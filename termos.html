@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Termos de Uso - AVV</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-blue: #190d74;
+            --color-yellow: #fcf101;
+            --color-white: #ffffff;
+        }
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--color-blue);
+            color: white;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            position: relative;
+            min-height: 100vh;
+        }
+        /* Marca d'água */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60%;
+            height: 60%;
+            background-image: url('logos/logo_avv.png');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            opacity: 0.05;
+            z-index: -1;
+            pointer-events: none;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+        .logo-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .logo-header img {
+            height: 100px;
+        }
+        h1, h2 {
+            font-family: 'Fredoka', sans-serif;
+            color: var(--color-yellow);
+        }
+        h1 { font-size: 2.5rem; text-align: center; margin-bottom: 40px; }
+        h2 { font-size: 1.5rem; margin-top: 30px; }
+        p, li { font-size: 1.1rem; opacity: 0.9; }
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: var(--color-yellow);
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .back-btn:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-btn">← Voltar para o site</a>
+        <div class="logo-header">
+            <img src="logos/logo_avv.png" alt="AVV Logo">
+        </div>
+        <h1>Termos de Uso</h1>
+        
+        <p>Bem-vindo ao site da Associação Vilhenense de Voleibol (AVV). Ao acessar este site, você concorda em cumprir estes termos de serviço, todas as leis e regulamentos aplicáveis ​​e concorda que é responsável pelo cumprimento de todas as leis locais aplicáveis.</p>
+
+        <h2>1. Uso de Licença</h2>
+        <p>É concedida permissão para baixar temporariamente uma cópia dos materiais (informações ou software) no site da AVV, apenas para visualização pessoal e não comercial transitória.</p>
+
+        <h2>2. Isenção de Responsabilidade</h2>
+        <p>Os materiais no site da AVV são fornecidos 'como estão'. A AVV não oferece garantias, expressas ou implícitas, e, por este meio, isenta e nega todas as outras garantias, incluindo, sem limitação, garantias implícitas ou condições de comercialização, adequação a um fim específico ou não violação de propriedade intelectual ou outra violação de direitos.</p>
+
+        <h2>3. Limitações</h2>
+        <p>Em nenhum caso a AVV ou seus fornecedores serão responsáveis ​​por quaisquer danos (incluindo, sem limitação, danos por perda de dados ou lucro ou devido a interrupção dos negócios) decorrentes do uso ou da incapacidade de usar os materiais em AVV.</p>
+
+        <h2>4. Precisão dos Materiais</h2>
+        <p>Os materiais exibidos no site da AVV podem incluir erros técnicos, tipográficos ou fotográficos. A AVV não garante que qualquer material em seu site seja preciso, completo ou atual. A AVV pode fazer alterações nos materiais contidos em seu site a qualquer momento, sem aviso prévio.</p>
+
+        <h2>5. Links</h2>
+        <p>A AVV não analisou todos os sites vinculados ao seu site e não é responsável pelo conteúdo de nenhum site vinculado. A inclusão de qualquer link não implica endosso pela AVV do site. O uso de qualquer site vinculado é por conta e risco do usuário.</p>
+
+        <p style="margin-top: 50px; text-align: center; font-size: 0.9rem; opacity: 0.7;">Última atualização: Maio de 2026.</p>
+    </div>
+</body>
+</html>

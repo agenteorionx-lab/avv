@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AVV - Associação Vilhenense de Voleibol</title>
+    <!-- Fontes amigáveis, desenhadas e menos formais -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+</head>
+<body>
+
+    <!-- HEADER SUPERIOR -->
+    <header class="main-header">
+        <div class="container">
+            <div class="header-inner">
+                <img src="logos/logo_avv.png" alt="AVV Logo" class="main-logo">
+                <button class="mobile-menu-btn" id="mobile-menu-btn">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <nav class="main-nav" id="main-nav">
+                    <a href="#home">Início</a>
+                    <a href="#historia">História</a>
+                    <a href="#tecnicos">Técnicos</a>
+                    <a href="#matricula">Matrícula</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- 1. HERO SECTION (AZUL) -->
+    <section class="hero bg-blue" id="home">
+        <div class="container">
+            <div class="hero-flex">
+                <div class="hero-content">
+                    <span class="pre-headline badge-yellow">
+                        <svg class="icon-vb" viewBox="0 0 512 512" width="20" height="20" fill="currentColor">
+                            <path d="M256 48C141.1 48 48 141.1 48 256s93.1 208 208 208 208-93.1 208-208S370.9 48 256 48zm-31.5 385.1c-43.6-11.2-81.5-36.9-106.3-71.8 19.3-15.6 44.5-24.9 72-24.9 14 0 27.2 2.4 39.5 6.7-1.7 30-3.5 60.1-5.2 90zm63 0c-1.7-29.9-3.5-60-5.2-90 12.3-4.3 25.5-6.7 39.5-6.7 27.5 0 52.7 9.3 72 24.9-24.8 34.9-62.7 60.6-106.3 71.8zM111.4 335.7c-21.7-22.9-37.4-50.5-45.5-81 24.2-1.9 47.1-9 66.9-20.2 11.2 23.3 26.5 44.1 45 61.6-26.6 9-49.8 23-66.4 39.6zm289.2 0c-16.6-16.6-39.8-30.6-66.4-39.6 18.5-17.5 33.8-38.3 45-61.6 19.8 11.2 42.7 18.3 66.9 20.2-8.1 30.5-23.8 58.1-45.5 81zM256 272c-15.6 0-30.3-3.6-43.4-9.9-15.1-16.2-27.4-35.1-36.2-55.9 24.1-15.7 51-24.6 79.6-24.6s55.5 8.9 79.6 24.6c-8.8 20.8-21.1 39.7-36.2 55.9-13.1 6.3-27.8 9.9-43.4 9.9zm-86.8-68.8c8.2 19 19.5 36.1 33.2 50.8-13.8 13.8-30.9 25.1-49.9 33.2-17.5-17.5-31.8-38.3-42-61.2 17.5-10 37.5-17.4 58.7-22.8zm173.6 0c21.2 5.4 41.2 12.8 58.7 22.8-10.2 22.9-24.5 43.7-42 61.2-19-8.1-36.1-19.4-49.9-33.2 13.7-14.7 25-31.8 33.2-50.8zM151.4 176.3c-21.2 5.4-41.2 12.8-58.7 22.8 10.2-22.9 24.5-43.7 42-61.2 19 8.1 36.1 19.4 49.9 33.2-13.7 14.7-25 31.8-33.2 50.8zm209.2 0c8.2 19 19.5 36.1 33.2 50.8-13.8 13.8-30.9 25.1-49.9 33.2-17.5-17.5-31.8-38.3-42-61.2 17.5-10 37.5-17.4 58.7-22.8zM256 160c-28.6 0-55.5 8.9-79.6 24.6 8.8-20.8 21.1-39.7 36.2-55.9 13.1-6.3 27.8-9.9 43.4-9.9s30.3 3.6 43.4 9.9c15.1 16.2 27.4 35.1 36.2 55.9-24.1-15.7-51-24.6-79.6-24.6zm-31.5-73.9c1.7 29.9 3.5 60 5.2 90-12.3 4.3-25.5 6.7-39.5 6.7-27.5 0-52.7-9.3-72-24.9 24.8-34.9 62.7-60.6 106.3-71.8zm63 0c43.6 11.2 81.5 36.9 106.3 71.8-19.3 15.6-44.5 24.9-72 24.9-14 0-27.2-2.4-39.5-6.7 1.7-30 3.5-60.1 5.2-90z"/>
+                        </svg>
+                        Associação Vilhenense de Voleibol
+                    </span>
+                    <h1 class="heading-xl">Tradição, Garra e Vitórias: Venha Fazer Parte da História do <span class="text-yellow">Vôlei Rondoniense</span>.</h1>
+                    <p class="hero-subtitle">Há 23 anos transformando talentos em campeões e elevando o voleibol de Vilhena aos pódios estaduais e nacionais.</p>
+                    <div class="hero-buttons">
+                        <a href="#matricula" class="btn btn-primary">Quero Fazer Parte da AVV</a>
+                        <a href="#historia" class="btn btn-outline">Conhecer Nossa História</a>
+                    </div>
+                </div>
+                <div class="hero-mascot">
+                    <img src="logos/mascote_coelho.png" alt="Mascote Coelho AVV" class="mascot-img">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats bg-yellow" style="padding: 25px 0;">
+        <div class="container" style="max-width: 1100px;">
+            <div class="stats-grid" style="display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap;">
+                <div class="stat-item-horizontal">
+                    <span class="stat-emoji">
+                        <svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2zm-7 5h5v5h-5v-5z"/></svg>
+                    </span>
+                    <div class="stat-content">
+                        <h3 class="counter" data-target="23">0</h3>
+                        <p>Anos de História</p>
+                    </div>
+                </div>
+                <div class="stat-item-horizontal">
+                    <span class="stat-emoji">
+                        <svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 10.63 21 8.55 21 7V5h-2zM5 7h2v3c-1.1 0-2-.9-2-2V7zm14 1c0 1.1-.9 2-2 2V7h2v1z"/></svg>
+                    </span>
+                    <div class="stat-content">
+                        <h3 class="counter" data-target="28">0</h3>
+                        <p>Títulos Estaduais</p>
+                    </div>
+                </div>
+                <div class="stat-item-horizontal">
+                    <span class="stat-emoji">
+                        <svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                    </span>
+                    <div class="stat-content">
+                        <h3 class="counter" data-target="13">0</h3>
+                        <p>Medalhas Nacionais</p>
+                    </div>
+                </div>
+                <div class="stat-item-horizontal">
+                    <span class="stat-emoji">
+                        <svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
+                    </span>
+                    <div class="stat-content">
+                        <h3>+10 MIL</h3>
+                        <p>Atletas Formados</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. ABOUT SECTION (BRANCO) -->
+    <section class="about bg-white section-padding" id="historia">
+        <div class="container">
+            <div class="about-flex">
+                <div class="about-content">
+                    <span class="badge-mini">NOSSA TRAJETÓRIA</span>
+                    <h2 class="section-title-tight">Mais de Duas Décadas <br><span>Forjando Campeões</span></h2>
+                    <div class="divider-small"></div>
+                    <p>A AVV nasceu de um grande sonho e se consolidou como a <strong>maior potência do voleibol</strong> em nossa região. Ao longo desses 23 anos, nossa quadra tem sido palco de muito suor, superação e lágrimas de alegria.</p>
+                    <p>Muito além de revelar atletas de alto rendimento, nossa maior missão é <strong>formar grandes cidadãos</strong>. Acreditamos que a disciplina, o respeito e o trabalho em equipe que o vôlei ensina são as maiores medalhas que nossos jovens levam para a vida.</p>
+                </div>
+                <div class="about-gallery">
+                    <div class="swiper main-carousel">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide"><img src="equipe/Captura de tela 2026-05-03 153345.png" alt="Equipe AVV 1"></div>
+                            <div class="swiper-slide"><img src="equipe/Captura de tela 2026-05-03 153354.png" alt="Equipe AVV 2"></div>
+                            <div class="swiper-slide"><img src="equipe/Captura de tela 2026-05-03 153423.png" alt="Equipe AVV 3"></div>
+                            <div class="swiper-slide"><img src="equipe/Captura de tela 2026-05-03 153458.png" alt="Equipe AVV 4"></div>
+                            <div class="swiper-slide"><img src="equipe/Captura de tela 2026-05-03 153544.png" alt="Equipe AVV 5"></div>
+                        </div>
+                    </div>
+                    <div class="gallery-accent"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. COACHES SECTION (AZUL) -->
+    <section class="coaches bg-blue section-padding" id="tecnicos">
+        <div class="container">
+            <div class="text-center" style="margin-bottom: 50px;">
+                <span class="badge-mini" style="background: var(--color-yellow); color: var(--color-blue);">COMISSÃO TÉCNICA</span>
+                <h2 class="heading-l" style="color: var(--color-yellow); margin-top: 15px;">Aprenda com os Melhores.</h2>
+                <p class="subtitle text-white" style="opacity: 0.9;">Treine com estrategistas que transformam suor em glória.</p>
+            </div>
+            
+            <div class="coaches-grid">
+                <!-- Ana Emerick -->
+                <div class="coach-card-modern">
+                    <div class="coach-image">
+                        <img src="tecnicos/ChatGPT Image 3_05_2026, 15_51_44.png" alt="Ana Emerick">
+                    </div>
+                    <div class="coach-info">
+                        <h3 class="text-yellow">Ana Emerick</h3>
+                        <p class="text-white">Referência técnica em RO. Especialista em fundamentos perfeitos e mentalidade de liderança para jovens atletas.</p>
+                    </div>
+                </div>
+                <!-- Silvan Freitas -->
+                <div class="coach-card-modern">
+                    <div class="coach-image">
+                        <img src="tecnicos/ChatGPT Image 3_05_2026, 15_54_39.png" alt="Silvan Freitas">
+                    </div>
+                    <div class="coach-info">
+                        <h3 class="text-yellow">Silvan Freitas</h3>
+                        <p class="text-white">Fundador da AVV e estrategista nato. O mentor por trás dos maiores títulos estaduais da nossa história.</p>
+                    </div>
+                </div>
+                <!-- France Lima -->
+                <div class="coach-card-modern">
+                    <div class="coach-image">
+                        <img src="tecnicos/ChatGPT Image 3_05_2026, 15_51_51.png" alt="France Lima">
+                    </div>
+                    <div class="coach-info">
+                        <h3 class="text-yellow">France Lima</h3>
+                        <p class="text-white">Pilar histórico da AVV. Especialista em preparação física integrada e motivação de alto rendimento.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. SCHEDULE SECTION (AMARELO) -->
+    <section class="schedule bg-yellow section-padding" id="turmas">
+        <div class="container">
+            <div class="text-center" style="margin-bottom: 60px;">
+                <span class="badge-mini" style="background: var(--color-blue); color: white;">HORÁRIOS</span>
+                <h2 class="heading-l text-blue" style="margin-top: 15px;">Escolha Sua Turma</h2>
+                <p class="subtitle text-blue" style="opacity: 0.8;">Temos a categoria certa para o seu nível e idade.</p>
+            </div>
+            
+            <div class="schedule-grid-3d">
+                <!-- Iniciação -->
+                <div class="card-3d-wrapper">
+                    <div class="card-3d">
+                        <div class="card-3d-inner">
+                            <h3 class="text-blue">Iniciação Esportiva</h3>
+                            <p class="tag">ESCOLINHA</p>
+                            <div class="card-details">
+                                <div class="detail-row">
+                                    <span class="label">DIAS:</span>
+                                    <span class="value">Terças e Quintas</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="label">HORÁRIO:</span>
+                                    <span class="value">18h às 19h30</span>
+                                </div>
+                            </div>
+                            <div class="card-footer-svg">
+                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--color-blue)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.2;"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20"></path><path d="M2 12h20"></path><path d="M12 2a14.5 14.5 0 0 1 0 20"></path><path d="m15.5 15.5-7-7"></path><path d="m15.5 8.5-7 7"></path></svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Rendimento -->
+                <div class="card-3d-wrapper">
+                    <div class="card-3d featured">
+                        <div class="card-3d-inner">
+                            <h3 class="text-white">Base e Rendimento</h3>
+                            <p class="tag-white">COMPETIÇÃO</p>
+                            <div class="card-details">
+                                <div class="detail-row">
+                                    <span class="label-white">DIAS:</span>
+                                    <span class="value-white">Seg, Qua e Sex</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="label-white">HORÁRIO:</span>
+                                    <span class="value-white">19h às 21h</span>
+                                </div>
+                            </div>
+                            <div class="card-footer-svg">
+                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.4;"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Adulto -->
+                <div class="card-3d-wrapper">
+                    <div class="card-3d">
+                        <div class="card-3d-inner">
+                            <h3 class="text-blue">Adulto / Master</h3>
+                            <p class="tag">LAZER & TÉCNICA</p>
+                            <div class="card-details">
+                                <div class="detail-row">
+                                    <span class="label">DIAS:</span>
+                                    <span class="value">Sábados</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="label">HORÁRIO:</span>
+                                    <span class="value">15h às 18h</span>
+                                </div>
+                            </div>
+                            <div class="card-footer-svg">
+                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--color-blue)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.2;"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.5 4 6.5 2 2 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path></svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botão agora na parte inferior - CORRIGIDO E VISÍVEL -->
+            <div class="text-center" style="margin-top: 60px;">
+                <a href="https://wa.me/5569992099604" target="_blank" class="btn btn-blue" style="padding: 20px 40px; font-size: 1.1rem; box-shadow: 0 10px 20px rgba(25, 13, 116, 0.3);">
+                    QUERO AGENDAR MINHA AULA EXPERIMENTAL
+                </a>
+                <p class="text-blue" style="margin-top: 20px; font-weight: 700; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px;">
+                    ⚡ Vagas limitadas! Garanta a sua agora.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. DIFFERENTIALS SECTION (BRANCO) -->
+    <section class="differentials bg-white section-padding" id="diferenciais">
+        <div class="container">
+            <div class="text-center" style="margin-bottom: 50px;">
+                <span class="badge-mini" style="background: var(--color-blue); color: white;">POR QUE A AVV?</span>
+                <h2 class="heading-l text-blue" style="margin-top: 15px;">Diferenciais da AVV</h2>
+                <p class="subtitle" style="color: #666; max-width: 600px; margin: 0 auto;">Formamos muito mais que atletas. Construímos o futuro de grandes cidadãos através do voleibol.</p>
+            </div>
+            
+            <div class="diff-grid-modern">
+                <!-- Card 1 -->
+                <div class="diff-card-square">
+                    <div class="diff-card-img">
+                        <img src="avv_respect_coaches.png" alt="Respeito e Confiança">
+                        <div class="diff-card-icon-overlay">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg>
+                        </div>
+                    </div>
+                    <div class="diff-card-body">
+                        <h4 class="text-blue">Respeito e Confiança</h4>
+                        <p>Uma comissão técnica unida por muita história e amizade, criando um ambiente seguro e íntegro.</p>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="diff-card-square featured-border">
+                    <div class="diff-card-img">
+                        <img src="avv_team_huddle.png" alt="Sinergia Vencedora">
+                        <div class="diff-card-icon-overlay">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m8 3 4 8 5-5 5 15H2L8 3z"></path></svg>
+                        </div>
+                    </div>
+                    <div class="diff-card-body">
+                        <h4 class="text-blue">Sinergia Vencedora</h4>
+                        <p>Trabalho conjunto de mestres que garante evolução rápida, técnica e sólida na quadra.</p>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="diff-card-square">
+                    <div class="diff-card-img">
+                        <img src="avv_travel_competition.png" alt="Passaporte para o Mundo">
+                        <div class="diff-card-icon-overlay">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20"></path><path d="M2 12h20"></path><path d="M12 2a14.5 14.5 0 0 1 0 20"></path></svg>
+                        </div>
+                    </div>
+                    <div class="diff-card-body">
+                        <h4 class="text-blue">Passaporte para o Mundo</h4>
+                        <p>Oportunidade real de viajar para competições nacionais e internacionais através do esporte.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. TALENTS SECTION (AZUL) - CARDS QUADRADOS COM IMAGEM -->
+    <section class="talents bg-blue section-padding" id="carreira">
+        <div class="container">
+            <div class="text-center" style="margin-bottom: 60px;">
+                <h2 class="heading-l text-yellow">Seu Caminho Para o Profissional</h2>
+                <p class="subtitle text-white" style="max-width: 700px; margin: 0 auto; opacity: 0.9;">A maior vitrine de vôlei de Rondônia. Veja onde nossos atletas chegam:</p>
+            </div>
+            
+            <div class="diff-grid-modern">
+                <!-- Card 1 -->
+                <div class="diff-card-square bg-blue-dark">
+                    <div class="diff-card-img">
+                        <img src="avv_superliga_athlete.png" alt="Superliga">
+                        <div class="diff-card-icon-overlay">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="m15.5 15.5-7-7"></path><path d="m15.5 8.5-7 7"></path></svg>
+                        </div>
+                    </div>
+                    <div class="diff-card-body">
+                        <h4 class="text-yellow">Superliga e Seleção Brasileira</h4>
+                        <p class="text-white">Formamos atletas que já vestiram a camisa da <strong>Seleção Brasileira</strong> e brilharam na Superliga Feminina e Masculina. O ápice do vôlei nacional começa aqui.</p>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="diff-card-square bg-blue-dark">
+                    <div class="diff-card-img">
+                        <img src="avv_international_league.png" alt="Carreiras Internacionais">
+                        <div class="diff-card-icon-overlay">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20"></path><path d="M2 12h20"></path><path d="M12 2a14.5 14.5 0 0 1 0 20"></path></svg>
+                        </div>
+                    </div>
+                    <div class="diff-card-body">
+                        <h4 class="text-yellow">Carreiras Internacionais</h4>
+                        <p class="text-white">Exportamos talentos para o mundo! Atletas da base AVV hoje brilham em <strong>ligas estrangeiras</strong> e clubes da Europa e Ásia, como o craque Kaio Ribeiro.</p>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="diff-card-square bg-blue-dark">
+                    <div class="diff-card-img">
+                        <img src="avv_scout_podium.png" alt="Vitrine do Estado">
+                        <div class="diff-card-icon-overlay">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+                        </div>
+                    </div>
+                    <div class="diff-card-body">
+                        <h4 class="text-yellow">A Maior Vitrine do Estado</h4>
+                        <p class="text-white">Somos o radar número 1 para <strong>olheiros e grandes clubes</strong>. Disputar campeonatos brasileiros pela AVV garante visibilidade nacional constante.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. PARTNERS & SPONSORS (AMARELO) -->
+    <section class="partners bg-yellow section-padding">
+        <div class="container">
+            <div class="text-center" style="margin-bottom: 40px;">
+                <h2 class="heading-l text-blue">Parceiros e Patrocinadores</h2>
+                <h3 class="heading-m text-blue">Quem Acredita na Transformação pelo Esporte</h3>
+                <p class="text-blue" style="font-weight: 600; max-width: 800px; margin: 0 auto;">A AVV agradece profundamente aos nossos parceiros e patrocinadores oficiais. É graças a esse apoio fundamental que continuamos revelando talentos e levando o nome de Vilhena para os pódios de todo o Brasil.</p>
+            </div>
+
+            <!-- CARROSSEL DE PATROCINADORES -->
+            <div class="carousel-container">
+                <div class="carousel-track" id="sponsor-track">
+                    <!-- Patrocinadores Institucionais e Privados (Todos Juntos) -->
+                    <div class="sponsor-card">Prefeitura Mun. de Vilhena<br><span>@municipiodevilhena</span></div>
+                    <div class="sponsor-card">CMDCA Vilhena<br><span>@cmdcavilhena</span></div>
+                    <div class="sponsor-card">SEMES</div>
+                    <div class="sponsor-card">Câmara de Vilhena<br><span>@camaradevilhena</span></div>
+                    <div class="sponsor-card">Vereador Jander Rocha</div>
+                    <div class="sponsor-card">Sicoob Credisul<br><span>@sicoob_credisul</span></div>
+                    <div class="sponsor-card">Unimed Vilhena<br><span>@labunimedvilhena</span></div>
+                    <div class="sponsor-card">RD Farma<br><span>@rdfarma_oficial</span></div>
+                    <div class="sponsor-card">Favoo<br><span>@escolafavoo</span></div>
+                    <div class="sponsor-card">5.8 Telecom<br><span>@internet5.8oficial</span></div>
+                    <div class="sponsor-card">4K Imports</div>
+                    <div class="sponsor-card">Dr. Mario Azambuja</div>
+                    <div class="sponsor-card">ASMUV</div>
+                    <div class="sponsor-card">Desafios Contabilidade</div>
+                    <div class="sponsor-card">Academia Power</div>
+                    <div class="sponsor-card">Posto Catarinense</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 9. FAQ SECTION (BRANCO) -->
+    <section class="faq bg-white section-padding" id="duvidas">
+        <div class="container">
+            <div class="text-center" style="margin-bottom: 50px;">
+                <h2 class="heading-l text-blue">Dúvidas Frequentes</h2>
+                <p class="subtitle text-blue" style="opacity: 0.7;">Clique na pergunta para ver a resposta:</p>
+            </div>
+
+            <div class="faq-grid-modern">
+                <div class="faq-item-modern">
+                    <button class="faq-btn">
+                        <span>A partir de qual idade pode começar a treinar?</span>
+                        <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </button>
+                    <div class="faq-content">
+                        <p>Aceitamos alunos a partir de 7 anos. A escolinha utiliza uma metodologia lúdica e adaptada para cada faixa etária.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item-modern">
+                    <button class="faq-btn">
+                        <span>Preciso ter experiência prévia para me matricular?</span>
+                        <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </button>
+                    <div class="faq-content">
+                        <p>Não! Temos categorias para iniciantes absolutos. Nossos técnicos ensinarão todos os fundamentos desde o básico.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item-modern">
+                    <button class="faq-btn">
+                        <span>Como funcionam as seletivas para equipes de competição?</span>
+                        <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </button>
+                    <div class="faq-content">
+                        <p>Alunos são constantemente avaliados nos treinos. Atletas com evolução são convidados para as equipes de rendimento.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item-modern">
+                    <button class="faq-btn">
+                        <span>Os técnicos acompanham os alunos nas viagens?</span>
+                        <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </button>
+                    <div class="faq-content">
+                        <p>Sim. Em todas as viagens e torneios, nossa comissão técnica garante a estratégia, segurança e suporte total.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item-modern">
+                    <button class="faq-btn">
+                        <span>A AVV também é aberta para o público adulto?</span>
+                        <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </button>
+                    <div class="faq-content">
+                        <p>Sim! Temos a categoria Master/Adulto para quem ama o esporte e quer praticar em alto nível.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item-modern">
+                    <button class="faq-btn">
+                        <span>Qual o valor da mensalidade e onde são os treinos?</span>
+                        <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </button>
+                    <div class="faq-content">
+                        <p>Treinamos na R. Quarenta e Três, 183. Para valores atualizados, clique no botão de WhatsApp abaixo.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center" style="margin-top: 50px;">
+                <a href="https://wa.me/5569992099604" target="_blank" class="btn btn-primary">Ainda tenho dúvidas</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 10. FOOTER (AZUL) -->
+    <footer class="footer bg-blue section-padding" style="padding-bottom: 30px;">
+        <div class="container">
+            <div class="footer-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 50px; margin-bottom: 50px;">
+                <!-- Coluna 1: Logo e Sobre -->
+                <div class="footer-col">
+                    <img src="logos/logo_avv.png" alt="Logo AVV" style="height: 100px; margin-bottom: 20px;">
+                    <p class="text-white" style="opacity: 0.8; line-height: 1.6;">Associação Vilhenense de Voleibol - Transformando vidas através do esporte em Vilhena e região.</p>
+                    <div class="social-links-footer" style="display: flex; gap: 15px; margin-top: 25px;">
+                        <a href="https://www.instagram.com/p/DOZQ9LbgVoJ/" target="_blank" class="social-btn-round" title="Instagram" style="color: white !important;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                        </a>
+                        <a href="https://www.facebook.com/AVVVILHENARO" target="_blank" class="social-btn-round" title="Facebook" style="color: white !important;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+                        </a>
+                        <a href="https://www.youtube.com/@avv-voleivilhena6374" target="_blank" class="social-btn-round" title="YouTube" style="color: white !important;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.42a2.78 2.78 0 0 0-1.94 2C1 8.11 1 12 1 12s0 3.89.46 5.58a2.78 2.78 0 0 0 1.94 2c1.72.42 8.6.42 8.6.42s6.88 0 8.6-.42a2.78 2.78 0 0 0 1.94-2C23 15.89 23 12 23 12s0-3.89-.46-5.58z"></path><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"></polygon></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Coluna 2: Localização e Mapa -->
+                <div class="footer-col">
+                    <h4 class="heading-m text-yellow" style="margin-bottom: 20px;">Nossa Sede</h4>
+                    <p class="text-white" style="margin-bottom: 15px;">R. Quarenta e Três, 183-281<br>Jardim Eldorado, Vilhena - RO</p>
+                    <div class="map-wrapper" style="border-radius: 15px; overflow: hidden; height: 180px; border: 2px solid rgba(255,255,255,0.1);">
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3890.655931291147!2d-60.1384!3d-12.7384!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTLCsDQ0JzE4LjIiUyA2MMKwMDgnMTguMiJX!5e0!3m2!1spt-BR!2sbr!4v1714770000000!5m2!1spt-BR!2sbr" 
+                            width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                    </div>
+                </div>
+
+                <!-- Coluna 3: Links e Info -->
+                <div class="footer-col">
+                    <h4 class="heading-m text-yellow" style="margin-bottom: 20px;">Fale Conosco</h4>
+                    <p class="text-white"><strong>WhatsApp:</strong> (69) 99209-9604</p>
+                    <p class="text-white" style="margin-top: 10px;"><strong>E-mail:</strong> contato@avv.com.br</p>
+                </div>
+            </div>
+
+            <div class="footer-bottom" style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 30px; text-align: center; display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
+                <p class="text-white" style="font-size: 0.9rem; opacity: 0.6;">&copy; 2026 Associação Vilhenense de Voleibol. Todos os direitos reservados.</p>
+                <div class="legal-footer-links">
+                    <a href="termos.html" class="legal-link" style="margin: 0 5px;">Termos de Uso</a>
+                    <span style="color: rgba(255,255,255,0.3);">|</span>
+                    <a href="privacidade.html" class="legal-link" style="margin: 0 5px;">Privacidade</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // Menu Mobile Toggle
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const mainNav = document.getElementById('main-nav');
+        
+        menuBtn.addEventListener('click', () => {
+            menuBtn.classList.toggle('active');
+            mainNav.classList.toggle('active');
+        });
+
+        // Fechar menu ao clicar em link
+        document.querySelectorAll('.main-nav a').forEach(link => {
+            link.addEventListener('click', () => {
+                menuBtn.classList.remove('active');
+                mainNav.classList.remove('active');
+            });
+        });
+    </script>
+</body>
+</html>
