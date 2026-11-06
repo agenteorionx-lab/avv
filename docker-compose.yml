@@ -16,16 +16,8 @@ services:
         - "traefik.enable=true"
         - "traefik.docker.network=traefik_public"
 
-        # Roteamento HTTPS imediato via subcaminho (/avv) nos domínios ativos da OrionX
-        - "traefik.http.routers.avv-subpath.rule=(Host(`sistema.orionxbrasil.com`) || Host(`painel.orionxbrasil.com`)) && PathPrefix(`/avv`)"
-        - "traefik.http.routers.avv-subpath.priority=100"
-        - "traefik.http.routers.avv-subpath.entrypoints=websecure"
-        - "traefik.http.routers.avv-subpath.tls=true"
-        - "traefik.http.routers.avv-subpath.tls.certresolver=le"
-        - "traefik.http.routers.avv-subpath.service=avv-portal-svc"
-
-        # Roteamento dedicado para o domínio oficial avvvoleibol.com.br
-        - "traefik.http.routers.avv-domain.rule=Host(`avvvoleibol.com.br`) || Host(`www.avvvoleibol.com.br`) || Host(`avv.orionxbrasil.com`)"
+        # Roteamento exclusivo para o domínio oficial avvvoleibol.com.br
+        - "traefik.http.routers.avv-domain.rule=Host(`avvvoleibol.com.br`) || Host(`www.avvvoleibol.com.br`)"
         - "traefik.http.routers.avv-domain.entrypoints=websecure"
         - "traefik.http.routers.avv-domain.tls=true"
         - "traefik.http.routers.avv-domain.tls.certresolver=le"

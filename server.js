@@ -165,7 +165,8 @@ app.post(['/api/recuperar-senha', '/avv/api/recuperar-senha'], async (req, res) 
             expiraEm
         });
 
-        const baseUrl = `${req.protocol}://${req.get('host')}`;
+        const proto = req.get('x-forwarded-proto') || req.protocol;
+        const baseUrl = `${proto}://${req.get('host')}`;
         const linkRedefinicao = `${baseUrl}/login.html?token=${token}&email=${encodeURIComponent(emailNormalizado)}`;
 
         const htmlEmail = gerarHtmlEmailRecuperacao(nomeResponsavel, nomeTime, linkRedefinicao, codigo);
