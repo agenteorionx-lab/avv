@@ -1519,6 +1519,12 @@
 
                 // Prioriza a sessão ativa logada
                 const sessao = JSON.parse(localStorage.getItem('avv_sessao_ativa') || 'null');
+                if (!sessao || sessao.tipo !== 'time') {
+                    // Se não estiver logado, redireciona para a tela de login
+                    window.location.href = 'login.html';
+                    return;
+                }
+
                 let dadosEquipe = null;
 
                 if (sessao && sessao.email) {
@@ -1593,84 +1599,7 @@
 
         // BANCO CENTRAL DE CAMPEONATOS (SINCRONIZADO COM O PAINEL DE ADMINISTRAÇÃO)
         let bancoCampeonatos = {};
-
-        const bancoPadraoCampeonatos = {
-            'superliga-masc': {
-                id: 'superliga-masc',
-                nome: 'SUPERLIGA INTERIORANA - POLO VILHENA - MASCULINO',
-                modalidade: 'Vôlei de Quadra Adulto Oficial',
-                fase: 'Inscrições Abertas até 25/11/2026',
-                taxa: 'Isento / Filiação Ativa',
-                limiteAtletas: 12,
-                descricao: 'A Superliga Interiorana da AVV é o torneio de elite regional de voleibol indoor masculino do cone sul de Rondônia, reunindo os principais clubes habilitados na federação.',
-                categoriasAceitas: ['Adulto Masculino'],
-                regulamento: `
-                    <h4 style="color: #0f1c3f; margin-bottom: 10px;">CAPÍTULO I - DA FINALIDADE E ORGANIZAÇÃO</h4>
-                    <p>Art. 1º - A Superliga Interiorana Polo Vilhena Masculino tem por objetivo fomentar o desporto de alto rendimento no interior do Estado.</p>
-                    <p>Art. 2º - A competição é realizada sob as regras oficiais da Federação Internacional de Voleibol (FIVB) e homologada pela Associação Vilhenense de Voleibol (AVV).</p>
-                    
-                    <h4 style="color: #0f1c3f; margin-top: 15px; margin-bottom: 10px;">CAPÍTULO II - DA ELEGIBILIDADE E CATEGORIAS HOMOLOGADAS</h4>
-                    <p>Art. 3º - São elegíveis única e exclusivamente equipes cadastradas na categoria <strong>Adulto Masculino</strong> com atletas federados e homologados.</p>
-                    <p>Art. 4º - Cada equipe poderá inscrever no máximo <strong>12 (doze) atletas</strong> devidamente regularizados por partida.</p>
-                    
-                    <h4 style="color: #0f1c3f; margin-top: 15px; margin-bottom: 10px;">CAPÍTULO III - DISCIPLINA E PONTUAÇÃO</h4>
-                    <p>Art. 5º - Vitória por 3x0 ou 3x1 confere 3 pontos ao vencedor; vitória por 3x2 confere 2 pontos ao vencedor e 1 ponto ao perdedor.</p>
-                `
-            },
-            'superliga-fem': {
-                id: 'superliga-fem',
-                nome: 'SUPERLIGA INTERIORANA - POLO VILHENA - FEMININO',
-                modalidade: 'Vôlei de Quadra Adulto Oficial',
-                fase: 'Inscrições Abertas até 25/11/2026',
-                taxa: 'Isento / Filiação Ativa',
-                limiteAtletas: 12,
-                descricao: 'Competição principal do voleibol feminino regional, promovendo o protagonismo das equipes e atletas de voleibol indoor no Estado.',
-                categoriasAceitas: ['Adulto Feminino'],
-                regulamento: `
-                    <h4 style="color: #0f1c3f; margin-bottom: 10px;">CAPÍTULO I - DA FINALIDADE</h4>
-                    <p>Art. 1º - O campeonato feminino objetiva a qualificação das equipes para os certames interestaduais da região Norte.</p>
-                    
-                    <h4 style="color: #0f1c3f; margin-top: 15px; margin-bottom: 10px;">CAPÍTULO II - CATEGORIAS ADMITIDAS</h4>
-                    <p>Art. 2º - Aceita exclusivamente equipes homologadas na categoria <strong>Adulto Feminino</strong>.</p>
-                    <p>Art. 3º - Limite regulamentar estrito de <strong>12 atletas</strong> por equipe participante.</p>
-                `
-            },
-            'circuito-praia': {
-                id: 'circuito-praia',
-                nome: 'CIRCUITO RONDONIENSE DE VÔLEI DE PRAIA',
-                modalidade: 'Vôlei de Areia',
-                fase: 'Inscrições Abertas até 15/12/2026',
-                taxa: 'Isento / Filiação Ativa',
-                limiteAtletas: 4,
-                descricao: 'Etapa oficial de vôlei de areia disputada em arenas homologadas de Vilhena, aberta a duplas e quartetos das categorias adultas e de base.',
-                categoriasAceitas: ['Adulto Masculino', 'Adulto Feminino'],
-                regulamento: `
-                    <h4 style="color: #0f1c3f; margin-bottom: 10px;">CAPÍTULO I - DO FORMATO DE DISPUTA</h4>
-                    <p>Art. 1º - As disputas na areia seguem as diretrizes oficiais de voleibol de praia com jogos em melhor de 3 sets (21 pontos e tie-break de 15 pontos).</p>
-                    
-                    <h4 style="color: #0f1c3f; margin-top: 15px; margin-bottom: 10px;">CAPÍTULO II - CATEGORIAS HABILITADAS</h4>
-                    <p>Art. 2º - O circuito aceita inscrições de equipes nas categorias <strong>Adulto Masculino e Adulto Feminino</strong>.</p>
-                `
-            },
-            'estadual-base': {
-                id: 'estadual-base',
-                nome: 'CAMPEONATO ESTADUAL DE CATEGORIAS DE BASE (SUB-13, SUB-15 E SUB-18)',
-                modalidade: 'Vôlei de Quadra Categorias de Base',
-                fase: 'Inscrições Abertas até 05/11/2026',
-                taxa: 'Isento / Fomento ao Esporte de Base',
-                limiteAtletas: 12,
-                descricao: 'Maior certame formador de novos talentos do voleibol em Rondônia, voltado aos jovens atletas das categorias Sub-13, Sub-15 e Sub-18.',
-                categoriasAceitas: ['Sub-13 Masculino', 'Sub-13 Feminino', 'Sub-15 Masculino', 'Sub-15 Feminino', 'Sub-18 Masculino', 'Sub-18 Feminino'],
-                regulamento: `
-                    <h4 style="color: #0f1c3f; margin-bottom: 10px;">CAPÍTULO I - DA PARTICIPAÇÃO DAS ESCOLINHAS E CLUBES</h4>
-                    <p>Art. 1º - O Campeonato Estadual de Base é restrito a atletas federados nas faixas etárias comprovadas por certidão e RG.</p>
-                    
-                    <h4 style="color: #0f1c3f; margin-top: 15px; margin-bottom: 10px;">CAPÍTULO II - CATEGORIAS EXCLUSIVAS DE BASE</h4>
-                    <p>Art. 2º - Aceita equipes inscritas exclusivamente nas categorias <strong>Sub-13 (Masc/Fem), Sub-15 (Masc/Fem) e Sub-18 (Masc/Fem)</strong>.</p>
-                    <p>Art. 3º - É vedada a participação de atletas de idade superior à categoria indicada na ficha.</p>
-                `
-            }
-        };
+        const bancoPadraoCampeonatos = {};
 
         function carregarCampeonatosPainelTime() {
             const salvos = localStorage.getItem('avv_banco_campeonatos');
@@ -1678,11 +1607,10 @@
                 try {
                     bancoCampeonatos = JSON.parse(salvos);
                 } catch(e) {
-                    bancoCampeonatos = { ...bancoPadraoCampeonatos };
+                    bancoCampeonatos = {};
                 }
             } else {
-                bancoCampeonatos = { ...bancoPadraoCampeonatos };
-                localStorage.setItem('avv_banco_campeonatos', JSON.stringify(bancoCampeonatos));
+                bancoCampeonatos = {};
             }
 
             renderizarListaCampeonatosTime();

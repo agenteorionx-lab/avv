@@ -855,70 +855,27 @@
         let equipeAbertaId = null;
         let categoriaAtivaEquipe = 'todas';
 
-        const bancoPadraoCampeonatos = {
-            'superliga-masc': {
-                id: 'superliga-masc',
-                nome: 'SUPERLIGA INTERIORANA - POLO VILHENA - MASCULINO',
-                modalidade: 'Vôlei de Quadra Adulto Oficial',
-                banner: 'avv_superliga_athlete.png',
-                fase: 'Inscrições Abertas até 25/11/2026',
-                taxa: 'Isento / Filiação Ativa',
-                limiteAtletas: 12,
-                descricao: 'A Superliga Interiorana da AVV é o torneio de elite regional de voleibol indoor masculino do cone sul de Rondônia, reunindo os principais clubes habilitados na federação.',
-                categoriasAceitas: ['Adulto Masculino'],
-                regulamento: '<h4>CAPÍTULO I - DA FINALIDADE</h4><p>Art. 1º - Torneio de elite regional masculino homologado pela AVV.</p>'
-            },
-            'superliga-fem': {
-                id: 'superliga-fem',
-                nome: 'SUPERLIGA INTERIORANA - POLO VILHENA - FEMININO',
-                modalidade: 'Vôlei de Quadra Adulto Oficial',
-                banner: 'avv_team_huddle.png',
-                fase: 'Inscrições Abertas até 25/11/2026',
-                taxa: 'Isento / Filiação Ativa',
-                limiteAtletas: 12,
-                descricao: 'Competição principal do voleibol feminino regional, promovendo o protagonismo das equipes e atletas de voleibol indoor no Estado.',
-                categoriasAceitas: ['Adulto Feminino'],
-                regulamento: '<h4>CAPÍTULO I - DA FINALIDADE</h4><p>Art. 1º - Torneio oficial feminino homologado pela AVV.</p>'
-            },
-            'estadual-base': {
-                id: 'estadual-base',
-                nome: 'CAMPEONATO ESTADUAL DE CATEGORIAS DE BASE (SUB-13, SUB-15 E SUB-18)',
-                modalidade: 'Vôlei de Quadra Categorias de Base',
-                banner: 'avv_international_league.png',
-                fase: 'Inscrições Abertas até 05/11/2026',
-                taxa: 'Isento / Fomento ao Esporte de Base',
-                limiteAtletas: 12,
-                descricao: 'Maior certame formador de novos talentos do voleibol em Rondônia, voltado aos jovens atletas das categorias de base Sub-13, Sub-15 e Sub-18.',
-                categoriasAceitas: ['Sub-13 Masculino', 'Sub-13 Feminino', 'Sub-15 Masculino', 'Sub-15 Feminino', 'Sub-18 Masculino', 'Sub-18 Feminino'],
-                regulamento: '<h4>CAPÍTULO I - DA BASE</h4><p>Art. 1º - Restrito a atletas das categorias Sub-13, Sub-15 e Sub-18 devidamente comprovados por documento oficial.</p>'
-            },
-            'circuito-praia': {
-                id: 'circuito-praia',
-                nome: 'CIRCUITO RONDONIENSE DE VÔLEI DE PRAIA',
-                modalidade: 'Vôlei de Areia',
-                banner: 'logos/rede_volei.png',
-                fase: 'Inscrições Abertas até 15/12/2026',
-                taxa: 'Isento / Filiação Ativa',
-                limiteAtletas: 4,
-                descricao: 'Etapa oficial de vôlei de areia disputada em arenas homologadas de Vilhena, aberta a duplas e quartetos das categorias adultas e de base.',
-                categoriasAceitas: ['Adulto Masculino', 'Adulto Feminino'],
-                regulamento: '<h4>CAPÍTULO I - DO VÔLEI DE AREIA</h4><p>Art. 1º - Disputas em melhor de 3 sets.</p>'
-            }
-        };
+        const bancoPadraoCampeonatos = {};
 
         const equipesIniciaisPadrao = [];
 
         // Inicialização ao abrir o Painel ADM
         document.addEventListener('DOMContentLoaded', () => {
+            const sessaoAdm = JSON.parse(localStorage.getItem('avv_sessao_adm') || 'null');
+            if (!sessaoAdm || sessaoAdm.tipo !== 'adm') {
+                window.location.href = 'login.html';
+                return;
+            }
             // Remove dados fictícios de demonstração caso tenham ficado salvos no navegador
-            if (!localStorage.getItem('avv_sistema_limpo_v2')) {
+            if (!localStorage.getItem('avv_sistema_limpo_v3')) {
                 try {
                     const idsFicticios = ['eq-avv-principal', 'eq-porto-velho-base', 'eq-jiparana-fem', 'eq-ariquemes-beach'];
                     const salvo = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
                     const limpo = salvo.filter(e => !idsFicticios.includes(e.id));
                     localStorage.setItem('avv_equipes_completo_db', JSON.stringify(limpo));
+                    localStorage.removeItem('avv_banco_campeonatos');
                 } catch(e) {}
-                localStorage.setItem('avv_sistema_limpo_v2', 'true');
+                localStorage.setItem('avv_sistema_limpo_v3', 'true');
             }
 
             carregarCampeonatos();
