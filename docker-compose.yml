@@ -4,9 +4,9 @@ services:
     networks:
       - traefik_public
     ports:
-      - "3005:3005"
+      - "3006:3006"
     environment:
-      - PORT=3005
+      - PORT=3006
     deploy:
       restart_policy:
         condition: on-failure
@@ -29,7 +29,7 @@ services:
         - "traefik.http.routers.avv-domain.tls.certresolver=le"
         - "traefik.http.routers.avv-domain.service=avv-portal-svc"
 
-        - "traefik.http.services.avv-portal-svc.loadbalancer.server.port=3005"
+        - "traefik.http.services.avv-portal-svc.loadbalancer.server.port=3006"
 
 networks:
   traefik_public:
