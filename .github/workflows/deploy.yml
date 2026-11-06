@@ -45,3 +45,4 @@ jobs:
             docker image prune -f
 
             echo "✅ DEPLOY AVV CONCLUÍDO COM SUCESSO."
+

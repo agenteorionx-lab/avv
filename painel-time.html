@@ -347,47 +347,8 @@
                     <div class="fed-header-gold">INSCRIÇÕES CONFIRMADAS</div>
 
                     <div id="lista-inscricoes-confirmadas">
-                        <!-- Itens gerados dinamicamente ou listados por padrão -->
-                        <div class="fed-list-item">
-                            <div class="item-left-block">
-                                <img src="logos/logo_avv.png" alt="Escudo" class="item-shield-img">
-                                <div class="item-text-info">
-                                    <h4>SUPERLIGA INTERIORANA - POLO VILHENA - MASCULINO</h4>
-                                    <div class="item-meta-sub">
-                                        <span><strong>Nº da Inscrição:</strong> 146114</span>
-                                        <span><strong>Data da Inscrição:</strong> 08/09/2026</span>
-                                        <span><strong>Hora:</strong> 10:15</span>
-                                        <span><strong>Atletas Inscritos:</strong> 12</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div style="display: flex; align-items: center; gap: 12px;">
-                                <span class="badge-status-approved">✓ Confirmada</span>
-                                <button class="btn-action-green" title="Gerenciar Atletas da Inscrição" onclick="switchFedTab('meustimes', null)">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="fed-list-item">
-                            <div class="item-left-block">
-                                <img src="logos/logo_avv.png" alt="Escudo" class="item-shield-img">
-                                <div class="item-text-info">
-                                    <h4>SUPERLIGA INTERIORANA - POLO VILHENA - FEMININO</h4>
-                                    <div class="item-meta-sub">
-                                        <span><strong>Nº da Inscrição:</strong> 146219</span>
-                                        <span><strong>Data da Inscrição:</strong> 09/09/2026</span>
-                                        <span><strong>Hora:</strong> 14:30</span>
-                                        <span><strong>Atletas Inscritos:</strong> 11</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div style="display: flex; align-items: center; gap: 12px;">
-                                <span class="badge-status-approved">✓ Confirmada</span>
-                                <button class="btn-action-green" title="Gerenciar Atletas da Inscrição" onclick="switchFedTab('meustimes', null)">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                                </button>
-                            </div>
+                        <div id="msg-sem-inscricoes-confirmadas" style="padding: 28px; text-align: center; color: #64748b; font-size: 13px;">
+                            Nenhuma inscrição em campeonato realizada até o momento.
                         </div>
                     </div>
                 </div>
@@ -407,12 +368,12 @@
                         <button class="btn-subtab-pill" id="btn-subtab-atletas" onclick="alternarSubAbaTime('atletas')">
                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                             Atletas
-                            <span class="subtab-count-badge" id="badge-total-atletas">2</span>
+                            <span class="subtab-count-badge" id="badge-total-atletas">0</span>
                         </button>
                         <button class="btn-subtab-pill" id="btn-subtab-comissao" onclick="alternarSubAbaTime('comissao')">
                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                             Comissão
-                            <span class="subtab-count-badge" id="badge-total-comissao">2</span>
+                            <span class="subtab-count-badge" id="badge-total-comissao">0</span>
                         </button>
                     </div>
 
@@ -449,22 +410,22 @@
                         
                         <div style="display: flex; flex-direction: column; gap: 12px; padding: 14px; background: #f8fafc;">
                             
-                            <!-- EQUIPE 1: AVV VILHENA / SICREDI -->
+                            <!-- EQUIPE DO CLUBE LOGADO -->
                             <div class="fed-list-item" style="margin: 0; background: #ffffff;">
                                 <div class="item-left-block">
                                     <img src="logos/logo_avv.png" alt="Escudo" class="item-shield-img">
                                     <div class="item-text-info">
                                         <div style="display: flex; align-items: center; gap: 8px;">
-                                            <h4 id="team-name-card" style="margin: 0;">AVV VILHENA / SICREDI</h4>
-                                            <span style="font-size: 10px; font-weight: 800; color: #166534; background: #dcfce7; padding: 2px 7px; border-radius: 3px;">HOMOLOGADA</span>
+                                            <h4 id="team-name-card" style="margin: 0;">SUA EQUIPE</h4>
+                                            <span id="team-status-badge-card" style="font-size: 10px; font-weight: 800; color: #b45309; background: #fef3c7; padding: 2px 7px; border-radius: 3px;">AGUARDANDO HOMOLOGAÇÃO</span>
                                         </div>
                                         <div class="item-meta-sub" id="team-meta-container" style="margin-top: 6px;">
                                             <span><strong>Sede:</strong> <span id="team-city-card">Vilhena - RO</span></span>
-                                            <span><strong>Nº da Inscrição:</strong> <span id="team-num-card">191420</span></span>
-                                            <span><strong>Data/Hora:</strong> <span id="team-data-card">05/09/2026</span> às <span id="team-hora-card">09:12</span></span>
+                                            <span><strong>Nº da Inscrição:</strong> <span id="team-num-card">---</span></span>
+                                            <span><strong>Data/Hora:</strong> <span id="team-data-card">--/--/----</span> às <span id="team-hora-card">--:--</span></span>
                                             <span><strong>Categoria:</strong> <span id="team-cat-card" style="color: #1d4ed8; font-weight: 700;">Adulto Masculino</span></span>
-                                            <span><strong>Atletas:</strong> <span id="count-atletas">4</span>/12</span>
-                                            <span><strong>Comissão:</strong> <span id="count-tecnicos">2</span></span>
+                                            <span><strong>Atletas:</strong> <span id="count-atletas">0</span>/12</span>
+                                            <span><strong>Comissão:</strong> <span id="count-tecnicos">0</span></span>
                                         </div>
                                     </div>
                                 </div>
@@ -475,87 +436,6 @@
                                     </button>
                                     <button class="btn-action-green" title="Editar Dados da Equipe" onclick="abrirModalTime('editar')">
                                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- EQUIPE 2: PORTO VELHO VÔLEI CLUBE (BASE) -->
-                            <div class="fed-list-item" style="margin: 0; background: #ffffff;">
-                                <div class="item-left-block">
-                                    <img src="logos/logo_avv.png" alt="Escudo" class="item-shield-img">
-                                    <div class="item-text-info">
-                                        <div style="display: flex; align-items: center; gap: 8px;">
-                                            <h4 style="margin: 0;">PORTO VELHO VÔLEI CLUBE (BASE)</h4>
-                                            <span style="font-size: 10px; font-weight: 800; color: #b45309; background: #fef3c7; padding: 2px 7px; border-radius: 3px;">AGUARDANDO HOMOLOGAÇÃO</span>
-                                        </div>
-                                        <div class="item-meta-sub" style="margin-top: 6px;">
-                                            <span><strong>Sede:</strong> Porto Velho - RO</span>
-                                            <span><strong>Nº da Inscrição:</strong> 744131</span>
-                                            <span><strong>Data/Hora:</strong> 22/09/2026 às 11:30</span>
-                                            <span><strong>Categoria:</strong> <span style="color: #1d4ed8; font-weight: 700;">Sub-15 / Sub-18 Masculino</span></span>
-                                            <span><strong>Atletas:</strong> 4/14</span>
-                                            <span><strong>Comissão:</strong> 1</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div style="display: flex; gap: 8px;">
-                                    <button class="btn-action-text-green" onclick="alternarSubAbaTime('atletas')" title="Ver Atletas">
-                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                                        Visualizar
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- EQUIPE 3: JI-PARANÁ VOLEIBOL FEMININO -->
-                            <div class="fed-list-item" style="margin: 0; background: #ffffff;">
-                                <div class="item-left-block">
-                                    <img src="logos/logo_avv.png" alt="Escudo" class="item-shield-img">
-                                    <div class="item-text-info">
-                                        <div style="display: flex; align-items: center; gap: 8px;">
-                                            <h4 style="margin: 0;">JI-PARANÁ VOLEIBOL FEMININO</h4>
-                                            <span style="font-size: 10px; font-weight: 800; color: #b45309; background: #fef3c7; padding: 2px 7px; border-radius: 3px;">PENDENTE DE ANÁLISE</span>
-                                        </div>
-                                        <div class="item-meta-sub" style="margin-top: 6px;">
-                                            <span><strong>Sede:</strong> Ji-Paraná - RO</span>
-                                            <span><strong>Nº da Inscrição:</strong> 146219</span>
-                                            <span><strong>Data/Hora:</strong> 09/09/2026 às 14:30</span>
-                                            <span><strong>Categoria:</strong> <span style="color: #1d4ed8; font-weight: 700;">Adulto Feminino</span></span>
-                                            <span><strong>Atletas:</strong> 3/12</span>
-                                            <span><strong>Comissão:</strong> 1</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div style="display: flex; gap: 8px;">
-                                    <button class="btn-action-text-green" onclick="alternarSubAbaTime('atletas')" title="Ver Atletas">
-                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                                        Visualizar
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- EQUIPE 4: ARIQUEMES BEACH VÔLEI -->
-                            <div class="fed-list-item" style="margin: 0; background: #ffffff;">
-                                <div class="item-left-block">
-                                    <img src="logos/logo_avv.png" alt="Escudo" class="item-shield-img">
-                                    <div class="item-text-info">
-                                        <div style="display: flex; align-items: center; gap: 8px;">
-                                            <h4 style="margin: 0;">ARIQUEMES BEACH VÔLEI (AREIA)</h4>
-                                            <span style="font-size: 10px; font-weight: 800; color: #166534; background: #dcfce7; padding: 2px 7px; border-radius: 3px;">HOMOLOGADA</span>
-                                        </div>
-                                        <div class="item-meta-sub" style="margin-top: 6px;">
-                                            <span><strong>Sede:</strong> Ariquemes - RO</span>
-                                            <span><strong>Nº da Inscrição:</strong> 882041</span>
-                                            <span><strong>Data/Hora:</strong> 28/09/2026 às 16:00</span>
-                                            <span><strong>Categoria:</strong> <span style="color: #1d4ed8; font-weight: 700;">Adulto Masculino (Praia)</span></span>
-                                            <span><strong>Atletas:</strong> 2/4</span>
-                                            <span><strong>Comissão:</strong> 1</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div style="display: flex; gap: 8px;">
-                                    <button class="btn-action-text-green" onclick="alternarSubAbaTime('atletas')" title="Ver Atletas">
-                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                                        Visualizar
                                     </button>
                                 </div>
                             </div>
@@ -600,337 +480,7 @@
                         </div>
                         
                         <div id="lista-cards-atletas">
-                            
-                            <!-- CARD ATLETA 1 -->
-                            <div class="card-atleta-fed" id="atleta-card-1914717" data-categoria="Adulto Masculino">
-                                <div class="atleta-card-top-bar">
-                                    <div class="atleta-checkbox-box">
-                                        <input type="checkbox">
-                                    </div>
-                                    <div class="atleta-top-badges">
-                                        <span class="atleta-tag-status">✓ CONCLUÍDO</span>
-                                    </div>
-                                </div>
-
-                                <div class="atleta-card-inner">
-                                    <div class="atleta-photo-box">
-                                        <img src="logos/mascote_coelho.png" class="atleta-img-thumb" id="img-ath-1914717" alt="Foto">
-                                        <img src="logos/logo_avv.png" class="atleta-club-badge" title="Associação Vilhenense de Voleibol" alt="AVV">
-                                    </div>
-                                    <div class="atleta-info-body">
-                                        <h4 class="atleta-nome-display">ADRIANO MARTINS GUIRRO</h4>
-                                        <div class="atleta-meta-txt">
-                                            <div class="atleta-meta-row">
-                                                <span class="atleta-meta-label">Inscrição:</span>
-                                                <span class="atleta-meta-val">1914717</span>
-                                            </div>
-                                            <div class="atleta-meta-row">
-                                                <span class="atleta-meta-label">Data/Hora:</span>
-                                                <span class="atleta-meta-val">10/09/2026 às 13:47</span>
-                                            </div>
-                                            <div class="atleta-meta-row">
-                                                <span class="atleta-meta-label">Posição:</span>
-                                                <span class="atleta-meta-val" style="color: #1d72f2;">Ponteiro</span>
-                                            </div>
-                                            <div class="atleta-meta-row">
-                                                <span class="atleta-meta-label">Gênero:</span>
-                                                <span class="atleta-meta-val">Masculino</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="atleta-card-actions">
-                                    <button class="btn-card-action btn-blue-action" onclick="abrirEdicaoAtleta('1914717', 'ADRIANO MARTINS GUIRRO', '064.797.809-14', '142857', '28/04/1988', 'Masculino', 'Ponteiro')" title="Editar Dados do Atleta">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                                        Editar
-                                    </button>
-                                    <button class="btn-card-action btn-cyan-action" onclick="abrirFichaAtleta('1914717', 'ADRIANO MARTINS GUIRRO')" title="Visualizar Ficha Oficial de Inscrição">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-                                        Ficha
-                                    </button>
-                                    <button class="btn-card-action btn-red-action" onclick="demitirAtleta('atleta-card-1914717', 'ADRIANO MARTINS GUIRRO')" title="Excluir ou Desvincular Atleta">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                                        Excluir
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- CARD ATLETA 2 -->
-                            <div class="card-atleta-fed" id="atleta-card-1914718" data-categoria="Adulto Masculino">
-                                <div class="atleta-card-top-bar">
-                                    <div class="atleta-checkbox-box">
-                                        <input type="checkbox">
-                                    </div>
-                                    <div class="atleta-top-badges">
-                                        <span class="atleta-tag-status">✓ CONCLUÍDO</span>
-                                    </div>
-                                </div>
-
-                                <div class="atleta-card-inner">
-                                    <div class="atleta-photo-box">
-                                        <img src="logos/mascote_coelho.png" class="atleta-img-thumb" id="img-ath-1914718" alt="Foto">
-                                        <img src="logos/logo_avv.png" class="atleta-club-badge" title="Associação Vilhenense de Voleibol" alt="AVV">
-                                    </div>
-                                    <div class="atleta-info-body">
-                                        <h4 class="atleta-nome-display">LUCAS GABRIEL SILVEIRA</h4>
-                                        <div class="atleta-meta-txt">
-                                            <div class="atleta-meta-row">
-                                                <span class="atleta-meta-label">Inscrição:</span>
-                                                <span class="atleta-meta-val">1914718</span>
-                                            </div>
-                                            <div class="atleta-meta-row">
-                                                <span class="atleta-meta-label">Data/Hora:</span>
-                                                <span class="atleta-meta-val">11/09/2026 às 15:20</span>
-                                            </div>
-                                            <div class="atleta-meta-row">
-                                                <span class="atleta-meta-label">Posição:</span>
-                                                <span class="atleta-meta-val" style="color: #1d72f2;">Levantador</span>
-                                            </div>
-                                            <div class="atleta-meta-row">
-                                                <span class="atleta-meta-label">Gênero:</span>
-                                                <span class="atleta-meta-val">Masculino</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="atleta-card-actions">
-                                    <button class="btn-card-action btn-blue-action" onclick="abrirEdicaoAtleta('1914718', 'LUCAS GABRIEL SILVEIRA', '864.213.902-11', '391024', '15/04/2004', 'Masculino', 'Levantador')" title="Editar Dados do Atleta">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                                        Editar
-                                    </button>
-                                    <button class="btn-card-action btn-cyan-action" onclick="abrirFichaAtleta('1914718', 'LUCAS GABRIEL SILVEIRA')" title="Visualizar Ficha Oficial de Inscrição">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-                                        Ficha
-                                    </button>
-                                    <button class="btn-card-action btn-red-action" onclick="demitirAtleta('atleta-card-1914718', 'LUCAS GABRIEL SILVEIRA')" title="Excluir ou Desvincular Atleta">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                                        Excluir
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- CARD ATLETA 3 (SUB-18) -->
-                            <div class="card-atleta-fed" id="atleta-card-744132" data-categoria="Sub-18 Masculino">
-                                <div class="atleta-card-top-bar">
-                                    <div class="atleta-checkbox-box">
-                                        <input type="checkbox">
-                                    </div>
-                                    <div class="atleta-top-badges">
-                                        <span class="atleta-tag-status">✓ CONCLUÍDO</span>
-                                    </div>
-                                </div>
-
-                                <div class="atleta-card-inner">
-                                    <div class="atleta-photo-box">
-                                        <img src="logos/mascote_coelho.png" class="atleta-img-thumb" id="img-ath-744132" alt="Foto">
-                                        <img src="logos/logo_avv.png" class="atleta-club-badge" title="Porto Velho Vôlei Clube" alt="AVV">
-                                    </div>
-                                    <div class="atleta-info-body">
-                                        <h4 class="atleta-nome-display">GABRIEL HENRIQUE SOUZA</h4>
-                                        <div class="atleta-meta-txt">
-                                            <div class="atleta-meta-row">
-                                                <span class="atleta-meta-label">Inscrição:</span>
-                                                <span class="atleta-meta-val">744132</span>
-                                            </div>
-                                            <div class="atleta-meta-row">
-                                                <span class="atleta-meta-label">Data/Hora:</span>
-                                                <span class="atleta-meta-val">22/09/2026 às 11:45</span>
-                                            </div>
-                                            <div class="atleta-meta-row">
-                                                <span class="atleta-meta-label">Posição:</span>
-                                                <span class="atleta-meta-val" style="color: #1d72f2;">Ponteiro</span>
-                                            </div>
-                                            <div class="atleta-meta-row">
-                                                <span class="atleta-meta-label">Gênero:</span>
-                                                <span class="atleta-meta-val">Sub-18 Masc</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="atleta-card-actions">
-                                    <button class="btn-card-action btn-blue-action" onclick="abrirEdicaoAtleta('744132', 'GABRIEL HENRIQUE SOUZA', '512.309.441-10', '881203', '11/05/2009', 'Masculino', 'Ponteiro')" title="Editar Dados do Atleta">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                                        Editar
-                                    </button>
-                                    <button class="btn-card-action btn-cyan-action" onclick="abrirFichaAtleta('744132', 'GABRIEL HENRIQUE SOUZA')" title="Visualizar Ficha Oficial de Inscrição">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-                                        Ficha
-                                    </button>
-                                    <button class="btn-card-action btn-red-action" onclick="demitirAtleta('atleta-card-744132', 'GABRIEL HENRIQUE SOUZA')" title="Excluir ou Desvincular Atleta">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                                        Excluir
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- CARD ATLETA 4 (SUB-15) -->
-                            <div class="card-atleta-fed" id="atleta-card-744133" data-categoria="Sub-15 Masculino">
-                                <div class="atleta-card-top-bar">
-                                    <div class="atleta-checkbox-box">
-                                        <input type="checkbox">
-                                    </div>
-                                    <div class="atleta-top-badges">
-                                        <span class="atleta-tag-status">✓ CONCLUÍDO</span>
-                                    </div>
-                                </div>
-
-                                <div class="atleta-card-inner">
-                                    <div class="atleta-photo-box">
-                                        <img src="logos/mascote_coelho.png" class="atleta-img-thumb" id="img-ath-744133" alt="Foto">
-                                        <img src="logos/logo_avv.png" class="atleta-club-badge" title="Porto Velho Vôlei Clube" alt="AVV">
-                                    </div>
-                                    <div class="atleta-info-body">
-                                        <h4 class="atleta-nome-display">MATHEUS VINÍCIUS ALVES</h4>
-                                        <div class="atleta-meta-txt">
-                                            <div class="atleta-meta-row">
-                                                <span class="atleta-meta-label">Inscrição:</span>
-                                                <span class="atleta-meta-val">744133</span>
-                                            </div>
-                                            <div class="atleta-meta-row">
-                                                <span class="atleta-meta-label">Data/Hora:</span>
-                                                <span class="atleta-meta-val">22/09/2026 às 11:50</span>
-                                            </div>
-                                            <div class="atleta-meta-row">
-                                                <span class="atleta-meta-label">Posição:</span>
-                                                <span class="atleta-meta-val" style="color: #1d72f2;">Levantador</span>
-                                            </div>
-                                            <div class="atleta-meta-row">
-                                                <span class="atleta-meta-label">Gênero:</span>
-                                                <span class="atleta-meta-val">Sub-15 Masc</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="atleta-card-actions">
-                                    <button class="btn-card-action btn-blue-action" onclick="abrirEdicaoAtleta('744133', 'MATHEUS VINÍCIUS ALVES', '619.882.104-55', '910234', '22/09/2011', 'Masculino', 'Levantador')" title="Editar Dados do Atleta">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                                        Editar
-                                    </button>
-                                    <button class="btn-card-action btn-cyan-action" onclick="abrirFichaAtleta('744133', 'MATHEUS VINÍCIUS ALVES')" title="Visualizar Ficha Oficial de Inscrição">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-                                        Ficha
-                                    </button>
-                                    <button class="btn-card-action btn-red-action" onclick="demitirAtleta('atleta-card-744133', 'MATHEUS VINÍCIUS ALVES')" title="Excluir ou Desvincular Atleta">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                                        Excluir
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- CARD ATLETA 5 (ADULTO FEMININO) -->
-                            <div class="card-atleta-fed" id="atleta-card-146220" data-categoria="Adulto Feminino">
-                                <div class="atleta-card-top-bar">
-                                    <div class="atleta-checkbox-box">
-                                        <input type="checkbox">
-                                    </div>
-                                    <div class="atleta-top-badges">
-                                        <span class="atleta-tag-status">✓ CONCLUÍDO</span>
-                                    </div>
-                                </div>
-
-                                <div class="atleta-card-inner">
-                                    <div class="atleta-photo-box">
-                                        <img src="logos/mascote_coelho.png" class="atleta-img-thumb" id="img-ath-146220" alt="Foto">
-                                        <img src="logos/logo_avv.png" class="atleta-club-badge" title="Ji-Paraná Voleibol Feminino" alt="AVV">
-                                    </div>
-                                    <div class="atleta-info-body">
-                                        <h4 class="atleta-nome-display">BEATRIZ HELENA RAMOS</h4>
-                                        <div class="atleta-meta-txt">
-                                            <div class="atleta-meta-row">
-                                                <span class="atleta-meta-label">Inscrição:</span>
-                                                <span class="atleta-meta-val">146220</span>
-                                            </div>
-                                            <div class="atleta-meta-row">
-                                                <span class="atleta-meta-label">Data/Hora:</span>
-                                                <span class="atleta-meta-val">09/09/2026 às 15:00</span>
-                                            </div>
-                                            <div class="atleta-meta-row">
-                                                <span class="atleta-meta-label">Posição:</span>
-                                                <span class="atleta-meta-val" style="color: #1d72f2;">Oposta</span>
-                                            </div>
-                                            <div class="atleta-meta-row">
-                                                <span class="atleta-meta-label">Gênero:</span>
-                                                <span class="atleta-meta-val">Feminino</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="atleta-card-actions">
-                                    <button class="btn-card-action btn-blue-action" onclick="abrirEdicaoAtleta('146220', 'BEATRIZ HELENA RAMOS', '318.990.412-88', '741258', '14/07/1997', 'Feminino', 'Oposta')" title="Editar Dados da Atleta">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                                        Editar
-                                    </button>
-                                    <button class="btn-card-action btn-cyan-action" onclick="abrirFichaAtleta('146220', 'BEATRIZ HELENA RAMOS')" title="Visualizar Ficha Oficial de Inscrição">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-                                        Ficha
-                                    </button>
-                                    <button class="btn-card-action btn-red-action" onclick="demitirAtleta('atleta-card-146220', 'BEATRIZ HELENA RAMOS')" title="Excluir ou Desvincular Atleta">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                                        Excluir
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- CARD ATLETA 6 (VÔLEI DE PRAIA) -->
-                            <div class="card-atleta-fed" id="atleta-card-882042" data-categoria="Adulto Masculino">
-                                <div class="atleta-card-top-bar">
-                                    <div class="atleta-checkbox-box">
-                                        <input type="checkbox">
-                                    </div>
-                                    <div class="atleta-top-badges">
-                                        <span class="atleta-tag-status">✓ CONCLUÍDO</span>
-                                    </div>
-                                </div>
-
-                                <div class="atleta-card-inner">
-                                    <div class="atleta-photo-box">
-                                        <img src="logos/mascote_coelho.png" class="atleta-img-thumb" id="img-ath-882042" alt="Foto">
-                                        <img src="logos/logo_avv.png" class="atleta-club-badge" title="Ariquemes Beach Vôlei" alt="AVV">
-                                    </div>
-                                    <div class="atleta-info-body">
-                                        <h4 class="atleta-nome-display">LUCAS MEDEIROS BARRETO</h4>
-                                        <div class="atleta-meta-txt">
-                                            <div class="atleta-meta-row">
-                                                <span class="atleta-meta-label">Inscrição:</span>
-                                                <span class="atleta-meta-val">882042</span>
-                                            </div>
-                                            <div class="atleta-meta-row">
-                                                <span class="atleta-meta-label">Data/Hora:</span>
-                                                <span class="atleta-meta-val">28/09/2026 às 16:15</span>
-                                            </div>
-                                            <div class="atleta-meta-row">
-                                                <span class="atleta-meta-label">Posição:</span>
-                                                <span class="atleta-meta-val" style="color: #1d72f2;">Defensor de Praia</span>
-                                            </div>
-                                            <div class="atleta-meta-row">
-                                                <span class="atleta-meta-label">Gênero:</span>
-                                                <span class="atleta-meta-val">Praia Masc</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="atleta-card-actions">
-                                    <button class="btn-card-action btn-blue-action" onclick="abrirEdicaoAtleta('882042', 'LUCAS MEDEIROS BARRETO', '719.330.122-45', '654987', '18/06/1995', 'Masculino', 'Defensor de Praia')" title="Editar Dados do Atleta">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                                        Editar
-                                    </button>
-                                    <button class="btn-card-action btn-cyan-action" onclick="abrirFichaAtleta('882042', 'LUCAS MEDEIROS BARRETO')" title="Visualizar Ficha Oficial de Inscrição">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-                                        Ficha
-                                    </button>
-                                    <button class="btn-card-action btn-red-action" onclick="demitirAtleta('atleta-card-882042', 'LUCAS MEDEIROS BARRETO')" title="Excluir ou Desvincular Atleta">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                                        Excluir
-                                    </button>
-                                </div>
-                            </div>
-
+                            <!-- Os atletas cadastrados pelo clube serão exibidos aqui -->
                         </div>
                     </div>
                 </div>
@@ -954,211 +504,7 @@
                         </div>
                         
                         <div id="lista-cards-tecnicos" style="padding: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; background: #f1f5f9;">
-                            
-                            <!-- CARD TÉCNICO 1 -->
-                            <div class="card-atleta-fed" id="tecnico-card-55012" style="border-top-color: #0f1c3f;">
-                                <div class="atleta-card-top-bar">
-                                    <div class="atleta-checkbox-box">
-                                        <input type="checkbox">
-                                    </div>
-                                    <div class="atleta-top-badges">
-                                        <span class="atleta-tag-status" style="background: #0f1c3f;">✓ HOMOLOGADO</span>
-                                    </div>
-                                </div>
-
-                                <div class="atleta-card-inner">
-                                    <div class="atleta-photo-box">
-                                        <img src="logos/mascote_coelho.png" class="atleta-img-thumb" id="img-tec-138248" alt="Foto">
-                                        <img src="logos/logo_avv.png" class="atleta-club-badge" title="Associação Vilhenense de Voleibol" alt="AVV">
-                                    </div>
-                                    <div class="atleta-info-body">
-                                        <h4 class="atleta-nome-display">GILVAN FERREIRA DA SILVA</h4>
-                                        <div class="atleta-meta-txt">
-                                            <div class="atleta-meta-row">
-                                                <span class="atleta-meta-label">Inscrição Técnica:</span>
-                                                <span class="atleta-meta-val">138248</span>
-                                            </div>
-                                            <div class="atleta-meta-row">
-                                                <span class="atleta-meta-label">Função / Cargo:</span>
-                                                <span class="atleta-meta-val" style="color: #0f766e;">Técnico</span>
-                                            </div>
-                                            <div class="atleta-meta-row">
-                                                <span class="atleta-meta-label">CPF:</span>
-                                                <span class="atleta-meta-val">662.394.782-53</span>
-                                            </div>
-                                            <div class="atleta-meta-row">
-                                                <span class="atleta-meta-label">Data/Hora:</span>
-                                                <span class="atleta-meta-val">10/09/2026 às 14:06</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="atleta-card-actions">
-                                    <button class="btn-card-action btn-blue-action" onclick="abrirEdicaoTecnico('138248', 'GILVAN FERREIRA DA SILVA', '662.394.782-53', '', '', 'Técnico', '')" title="Editar Dados do Técnico">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                                        Editar
-                                    </button>
-                                    <button class="btn-card-action btn-red-action" onclick="excluirTecnico('tecnico-card-55012', 'GILVAN FERREIRA DA SILVA')" title="Excluir Técnico">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                                        Excluir
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- CARD TÉCNICO 2 -->
-                            <div class="card-atleta-fed" id="tecnico-card-55013" style="border-top-color: #0f1c3f;">
-                                <div class="atleta-card-top-bar">
-                                    <div class="atleta-checkbox-box">
-                                        <input type="checkbox">
-                                    </div>
-                                    <div class="atleta-top-badges">
-                                        <span class="atleta-tag-status" style="background: #0f1c3f;">✓ HOMOLOGADO</span>
-                                    </div>
-                                </div>
-
-                                <div class="atleta-card-inner">
-                                    <div class="atleta-photo-box">
-                                        <img src="logos/mascote_coelho.png" class="atleta-img-thumb" id="img-tec-55013" alt="Foto">
-                                        <img src="logos/logo_avv.png" class="atleta-club-badge" title="Associação Vilhenense de Voleibol" alt="AVV">
-                                    </div>
-                                    <div class="atleta-info-body">
-                                        <h4 class="atleta-nome-display">ANA PAULA RIBEIRO</h4>
-                                        <div class="atleta-meta-txt">
-                                            <div class="atleta-meta-row">
-                                                <span class="atleta-meta-label">Inscrição Técnica:</span>
-                                                <span class="atleta-meta-val">55013</span>
-                                            </div>
-                                            <div class="atleta-meta-row">
-                                                <span class="atleta-meta-label">Função / Cargo:</span>
-                                                <span class="atleta-meta-val" style="color: #0f766e;">Assistente Técnica</span>
-                                            </div>
-                                            <div class="atleta-meta-row">
-                                                <span class="atleta-meta-label">CREF / Registro:</span>
-                                                <span class="atleta-meta-val">005118-G/RO</span>
-                                            </div>
-                                            <div class="atleta-meta-row">
-                                                <span class="atleta-meta-label">Data/Hora:</span>
-                                                <span class="atleta-meta-val">07/09/2026 às 14:10</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="atleta-card-actions">
-                                    <button class="btn-card-action btn-blue-action" onclick="abrirEdicaoTecnico('55013', 'ANA PAULA RIBEIRO', '521.849.330-91', '91024', '22/11/1985', 'Assistente Técnica', '005118-G/RO')" title="Editar Dados da Assistente">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                                        Editar
-                                    </button>
-                                    <button class="btn-card-action btn-red-action" onclick="excluirTecnico('tecnico-card-55013', 'ANA PAULA RIBEIRO')" title="Excluir Assistente">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                                        Excluir
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- CARD TÉCNICO 3 (TÉCNICO DE BASE) -->
-                            <div class="card-atleta-fed" id="tecnico-card-139880" style="border-top-color: #0f1c3f;">
-                                <div class="atleta-card-top-bar">
-                                    <div class="atleta-checkbox-box">
-                                        <input type="checkbox">
-                                    </div>
-                                    <div class="atleta-top-badges">
-                                        <span class="atleta-tag-status" style="background: #0f1c3f;">✓ HOMOLOGADO</span>
-                                    </div>
-                                </div>
-
-                                <div class="atleta-card-inner">
-                                    <div class="atleta-photo-box">
-                                        <img src="logos/mascote_coelho.png" class="atleta-img-thumb" id="img-tec-139880" alt="Foto">
-                                        <img src="logos/logo_avv.png" class="atleta-club-badge" title="Porto Velho Vôlei Clube" alt="AVV">
-                                    </div>
-                                    <div class="atleta-info-body">
-                                        <h4 class="atleta-nome-display">RODRIGO SANTORO DE SOUZA</h4>
-                                        <div class="atleta-meta-txt">
-                                            <div class="atleta-meta-row">
-                                                <span class="atleta-meta-label">Inscrição Técnica:</span>
-                                                <span class="atleta-meta-val">139880</span>
-                                            </div>
-                                            <div class="atleta-meta-row">
-                                                <span class="atleta-meta-label">Função / Cargo:</span>
-                                                <span class="atleta-meta-val" style="color: #0f766e;">Técnico Base</span>
-                                            </div>
-                                            <div class="atleta-meta-row">
-                                                <span class="atleta-meta-label">CREF / Registro:</span>
-                                                <span class="atleta-meta-val">006781-G/RO</span>
-                                            </div>
-                                            <div class="atleta-meta-row">
-                                                <span class="atleta-meta-label">Data/Hora:</span>
-                                                <span class="atleta-meta-val">22/09/2026 às 11:35</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="atleta-card-actions">
-                                    <button class="btn-card-action btn-blue-action" onclick="abrirEdicaoTecnico('139880', 'RODRIGO SANTORO DE SOUZA', '419.002.311-89', '881902', '14/08/1982', 'Técnico Base', '006781-G/RO')" title="Editar Dados do Técnico">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                                        Editar
-                                    </button>
-                                    <button class="btn-card-action btn-red-action" onclick="excluirTecnico('tecnico-card-139880', 'RODRIGO SANTORO DE SOUZA')" title="Excluir Técnico">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                                        Excluir
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- CARD TÉCNICO 4 (PREPARADOR FÍSICO) -->
-                            <div class="card-atleta-fed" id="tecnico-card-139001" style="border-top-color: #0f1c3f;">
-                                <div class="atleta-card-top-bar">
-                                    <div class="atleta-checkbox-box">
-                                        <input type="checkbox">
-                                    </div>
-                                    <div class="atleta-top-badges">
-                                        <span class="atleta-tag-status" style="background: #0f1c3f;">✓ HOMOLOGADO</span>
-                                    </div>
-                                </div>
-
-                                <div class="atleta-card-inner">
-                                    <div class="atleta-photo-box">
-                                        <img src="logos/mascote_coelho.png" class="atleta-img-thumb" id="img-tec-139001" alt="Foto">
-                                        <img src="logos/logo_avv.png" class="atleta-club-badge" title="Ji-Paraná Voleibol Feminino" alt="AVV">
-                                    </div>
-                                    <div class="atleta-info-body">
-                                        <h4 class="atleta-nome-display">MARCOS VINÍCIUS PRADO</h4>
-                                        <div class="atleta-meta-txt">
-                                            <div class="atleta-meta-row">
-                                                <span class="atleta-meta-label">Inscrição Técnica:</span>
-                                                <span class="atleta-meta-val">139001</span>
-                                            </div>
-                                            <div class="atleta-meta-row">
-                                                <span class="atleta-meta-label">Função / Cargo:</span>
-                                                <span class="atleta-meta-val" style="color: #0f766e;">Preparador Físico</span>
-                                            </div>
-                                            <div class="atleta-meta-row">
-                                                <span class="atleta-meta-label">CREF / Registro:</span>
-                                                <span class="atleta-meta-val">005432-G/RO</span>
-                                            </div>
-                                            <div class="atleta-meta-row">
-                                                <span class="atleta-meta-label">Data/Hora:</span>
-                                                <span class="atleta-meta-val">09/09/2026 às 14:35</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="atleta-card-actions">
-                                    <button class="btn-card-action btn-blue-action" onclick="abrirEdicaoTecnico('139001', 'MARCOS VINÍCIUS PRADO', '209.443.118-22', '741982', '10/05/1990', 'Preparador Físico', '005432-G/RO')" title="Editar Dados do Preparador">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                                        Editar
-                                    </button>
-                                    <button class="btn-card-action btn-red-action" onclick="excluirTecnico('tecnico-card-139001', 'MARCOS VINÍCIUS PRADO')" title="Excluir Preparador">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                                        Excluir
-                                    </button>
-                                </div>
-                            </div>
-
+                            <!-- Os membros da comissão técnica cadastrados pelo clube serão exibidos aqui -->
                         </div>
                     </div>
 
@@ -1656,67 +1002,7 @@
                                 </tr>
                             </thead>
                             <tbody id="vis-tabela-atletas-corpo">
-                                <!-- Linha Atleta 1 -->
-                                <tr id="row-roster-1914717">
-                                    <td style="text-align: center;">
-                                        <input type="checkbox" class="chk-atleta-roster chk-roster-custom" value="1914717" data-nome="ADRIANO MARTINS GUIRRO" data-cpf="064.797.809-14" data-rg="142857" data-nasc="28/04/1988" data-posicao="Ponteiro" data-genero="Masculino" data-foto="logos/mascote_coelho.png" onchange="atualizarEstadoSelecionarTodos()">
-                                    </td>
-                                    <td style="text-align: center;">
-                                        <img src="logos/mascote_coelho.png" class="atleta-roster-thumb" alt="Foto">
-                                    </td>
-                                    <td>
-                                        <strong style="color: #1e293b; font-size: 13px;">ADRIANO MARTINS GUIRRO</strong>
-                                        <div style="font-size: 11px; color: #64748b; margin-top: 2px;">CPF: 064.797.809-14 &bull; RG: 142857</div>
-                                    </td>
-                                    <td><strong style="color: #0f1c3f; font-size: 13px;">1914717</strong></td>
-                                    <td><span style="color: #1d72f2; font-weight: 700;">Ponteiro</span></td>
-                                    <td>Masculino</td>
-                                    <td><span class="badge-status-concluido">✓ Concluído</span></td>
-                                    <td style="text-align: center;">
-                                        <div style="display: flex; gap: 6px; justify-content: center;">
-                                            <button class="btn-table-icon" style="color: #1d72f2;" title="Editar Atleta" onclick="fecharModalVisualizarEquipe(); abrirEdicaoAtleta('1914717', 'ADRIANO MARTINS GUIRRO', '064.797.809-14', '142857', '28/04/1988', 'Masculino', 'Ponteiro')">
-                                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                                            </button>
-                                            <button class="btn-table-icon" style="color: #0f766e;" title="Ficha Oficial" onclick="abrirFichaAtleta('1914717', 'ADRIANO MARTINS GUIRRO')">
-                                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-                                            </button>
-                                            <button class="btn-table-icon" style="color: #dc2626;" title="Remover da Equipe" onclick="removerAtletaDaEquipeTabela('row-roster-1914717', 'ADRIANO MARTINS GUIRRO')">
-                                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-
-                                <!-- Linha Atleta 2 -->
-                                <tr id="row-roster-1914718">
-                                    <td style="text-align: center;">
-                                        <input type="checkbox" class="chk-atleta-roster chk-roster-custom" value="1914718" data-nome="LUCAS GABRIEL SILVEIRA" data-cpf="864.213.902-11" data-rg="391024" data-nasc="15/04/2008" data-posicao="Levantador" data-genero="Masculino" data-foto="logos/mascote_coelho.png" onchange="atualizarEstadoSelecionarTodos()">
-                                    </td>
-                                    <td style="text-align: center;">
-                                        <img src="logos/mascote_coelho.png" class="atleta-roster-thumb" alt="Foto">
-                                    </td>
-                                    <td>
-                                        <strong style="color: #1e293b; font-size: 13px;">LUCAS GABRIEL SILVEIRA</strong>
-                                        <div style="font-size: 11px; color: #64748b; margin-top: 2px;">CPF: 864.213.902-11 &bull; RG: 391024</div>
-                                    </td>
-                                    <td><strong style="color: #0f1c3f; font-size: 13px;">1914718</strong></td>
-                                    <td><span style="color: #1d72f2; font-weight: 700;">Levantador</span></td>
-                                    <td>Masculino</td>
-                                    <td><span class="badge-status-concluido">✓ Concluído</span></td>
-                                    <td style="text-align: center;">
-                                        <div style="display: flex; gap: 6px; justify-content: center;">
-                                            <button class="btn-table-icon" style="color: #1d72f2;" title="Editar Atleta" onclick="fecharModalVisualizarEquipe(); abrirEdicaoAtleta('1914718', 'LUCAS GABRIEL SILVEIRA', '864.213.902-11', '391024', '15/04/2008', 'Masculino', 'Levantador')">
-                                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                                            </button>
-                                            <button class="btn-table-icon" style="color: #0f766e;" title="Ficha Oficial" onclick="abrirFichaAtleta('1914718', 'LUCAS GABRIEL SILVEIRA')">
-                                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-                                            </button>
-                                            <button class="btn-table-icon" style="color: #dc2626;" title="Remover da Equipe" onclick="removerAtletaDaEquipeTabela('row-roster-1914718', 'LUCAS GABRIEL SILVEIRA')">
-                                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
+                                <!-- Atletas vinculados serão exibidos aqui -->
                             </tbody>
                         </table>
                     </div>
@@ -1767,60 +1053,9 @@
                             </tr>
                         </thead>
                         <tbody id="tabela-banco-atletas-corpo">
-                            <!-- Atleta disponível 1 (Concluído) -->
-                            <tr id="row-banco-1914725">
-                                <td style="text-align: center;">
-                                    <img src="logos/mascote_coelho.png" style="width: 30px; height: 30px; border-radius: 4px; object-fit: cover;" alt="Foto">
-                                </td>
-                                <td>
-                                    <strong>MATHEUS HENRIQUE COSTA</strong>
-                                    <div style="font-size: 10px; color: #64748b;">CPF: 912.443.109-22</div>
-                                </td>
-                                <td>1914725</td>
-                                <td><span style="color: #1d72f2; font-weight: 600;">Oposto</span></td>
-                                <td><span class="badge-status-concluido">✓ Concluído</span></td>
-                                <td style="text-align: center;">
-                                    <button class="btn-action-text-green" onclick="vincularAtletaConfirmado('1914725', 'MATHEUS HENRIQUE COSTA', '912.443.109-22', 'Oposto', 'Masculino', 'Concluído')" style="padding: 5px 12px; font-size: 11px; height: 30px; white-space: nowrap;">
-                                        + Vincular
-                                    </button>
-                                </td>
-                            </tr>
-
-                            <!-- Atleta disponível 2 (Concluído) -->
-                            <tr id="row-banco-1914730">
-                                <td style="text-align: center;">
-                                    <img src="logos/mascote_coelho.png" style="width: 30px; height: 30px; border-radius: 4px; object-fit: cover;" alt="Foto">
-                                </td>
-                                <td>
-                                    <strong>GABRIEL SCHMIDT BARBOSA</strong>
-                                    <div style="font-size: 10px; color: #64748b;">CPF: 721.554.801-44</div>
-                                </td>
-                                <td>1914730</td>
-                                <td><span style="color: #1d72f2; font-weight: 600;">Central</span></td>
-                                <td><span class="badge-status-concluido">✓ Concluído</span></td>
-                                <td style="text-align: center;">
-                                    <button class="btn-action-text-green" onclick="vincularAtletaConfirmado('1914730', 'GABRIEL SCHMIDT BARBOSA', '721.554.801-44', 'Central', 'Masculino', 'Concluído')" style="padding: 5px 12px; font-size: 11px; height: 30px; white-space: nowrap;">
-                                        + Vincular
-                                    </button>
-                                </td>
-                            </tr>
-
-                            <!-- Atleta disponível 3 (Pendente / Bloqueado para demonstrar validação de regra de negócio) -->
-                            <tr style="background: #fff1f2; opacity: 0.75;">
-                                <td style="text-align: center;">
-                                    <img src="logos/mascote_coelho.png" style="width: 30px; height: 30px; border-radius: 4px; object-fit: cover;" alt="Foto">
-                                </td>
-                                <td>
-                                    <strong>RODRIGO ALMEIDA PINTO</strong>
-                                    <div style="font-size: 10px; color: #e11d48; font-weight: 600;">Pendente de Autorização Médica</div>
-                                </td>
-                                <td>1914735</td>
-                                <td><span style="color: #64748b; font-weight: 600;">Líbero</span></td>
-                                <td><span class="badge-status-pendente">✕ Pendente</span></td>
-                                <td style="text-align: center;">
-                                    <button disabled style="background: #cbd5e1; color: #64748b; border: none; padding: 4px 10px; border-radius: 3px; font-size: 11px; font-weight: 700; cursor: not-allowed; text-transform: uppercase;" title="Apenas atletas com status Concluído podem ser vinculados">
-                                        Bloqueado
-                                    </button>
+                            <tr>
+                                <td colspan="6" style="text-align: center; padding: 24px; color: #64748b;">
+                                    Cadastre atletas na aba "Atletas" para vinculá-los à equipe.
                                 </td>
                             </tr>
                         </tbody>
@@ -2273,6 +1508,15 @@
         // Puxa dados da pré-inscrição realizada e sessão ativa
         document.addEventListener('DOMContentLoaded', () => {
             try {
+                // Limpeza de registros fictícios que possam ter ficado salvos em sessões de teste anteriores
+                if (!localStorage.getItem('avv_sistema_limpo_v2')) {
+                    const idsFicticios = ['eq-avv-principal', 'eq-porto-velho-base', 'eq-jiparana-fem', 'eq-ariquemes-beach'];
+                    const salvasDb = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
+                    const filtradas = salvasDb.filter(e => !idsFicticios.includes(e.id));
+                    localStorage.setItem('avv_equipes_completo_db', JSON.stringify(filtradas));
+                    localStorage.setItem('avv_sistema_limpo_v2', 'true');
+                }
+
                 // Prioriza a sessão ativa logada
                 const sessao = JSON.parse(localStorage.getItem('avv_sessao_ativa') || 'null');
                 let dadosEquipe = null;
@@ -2665,13 +1909,15 @@
                 }
             } catch(e) {}
 
-            // Fallback para as 4 variações padrão de agremiações do clube
-            return [
-                { id: 'eq-avv-principal', nomeTime: 'AVV VILHENA / SICREDI', cidade: 'Vilhena', estado: 'RO', categoria: 'Adulto Masculino', status: 'Homologado' },
-                { id: 'eq-porto-velho-base', nomeTime: 'PORTO VELHO VÔLEI CLUBE (BASE)', cidade: 'Porto Velho', estado: 'RO', categoria: 'Sub-15 Masculino', status: 'Pendente' },
-                { id: 'eq-jiparana-fem', nomeTime: 'JI-PARANÁ VOLEIBOL FEMININO', cidade: 'Ji-Paraná', estado: 'RO', categoria: 'Adulto Feminino', status: 'Pendente' },
-                { id: 'eq-ariquemes-beach', nomeTime: 'ARIQUEMES BEACH VÔLEI', cidade: 'Ariquemes', estado: 'RO', categoria: 'Adulto Masculino', status: 'Homologado' }
-            ];
+            // Caso ainda não haja no banco unificado, usa os dados do card da equipe atual se preenchido
+            const nomeCard = document.getElementById('team-name-card')?.textContent.trim();
+            const catCard = document.getElementById('team-cat-card')?.textContent.trim() || 'Adulto Masculino';
+            if (nomeCard && nomeCard !== 'SUA EQUIPE') {
+                return [
+                    { id: 'eq-atual', nomeTime: nomeCard, cidade: 'Vilhena', estado: 'RO', categoria: catCard, status: 'Pendente' }
+                ];
+            }
+            return [];
         }
 
         function confirmarInscricaoPelaSubpagina() {
@@ -2706,10 +1952,12 @@
             const dataStr = agora.toLocaleDateString('pt-BR');
             const horaStr = agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
 
-            const nomeEquipe = equipe ? equipe.nomeTime : 'AVV VILHENA / SICREDI';
-            const catEquipe = equipe ? equipe.categoria : 'Adulto Masculino';
+            const nomeEquipe = equipe ? equipe.nomeTime : (document.getElementById('team-name-card')?.textContent.trim() || 'Sua Equipe');
+            const catEquipe = equipe ? equipe.categoria : (document.getElementById('team-cat-card')?.textContent.trim() || 'Adulto Masculino');
 
             const container = document.getElementById('lista-inscricoes-confirmadas');
+            const msgVazio = document.getElementById('msg-sem-inscricoes-confirmadas');
+            if (msgVazio) msgVazio.remove();
 
             const item = document.createElement('div');
             item.className = 'fed-list-item';

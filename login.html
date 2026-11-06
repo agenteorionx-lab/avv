@@ -365,17 +365,6 @@
                 eq = inscricoes.find(item => (item.email || '').toLowerCase() === email);
             }
 
-            // Se for a equipe padrão de demonstração
-            if (!eq && (email === 'contato@avv.com.br' || email === 'contato@portovelhovolei.com.br' || email === 'anapaula@jiparanafc.com.br' || email === 'felipe@ariquemesbeach.com.br')) {
-                eq = {
-                    id: 'eq-avv-principal',
-                    nomeTime: 'AVV VILHENA / SICREDI',
-                    responsavelNome: 'Silomar Silva',
-                    email: email,
-                    senha: '123'
-                };
-            }
-
             if (!eq) {
                 exibirAlertaLogin('E-mail não encontrado no sistema. Faça a pré-inscrição da sua equipe antes de acessar.', 'error');
                 return;
@@ -468,8 +457,7 @@
             const inscricoes = JSON.parse(localStorage.getItem('avv_inscricoes_teste') || '[]');
 
             const eq = equipes.find(item => (item.email || '').toLowerCase() === email) ||
-                       inscricoes.find(item => (item.email || '').toLowerCase() === email) ||
-                       (email === 'contato@avv.com.br' ? { responsavelNome: 'Silomar Silva', nomeTime: 'AVV Vilhena' } : null);
+                       inscricoes.find(item => (item.email || '').toLowerCase() === email);
 
             if (!eq) {
                 alertBox.textContent = 'E-mail não localizado no sistema da federação. Verifique o endereço digitado.';
