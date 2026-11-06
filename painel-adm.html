@@ -72,15 +72,35 @@
                 </a>
             </li>
         </ul>
-
-        <!-- RODAPÉ DE USUÁRIO ADMINISTRADOR -->
-        <div class="sidebar-fed-footer">
-            <div style="display: flex; align-items: center; gap: 10px; padding: 6px 10px;">
-                <div class="user-avatar-badge" style="background: #c5a021; color: #0f1c3f; font-weight: 800;">ADM</div>
-                <div class="user-details">
-                    <span class="user-name">Administrador Geral</span>
-                    <span class="user-role" style="color: #cbd5e1;">Diretoria Técnica AVV</span>
+<!-- RODAPÉ DE USUÁRIO ADMINISTRADOR COM DROPDOWN DE PERFIL -->
+        <div class="sidebar-fed-footer" style="position: relative;">
+            <button class="user-profile-trigger" id="adm-profile-trigger-btn" onclick="toggleAdmProfileDropdown()" style="width: 100%; display: flex; align-items: center; justify-content: space-between; background: none; border: none; padding: 8px 10px; cursor: pointer; border-radius: 6px; text-align: left;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div class="user-avatar-badge" style="background: #c5a021; color: #0f1c3f; font-weight: 800;">ADM</div>
+                    <div class="user-details">
+                        <span class="user-name" id="adm-user-display-name">Administrador Geral</span>
+                        <span class="user-role" id="adm-user-display-role" style="color: #cbd5e1;">Diretoria Técnica AVV</span>
+                    </div>
                 </div>
+                <svg class="user-arrow-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="2">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </button>
+
+            <!-- MENU SUSPENSO DO ADM -->
+            <div class="user-dropdown-menu" id="adm-user-dropdown-popup" style="bottom: 70px; left: 10px; width: calc(100% - 20px);">
+                <button class="user-dropdown-item" onclick="abrirPerfilAdmPeloDropdown()">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                    Meus Dados
+                </button>
+                <button class="user-dropdown-item" onclick="abrirPerfilAdmPeloDropdown()">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                    Mudar Minha Senha
+                </button>
+                <button class="user-dropdown-item danger" onclick="executarLogoutAdm()" style="width: 100%; border: none; background: none; text-align: left; cursor: pointer;">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                    Sair da Conta
+                </button>
             </div>
         </div>
     </aside>
@@ -488,6 +508,75 @@
 
             </section>
 
+            <!-- ============================================================== -->
+            <!-- 5. ABA: MEUS DADOS / PERFIL DO ADMINISTRADOR                    -->
+            <!-- ============================================================== -->
+            <section id="tab-adm-perfil" class="tab-pane">
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start;">
+                    
+                    <!-- COLUNA ESQUERDA: DADOS DO ADMINISTRADOR -->
+                    <div class="fed-card-container" style="margin-bottom: 0;">
+                        <div style="background: #0f1c3f; color: #ffffff; padding: 12px 18px; font-size: 11px; font-weight: 800; text-transform: uppercase;">
+                            DADOS DO ADMINISTRADOR
+                        </div>
+                        
+                        <div style="padding: 24px;">
+                            <div style="display: flex; flex-direction: column; gap: 14px;">
+                                <div>
+                                    <label style="display: block; font-size: 11px; font-weight: 700; color: #334155; margin-bottom: 4px;">NOME / CARGO *</label>
+                                    <input type="text" id="adm-prof-nome" style="width: 100%; height: 38px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 13px;" value="Administrador Geral">
+                                </div>
+
+                                <div>
+                                    <label style="display: block; font-size: 11px; font-weight: 700; color: #334155; margin-bottom: 4px;">SETOR / DEPARTAMENTO</label>
+                                    <input type="text" id="adm-prof-setor" style="width: 100%; height: 38px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 13px;" value="Diretoria Técnica AVV">
+                                </div>
+
+                                <div>
+                                    <label style="display: block; font-size: 11px; font-weight: 700; color: #334155; margin-bottom: 4px;">E-MAIL ADMINISTRATIVO *</label>
+                                    <input type="email" id="adm-prof-email" style="width: 100%; height: 38px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 13px;" value="admin@avv.com.br">
+                                </div>
+
+                                <button class="btn-action-text-green" style="align-self: flex-start; margin-top: 8px;" onclick="salvarDadosAdm()">
+                                    ✓ SALVAR DADOS
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- COLUNA DIREITA: ALTERAR SENHA ADMINISTRATIVA -->
+                    <div class="fed-card-container" style="margin-bottom: 0;">
+                        <div style="background: #0f1c3f; color: #ffffff; padding: 12px 18px; font-size: 11px; font-weight: 800; text-transform: uppercase;">
+                            ALTERAR SENHA DE ADMINISTRADOR
+                        </div>
+                        <div style="padding: 24px;">
+                            <p style="font-size: 12px; color: #64748b; margin-bottom: 20px; line-height: 1.5;">
+                                Altere a senha de acesso administrativo à federação. Mantenha essa credencial segura.
+                            </p>
+                            <div style="display: flex; flex-direction: column; gap: 14px;">
+                                <div>
+                                    <label style="display: block; font-size: 11px; font-weight: 700; color: #334155; margin-bottom: 4px;">SENHA ATUAL *</label>
+                                    <input type="password" id="adm-pass-atual" style="width: 100%; height: 38px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 13px;" placeholder="Digite a senha atual">
+                                </div>
+                                <div>
+                                    <label style="display: block; font-size: 11px; font-weight: 700; color: #334155; margin-bottom: 4px;">NOVA SENHA *</label>
+                                    <input type="password" id="adm-pass-nova" style="width: 100%; height: 38px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 13px;" placeholder="Digite a nova senha">
+                                </div>
+                                <div>
+                                    <label style="display: block; font-size: 11px; font-weight: 700; color: #334155; margin-bottom: 4px;">CONFIRMAR NOVA SENHA *</label>
+                                    <input type="password" id="adm-pass-confirma" style="width: 100%; height: 38px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 13px;" placeholder="Repita a nova senha">
+                                </div>
+                                <button class="btn-action-text-green" style="align-self: flex-start; margin-top: 8px;" onclick="alterarSenhaAdm()">
+                                    ✓ ATUALIZAR SENHA
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </section>
         </main>
     </div>
 
@@ -2323,6 +2412,90 @@
                 window.location.href = 'login.html';
             }
         }
+    
+        // Funções de Gestão do Perfil do Administrador
+        function toggleAdmProfileDropdown() {
+            const popup = document.getElementById('adm-user-dropdown-popup');
+            const btn = document.getElementById('adm-profile-trigger-btn');
+            if (popup) popup.classList.toggle('active');
+            if (btn) btn.classList.toggle('active');
+        }
+
+        function abrirPerfilAdmPeloDropdown() {
+            switchAdmTab('perfil', null);
+            document.getElementById('adm-user-dropdown-popup')?.classList.remove('active');
+            document.getElementById('adm-profile-trigger-btn')?.classList.remove('active');
+        }
+
+        document.addEventListener('click', (e) => {
+            const footer = document.querySelector('.sidebar-fed-footer');
+            if (footer && !footer.contains(e.target)) {
+                document.getElementById('adm-user-dropdown-popup')?.classList.remove('active');
+                document.getElementById('adm-profile-trigger-btn')?.classList.remove('active');
+            }
+        });
+
+        function salvarDadosAdm() {
+            const nome = document.getElementById('adm-prof-nome')?.value.trim();
+            const setor = document.getElementById('adm-prof-setor')?.value.trim();
+            const email = document.getElementById('adm-prof-email')?.value.trim();
+
+            if (!nome || !email) {
+                alert('Nome e E-mail são obrigatórios.');
+                return;
+            }
+
+            const dadosAdm = {
+                tipo: 'adm',
+                usuario: nome,
+                setor: setor || 'Diretoria Técnica AVV',
+                email: email,
+                timestamp: Date.now()
+            };
+
+            localStorage.setItem('avv_sessao_adm', JSON.stringify(dadosAdm));
+            const elNome = document.getElementById('adm-user-display-name');
+            const elRole = document.getElementById('adm-user-display-role');
+            if (elNome) elNome.textContent = nome;
+            if (elRole) elRole.textContent = setor || 'Diretoria Técnica AVV';
+
+            alert('Dados do Administrador atualizados com sucesso!');
+        }
+
+        function alterarSenhaAdm() {
+            const atual = document.getElementById('adm-pass-atual')?.value;
+            const nova = document.getElementById('adm-pass-nova')?.value;
+            const confirma = document.getElementById('adm-pass-confirma')?.value;
+
+            const senhaGravada = localStorage.getItem('avv_adm_senha') || 'admin123';
+
+            if (atual !== senhaGravada) {
+                alert('Senha atual incorreta.');
+                return;
+            }
+
+            if (!nova || nova.length < 6) {
+                alert('A nova senha deve ter no mínimo 6 caracteres.');
+                return;
+            }
+
+            if (nova !== confirma) {
+                alert('A confirmação não coincide com a nova senha digitada.');
+                return;
+            }
+
+            localStorage.setItem('avv_adm_senha', nova);
+            alert('✓ Senha administrativa alterada com sucesso!');
+            document.getElementById('adm-pass-atual').value = '';
+            document.getElementById('adm-pass-nova').value = '';
+            document.getElementById('adm-pass-confirma').value = '';
+        }
+
+        function executarLogoutAdm() {
+            localStorage.removeItem('avv_sessao_adm');
+            window.location.href = 'login.html';
+        }
+
     </script>
 </body>
 </html>

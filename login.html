@@ -401,12 +401,16 @@
             const user = document.getElementById('adm-login-user').value.trim().toLowerCase();
             const pass = document.getElementById('adm-login-pass').value;
 
-            // Credencial administrativa padrão
-            if ((user === 'admin@avv.com.br' || user === 'admin') && pass === 'admin123') {
+            const senhaAdmValida = localStorage.getItem('avv_adm_senha') || 'admin123';
+
+            // Credencial administrativa padrão ou alterada
+            if ((user === 'admin@avv.com.br' || user === 'admin') && pass === senhaAdmValida) {
+                const dadosSalvos = JSON.parse(localStorage.getItem('avv_sessao_adm') || '{}');
                 const sessaoAdm = {
                     tipo: 'adm',
-                    usuario: 'Administrador AVV',
-                    email: 'admin@avv.com.br',
+                    usuario: dadosSalvos.usuario || 'Administrador AVV',
+                    email: dadosSalvos.email || 'admin@avv.com.br',
+                    setor: dadosSalvos.setor || 'Diretoria Técnica AVV',
                     timestamp: Date.now()
                 };
                 localStorage.setItem('avv_sessao_adm', JSON.stringify(sessaoAdm));
