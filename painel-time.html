@@ -408,38 +408,13 @@
                     <div class="fed-card-container">
                         <div class="fed-header-gold">EQUIPES CADASTRADAS PELO SEU CLUBE</div>
                         
-                        <div style="display: flex; flex-direction: column; gap: 12px; padding: 14px; background: #f8fafc;">
-                            
-                            <!-- EQUIPE DO CLUBE LOGADO -->
-                            <div class="fed-list-item" style="margin: 0; background: #ffffff;">
-                                <div class="item-left-block">
-                                    <img src="logos/logo_avv.png" alt="Escudo" class="item-shield-img">
-                                    <div class="item-text-info">
-                                        <div style="display: flex; align-items: center; gap: 8px;">
-                                            <h4 id="team-name-card" style="margin: 0;">SUA EQUIPE</h4>
-                                            <span id="team-status-badge-card" style="font-size: 10px; font-weight: 800; color: #b45309; background: #fef3c7; padding: 2px 7px; border-radius: 3px;">AGUARDANDO HOMOLOGAÇÃO</span>
-                                        </div>
-                                        <div class="item-meta-sub" id="team-meta-container" style="margin-top: 6px;">
-                                            <span><strong>Sede:</strong> <span id="team-city-card">Vilhena - RO</span></span>
-                                            <span><strong>Nº da Inscrição:</strong> <span id="team-num-card">---</span></span>
-                                            <span><strong>Data/Hora:</strong> <span id="team-data-card">--/--/----</span> às <span id="team-hora-card">--:--</span></span>
-                                            <span><strong>Categoria:</strong> <span id="team-cat-card" style="color: #1d4ed8; font-weight: 700;">Adulto Masculino</span></span>
-                                            <span><strong>Atletas:</strong> <span id="count-atletas">0</span>/12</span>
-                                            <span><strong>Comissão:</strong> <span id="count-tecnicos">0</span></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div style="display: flex; gap: 8px;">
-                                    <button class="btn-action-text-green" onclick="abrirModalVisualizarEquipe()" title="Visualizar Dados da Equipe e Atletas Vinculados">
-                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                                        Visualizar
-                                    </button>
-                                    <button class="btn-action-green" title="Editar Dados da Equipe" onclick="abrirModalTime('editar')">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                                    </button>
-                                </div>
+                        <div id="lista-equipes-cadastradas-clube" style="display: flex; flex-direction: column; gap: 12px; padding: 14px; background: #f8fafc;">
+                            <div id="msg-sem-equipe-cadastrada" style="padding: 32px 20px; text-align: center; color: #64748b; font-size: 13px; background: #ffffff; border: 1px dashed #cbd5e1; border-radius: 4px;">
+                                <p style="margin: 0 0 10px 0;">Nenhuma equipe cadastrada para esta agremiação.</p>
+                                <button onclick="abrirModalTime('novo')" class="btn-action-text-green" style="margin: 0 auto; font-size: 12px; height: 34px; padding: 0 16px;">
+                                    + Cadastrar Primeira Equipe
+                                </button>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -1427,6 +1402,65 @@
         });
 
         // Alternância de Sub-páginas na aba "Meus Times" (Equipes, Atletas, Comissão)
+        
+        function renderizarEquipesClubeView(equipes) {
+            const container = document.getElementById('lista-equipes-cadastradas-clube');
+            if (!container) return;
+
+            if (!equipes || equipes.length === 0) {
+                container.innerHTML = `
+                    <div id="msg-sem-equipe-cadastrada" style="padding: 32px 20px; text-align: center; color: #64748b; font-size: 13px; background: #ffffff; border: 1px dashed #cbd5e1; border-radius: 4px;">
+                        <p style="margin: 0 0 10px 0;">Nenhuma equipe cadastrada para esta agremiação.</p>
+                        <button onclick="abrirModalTime('novo')" class="btn-action-text-green" style="margin: 0 auto; font-size: 12px; height: 34px; padding: 0 16px;">
+                            + Cadastrar Primeira Equipe
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = '';
+            equipes.forEach(eq => {
+                const item = document.createElement('div');
+                item.className = 'fed-list-item';
+                item.style.margin = '0';
+                item.style.background = '#ffffff';
+                const statusBadge = eq.status === 'Homologado'
+                    ? '<span style="font-size: 10px; font-weight: 800; color: #15803d; background: #dcfce7; padding: 2px 7px; border-radius: 3px;">HOMOLOGADO</span>'
+                    : '<span style="font-size: 10px; font-weight: 800; color: #b45309; background: #fef3c7; padding: 2px 7px; border-radius: 3px;">AGUARDANDO HOMOLOGAÇÃO</span>';
+
+                item.innerHTML = `
+                    <div class="item-left-block">
+                        <img src="${eq.logo || 'logos/logo_avv.png'}" alt="Escudo" class="item-shield-img">
+                        <div class="item-text-info">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <h4 id="team-name-card" style="margin: 0;">${eq.nomeTime}</h4>
+                                ${statusBadge}
+                            </div>
+                            <div class="item-meta-sub" id="team-meta-container" style="margin-top: 6px;">
+                                <span><strong>Sede:</strong> <span id="team-city-card">${eq.cidade || 'Vilhena'} - ${eq.estado || 'RO'}</span></span>
+                                <span><strong>Nº da Inscrição:</strong> <span id="team-num-card">${eq.numeroInscricao || '---'}</span></span>
+                                <span><strong>Data/Hora:</strong> <span id="team-data-card">${eq.dataInscricao || '--/--/----'}</span> às <span id="team-hora-card">${eq.horaInscricao || '--:--'}</span></span>
+                                <span><strong>Categoria:</strong> <span id="team-cat-card" style="color: #1d4ed8; font-weight: 700;">${eq.categoria || (eq.categorias && eq.categorias[0]) || 'Adulto Masculino'}</span></span>
+                                <span><strong>Atletas:</strong> <span id="count-atletas">${(eq.atletas || []).length}</span>/12</span>
+                                <span><strong>Comissão:</strong> <span id="count-tecnicos">${(eq.comissao || []).length}</span></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn-action-text-green" onclick="abrirModalVisualizarEquipe()" title="Visualizar Dados da Equipe e Atletas Vinculados">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                            Visualizar
+                        </button>
+                        <button class="btn-action-green" title="Editar Dados da Equipe" onclick="abrirModalTime('editar')">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
         function alternarSubAbaTime(subTipo) {
             const btnEquipes = document.getElementById('btn-subtab-equipes');
             const btnAtletas = document.getElementById('btn-subtab-atletas');
@@ -1520,13 +1554,13 @@
         document.addEventListener('DOMContentLoaded', () => {
             try {
                 // Limpeza de registros fictícios que possam ter ficado salvos em sessões de teste anteriores
-                if (!localStorage.getItem('avv_sistema_limpo_v2')) {
-                    const idsFicticios = ['eq-avv-principal', 'eq-porto-velho-base', 'eq-jiparana-fem', 'eq-ariquemes-beach'];
-                    const salvasDb = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
-                    const filtradas = salvasDb.filter(e => !idsFicticios.includes(e.id));
-                    localStorage.setItem('avv_equipes_completo_db', JSON.stringify(filtradas));
-                    localStorage.setItem('avv_sistema_limpo_v2', 'true');
-                }
+                if (!localStorage.getItem('avv_sistema_limpo_v4')) {
+                try {
+                    localStorage.removeItem('avv_banco_campeonatos');
+                    localStorage.setItem('avv_banco_campeonatos', JSON.stringify({}));
+                } catch(e) {}
+                localStorage.setItem('avv_sistema_limpo_v4', 'true');
+            }
 
                 // Prioriza a sessão ativa logada
                 const sessao = JSON.parse(localStorage.getItem('avv_sessao_ativa') || 'null');
@@ -1548,6 +1582,8 @@
                     if (salvas.length > 0) dadosEquipe = salvas[salvas.length - 1];
                 }
 
+                const equipesClube = dadosEquipe ? [dadosEquipe] : [];
+                renderizarEquipesClubeView(equipesClube);
                 if (dadosEquipe) {
                     const ult = dadosEquipe;
                     const elUserNome = document.getElementById('user-display-name');

@@ -968,15 +968,12 @@
                 return;
             }
             // Remove dados fictícios de demonstração caso tenham ficado salvos no navegador
-            if (!localStorage.getItem('avv_sistema_limpo_v3')) {
+            if (!localStorage.getItem('avv_sistema_limpo_v4')) {
                 try {
-                    const idsFicticios = ['eq-avv-principal', 'eq-porto-velho-base', 'eq-jiparana-fem', 'eq-ariquemes-beach'];
-                    const salvo = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
-                    const limpo = salvo.filter(e => !idsFicticios.includes(e.id));
-                    localStorage.setItem('avv_equipes_completo_db', JSON.stringify(limpo));
                     localStorage.removeItem('avv_banco_campeonatos');
+                    localStorage.setItem('avv_banco_campeonatos', JSON.stringify({}));
                 } catch(e) {}
-                localStorage.setItem('avv_sistema_limpo_v3', 'true');
+                localStorage.setItem('avv_sistema_limpo_v4', 'true');
             }
 
             carregarCampeonatos();
