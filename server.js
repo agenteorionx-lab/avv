@@ -44,11 +44,14 @@ async function criarTransporter() {
 
     if (process.env.SMTP_USER && process.env.SMTP_PASS) {
         transporterCache = nodemailer.createTransport({
-            host: process.env.SMTP_HOST || 'smtp.gmail.com',
-            port: Number(process.env.SMTP_PORT) || 587,
-            secure: process.env.SMTP_SECURE === 'true',
+            host: process.env.SMTP_HOST || '162.241.203.81',
+            port: Number(process.env.SMTP_PORT) || 465,
+            secure: process.env.SMTP_SECURE ? process.env.SMTP_SECURE === 'true' : true,
             pool: true,
             maxConnections: 3,
+            tls: {
+                rejectUnauthorized: false
+            },
             auth: {
                 user: process.env.SMTP_USER,
                 pass: process.env.SMTP_PASS

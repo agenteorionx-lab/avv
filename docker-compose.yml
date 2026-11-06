@@ -5,6 +5,8 @@ services:
       - traefik_public
     ports:
       - "3006:3006"
+    env_file:
+      - .env
     environment:
       - PORT=3006
     deploy:
