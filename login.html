@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acesso ao Sistema | Associação Vilhenense de Voleibol - AVV</title>
+    <!-- Tipografia Corporativa Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="inscricao.css">
+    <style>
+        .login-card {
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(15, 28, 63, 0.12);
+            border: 1px solid #cbd5e1;
+            max-width: 440px;
+            width: 100%;
+            margin: 40px auto;
+            overflow: hidden;
+        }
+        .login-tabs {
+            display: flex;
+            background: #f1f5f9;
+            border-bottom: 1px solid #cbd5e1;
+        }
+        .login-tab-btn {
+            flex: 1;
+            padding: 13px 10px;
+            font-size: 12px;
+            font-weight: 700;
+            text-align: center;
+            color: #64748b;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+        .login-tab-btn.active {
+            background: #ffffff;
+            color: var(--c-navy);
+            border-bottom: 2px solid var(--c-navy);
+        }
+        .login-body {
+            padding: 28px 26px;
+        }
+        .login-input-group {
+            margin-bottom: 16px;
+        }
+        .login-input-group label {
+            display: block;
+            font-size: 11px;
+            font-weight: 800;
+            color: #0f1c3f;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            letter-spacing: 0.3px;
+        }
+        .login-input-field {
+            width: 100%;
+            height: 42px;
+            padding: 0 12px;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #1e293b;
+            transition: border-color 0.2s;
+            font-family: 'Inter', sans-serif;
+            background: #ffffff;
+        }
+        .login-input-field:focus {
+            outline: none;
+            border-color: var(--c-navy);
+        }
+        .btn-login-submit {
+            width: 100%;
+            height: 44px;
+            background: var(--c-navy);
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            font-size: 12.5px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .btn-login-submit:hover {
+            background: #192b5a;
+        }
+        .alert-login-box {
+            display: none;
+            padding: 10px 14px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-bottom: 16px;
+            line-height: 1.4;
+        }
+        .alert-login-box.error {
+            display: block;
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+        .alert-login-box.success {
+            display: block;
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+    </style>
+</head>
+<body style="min-height: 100vh; display: flex; flex-direction: column; background: #f8fafc;">
+
+    <!-- TOPBAR INSTITUCIONAL -->
+    <div class="gov-topbar">
+        <div class="container">
+            <span>SISTEMA INTEGRADO DE COMPETIÇÕES &bull; RONDÔNIA</span>
+            <span>AUTENTICAÇÃO DE USUÁRIOS</span>
+        </div>
+    </div>
+
+    <!-- HEADER PRINCIPAL -->
+    <header class="site-header">
+        <div class="container">
+            <a href="index.html" class="site-brand">
+                <img src="logos/logo_avv.png" alt="AVV Logo" class="site-logo">
+                <div class="brand-titles">
+                    <span class="line-small">ASSOCIAÇÃO VILHENENSE</span>
+                    <span class="line-large">DE VOLEIBOL</span>
+                </div>
+            </a>
+            <nav class="site-nav">
+                <a href="index.html">Portal AVV</a>
+                <a href="inscricao.html" class="btn-nav-action" style="background: transparent; color: var(--c-navy); border: 1.5px solid var(--c-navy);">+ Pré-Inscrição</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ÁREA CENTRAL DE LOGIN -->
+    <main style="flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px;">
+        <div class="login-card">
+            
+            <!-- CABEÇALHO COM TÍTULO E ABAS DE ACESSO -->
+            <div style="background: var(--c-navy); color: #ffffff; padding: 18px 24px; text-align: center; border-bottom: 3px solid #c5a021;">
+                <h3 style="font-size: 15px; font-weight: 900; margin: 0; text-transform: uppercase; letter-spacing: 0.6px;">Portal de Acesso Oficial</h3>
+                <span style="font-size: 11px; color: #cbd5e1; display: block; margin-top: 4px;">Associação Vilhenense de Voleibol</span>
+            </div>
+
+            <div class="login-tabs">
+                <button type="button" class="login-tab-btn active" id="tab-btn-time" onclick="alternarTipoLogin('time')">
+                    Área do Clube / Time
+                </button>
+                <button type="button" class="login-tab-btn" id="tab-btn-adm" onclick="alternarTipoLogin('adm')">
+                    Diretoria / ADM
+                </button>
+            </div>
+
+            <div class="login-body">
+                
+                <div id="login-alert-msg" class="alert-login-box"></div>
+
+                <!-- FORMULÁRIO DE LOGIN DO TIME -->
+                <form id="form-login-time" onsubmit="executarLoginTime(event)">
+                    <div class="login-input-group">
+                        <label for="time-login-email">E-mail Institucional Cadastrado</label>
+                        <input type="email" id="time-login-email" class="login-input-field" placeholder="contato@equipe.com.br" required>
+                    </div>
+
+                    <div class="login-input-group">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                            <label for="time-login-pass" style="margin-bottom: 0;">Senha de Acesso</label>
+                            <a href="javascript:void(0)" onclick="abrirModalRecuperarSenha()" style="font-size: 10.5px; color: #2563eb; text-decoration: none; font-weight: 600;">Esqueceu a senha?</a>
+                        </div>
+                        <input type="password" id="time-login-pass" class="login-input-field" placeholder="Digite sua senha cadastrada" required>
+                    </div>
+
+                    <button type="submit" class="btn-login-submit" style="background: #16a34a;">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>
+                        Entrar na Área do Clube
+                    </button>
+
+                    <div style="margin-top: 18px; text-align: center; border-top: 1px solid #e2e8f0; padding-top: 14px; font-size: 11.5px; color: #64748b;">
+                        Ainda não cadastrou sua agremiação?<br>
+                        <a href="inscricao.html" style="color: var(--c-navy); font-weight: 800; text-decoration: none; display: inline-block; margin-top: 4px;">
+                            + Fazer Pré-Inscrição da Equipe
+                        </a>
+                    </div>
+                </form>
+
+                <!-- FORMULÁRIO DE LOGIN ADMINISTRATIVO -->
+                <form id="form-login-adm" onsubmit="executarLoginAdm(event)" style="display: none;">
+                    <div class="login-input-group">
+                        <label for="adm-login-user">Usuário Administrativo ou E-mail</label>
+                        <input type="text" id="adm-login-user" class="login-input-field" placeholder="admin@avv.com.br ou admin" value="admin@avv.com.br" required>
+                    </div>
+
+                    <div class="login-input-group">
+                        <label for="adm-login-pass">Senha Administrativa</label>
+                        <input type="password" id="adm-login-pass" class="login-input-field" placeholder="Senha do Administrador" value="admin123" required>
+                    </div>
+
+                    <button type="submit" class="btn-login-submit">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                        Acessar Painel da Federação
+                    </button>
+
+                    <div style="margin-top: 14px; text-align: center; font-size: 11px; color: #64748b;">
+                        Área restrita à diretoria e arbitragem da AVV.
+                    </div>
+                </form>
+
+            </div>
+
+        </div>
+    </main>
+
+    <!-- FOOTER SIMPLES -->
+    <footer style="background: #0f1c3f; color: #cbd5e1; padding: 14px 20px; text-align: center; font-size: 11px; border-top: 3px solid #c5a021;">
+        &copy; 2026 Associação Vilhenense de Voleibol - AVV &bull; Sistema Integrado de Competições
+    </footer>
+
+    <!-- MODAL DE RECUPERAÇÃO DE SENHA COM DISPARO DE E-MAIL -->
+    <div id="modal-recuperar-senha" role="dialog" aria-modal="true" aria-labelledby="modal-recup-titulo" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 28, 63, 0.75); z-index: 3000; align-items: center; justify-content: center; backdrop-filter: blur(4px); padding: 15px;">
+        <div style="background: #ffffff; width: 100%; max-width: 480px; border-radius: 8px; box-shadow: 0 15px 40px rgba(0,0,0,0.35); overflow: hidden; border: 1px solid #cbd5e1;">
+            
+            <div style="background: var(--c-navy); color: #ffffff; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #c5a021;">
+                <div>
+                    <h4 id="modal-recup-titulo" style="font-size: 13px; font-weight: 800; text-transform: uppercase; margin: 0; letter-spacing: 0.5px;">Recuperar Senha de Acesso</h4>
+                    <span style="font-size: 10.5px; color: #cbd5e1;">Associação Vilhenense de Voleibol</span>
+                </div>
+                <button onclick="fecharModalRecuperarSenha()" aria-label="Fechar janela de recuperação de senha" style="background: none; border: none; font-size: 22px; color: #ffffff; cursor: pointer; line-height: 1;">&times;</button>
+            </div>
+
+            <!-- PASSO 1: DIGITAR E-MAIL -->
+            <div id="recup-passo-1" style="padding: 24px;">
+                <p style="font-size: 12.5px; color: #475569; line-height: 1.5; margin-top: 0;">
+                    Informe o e-mail cadastrado da sua agremiação. Enviaremos um e-mail institucional oficial com o link de redefinição e código de segurança.
+                </p>
+
+                <div id="recup-alert-msg" class="alert-login-box"></div>
+
+                <form id="form-recup-envio" onsubmit="enviarEmailRecuperacao(event)">
+                    <div class="login-input-group">
+                        <label for="recup-email">E-mail Cadastrado</label>
+                        <input type="email" id="recup-email" class="login-input-field" placeholder="contato@equipe.com.br" required>
+                    </div>
+
+                    <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+                        <button type="button" onclick="fecharModalRecuperarSenha()" style="padding: 9px 16px; border: 1px solid #cbd5e1; background: #ffffff; border-radius: 4px; font-size: 12px; font-weight: 700; cursor: pointer;">
+                            Cancelar
+                        </button>
+                        <button type="submit" id="btn-enviar-email-recup" class="btn-login-submit" style="width: auto; padding: 0 20px; height: 38px; margin-top: 0; background: #16a34a;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                            Enviar E-mail de Recuperação
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- PASSO 2: SUCESSO DO ENVIO & REDEFINIÇÃO COM CÓDIGO -->
+            <div id="recup-passo-2" style="display: none; padding: 24px;">
+                <div style="text-align: center; margin-bottom: 18px;">
+                    <div style="width: 48px; height: 48px; background: #dcfce7; color: #166534; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 8px;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    </div>
+                    <h4 style="font-size: 15px; font-weight: 800; color: #0f1c3f; margin: 0;">E-mail Enviado com Sucesso!</h4>
+                    <p style="font-size: 12px; color: #64748b; margin-top: 4px;">
+                        Verifique a caixa de entrada de <strong id="recup-email-enviado" style="color: #0f1c3f;"></strong>
+                    </p>
+                </div>
+
+                <div id="recup-preview-link-box" style="display: none; background: #f0fdf4; border: 1px dashed #86efac; border-radius: 6px; padding: 12px; margin-bottom: 16px; font-size: 11.5px; text-align: center;">
+                    <span>Demonstração de Envio (Ethereal Mail):</span><br>
+                    <a id="recup-preview-link" href="#" target="_blank" style="color: #166534; font-weight: 800; text-decoration: underline; display: inline-block; margin-top: 4px;">
+                        ↗ Abrir e visualizar e-mail enviado na web
+                    </a>
+                </div>
+
+                <form id="form-recup-redefinir" onsubmit="concluirRedefinicaoSenha(event)">
+                    <div class="login-input-group">
+                        <label for="recup-codigo">Código de Segurança (6 dígitos)</label>
+                        <input type="text" id="recup-codigo" class="login-input-field" placeholder="Ex: 596528" maxlength="6" style="text-align: center; font-size: 18px; font-weight: 800; letter-spacing: 4px;" required>
+                    </div>
+
+                    <div class="login-input-group">
+                        <label for="recup-nova-senha">Nova Senha</label>
+                        <input type="password" id="recup-nova-senha" class="login-input-field" placeholder="Mínimo de 6 dígitos" minlength="6" required>
+                    </div>
+
+                    <div class="login-input-group">
+                        <label for="recup-confirma-senha">Confirmar Nova Senha</label>
+                        <input type="password" id="recup-confirma-senha" class="login-input-field" placeholder="Repita a nova senha" minlength="6" required>
+                    </div>
+
+                    <button type="submit" class="btn-login-submit" style="background: var(--c-navy);">
+                        ✓ Salvar Nova Senha e Concluir
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        let tipoLoginAtual = 'time';
+
+        function alternarTipoLogin(tipo) {
+            tipoLoginAtual = tipo;
+            const btnTime = document.getElementById('tab-btn-time');
+            const btnAdm = document.getElementById('tab-btn-adm');
+            const formTime = document.getElementById('form-login-time');
+            const formAdm = document.getElementById('form-login-adm');
+            const alertBox = document.getElementById('login-alert-msg');
+            
+            alertBox.className = 'alert-login-box';
+            alertBox.style.display = 'none';
+
+            if (tipo === 'time') {
+                btnTime.classList.add('active');
+                btnAdm.classList.remove('active');
+                formTime.style.display = 'block';
+                formAdm.style.display = 'none';
+            } else {
+                btnAdm.classList.add('active');
+                btnTime.classList.remove('active');
+                formAdm.style.display = 'block';
+                formTime.style.display = 'none';
+            }
+        }
+
+        function exibirAlertaLogin(msg, tipo = 'error') {
+            const alertBox = document.getElementById('login-alert-msg');
+            alertBox.textContent = msg;
+            alertBox.className = `alert-login-box ${tipo}`;
+            alertBox.style.display = 'block';
+        }
+
+        // Login do Clube / Usuário
+        function executarLoginTime(e) {
+            e.preventDefault();
+            const email = document.getElementById('time-login-email').value.trim().toLowerCase();
+            const senha = document.getElementById('time-login-pass').value;
+
+            // Busca no banco unificado ou nas inscrições
+            let equipes = [];
+            try {
+                equipes = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
+            } catch(e) {}
+            
+            const inscricoes = JSON.parse(localStorage.getItem('avv_inscricoes_teste') || '[]');
+            
+            // Procura a equipe com esse e-mail
+            let eq = equipes.find(item => (item.email || '').toLowerCase() === email);
+            if (!eq) {
+                eq = inscricoes.find(item => (item.email || '').toLowerCase() === email);
+            }
+
+            // Se for a equipe padrão de demonstração
+            if (!eq && (email === 'contato@avv.com.br' || email === 'contato@portovelhovolei.com.br' || email === 'anapaula@jiparanafc.com.br' || email === 'felipe@ariquemesbeach.com.br')) {
+                eq = {
+                    id: 'eq-avv-principal',
+                    nomeTime: 'AVV VILHENA / SICREDI',
+                    responsavelNome: 'Silomar Silva',
+                    email: email,
+                    senha: '123'
+                };
+            }
+
+            if (!eq) {
+                exibirAlertaLogin('E-mail não encontrado no sistema. Faça a pré-inscrição da sua equipe antes de acessar.', 'error');
+                return;
+            }
+
+            // Se tiver senha cadastrada, valida; se for time demo inicial aceita qualquer senha ou padrão 123
+            if (eq.senha && eq.senha !== senha) {
+                exibirAlertaLogin('Senha incorreta para esta agremiação. Verifique e tente novamente.', 'error');
+                return;
+            }
+
+            // Grava a sessão ativa
+            const sessao = {
+                tipo: 'time',
+                equipeId: eq.id,
+                email: eq.email,
+                nomeTime: eq.nomeTime,
+                responsavelNome: eq.responsavelNome || 'Dirigente Responsável',
+                protocolo: eq.protocolo || ('AVV-' + eq.numeroInscricao),
+                numeroInscricao: eq.numeroInscricao,
+                timestamp: Date.now()
+            };
+            localStorage.setItem('avv_sessao_ativa', JSON.stringify(sessao));
+
+            exibirAlertaLogin('Acesso autorizado! Redirecionando para o painel do clube...', 'success');
+            setTimeout(() => {
+                window.location.href = 'painel-time.html';
+            }, 600);
+        }
+
+        // Login da Diretoria / ADM
+        function executarLoginAdm(e) {
+            e.preventDefault();
+            const user = document.getElementById('adm-login-user').value.trim().toLowerCase();
+            const pass = document.getElementById('adm-login-pass').value;
+
+            // Credencial administrativa padrão
+            if ((user === 'admin@avv.com.br' || user === 'admin') && pass === 'admin123') {
+                const sessaoAdm = {
+                    tipo: 'adm',
+                    usuario: 'Administrador AVV',
+                    email: 'admin@avv.com.br',
+                    timestamp: Date.now()
+                };
+                localStorage.setItem('avv_sessao_adm', JSON.stringify(sessaoAdm));
+                exibirAlertaLogin('Acesso de Administrador confirmado. Entrando no painel...', 'success');
+                setTimeout(() => {
+                    window.location.href = 'painel-adm.html';
+                }, 600);
+            } else {
+                exibirAlertaLogin('Credenciais administrativas inválidas.', 'error');
+            }
+        }
+
+        // ======================================================================
+        // RECUPERAÇÃO DE SENHA VIA E-MAIL OFICIAL
+        // ======================================================================
+        let emailRecuperacaoAtual = '';
+        let tokenRecuperacaoUrl = '';
+
+        function abrirModalRecuperarSenha() {
+            document.getElementById('modal-recuperar-senha').style.display = 'flex';
+            document.getElementById('recup-passo-1').style.display = 'block';
+            document.getElementById('recup-passo-2').style.display = 'none';
+            const alertBox = document.getElementById('recup-alert-msg');
+            alertBox.style.display = 'none';
+
+            // Pré-preenche se o usuário já digitou o e-mail no login
+            const emailDigitado = document.getElementById('time-login-email').value.trim();
+            if (emailDigitado) {
+                document.getElementById('recup-email').value = emailDigitado;
+            }
+        }
+
+        function fecharModalRecuperarSenha() {
+            document.getElementById('modal-recuperar-senha').style.display = 'none';
+        }
+
+        async function enviarEmailRecuperacao(e) {
+            e.preventDefault();
+            const email = document.getElementById('recup-email').value.trim().toLowerCase();
+            const btn = document.getElementById('btn-enviar-email-recup');
+            const alertBox = document.getElementById('recup-alert-msg');
+
+            // Verifica se o e-mail existe no banco
+            let equipes = [];
+            try {
+                equipes = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
+            } catch(err) {}
+            const inscricoes = JSON.parse(localStorage.getItem('avv_inscricoes_teste') || '[]');
+
+            const eq = equipes.find(item => (item.email || '').toLowerCase() === email) ||
+                       inscricoes.find(item => (item.email || '').toLowerCase() === email) ||
+                       (email === 'contato@avv.com.br' ? { responsavelNome: 'Silomar Silva', nomeTime: 'AVV Vilhena' } : null);
+
+            if (!eq) {
+                alertBox.textContent = 'E-mail não localizado no sistema da federação. Verifique o endereço digitado.';
+                alertBox.className = 'alert-login-box error';
+                alertBox.style.display = 'block';
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = 'Enviando e-mail...';
+
+            try {
+                const response = await fetch('api/recuperar-senha', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: email,
+                        nomeResponsavel: eq.responsavelNome || 'Dirigente Responsável',
+                        nomeTime: eq.nomeTime || 'Sua Agremiação'
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.ok) {
+                    emailRecuperacaoAtual = email;
+                    document.getElementById('recup-email-enviado').textContent = email;
+                    document.getElementById('recup-passo-1').style.display = 'none';
+                    document.getElementById('recup-passo-2').style.display = 'block';
+
+                    if (data.previewUrl) {
+                        const boxPreview = document.getElementById('recup-preview-link-box');
+                        const linkPreview = document.getElementById('recup-preview-link');
+                        linkPreview.href = data.previewUrl;
+                        boxPreview.style.display = 'block';
+                    }
+                } else {
+                    alertBox.textContent = data.mensagem || 'Falha ao processar recuperação.';
+                    alertBox.className = 'alert-login-box error';
+                    alertBox.style.display = 'block';
+                }
+            } catch (err) {
+                console.error(err);
+                alertBox.textContent = 'Erro de conexão com o servidor de e-mail.';
+                alertBox.className = 'alert-login-box error';
+                alertBox.style.display = 'block';
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg> Enviar E-mail de Recuperação';
+            }
+        }
+
+        async function concluirRedefinicaoSenha(e) {
+            e.preventDefault();
+            const codigo = document.getElementById('recup-codigo').value.trim();
+            const novaSenha = document.getElementById('recup-nova-senha').value;
+            const confirmaSenha = document.getElementById('recup-confirma-senha').value;
+
+            if (novaSenha !== confirmaSenha) {
+                alert('A confirmação de senha não coincide com a nova senha digitada.');
+                return;
+            }
+
+            try {
+                const response = await fetch('api/redefinir-senha', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: emailRecuperacaoAtual,
+                        codigo: codigo,
+                        token: tokenRecuperacaoUrl,
+                        novaSenha: novaSenha
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.ok) {
+                    // Atualiza a senha no banco local
+                    atualizarSenhaNoBancoLocal(emailRecuperacaoAtual, novaSenha);
+                    fecharModalRecuperarSenha();
+                    document.getElementById('time-login-email').value = emailRecuperacaoAtual;
+                    document.getElementById('time-login-pass').value = '';
+                    exibirAlertaLogin('✓ Senha redefinida com sucesso! Você já pode entrar com a nova senha.', 'success');
+                } else {
+                    alert(data.mensagem || 'Código de segurança incorreto.');
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Erro ao redefinir senha no servidor.');
+            }
+        }
+
+        function atualizarSenhaNoBancoLocal(email, novaSenha) {
+            try {
+                const equipesDb = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
+                const idx = equipesDb.findIndex(e => (e.email || '').toLowerCase() === email.toLowerCase());
+                if (idx !== -1) {
+                    equipesDb[idx].senha = novaSenha;
+                    localStorage.setItem('avv_equipes_completo_db', JSON.stringify(equipesDb));
+                }
+
+                const inscricoes = JSON.parse(localStorage.getItem('avv_inscricoes_teste') || '[]');
+                const idxIns = inscricoes.findIndex(e => (e.email || '').toLowerCase() === email.toLowerCase());
+                if (idxIns !== -1) {
+                    inscricoes[idxIns].senha = novaSenha;
+                    localStorage.setItem('avv_inscricoes_teste', JSON.stringify(inscricoes));
+                }
+            } catch (err) {}
+        }
+
+        // Acessibilidade: Fechar modal de recuperação ao pressionar ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                fecharModalRecuperarSenha();
+            }
+        });
+
+        // Verifica se a página foi aberta por um link do e-mail com ?token=XYZ
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+            const email = urlParams.get('email');
+
+            if (token && email) {
+                tokenRecuperacaoUrl = token;
+                emailRecuperacaoAtual = email;
+                abrirModalRecuperarSenha();
+                document.getElementById('recup-email-enviado').textContent = email;
+                document.getElementById('recup-passo-1').style.display = 'none';
+                document.getElementById('recup-passo-2').style.display = 'block';
+                document.getElementById('recup-codigo').value = 'TOKEN';
+                document.getElementById('recup-codigo').readOnly = true;
+                exibirAlertaLogin('Link de recuperação do e-mail autenticado! Digite sua nova senha abaixo.', 'success');
+            }
+        });
+    </script>
+</body>
+</html>

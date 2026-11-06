@@ -1,0 +1,485 @@
+/* ==========================================================================
+   PORTAL OFICIAL DE COMPETIÇÕES AVV - DESIGN INSTITUCIONAL / FEDERAÇÃO
+   ========================================================================== */
+
+:root {
+  /* Cores Oficiais e Sóbrias */
+  --c-navy: #0f1c3f;            /* Azul Marinho Oficial Profundo */
+  --c-navy-dark: #09122a;
+  --c-navy-light: #1a2e66;
+  --c-gold: #eab308;            /* Dourado Oficial (sem ser amarelo infantil) */
+  --c-gold-hover: #ca8a04;
+  
+  --c-bg: #f1f5f9;              /* Cinza institucional de fundo */
+  --c-card: #ffffff;
+  --c-border: #cbd5e1;
+  --c-border-strong: #94a3b8;
+  --c-focus: #0284c7;
+
+  --c-text: #0f172a;
+  --c-text-muted: #64748b;
+  --c-text-light: #94a3b8;
+  --c-danger: #b91c1c;
+
+  /* Tipografia Corporativa Séria */
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+  --radius: 4px;                /* Bordas técnicas e quadradas, nada infantil */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-card: 0 4px 12px rgba(15, 28, 63, 0.08);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font);
+  background-color: var(--c-bg);
+  color: var(--c-text);
+  line-height: 1.5;
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ==========================================================================
+   TOPBAR GOVERNAMENTAL / INSTITUCIONAL
+   ========================================================================== */
+.gov-topbar {
+  background: var(--c-navy-dark);
+  color: #94a3b8;
+  font-size: 11px;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  letter-spacing: 0.5px;
+}
+
+.gov-topbar .container {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.site-header {
+  background: var(--c-navy);
+  border-bottom: 3px solid var(--c-gold);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+}
+
+.site-header .container {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.site-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-decoration: none;
+}
+
+.site-logo {
+  height: 48px;
+  width: auto;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+}
+
+.brand-separator {
+  width: 1px;
+  height: 32px;
+  background: rgba(255,255,255,0.2);
+}
+
+.brand-titles {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.brand-titles .line-small {
+  font-size: 11px;
+  font-weight: 700;
+  color: #e2e8f0;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
+
+.brand-titles .line-large {
+  font-size: 17px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.site-nav a {
+  color: #e2e8f0;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  transition: color 0.15s ease;
+}
+
+.site-nav a:hover {
+  color: var(--c-gold);
+}
+
+.site-nav a.btn-nav-action {
+  background: var(--c-gold);
+  color: var(--c-navy-dark);
+  padding: 7px 16px;
+  border-radius: var(--radius);
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.site-nav a.btn-nav-action:hover {
+  background: #ffffff;
+  color: var(--c-navy);
+}
+
+/* ==========================================================================
+   HERO / BANNER COM FOTO REAL DE VOLEIBOL
+   ========================================================================== */
+.hero-official-banner {
+  background: linear-gradient(rgba(15, 28, 63, 0.88), rgba(9, 18, 42, 0.94)), url('avv_travel_competition.png');
+  background-size: cover;
+  background-position: center 30%;
+  color: #ffffff;
+  padding: 45px 20px 65px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  position: relative;
+}
+
+.hero-official-content {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.official-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(234, 179, 8, 0.15);
+  border: 1px solid var(--c-gold);
+  color: var(--c-gold);
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  border-radius: 2px;
+  margin-bottom: 12px;
+}
+
+.hero-official-banner h2 {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.4px;
+  color: #ffffff;
+  text-transform: uppercase;
+  line-height: 1.25;
+}
+
+.hero-official-banner p {
+  font-size: 14px;
+  color: #cbd5e1;
+  margin-top: 8px;
+  max-width: 700px;
+  line-height: 1.5;
+}
+
+/* ==========================================================================
+   FORMULÁRIO SÉRIO / FICHA TÉCNICA
+   ========================================================================== */
+.form-wrapper {
+  max-width: 860px;
+  margin: -35px auto 60px auto;
+  padding: 0 20px;
+  position: relative;
+  z-index: 10;
+  width: 100%;
+}
+
+.form-sheet {
+  background: var(--c-card);
+  border: 1px solid var(--c-border);
+  border-top: 4px solid var(--c-navy);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+  padding: 35px 40px;
+}
+
+@media (max-width: 650px) {
+  .form-sheet {
+    padding: 22px 18px;
+  }
+}
+
+.sheet-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-bottom: 2px solid var(--c-navy);
+  padding-bottom: 12px;
+  margin-bottom: 24px;
+}
+
+.sheet-header h3 {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--c-navy);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.sheet-header span {
+  font-size: 12px;
+  color: var(--c-text-muted);
+  font-weight: 600;
+}
+
+.form-section-title {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--c-navy);
+  background: #f8fafc;
+  border-left: 3px solid var(--c-navy);
+  padding: 6px 12px;
+  margin-bottom: 18px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.form-row.full {
+  grid-template-columns: 1fr;
+}
+
+@media (max-width: 600px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.form-field label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #334155;
+  letter-spacing: 0.2px;
+}
+
+.form-field label .req {
+  color: var(--c-danger);
+  margin-left: 2px;
+}
+
+.form-input, .form-select {
+  width: 100%;
+  height: 38px;
+  padding: 0 12px;
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius);
+  font-family: var(--font);
+  font-size: 13px;
+  color: var(--c-text);
+  background-color: #ffffff;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.form-input:focus, .form-select:focus {
+  outline: none;
+  border-color: var(--c-focus);
+  box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.15);
+}
+
+.form-input[readonly] {
+  background-color: #f1f5f9;
+  cursor: not-allowed;
+  color: #64748b;
+  font-weight: 600;
+}
+
+/* BOTÃO OFICIAL DE AÇÃO */
+.btn-submit-main {
+  width: 100%;
+  height: 44px;
+  background-color: var(--c-navy);
+  color: #ffffff;
+  border: 1px solid var(--c-navy-dark);
+  border-radius: var(--radius);
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.15s;
+  margin-top: 20px;
+}
+
+.btn-submit-main:hover {
+  background-color: var(--c-navy-light);
+}
+
+/* BOX DE SUCESSO / PROTOCOLO */
+.success-box {
+  display: none;
+  text-align: center;
+  padding: 30px 10px;
+}
+
+.success-badge {
+  display: inline-block;
+  background: #dcfce7;
+  color: #15803d;
+  font-weight: 700;
+  font-size: 12px;
+  padding: 4px 12px;
+  border-radius: 2px;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.success-box h3 {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--c-navy);
+  margin-bottom: 8px;
+}
+
+.success-box p {
+  color: var(--c-text-muted);
+  max-width: 480px;
+  margin: 0 auto 20px auto;
+  font-size: 13px;
+}
+
+/* ==========================================================================
+   FOOTER OFICIAL SÉRIO / CORPORATIVO
+   ========================================================================== */
+.site-footer {
+  margin-top: auto;
+  background-color: var(--c-navy-dark);
+  color: #cbd5e1;
+  padding: 40px 0 20px 0;
+  border-top: 3px solid var(--c-gold);
+}
+
+.site-footer .container {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 30px;
+}
+
+@media (max-width: 768px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 25px;
+  }
+}
+
+.footer-col h4 {
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding-bottom: 6px;
+}
+
+.footer-col p {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #94a3b8;
+}
+
+.social-links-footer {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.social-btn-round {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.08);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  transition: background 0.15s ease;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.social-btn-round:hover {
+  background: var(--c-gold);
+  color: var(--c-navy-dark) !important;
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: #64748b;
+}
+
+.legal-footer-links a {
+  color: #94a3b8;
+  text-decoration: none;
+  margin: 0 6px;
+}
+
+.legal-footer-links a:hover {
+  color: var(--c-gold);
+}

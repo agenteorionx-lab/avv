@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Competições | Pré-Inscrição de Equipes - AVV</title>
+    <!-- Tipografia Corporativa Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="inscricao.css">
+</head>
+<body>
+
+    <!-- 1. TOPBAR INSTITUCIONAL SUPERIOR -->
+    <div class="gov-topbar">
+        <div class="container">
+            <span>SISTEMA INTEGRADO DE COMPETIÇÕES &bull; RONDÔNIA</span>
+            <span>PRÉ-CADASTRO DE TIMES</span>
+        </div>
+    </div>
+
+    <!-- 2. HEADER PRINCIPAL COM LOGO E TEXTO FORMAL -->
+    <header class="site-header">
+        <div class="container">
+            <a href="index.html" class="site-brand">
+                <img src="logos/logo_avv.png" alt="AVV Logo" class="site-logo">
+                <div class="brand-titles">
+                    <span class="line-small">ASSOCIAÇÃO VILHENENSE</span>
+                    <span class="line-large">DE VOLEIBOL</span>
+                </div>
+            </a>
+            <nav class="site-nav">
+                <a href="index.html">Portal AVV</a>
+                <a href="index.html#historia">História</a>
+                <a href="index.html#tecnicos">Diretoria & Técnicos</a>
+                <a href="painel-time.html" class="btn-nav-action">Área Restrita do Time</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 3. BANNER FORMAL COM FOTO REAL DE VOLEIBOL & TEXTO DIRETO -->
+    <section class="hero-official-banner">
+        <div class="hero-official-content">
+            <h2>Pré-Inscrição de Equipes e Clubes</h2>
+            <p>Cadastre sua agremiação esportiva para solicitar habilitação e ter acesso ao gerenciamento de atletas e participação em campeonatos.</p>
+        </div>
+    </section>
+
+    <!-- 4. FORMULÁRIO TÉCNICO E FORMAL -->
+    <main class="form-wrapper">
+        <div class="form-sheet">
+
+            <div class="sheet-header">
+                <div>
+                    <h3>Ficha Cadastral da Entidade</h3>
+                    <span>Preencha os campos obrigatórios (*) com dados oficiais.</span>
+                </div>
+            </div>
+
+            <form id="form-pre-inscricao">
+                
+                <!-- SEÇÃO 1: DADOS DA EQUIPE -->
+                <div class="form-section-title">1. Identificação da Equipe / Associação</div>
+
+                <div class="form-row">
+                    <div class="form-field">
+                        <label for="estado">Estado (UF) <span class="req">*</span></label>
+                        <input type="text" id="estado" class="form-input" placeholder="Ex: Rondônia (RO), Acre (AC), MT..." required>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="cidade">Cidade / Município Sede <span class="req">*</span></label>
+                        <input type="text" id="cidade" class="form-input" placeholder="Ex: Vilhena, Cuiabá, Rio Branco..." required>
+                    </div>
+                </div>
+
+                <div class="form-row full">
+                    <div class="form-field">
+                        <label for="nomeTime">Razão Social ou Nome Fantasia da Equipe <span class="req">*</span></label>
+                        <input type="text" id="nomeTime" class="form-input" placeholder="Ex: Associação Vilhenense de Voleibol / Vilhena Vôlei Clube" required>
+                    </div>
+                </div>
+
+                <!-- SEÇÃO 2: DADOS DO RESPONSÁVEL TÉCNICO / DIRIGENTE -->
+                <div class="form-section-title" style="margin-top: 24px;">2. Representante Legal ou Técnico Responsável</div>
+
+                <div class="form-row full">
+                    <div class="form-field">
+                        <label for="nomeResponsavel">Nome Completo do Responsável <span class="req">*</span></label>
+                        <input type="text" id="nomeResponsavel" class="form-input" placeholder="Nome completo do dirigente ou treinador habilitado" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-field">
+                        <label for="email">E-mail Institucional para Acesso <span class="req">*</span></label>
+                        <input type="email" id="email" class="form-input" placeholder="contato@equipe.com.br" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="whatsapp">Telefone / WhatsApp Comercial <span class="req">*</span></label>
+                        <input type="tel" id="whatsapp" class="form-input" placeholder="(69) 99999-9999" required>
+                    </div>
+                </div>
+
+                <div class="form-row full">
+                    <div class="form-field">
+                        <label for="instagram">Canal Oficial de Divulgação (@ Instagram)</label>
+                        <input type="text" id="instagram" class="form-input" placeholder="@nomedotime">
+                    </div>
+                </div>
+
+                <!-- SEÇÃO 3: CREDENCIAIS DE ACESSO DO DIRIGENTE -->
+                <div class="form-section-title" style="margin-top: 24px;">3. Credenciais de Acesso à Área Restrita do Time</div>
+
+                <div class="form-row">
+                    <div class="form-field">
+                        <label for="senhaAcesso">Criar Senha de Acesso <span class="req">*</span></label>
+                        <input type="password" id="senhaAcesso" class="form-input" placeholder="Mínimo de 6 dígitos" minlength="6" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="confirmarSenha">Confirmar Senha <span class="req">*</span></label>
+                        <input type="password" id="confirmarSenha" class="form-input" placeholder="Repita a senha criada" minlength="6" required>
+                    </div>
+                </div>
+
+                <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-left: 3px solid var(--c-navy); padding: 12px 16px; border-radius: 2px; font-size: 12px; color: #475569; margin-top: 18px; display: flex; align-items: flex-start; gap: 10px;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0f1c3f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                    <div>
+                        <strong style="color: var(--c-navy); text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; display: block; margin-bottom: 2px;">Liberação Imediata:</strong>
+                        Ao enviar a ficha, o acesso ao painel do clube é liberado imediatamente com seu e-mail e senha cadastrados para você gerenciar elenco e comissão técnica. A homologação da equipe será analisada pela comissão técnica da AVV.
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit-main">
+                    Confirmar Envio da Pré-Inscrição
+                </button>
+            </form>
+
+            <!-- CONFIRMAÇÃO / PROTOCOLO SÉRIO -->
+            <div id="sucesso-box" class="success-box">
+                <span class="success-badge">✓ Homologação Solicitada</span>
+                <h3>Pré-Inscrição Concluída</h3>
+                <p>A ficha da agremiação <strong id="res-time-nome" style="color: var(--c-navy);"></strong> foi protocolada no sistema de competições da AVV.</p>
+
+                <div style="background: #f8fafc; border: 1px solid #cbd5e1; padding: 16px; border-radius: 4px; margin-bottom: 20px; text-align: left; max-width: 420px; margin-left: auto; margin-right: auto;">
+                    <div style="font-size: 11px; color: #64748b; font-weight: 700; text-transform: uppercase;">Número de Inscrição Oficial</div>
+                    <div id="res-protocolo" style="font-size: 18px; font-weight: 800; color: #0f1c3f; letter-spacing: 0.5px; margin-top: 2px;">Inscrição nº 191420 (AVV-191420)</div>
+                    <div id="res-meta-datahora" style="font-size: 12px; color: #166534; font-weight: 700; margin-top: 6px;">Data da Inscrição: 22/09/2026 às 17:49</div>
+                    <div style="font-size: 11px; color: #64748b; margin-top: 6px;">Status: Habilitado para cadastro de atletas e torneios</div>
+                </div>
+
+                <div>
+                    <a href="painel-time.html" class="btn-submit-main" style="display: inline-block; text-decoration: none; line-height: 44px; max-width: 280px;">
+                        Acessar Área do Time →
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- 5. FOOTER CORPORATIVO OFICIAL -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                        <img src="logos/logo_avv.png" alt="Logo AVV" style="height: 48px; width: auto; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));">
+                        <div class="brand-titles">
+                            <span class="line-small" style="font-size: 10px;">ASSOCIAÇÃO VILHENENSE</span>
+                            <span class="line-large" style="font-size: 15px;">DE VOLEIBOL</span>
+                        </div>
+                    </div>
+                    <p>Entidade máxima de fomento e desenvolvimento do voleibol de quadra e areia em Vilhena e na Região Sul de Rondônia. Fundada em 2003.</p>
+                    <div class="social-links-footer">
+                        <a href="https://www.instagram.com/p/DOZQ9LbgVoJ/" target="_blank" class="social-btn-round" title="Instagram">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path></svg>
+                        </a>
+                        <a href="https://www.facebook.com/AVVVILHENARO" target="_blank" class="social-btn-round" title="Facebook">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+                        </a>
+                        <a href="https://www.youtube.com/@avv-voleivilhena6374" target="_blank" class="social-btn-round" title="YouTube">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.42a2.78 2.78 0 0 0-1.94 2C1 8.11 1 12 1 12s0 3.89.46 5.58a2.78 2.78 0 0 0 1.94 2c1.72.42 8.6.42 8.6.42s6.88 0 8.6-.42a2.78 2.78 0 0 0 1.94-2C23 15.89 23 12 23 12s0-3.89-.46-5.58z"></path></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Sede Administrativa</h4>
+                    <p>Rua Quarenta e Três, 183-281<br>Jardim Eldorado, Vilhena - RO<br>CEP: 76980-000</p>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Secretaria Técnica</h4>
+                    <p><strong>Expediente:</strong> Seg. a Sex. 08h às 18h<br><strong>WhatsApp:</strong> (69) 99209-9604<br><strong>E-mail:</strong> contato@avv.com.br</p>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <span>&copy; 2026 AVV - Associação Vilhenense de Voleibol. Todos os direitos reservados.</span>
+                <div class="legal-footer-links">
+                    <a href="termos.html">Termos de Uso</a> &bull;
+                    <a href="privacidade.html">Política de Privacidade</a> &bull;
+                    <a href="painel-time.html">Área do Dirigente</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- SCRIPT TÉCNICO -->
+    <script>
+        const whatsappInput = document.getElementById('whatsapp');
+        whatsappInput.addEventListener('input', (e) => {
+            let val = e.target.value.replace(/\D/g, '');
+            if (val.length > 11) val = val.substring(0, 11);
+            if (val.length > 6) {
+                val = `(${val.substring(0, 2)}) ${val.substring(2, 7)}-${val.substring(7)}`;
+            } else if (val.length > 2) {
+                val = `(${val.substring(0, 2)}) ${val.substring(2)}`;
+            } else if (val.length > 0) {
+                val = `(${val}`;
+            }
+            e.target.value = val;
+        });
+
+        document.getElementById('form-pre-inscricao').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const senha = document.getElementById('senhaAcesso').value;
+            const confirma = document.getElementById('confirmarSenha').value;
+            const emailDigitado = document.getElementById('email').value.trim().toLowerCase();
+
+            if (senha !== confirma) {
+                alert('A confirmação de senha não coincide com a senha criada.');
+                document.getElementById('confirmarSenha').focus();
+                return;
+            }
+
+            // Prevenção de duplicidade de e-mail cadastrado
+            try {
+                const equipesExistentes = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
+                const jaCadastrado = equipesExistentes.find(eq => (eq.email || '').toLowerCase() === emailDigitado);
+                if (jaCadastrado) {
+                    alert(`O e-mail "${emailDigitado}" já possui cadastro vinculado à equipe "${jaCadastrado.nomeTime}".\n\nVocê será direcionado para a tela de Login.`);
+                    window.location.href = 'login.html';
+                    return;
+                }
+            } catch (err) {}
+
+            const btnSubmit = e.target.querySelector('button[type="submit"]');
+            if (btnSubmit) btnSubmit.disabled = true;
+
+            const agora = new Date();
+            const dataInscricao = agora.toLocaleDateString('pt-BR');
+            const horaInscricao = agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+            const numeroInscricaoTime = Math.floor(100000 + Math.random() * 900000);
+
+            const timeData = {
+                id: 'eq-' + Date.now(),
+                numeroInscricao: numeroInscricaoTime,
+                protocolo: 'AVV-' + numeroInscricaoTime,
+                dataInscricao: dataInscricao,
+                horaInscricao: horaInscricao,
+                dataHoraCompleta: `${dataInscricao} às ${horaInscricao}`,
+                estado: document.getElementById('estado').value.trim(),
+                cidade: document.getElementById('cidade').value.trim(),
+                nomeTime: document.getElementById('nomeTime').value.trim(),
+                responsavelNome: document.getElementById('nomeResponsavel').value.trim(),
+                email: document.getElementById('email').value.trim().toLowerCase(),
+                whatsapp: document.getElementById('whatsapp').value.trim(),
+                instagram: document.getElementById('instagram').value.trim(),
+                senha: senha,
+                status: 'Pendente',
+                categorias: ['Adulto Masculino'],
+                atletas: [],
+                comissao: [],
+                campeonato: 'Aguardando Seleção no Painel'
+            };
+
+            // Salva na lista de inscrições
+            const times = JSON.parse(localStorage.getItem('avv_inscricoes_teste') || '[]');
+            times.push(timeData);
+            localStorage.setItem('avv_inscricoes_teste', JSON.stringify(times));
+
+            // Salva diretamente no banco unificado de equipes para o ADM e Painel do Time
+            try {
+                const equipesDb = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
+                equipesDb.unshift(timeData);
+                localStorage.setItem('avv_equipes_completo_db', JSON.stringify(equipesDb));
+            } catch(err) {}
+
+            // Inicia a sessão automaticamente para entrada imediata
+            const sessao = {
+                tipo: 'time',
+                equipeId: timeData.id,
+                email: timeData.email,
+                nomeTime: timeData.nomeTime,
+                responsavelNome: timeData.responsavelNome,
+                protocolo: timeData.protocolo,
+                numeroInscricao: timeData.numeroInscricao,
+                timestamp: Date.now()
+            };
+            localStorage.setItem('avv_sessao_ativa', JSON.stringify(sessao));
+
+            document.getElementById('form-pre-inscricao').style.display = 'none';
+            document.getElementById('sucesso-box').style.display = 'block';
+            document.getElementById('res-time-nome').textContent = timeData.nomeTime;
+            document.getElementById('res-protocolo').textContent = `Inscrição nº ${timeData.numeroInscricao} (${timeData.protocolo})`;
+            
+            const metaInfoBox = document.getElementById('res-meta-datahora');
+            if (metaInfoBox) {
+                metaInfoBox.textContent = `Realizada em ${dataInscricao} às ${horaInscricao}`;
+            }
+        });
+    </script>
+</body>
+</html>

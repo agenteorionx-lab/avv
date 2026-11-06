@@ -1,0 +1,2640 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Administrativo | AVV Oficial</title>
+    <!-- Fonte Oficial Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="painel.css?v=5">
+    <link rel="stylesheet" href="painel-adm.css?v=5">
+</head>
+<body>
+
+    <!-- SIDEBAR LATERAL DO ADMINISTRADOR -->
+    <aside class="sidebar-fed" style="background-color: var(--adm-sidebar);">
+        <div class="sidebar-fed-header">
+            <img src="logos/logo_avv.png" alt="AVV Logo" class="sidebar-fed-logo">
+            <div class="sidebar-fed-title">
+                ADMINISTRAÇÃO AVV<br>
+                <span style="font-size: 11px; font-weight: 700; color: #f1f5f9;">Painel Administrativo</span>
+            </div>
+        </div>
+
+        <div class="sidebar-section-label">GESTÃO DA FEDERAÇÃO</div>
+
+        <ul class="sidebar-menu-fed">
+            <li>
+                <button class="active" id="nav-adm-dashboard" onclick="switchAdmTab('dashboard', this)">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                    Visão Geral
+                </button>
+            </li>
+            <li>
+                <button id="nav-adm-equipes" onclick="switchAdmTab('equipes', this)">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                    Equipes
+                    <span id="badge-adm-novos-cadastros" class="badge-status-waiting" style="font-size: 10px; margin-left: auto; padding: 2px 6px; border-radius: 10px;">0</span>
+                </button>
+            </li>
+            <li>
+                <button id="nav-adm-campeonatos" onclick="switchAdmTab('campeonatos', this)">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+                    Campeonatos
+                </button>
+            </li>
+            <li>
+                <button id="nav-adm-impressao" onclick="switchAdmTab('impressao', this)">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                    Imprimir Fichas
+                </button>
+            </li>
+        </ul>
+
+        <div class="sidebar-section-label">ATALHOS EXTERNOS</div>
+        <ul class="sidebar-menu-fed">
+            <li>
+                <a href="painel-time.html" target="_blank" style="text-decoration: none;">
+                    <button type="button">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                        Painel da Equipe
+                    </button>
+                </a>
+            </li>
+            <li>
+                <a href="inscricao.html" target="_blank" style="text-decoration: none;">
+                    <button type="button">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        Formulário de Cadastro
+                    </button>
+                </a>
+            </li>
+        </ul>
+
+        <!-- RODAPÉ DE USUÁRIO ADMINISTRADOR -->
+        <div class="sidebar-fed-footer">
+            <div style="display: flex; align-items: center; gap: 10px; padding: 6px 10px;">
+                <div class="user-avatar-badge" style="background: #c5a021; color: #0f1c3f; font-weight: 800;">ADM</div>
+                <div class="user-details">
+                    <span class="user-name">Administrador Geral</span>
+                    <span class="user-role" style="color: #cbd5e1;">Diretoria Técnica AVV</span>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ÁREA PRINCIPAL DO ADMINISTRADOR -->
+    <div class="main-wrapper-fed">
+        
+        <!-- TOPBAR BRANCA -->
+        <header class="topbar-fed">
+            <div class="topbar-breadcrumb">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+                <span>Administração &bull; <strong id="breadcrumb-title-adm">Visão Geral</strong></span>
+            </div>
+
+            <div class="topbar-right">
+                <button onclick="abrirModalCriarCampeonato()" class="btn-clean-action btn-clean-green" style="height: 32px; font-size: 11.5px; padding: 0 12px;">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    Novo Campeonato
+                </button>
+                <button onclick="fazerLogoutAdm()" class="icon-btn" title="Encerrar Sessão de Administrador" aria-label="Encerrar Sessão de Administrador" style="background: none; border: none; cursor: pointer;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- CORPO DOS PAINÉIS -->
+        <main class="content-body-fed">
+            
+            <!-- ============================================================== -->
+            <!-- 1. ABA: VISÃO GERAL (INDICADORES + ACESSO DIRETO ÀS EQUIPES)   -->
+            <!-- ============================================================== -->
+            <section id="tab-adm-dashboard" class="tab-pane active">
+                
+                <!-- CARDS DE MÉTRICAS CLICÁVEIS -->
+                <div class="stats-grid-adm">
+                    <div class="stat-card-adm" onclick="switchAdmTab('equipes', document.getElementById('nav-adm-equipes'))">
+                        <div class="stat-info">
+                            <h3 id="stat-adm-equipes-total">0</h3>
+                            <p>Equipes Cadastradas</p>
+                        </div>
+                        <div class="stat-icon" style="background: #f0fdf4; color: #166534;">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                        </div>
+                    </div>
+
+                    <div class="stat-card-adm" onclick="irParaEquipesPendentes()">
+                        <div class="stat-info">
+                            <h3 id="stat-adm-equipes-pendentes">0</h3>
+                            <p>Aguardando Homologação</p>
+                        </div>
+                        <div class="stat-icon" style="background: #fef3c7; color: #b45309;">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                        </div>
+                    </div>
+
+                    <div class="stat-card-adm" onclick="switchAdmTab('equipes', document.getElementById('nav-adm-equipes'))">
+                        <div class="stat-info">
+                            <h3 id="stat-adm-total-atletas">0</h3>
+                            <p>Atletas Vinculados</p>
+                        </div>
+                        <div class="stat-icon" style="background: #f1f5f9; color: #0f1c3f;">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                        </div>
+                    </div>
+
+                    <div class="stat-card-adm" onclick="switchAdmTab('campeonatos', document.getElementById('nav-adm-campeonatos'))">
+                        <div class="stat-info">
+                            <h3 id="stat-adm-champs-total">4</h3>
+                            <p>Campeonatos Ativos</p>
+                        </div>
+                        <div class="stat-icon" style="background: #eff6ff; color: #1d72f2;">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BLOCO DE ACESSO RÁPIDO ÀS EQUIPES (CLICAR ABRE A PÁGINA DA EQUIPE) -->
+                <div class="fed-card-container">
+                    <div class="fed-header-gold" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                        <span>EQUIPES CADASTRADAS</span>
+                        <button onclick="switchAdmTab('equipes', document.getElementById('nav-adm-equipes'))" style="background: #0f1c3f; color: #ffffff; border: none; padding: 6px 14px; border-radius: 4px; font-size: 11px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+                            Ver Todas
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                        </button>
+                    </div>
+                    <div style="padding: 20px; background: #f8fafc;">
+                        <div id="dashboard-grid-equipes-resumo" class="grid-equipes-adm">
+                            <!-- Gerado dinamicamente via JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RESUMO DE CAMPEONATOS E ATALHOS -->
+                <div style="display: grid; grid-template-columns: 1.4fr 1fr; gap: 20px;">
+                    <div class="fed-card-container" style="margin-bottom: 0;">
+                        <div class="fed-header-gold" style="display: flex; justify-content: space-between; align-items: center;">
+                            <span>CAMPEONATOS ATIVOS</span>
+                            <button onclick="switchAdmTab('campeonatos', document.getElementById('nav-adm-campeonatos'))" style="background: transparent; border: none; color: #fff; font-size: 11px; font-weight: 700; cursor: pointer; text-decoration: underline;">
+                                Gerenciar Campeonatos
+                            </button>
+                        </div>
+                        <div id="dashboard-lista-campeonatos" style="padding: 16px; display: flex; flex-direction: column; gap: 10px;">
+                            <!-- Preenchido via JS -->
+                        </div>
+                    </div>
+
+                    <div class="fed-card-container" style="margin-bottom: 0;">
+                        <div class="fed-header-gold">AÇÕES RÁPIDAS</div>
+                        <div style="padding: 18px; display: flex; flex-direction: column; gap: 12px;">
+                            <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 14px; border-radius: 6px;">
+                                <span style="font-size: 10.5px; font-weight: 800; color: #0f1c3f; text-transform: uppercase; display: block;">Impressão de Fichas</span>
+                                <p style="font-size: 12px; color: #475569; margin: 4px 0 10px 0;">Imprima de uma só vez todas as fichas A4 dos atletas separados por categoria.</p>
+                                <button onclick="switchAdmTab('impressao', document.getElementById('nav-adm-impressao'))" class="btn-action-text-green" style="font-size: 11px; width: 100%; justify-content: center; height: 36px;">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                                    Imprimir Fichas
+                                </button>
+                            </div>
+
+                            <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 14px; border-radius: 6px;">
+                                <span style="font-size: 10.5px; font-weight: 800; color: #0f1c3f; text-transform: uppercase; display: block;">Simulação de Cadastro</span>
+                                <p style="font-size: 12px; color: #475569; margin: 4px 0 10px 0;">Adicione uma equipe de teste com atletas para verificar o fluxo de aprovação.</p>
+                                <button onclick="simularEnvioNovoCadastro()" class="btn-action-text-green" style="background: #0f1c3f; font-size: 11px; width: 100%; justify-content: center; height: 36px;">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                    Simular Nova Equipe
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- 2. ABA: EQUIPES (BLOCOS DE EQUIPES -> PÁGINA DO TIME)          -->
+            <!-- ============================================================== -->
+            <section id="tab-adm-equipes" class="tab-pane">
+                
+                <!-- SUB-VIEW A: GRADE DE BLOCOS DAS EQUIPES -->
+                <div id="adm-subview-lista-equipes">
+                    
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+                        <div>
+                            <h3 style="font-size: 16px; font-weight: 800; color: #0f1c3f; text-transform: uppercase;">Equipes Cadastradas</h3>
+                            <p style="font-size: 12px; color: #64748b;">Selecione qualquer equipe para visualizar seus atletas, categorias e fichas de inscrição.</p>
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <button onclick="simularEnvioNovoCadastro()" class="btn-action-text-green" style="background: #0f1c3f; font-size: 11.5px; height: 36px;">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                Simular Nova Equipe
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- BARRA DE FILTROS LIMPA -->
+                    <div class="filter-bar-adm">
+                        <input type="text" id="filtro-busca-equipes" class="search-input-adm" aria-label="Buscar equipe por nome, cidade ou responsável" placeholder="Buscar equipe por nome, cidade ou responsável..." oninput="renderizarBlocosEquipesDebounced()">
+                        
+                        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                            <select id="filtro-categoria-equipes" class="select-filter-adm" onchange="renderizarBlocosEquipes()">
+                                <option value="todas">Todas as Categorias</option>
+                                <option value="Adulto Masculino">Adulto Masculino</option>
+                                <option value="Adulto Feminino">Adulto Feminino</option>
+                                <option value="Sub-18 Masculino">Sub-18 Masculino</option>
+                                <option value="Sub-18 Feminino">Sub-18 Feminino</option>
+                                <option value="Sub-15 Masculino">Sub-15 Masculino</option>
+                                <option value="Sub-15 Feminino">Sub-15 Feminino</option>
+                                <option value="Sub-13 Masculino">Sub-13 Masculino</option>
+                                <option value="Sub-13 Feminino">Sub-13 Feminino</option>
+                            </select>
+
+                            <select id="filtro-campeonato-equipes" class="select-filter-adm" onchange="renderizarBlocosEquipes()">
+                                <option value="todos">Todos os Campeonatos</option>
+                                <!-- Preenchido via JS -->
+                            </select>
+
+                            <select id="filtro-status-equipes" class="select-filter-adm" onchange="renderizarBlocosEquipes()">
+                                <option value="todos">Todos os Status</option>
+                                <option value="Homologado">Homologadas</option>
+                                <option value="Pendente">Pendentes</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- GRADE DE BLOCOS DE EQUIPES -->
+                    <div id="grid-blocos-equipes-principal" class="grid-equipes-adm">
+                        <!-- Blocos clicáveis injetados via JS -->
+                    </div>
+
+                </div>
+
+                <!-- SUB-VIEW B: PÁGINA INTERNA DEDICADA DA EQUIPE (AO CLICAR NO BLOCO) -->
+                <div id="adm-subview-detalhe-equipe" style="display: none;">
+                    
+                    <!-- BARRA DE NAVEGAÇÃO E AÇÕES PRINCIPAIS -->
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+                        <button onclick="fecharPaginaEquipeAdm()" style="display: inline-flex; align-items: center; gap: 8px; background: #ffffff; color: #0f1c3f; border: 1px solid #cbd5e1; padding: 8px 16px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; text-transform: uppercase; box-shadow: 0 1px 2px rgba(0,0,0,0.04);">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                            Voltar
+                        </button>
+
+                        <div id="equipe-detalhe-acoes-status" style="display: flex; align-items: center; gap: 10px;">
+                            <!-- Ações de Homologação / Status -->
+                        </div>
+                    </div>
+
+                    <!-- CABEÇALHO DA EQUIPE SELECIONADA -->
+                    <div class="equipe-detalhe-header-card">
+                        <div class="equipe-detalhe-banner">
+                            <div style="display: flex; align-items: center; gap: 16px;">
+                                <img id="pag-eq-logo" src="logos/logo_avv.png" style="width: 52px; height: 52px; border-radius: 6px; background: #ffffff; padding: 4px; object-fit: contain;" alt="Escudo">
+                                <div>
+                                    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                                        <h2 id="pag-eq-nome" style="font-size: 17px; font-weight: 800; text-transform: uppercase; margin: 0; color: #ffffff;">NOME DA EQUIPE</h2>
+                                        <span id="pag-eq-status-badge" class="badge-status-aprovado">Homologada</span>
+                                    </div>
+                                    <div id="pag-eq-subtitulo" style="font-size: 11.5px; color: #cbd5e1; margin-top: 3px;">
+                                        Vilhena - RO &bull; Protocolo: AVV-191420 &bull; Inscrita em: 05/09/2026
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- METADADOS DA EQUIPE -->
+                        <div class="equipe-detalhe-info-grid">
+                            <div class="equipe-detalhe-info-item">
+                                <span>Responsável</span>
+                                <strong id="pag-eq-dirigente">Silomar Silva</strong>
+                            </div>
+                            <div class="equipe-detalhe-info-item">
+                                <span>Telefone</span>
+                                <strong id="pag-eq-whats" style="color: #166534;">(69) 99209-9604</strong>
+                            </div>
+                            <div class="equipe-detalhe-info-item">
+                                <span>E-mail</span>
+                                <strong id="pag-eq-email" style="color: #1d4ed8;">contato@avv.com.br</strong>
+                            </div>
+                            <div class="equipe-detalhe-info-item">
+                                <span>Campeonato</span>
+                                <strong id="pag-eq-campeonato">Superliga Interiorana</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- BARRA CONSOLIDADA: CATEGORIAS E AÇÕES DE IMPRESSÃO -->
+                    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 18px; margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);">
+                        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                            <span style="font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase; margin-right: 4px;">Categorias:</span>
+                            <div id="pag-eq-categorias-tabs" class="categorias-tabs-bar" style="margin-bottom: 0;">
+                                <!-- Abas das categorias geradas via JS -->
+                            </div>
+                        </div>
+
+                        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                            <button onclick="imprimirTodasFichasDaEquipeCategoriaAtual()" class="btn-clean-action btn-clean-green" style="height: 34px;">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                                Imprimir Fichas (<span id="count-btn-imprimir-cat">0</span>)
+                            </button>
+                            <button onclick="imprimirRelacaoNominalCategoriaAtual()" class="btn-clean-action btn-clean-navy" style="height: 34px;">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                                Súmula
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- TABELA DE ATLETAS DA EQUIPE NA CATEGORIA SELECIONADA -->
+                    <div class="fed-card-container">
+                        <div class="fed-header-gold" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                            <span>ATLETAS DA EQUIPE (<span id="pag-eq-count-atletas">0</span>)</span>
+                            <label style="display: inline-flex; align-items: center; gap: 6px; font-size: 11px; cursor: pointer; color: #ffffff;">
+                                <input type="checkbox" id="chk-adm-all-atletas" onchange="toggleSelecionarTodosAtletasAdm(this.checked)" style="width: 15px; height: 15px; cursor: pointer;">
+                                Selecionar Todos
+                            </label>
+                        </div>
+
+                        <div style="overflow-x: auto;">
+                            <table class="table-adm">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 44px; text-align: center;">SEL.</th>
+                                        <th style="width: 64px; text-align: center;">FOTO</th>
+                                        <th>NOME DO ATLETA</th>
+                                        <th>INSCRIÇÃO</th>
+                                        <th>CATEGORIA</th>
+                                        <th>POSIÇÃO</th>
+                                        <th>DOCUMENTOS</th>
+                                        <th>NASCIMENTO</th>
+                                        <th style="text-align: center; width: 140px;">FICHA</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="pag-eq-tbody-atletas">
+                                    <!-- Atletas gerados via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- QUADRO DA COMISSÃO TÉCNICA DA EQUIPE -->
+                    <div class="fed-card-container" style="margin-bottom: 0;">
+                        <div style="background: #0f1c3f; color: #ffffff; padding: 10px 18px; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; display: flex; justify-content: space-between; align-items: center;">
+                            <span>COMISSÃO TÉCNICA</span>
+                            <span id="pag-eq-count-comissao" style="font-size: 11px; color: #cbd5e1;">0 Membros</span>
+                        </div>
+                        <div id="pag-eq-lista-comissao" class="grid-comissao-tecnica">
+                            <!-- Membros da comissão técnica gerados via JS -->
+                        </div>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- 3. ABA: CAMPEONATOS                                            -->
+            <!-- ============================================================== -->
+            <section id="tab-adm-campeonatos" class="tab-pane">
+                
+                <div style="margin-bottom: 20px;">
+                    <h3 style="font-size: 16px; font-weight: 800; color: #0f1c3f; text-transform: uppercase;">Campeonatos</h3>
+                    <p style="font-size: 12px; color: #64748b;">Gerencie os torneios oficiais da federação, configure categorias e consulte as equipes inscritas.</p>
+                </div>
+
+                <!-- GRADE DE CAMPEONATOS CADASTRADOS -->
+                <div id="grid-adm-campeonatos" class="grid-champs-adm">
+                    <!-- Cards de campeonatos gerados dinamicamente -->
+                </div>
+
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- 4. ABA: IMPRIMIR FICHAS                                        -->
+            <!-- ============================================================== -->
+            <section id="tab-adm-impressao" class="tab-pane">
+                
+                <div style="margin-bottom: 20px;">
+                    <h3 style="font-size: 16px; font-weight: 800; color: #0f1c3f; text-transform: uppercase;">Impressão de Fichas</h3>
+                    <p style="font-size: 12px; color: #64748b;">Selecione a equipe e a categoria desejada para imprimir as fichas individuais A4 ou a relação nominal.</p>
+                </div>
+
+                <!-- SELETOR DE IMPRESSÃO EM LOTE -->
+                <div class="fed-card-container" style="border: 1px solid #cbd5e1; border-radius: 8px;">
+                    <div class="fed-header-gold">FILTRAR IMPRESSÃO</div>
+                    <div style="padding: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; align-items: end; background: #ffffff;">
+                        
+                        <div>
+                            <label style="display: block; font-size: 11px; font-weight: 800; color: #0f1c3f; text-transform: uppercase; margin-bottom: 6px;">1. Selecionar Equipe</label>
+                            <select id="imp-select-equipe" class="select-filter-adm" style="width: 100%;" onchange="atualizarPreviaCentralImpressao()">
+                                <option value="todas">Todas as Equipes</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label style="display: block; font-size: 11px; font-weight: 800; color: #0f1c3f; text-transform: uppercase; margin-bottom: 6px;">2. Selecionar Categoria</label>
+                            <select id="imp-select-categoria" class="select-filter-adm" style="width: 100%;" onchange="atualizarPreviaCentralImpressao()">
+                                <option value="todas">Todas as Categorias</option>
+                                <option value="Adulto Masculino">Adulto Masculino</option>
+                                <option value="Adulto Feminino">Adulto Feminino</option>
+                                <option value="Sub-18 Masculino">Sub-18 Masculino</option>
+                                <option value="Sub-18 Feminino">Sub-18 Feminino</option>
+                                <option value="Sub-15 Masculino">Sub-15 Masculino</option>
+                                <option value="Sub-15 Feminino">Sub-15 Feminino</option>
+                                <option value="Sub-13 Masculino">Sub-13 Masculino</option>
+                                <option value="Sub-13 Feminino">Sub-13 Feminino</option>
+                            </select>
+                        </div>
+
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                            <button onclick="dispararImpressaoCentralFichas()" class="btn-action-text-green" style="flex: 1; height: 38px; justify-content: center; font-size: 12px;">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                                Imprimir Fichas (<span id="imp-count-fichas">0</span>)
+                            </button>
+                            <button onclick="dispararImpressaoCentralSumula()" class="btn-action-text-green" style="background: #0f1c3f; height: 38px; justify-content: center; font-size: 12px;">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                                Relação Nominal
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- PRÉVIA DOS ATLETAS QUE SERÃO IMPRESSOS -->
+                <div class="fed-card-container">
+                    <div style="background: #0f1c3f; color: #ffffff; padding: 11px 18px; font-size: 12px; font-weight: 800; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center;">
+                        <span>ATLETAS SELECIONADOS</span>
+                        <span id="imp-resumo-filtro" style="font-size: 11px; color: #c5a021;">Mostrando todos os atletas</span>
+                    </div>
+                    <div style="overflow-x: auto;">
+                        <table class="table-adm">
+                            <thead>
+                                <tr>
+                                    <th style="width: 60px; text-align: center;">FOTO</th>
+                                    <th>ATLETA</th>
+                                    <th>EQUIPE</th>
+                                    <th>CATEGORIA</th>
+                                    <th>POSIÇÃO</th>
+                                    <th>DOCUMENTOS</th>
+                                    <th style="text-align: center; width: 150px;">FICHA</th>
+                                </tr>
+                            </thead>
+                            <tbody id="imp-tbody-previa">
+                                <!-- Gerado via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </section>
+
+        </main>
+    </div>
+
+    <!-- ====================================================================== -->
+    <!-- MODAL: CONFIGURAR CAMPEONATO (ADM)                                     -->
+    <!-- ====================================================================== -->
+    <div id="modal-criar-campeonato" class="no-print" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 28, 63, 0.8); z-index: 2800; align-items: center; justify-content: center; backdrop-filter: blur(4px); padding: 15px;">
+        <div style="background: #ffffff; width: 100%; max-width: 820px; max-height: 92vh; border-radius: 6px; box-shadow: 0 15px 40px rgba(0,0,0,0.4); display: flex; flex-direction: column; overflow: hidden;">
+            
+            <div style="background: #0f1c3f; color: #ffffff; padding: 16px 22px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #c5a021;">
+                <div>
+                    <h3 style="font-size: 14px; font-weight: 800; text-transform: uppercase; margin: 0; letter-spacing: 0.5px;">CONFIGURAR CAMPEONATO</h3>
+                    <span style="font-size: 11px; color: #cbd5e1;">Defina as diretrizes, categorias aceitas e regulamento</span>
+                </div>
+                <button onclick="fecharModalCriarCampeonato()" style="background: none; border: none; font-size: 24px; color: #ffffff; cursor: pointer; line-height: 1;">&times;</button>
+            </div>
+
+            <form id="form-criar-campeonato" onsubmit="salvarNovoCampeonato(event)" style="padding: 22px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 16px;">
+                
+                <input type="hidden" id="champ-edit-id">
+
+                <div>
+                    <label style="display: block; font-size: 11px; font-weight: 800; color: #0f1c3f; text-transform: uppercase; margin-bottom: 4px;">Nome Oficial do Torneio <span style="color: #ef4444;">*</span></label>
+                    <input type="text" id="champ-form-nome" required style="width: 100%; height: 38px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12.5px;" placeholder="Ex: COPA RONDÔNIA DE VOLEIBOL - ETAPA CONE SUL">
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                    <div>
+                        <label style="display: block; font-size: 11px; font-weight: 800; color: #0f1c3f; text-transform: uppercase; margin-bottom: 4px;">Modalidade <span style="color: #ef4444;">*</span></label>
+                        <select id="champ-form-modalidade" required style="width: 100%; height: 38px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12.5px; background: #fff;">
+                            <option value="Vôlei de Quadra Adulto Oficial">Vôlei de Quadra Adulto Oficial</option>
+                            <option value="Vôlei de Quadra Categorias de Base">Vôlei de Quadra Categorias de Base</option>
+                            <option value="Vôlei de Areia">Vôlei de Areia</option>
+                            <option value="Vôlei Master">Vôlei Master</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label style="display: block; font-size: 11px; font-weight: 800; color: #0f1c3f; text-transform: uppercase; margin-bottom: 4px;">Prazo de Inscrições <span style="color: #ef4444;">*</span></label>
+                        <input type="text" id="champ-form-fase" required style="width: 100%; height: 38px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12.5px;" placeholder="Ex: Inscrições Abertas até 20/12/2026">
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                    <div>
+                        <label style="display: block; font-size: 11px; font-weight: 800; color: #0f1c3f; text-transform: uppercase; margin-bottom: 4px;">Taxa de Participação</label>
+                        <input type="text" id="champ-form-taxa" style="width: 100%; height: 38px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12.5px;" value="Isento / Filiação Ativa">
+                    </div>
+
+                    <div>
+                        <label style="display: block; font-size: 11px; font-weight: 800; color: #0f1c3f; text-transform: uppercase; margin-bottom: 4px;">Limite Máx. de Atletas por Equipe</label>
+                        <input type="number" id="champ-form-limite" style="width: 100%; height: 38px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12.5px;" value="12" min="2" max="20">
+                    </div>
+                </div>
+
+                <div>
+                    <label style="display: block; font-size: 11px; font-weight: 800; color: #0f1c3f; text-transform: uppercase; margin-bottom: 4px;">Imagem de Banner / Capa do Torneio</label>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <input type="text" id="champ-form-banner" style="flex: 1; height: 38px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12px;" placeholder="Ex: avv_superliga_athlete.png ou cole uma URL" oninput="atualizarBadgeArquivoBanner(this.value)">
+                        <label class="btn-clean-action btn-clean-navy" style="height: 38px; padding: 0 14px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; font-size: 11.5px;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                            Selecionar Arquivo
+                            <input type="file" id="champ-form-banner-file" accept="image/*" style="display: none;" onchange="previewUploadBannerCampeonato(event)">
+                        </label>
+                    </div>
+                    
+                    <!-- INFORMAÇÕES DE ENQUADRAMENTO E STATUS DO ARQUIVO -->
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; margin-top: 6px;">
+                        <small style="font-size: 11px; color: #64748b; display: inline-flex; align-items: center; gap: 4px;">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                            Tamanho recomendado para enquadramento: <strong>720 x 240 px</strong> (proporção 3:1 panorâmica).
+                        </small>
+                        <div id="champ-banner-file-badge" style="display: none; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; color: #166534; background: #dcfce7; border: 1px solid #bbf7d0; padding: 3px 8px; border-radius: 4px;">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                            <span id="champ-banner-file-name">arquivo.png</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label style="display: block; font-size: 11px; font-weight: 800; color: #0f1c3f; text-transform: uppercase; margin-bottom: 6px;">
+                        Categorias Homologadas e Aceitas Neste Torneio <span style="color: #ef4444;">*</span>
+                    </label>
+                    <div style="background: #f8fafc; border: 1px solid #cbd5e1; padding: 16px; border-radius: 6px; display: flex; flex-direction: column; gap: 14px;">
+                        
+                        <!-- SELETOR DE GÊNERO/NAIPE -->
+                        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding-bottom: 12px; border-bottom: 1px solid #e2e8f0;">
+                            <span style="font-size: 11px; font-weight: 700; color: #475569; text-transform: uppercase;">Gênero / Naipe de Disputa:</span>
+                            <div style="display: flex; gap: 16px; align-items: center;">
+                                <label style="display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: #0f1c3f; cursor: pointer;">
+                                    <input type="checkbox" id="naipe-masculino" checked onchange="atualizarOpcoesCategoriasNaipe()" style="cursor: pointer;">
+                                    Masculino
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: #0f1c3f; cursor: pointer;">
+                                    <input type="checkbox" id="naipe-feminino" checked onchange="atualizarOpcoesCategoriasNaipe()" style="cursor: pointer;">
+                                    Feminino
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- CATEGORIAS OFICIAIS (SUB-13, SUB-15, SUB-18, ADULTO) -->
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px;">
+                            <label style="display: flex; align-items: center; gap: 8px; font-size: 12.5px; font-weight: 700; color: #0f1c3f; background: #ffffff; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 4px; cursor: pointer;">
+                                <input type="checkbox" class="cat-base-chk" value="Sub-13" onchange="sincronizarCategoriasFinais()" style="cursor: pointer;">
+                                Sub-13
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 8px; font-size: 12.5px; font-weight: 700; color: #0f1c3f; background: #ffffff; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 4px; cursor: pointer;">
+                                <input type="checkbox" class="cat-base-chk" value="Sub-15" onchange="sincronizarCategoriasFinais()" style="cursor: pointer;">
+                                Sub-15
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 8px; font-size: 12.5px; font-weight: 700; color: #0f1c3f; background: #ffffff; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 4px; cursor: pointer;">
+                                <input type="checkbox" class="cat-base-chk" value="Sub-18" onchange="sincronizarCategoriasFinais()" style="cursor: pointer;">
+                                Sub-18
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 8px; font-size: 12.5px; font-weight: 700; color: #0f1c3f; background: #ffffff; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 4px; cursor: pointer;">
+                                <input type="checkbox" class="cat-base-chk" value="Adulto" checked onchange="sincronizarCategoriasFinais()" style="cursor: pointer;">
+                                Adulto
+                            </label>
+                        </div>
+
+                        <!-- RESUMO GERADO AUTOMATICAMENTE -->
+                        <div style="background: #ffffff; padding: 10px 12px; border: 1px dashed #cbd5e1; border-radius: 4px;">
+                            <span style="font-size: 10px; color: #64748b; font-weight: 700; text-transform: uppercase; display: block; margin-bottom: 4px;">Categorias Resultantes Homologadas:</span>
+                            <div id="champ-categorias-resultantes-preview" style="display: flex; flex-wrap: wrap; gap: 6px;">
+                                <!-- Tags dinâmicas -->
+                            </div>
+                        </div>
+
+                        <!-- INPUTS OCULTOS DE PERSISTÊNCIA -->
+                        <div id="champ-cats-hidden-container" style="display: none;"></div>
+
+                    </div>
+                </div>
+
+                <div>
+                    <label style="display: block; font-size: 11px; font-weight: 800; color: #0f1c3f; text-transform: uppercase; margin-bottom: 4px;">Visão Geral do Torneio</label>
+                    <textarea id="champ-form-desc" rows="3" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12.5px; font-family: inherit; resize: vertical;" placeholder="Breve resumo explicativo sobre a finalidade da competição..."></textarea>
+                </div>
+
+                <div>
+                    <label style="display: block; font-size: 11px; font-weight: 800; color: #0f1c3f; text-transform: uppercase; margin-bottom: 4px;">Conteúdo das Cláusulas do Regulamento Oficial (PDF)</label>
+                    <textarea id="champ-form-reg" rows="4" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12px; font-family: monospace; resize: vertical;" placeholder="Insira o texto dos artigos ou capítulos que irão compor o documento oficial em PDF..."></textarea>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 6px;">
+                    <button type="submit" class="btn-action-text-green" style="flex: 2; height: 42px; font-size: 12px; font-weight: 800; justify-content: center;">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        Salvar e Publicar Campeonato
+                    </button>
+                    <button type="button" onclick="fecharModalCriarCampeonato()" style="flex: 1; height: 42px; border: 1px solid #cbd5e1; background: #ffffff; border-radius: 4px; font-size: 12px; font-weight: 700; cursor: pointer;">
+                        Cancelar
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- ====================================================================== -->
+    <!-- MODAL: FICHA OFICIAL INDIVIDUAL DO ATLETA (FOLHA A4 COM IMPRESSÃO)     -->
+    <!-- ====================================================================== -->
+    <div id="modal-adm-ficha-atleta" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 28, 63, 0.85); z-index: 3100; align-items: center; justify-content: center; backdrop-filter: blur(4px); padding: 15px;">
+        <div style="background: #ffffff; width: 100%; max-width: 820px; max-height: 94vh; border-radius: 8px; box-shadow: 0 15px 40px rgba(0,0,0,0.5); display: flex; flex-direction: column; overflow: hidden;">
+            
+            <!-- BARRA SUPERIOR DE AÇÕES (NO PRINT) -->
+            <div class="no-print" style="background: #0f1c3f; color: #ffffff; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #c5a021;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <img src="logos/logo_avv.png" style="width: 26px; height: 26px; object-fit: contain;" alt="AVV">
+                    <span style="font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">FICHA OFICIAL DO ATLETA &bull; VISTORIA ADMINISTRATIVA</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <button onclick="window.print()" class="btn-action-text-green" style="background: #16a34a; font-size: 11px; padding: 6px 14px; height: 32px; gap: 6px;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                        Imprimir Ficha
+                    </button>
+                    <button onclick="fecharFichaAtletaAdm()" style="background: transparent; border: none; color: #ffffff; font-size: 24px; cursor: pointer; line-height: 1;" title="Fechar">&times;</button>
+                </div>
+            </div>
+
+            <!-- FOLHA A4 TIMBRADA COM MARCA D'ÁGUA -->
+            <div style="flex: 1; overflow-y: auto; padding: 24px; background: #e2e8f0; display: flex; justify-content: center;">
+                <div id="adm-folha-individual-container" class="folha-a4-avv" style="box-shadow: 0 4px 15px rgba(0,0,0,0.12); border-radius: 4px; padding: 28px 32px; min-height: 860px; background: #ffffff; position: relative; width: 100%; max-width: 760px;">
+                    <!-- Conteúdo preenchido dinamicamente por gerarHtmlFolhaFichaA4() -->
+                </div>
+            </div>
+
+            <!-- RODAPÉ DO MODAL -->
+            <div class="no-print" style="background: #f8fafc; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #e2e8f0;">
+                <span style="font-size: 11px; color: #64748b;">Visualizador de Ficha Homologada (Padrão A4 AVV)</span>
+                <button type="button" onclick="fecharFichaAtletaAdm()" style="padding: 7px 16px; background: #0f1c3f; color: #ffffff; border: none; border-radius: 4px; font-size: 12px; font-weight: 700; cursor: pointer;">
+                    Fechar Ficha
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ====================================================================== -->
+    <!-- MODAL PERSONALIZADO DE CONFIRMAÇÃO (DESIGN PROFISSIONAL / ZERO ALERT)  -->
+    <!-- ====================================================================== -->
+    <div id="modal-confirmacao-custom" class="no-print" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 28, 63, 0.75); z-index: 3900; align-items: center; justify-content: center; backdrop-filter: blur(5px); padding: 16px;">
+        <div style="background: #ffffff; width: 100%; max-width: 440px; border-radius: 8px; box-shadow: 0 20px 45px rgba(0,0,0,0.35); overflow: hidden;">
+            
+            <div style="padding: 24px 24px 18px 24px; display: flex; gap: 16px; align-items: flex-start;">
+                <div id="modal-confirm-icon-box" style="width: 46px; height: 46px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <!-- Ícone SVG injetado via JS -->
+                </div>
+                <div style="flex: 1;">
+                    <h3 id="modal-confirm-titulo" style="font-size: 15px; font-weight: 800; color: #0f1c3f; margin: 0 0 6px 0; line-height: 1.3; text-transform: uppercase;">Confirmar Ação</h3>
+                    <p id="modal-confirm-mensagem" style="font-size: 12.5px; color: #475569; margin: 0; line-height: 1.5;">Mensagem de confirmação...</p>
+                </div>
+            </div>
+
+            <div style="background: #f8fafc; padding: 14px 20px; display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid #e2e8f0;">
+                <button type="button" id="modal-confirm-btn-cancelar" onclick="fecharModalConfirmacao()" style="padding: 8px 16px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12px; font-weight: 600; color: #475569; cursor: pointer; transition: background 0.15s;">
+                    Cancelar
+                </button>
+                <button type="button" id="modal-confirm-btn-confirmar" style="padding: 8px 18px; border: none; border-radius: 4px; font-size: 12px; font-weight: 700; color: #ffffff; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: opacity 0.15s;">
+                    Confirmar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTAINER PARA IMPRESSÃO EM LOTE DE MÚLTIPLAS FICHAS (1 POR PÁGINA A4) -->
+    <div id="area-fichas-multiplas" style="display: none;"></div>
+
+    <!-- SCRIPT DE GESTÃO ADMINISTRATIVA INTEGRADA -->
+    <script>
+        // ======================================================================
+        // UTILITÁRIOS DE PERFORMANCE, ACESSIBILIDADE E PREVENÇÃO DE TRAVAMENTOS
+        // ======================================================================
+        function comprimirImagemCanvasAdm(file, maxW, maxH, quality, callback) {
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    try {
+                        let w = img.width;
+                        let h = img.height;
+                        if (w > maxW || h > maxH) {
+                            const ratio = Math.min(maxW / w, maxH / h);
+                            w = Math.round(w * ratio);
+                            h = Math.round(h * ratio);
+                        }
+                        const canvas = document.createElement('canvas');
+                        canvas.width = w;
+                        canvas.height = h;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, w, h);
+                        const compressedUrl = canvas.toDataURL('image/jpeg', quality || 0.8);
+                        callback(compressedUrl);
+                    } catch (err) {
+                        callback(e.target.result);
+                    }
+                };
+                img.onerror = function() {
+                    callback(e.target.result);
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function salvarStorageSeguroAdm(chave, valorString) {
+            try {
+                localStorage.setItem(chave, valorString);
+                return true;
+            } catch (err) {
+                console.warn('Limite de armazenamento atingido ao salvar:', chave, err);
+                return false;
+            }
+        }
+
+        let timerDebounceEquipes = null;
+        function renderizarBlocosEquipesDebounced() {
+            if (timerDebounceEquipes) clearTimeout(timerDebounceEquipes);
+            timerDebounceEquipes = setTimeout(() => {
+                renderizarBlocosEquipes();
+            }, 140);
+        }
+
+        // Acessibilidade: Fechar qualquer modal aberto ao pressionar a tecla ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                const modaisIds = [
+                    'modal-confirmacao-custom',
+                    'modal-criar-campeonato',
+                    'modal-adm-ficha-atleta'
+                ];
+                modaisIds.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el && el.style.display && el.style.display !== 'none') {
+                        el.style.display = 'none';
+                    }
+                });
+            }
+        });
+
+        // Ícones SVG padronizados para uso dinâmico (sem emojis)
+        const SVG_ICONS = {
+            check: `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>`,
+            clock: `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>`,
+            pin: `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>`,
+            users: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>`,
+            arrowRight: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>`,
+            settings: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg>`,
+            trash: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>`,
+            fileText: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>`,
+            xCircle: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`
+        };
+
+        // ======================================================================
+        // SISTEMA DE MODAL PERSONALIZADO DE CONFIRMAÇÃO (CUSTOM DIALOG)
+        // ======================================================================
+        let callbackConfirmacaoPendente = null;
+
+        function exibirModalConfirmacao({ titulo, mensagem, textoBotao = 'Confirmar', corBotao = '#dc2626', tipo = 'danger', onConfirm }) {
+            callbackConfirmacaoPendente = onConfirm;
+
+            const modal = document.getElementById('modal-confirmacao-custom');
+            const elTitulo = document.getElementById('modal-confirm-titulo');
+            const elMensagem = document.getElementById('modal-confirm-mensagem');
+            const btnConfirmar = document.getElementById('modal-confirm-btn-confirmar');
+            const iconBox = document.getElementById('modal-confirm-icon-box');
+
+            elTitulo.textContent = titulo;
+            elMensagem.textContent = mensagem;
+            btnConfirmar.textContent = textoBotao;
+            btnConfirmar.style.background = corBotao;
+
+            if (tipo === 'danger') {
+                iconBox.style.background = '#fee2e2';
+                iconBox.innerHTML = `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>`;
+            } else if (tipo === 'warning') {
+                iconBox.style.background = '#fef3c7';
+                iconBox.innerHTML = `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2.2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>`;
+            } else {
+                iconBox.style.background = '#dcfce7';
+                iconBox.innerHTML = `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.2"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+            }
+
+            btnConfirmar.onclick = () => {
+                fecharModalConfirmacao();
+                if (typeof callbackConfirmacaoPendente === 'function') {
+                    callbackConfirmacaoPendente();
+                }
+            };
+
+            modal.style.display = 'flex';
+        }
+
+        function fecharModalConfirmacao() {
+            const modal = document.getElementById('modal-confirmacao-custom');
+            modal.style.display = 'none';
+            callbackConfirmacaoPendente = null;
+        }
+
+        // ======================================================================
+        // 1. BANCO DE DADOS CENTRALIZADO (CAMPEONATOS + EQUIPES + ATLETAS)
+        // ======================================================================
+        let campeonatosAdm = {};
+        let equipesSistema = [];
+        let equipeAbertaId = null;
+        let categoriaAtivaEquipe = 'todas';
+
+        const bancoPadraoCampeonatos = {
+            'superliga-masc': {
+                id: 'superliga-masc',
+                nome: 'SUPERLIGA INTERIORANA - POLO VILHENA - MASCULINO',
+                modalidade: 'Vôlei de Quadra Adulto Oficial',
+                banner: 'avv_superliga_athlete.png',
+                fase: 'Inscrições Abertas até 25/11/2026',
+                taxa: 'Isento / Filiação Ativa',
+                limiteAtletas: 12,
+                descricao: 'A Superliga Interiorana da AVV é o torneio de elite regional de voleibol indoor masculino do cone sul de Rondônia, reunindo os principais clubes habilitados na federação.',
+                categoriasAceitas: ['Adulto Masculino'],
+                regulamento: '<h4>CAPÍTULO I - DA FINALIDADE</h4><p>Art. 1º - Torneio de elite regional masculino homologado pela AVV.</p>'
+            },
+            'superliga-fem': {
+                id: 'superliga-fem',
+                nome: 'SUPERLIGA INTERIORANA - POLO VILHENA - FEMININO',
+                modalidade: 'Vôlei de Quadra Adulto Oficial',
+                banner: 'avv_team_huddle.png',
+                fase: 'Inscrições Abertas até 25/11/2026',
+                taxa: 'Isento / Filiação Ativa',
+                limiteAtletas: 12,
+                descricao: 'Competição principal do voleibol feminino regional, promovendo o protagonismo das equipes e atletas de voleibol indoor no Estado.',
+                categoriasAceitas: ['Adulto Feminino'],
+                regulamento: '<h4>CAPÍTULO I - DA FINALIDADE</h4><p>Art. 1º - Torneio oficial feminino homologado pela AVV.</p>'
+            },
+            'estadual-base': {
+                id: 'estadual-base',
+                nome: 'CAMPEONATO ESTADUAL DE CATEGORIAS DE BASE (SUB-13, SUB-15 E SUB-18)',
+                modalidade: 'Vôlei de Quadra Categorias de Base',
+                banner: 'avv_international_league.png',
+                fase: 'Inscrições Abertas até 05/11/2026',
+                taxa: 'Isento / Fomento ao Esporte de Base',
+                limiteAtletas: 12,
+                descricao: 'Maior certame formador de novos talentos do voleibol em Rondônia, voltado aos jovens atletas das categorias de base Sub-13, Sub-15 e Sub-18.',
+                categoriasAceitas: ['Sub-13 Masculino', 'Sub-13 Feminino', 'Sub-15 Masculino', 'Sub-15 Feminino', 'Sub-18 Masculino', 'Sub-18 Feminino'],
+                regulamento: '<h4>CAPÍTULO I - DA BASE</h4><p>Art. 1º - Restrito a atletas das categorias Sub-13, Sub-15 e Sub-18 devidamente comprovados por documento oficial.</p>'
+            },
+            'circuito-praia': {
+                id: 'circuito-praia',
+                nome: 'CIRCUITO RONDONIENSE DE VÔLEI DE PRAIA',
+                modalidade: 'Vôlei de Areia',
+                banner: 'logos/rede_volei.png',
+                fase: 'Inscrições Abertas até 15/12/2026',
+                taxa: 'Isento / Filiação Ativa',
+                limiteAtletas: 4,
+                descricao: 'Etapa oficial de vôlei de areia disputada em arenas homologadas de Vilhena, aberta a duplas e quartetos das categorias adultas e de base.',
+                categoriasAceitas: ['Adulto Masculino', 'Adulto Feminino'],
+                regulamento: '<h4>CAPÍTULO I - DO VÔLEI DE AREIA</h4><p>Art. 1º - Disputas em melhor de 3 sets.</p>'
+            }
+        };
+
+        const equipesIniciaisPadrao = [
+            {
+                id: 'eq-avv-principal',
+                numeroInscricao: '191420',
+                protocolo: 'AVV-191420',
+                nomeTime: 'AVV VILHENA / SICREDI',
+                cidade: 'Vilhena',
+                estado: 'RO',
+                responsavelNome: 'Silomar Silva',
+                email: 'contato@avv.com.br',
+                whatsapp: '(69) 99209-9604',
+                instagram: '@avv.voleivilhena',
+                dataInscricao: '05/09/2026',
+                horaInscricao: '09:12',
+                dataHoraCompleta: '05/09/2026 às 09:12',
+                status: 'Homologado',
+                logo: 'logos/logo_avv.png',
+                campeonatoId: 'superliga-masc',
+                campeonatoNome: 'SUPERLIGA INTERIORANA - POLO VILHENA - MASCULINO',
+                categorias: ['Adulto Masculino'],
+                atletas: [
+                    {
+                        id: '1914717',
+                        nome: 'ADRIANO MARTINS GUIRRO',
+                        cpf: '064.797.809-14',
+                        rg: '142857 SSP/RO',
+                        nasc: '28/04/1988',
+                        genero: 'Masculino',
+                        categoria: 'Adulto Masculino',
+                        posicao: 'Ponteiro',
+                        whats: '(69) 99209-9604',
+                        dataHora: '10/09/2026 às 13:47',
+                        foto: 'logos/mascote_coelho.png'
+                    },
+                    {
+                        id: '1914718',
+                        nome: 'LUCAS GABRIEL SILVEIRA',
+                        cpf: '864.213.902-11',
+                        rg: '391024 SSP/RO',
+                        nasc: '15/04/2004',
+                        genero: 'Masculino',
+                        categoria: 'Adulto Masculino',
+                        posicao: 'Levantador',
+                        whats: '(69) 99344-5511',
+                        dataHora: '11/09/2026 às 15:20',
+                        foto: 'logos/mascote_coelho.png'
+                    }
+                ],
+                comissao: [
+                    {
+                        id: '138248',
+                        nome: 'GILVAN FERREIRA DA SILVA',
+                        funcao: 'Técnico Principal',
+                        cpf: '662.394.782-53',
+                        cref: '002410-G/RO',
+                        foto: 'logos/mascote_coelho.png'
+                    },
+                    {
+                        id: '55013',
+                        nome: 'ANA PAULA RIBEIRO',
+                        funcao: 'Assistente Técnica',
+                        cpf: '521.849.330-91',
+                        cref: '005118-G/RO',
+                        foto: 'logos/mascote_coelho.png'
+                    }
+                ]
+            },
+            {
+                id: 'eq-porto-velho-base',
+                numeroInscricao: '744131',
+                protocolo: 'AVV-744131',
+                nomeTime: 'PORTO VELHO VÔLEI CLUBE (BASE)',
+                cidade: 'Porto Velho',
+                estado: 'RO',
+                responsavelNome: 'Carlos Eduardo Mendes',
+                email: 'contato@portovelhovolei.com.br',
+                whatsapp: '(69) 99244-8811',
+                instagram: '@pvhvoleiclube',
+                dataInscricao: '22/09/2026',
+                horaInscricao: '11:30',
+                dataHoraCompleta: '22/09/2026 às 11:30',
+                status: 'Pendente',
+                logo: 'logos/logo_avv.png',
+                campeonatoId: 'estadual-base',
+                campeonatoNome: 'CAMPEONATO ESTADUAL DE CATEGORIAS DE BASE (SUB-13, SUB-15 E SUB-18)',
+                categorias: ['Sub-15 Masculino', 'Sub-18 Masculino'],
+                atletas: [
+                    {
+                        id: '744132',
+                        nome: 'GABRIEL HENRIQUE SOUZA',
+                        cpf: '512.309.441-10',
+                        rg: '881203 SESDEC/RO',
+                        nasc: '11/05/2009',
+                        genero: 'Masculino',
+                        categoria: 'Sub-18 Masculino',
+                        posicao: 'Ponteiro',
+                        whats: '(69) 99244-8811',
+                        dataHora: '22/09/2026 às 11:45',
+                        foto: 'logos/mascote_coelho.png'
+                    },
+                    {
+                        id: '744133',
+                        nome: 'MATHEUS VINÍCIUS ALVES',
+                        cpf: '619.882.104-55',
+                        rg: '910234 SESDEC/RO',
+                        nasc: '22/09/2011',
+                        genero: 'Masculino',
+                        categoria: 'Sub-15 Masculino',
+                        posicao: 'Levantador',
+                        whats: '(69) 99244-8811',
+                        dataHora: '22/09/2026 às 11:50',
+                        foto: 'logos/mascote_coelho.png'
+                    },
+                    {
+                        id: '744134',
+                        nome: 'ENZO GABRIEL FERREIRA',
+                        cpf: '702.441.980-32',
+                        rg: '924510 SESDEC/RO',
+                        nasc: '04/02/2012',
+                        genero: 'Masculino',
+                        categoria: 'Sub-15 Masculino',
+                        posicao: 'Central',
+                        whats: '(69) 99244-8811',
+                        dataHora: '22/09/2026 às 11:55',
+                        foto: 'logos/mascote_coelho.png'
+                    },
+                    {
+                        id: '744135',
+                        nome: 'KAUÃ VICTOR DE OLIVEIRA',
+                        cpf: '443.190.871-09',
+                        rg: '879104 SESDEC/RO',
+                        nasc: '19/08/2008',
+                        genero: 'Masculino',
+                        categoria: 'Sub-18 Masculino',
+                        posicao: 'Líbero',
+                        whats: '(69) 99244-8811',
+                        dataHora: '22/09/2026 às 12:00',
+                        foto: 'logos/mascote_coelho.png'
+                    }
+                ],
+                comissao: [
+                    {
+                        id: '139880',
+                        nome: 'RODRIGO SANTORO DE SOUZA',
+                        funcao: 'Técnico Base',
+                        cpf: '419.002.311-89',
+                        cref: '006781-G/RO',
+                        foto: 'logos/mascote_coelho.png'
+                    }
+                ]
+            },
+            {
+                id: 'eq-jiparana-fem',
+                numeroInscricao: '146219',
+                protocolo: 'AVV-146219',
+                nomeTime: 'JI-PARANÁ VOLEIBOL FEMININO',
+                cidade: 'Ji-Paraná',
+                estado: 'RO',
+                responsavelNome: 'Ana Paula Nogueira',
+                email: 'anapaula@jiparanafc.com.br',
+                whatsapp: '(69) 98411-2244',
+                instagram: '@jiparana.voleifem',
+                dataInscricao: '09/09/2026',
+                horaInscricao: '14:30',
+                dataHoraCompleta: '09/09/2026 às 14:30',
+                status: 'Pendente',
+                logo: 'logos/logo_avv.png',
+                campeonatoId: 'superliga-fem',
+                campeonatoNome: 'SUPERLIGA INTERIORANA - POLO VILHENA - FEMININO',
+                categorias: ['Adulto Feminino'],
+                atletas: [
+                    {
+                        id: '146220',
+                        nome: 'BEATRIZ HELENA RAMOS',
+                        cpf: '318.990.412-88',
+                        rg: '741258 SSP/RO',
+                        nasc: '14/07/1997',
+                        genero: 'Feminino',
+                        categoria: 'Adulto Feminino',
+                        posicao: 'Oposta',
+                        whats: '(69) 98411-2244',
+                        dataHora: '09/09/2026 às 15:00',
+                        foto: 'logos/mascote_coelho.png'
+                    },
+                    {
+                        id: '146221',
+                        nome: 'CAMILA CRISTINA DUARTE',
+                        cpf: '429.118.520-77',
+                        rg: '789654 SSP/RO',
+                        nasc: '03/11/1999',
+                        genero: 'Feminino',
+                        categoria: 'Adulto Feminino',
+                        posicao: 'Central',
+                        whats: '(69) 98411-2244',
+                        dataHora: '09/09/2026 às 15:15',
+                        foto: 'logos/mascote_coelho.png'
+                    },
+                    {
+                        id: '146222',
+                        nome: 'LARISSA MENEZES SANTOS',
+                        cpf: '550.881.332-90',
+                        rg: '812345 SSP/RO',
+                        nasc: '25/01/2001',
+                        genero: 'Feminino',
+                        categoria: 'Adulto Feminino',
+                        posicao: 'Líbero',
+                        whats: '(69) 98411-2244',
+                        dataHora: '09/09/2026 às 15:30',
+                        foto: 'logos/mascote_coelho.png'
+                    }
+                ],
+                comissao: [
+                    {
+                        id: '139001',
+                        nome: 'MARCOS VINÍCIUS PRADO',
+                        funcao: 'Preparador Físico',
+                        cpf: '209.443.118-22',
+                        cref: '005432-G/RO',
+                        foto: 'logos/mascote_coelho.png'
+                    }
+                ]
+            },
+            {
+                id: 'eq-ariquemes-beach',
+                numeroInscricao: '882041',
+                protocolo: 'AVV-882041',
+                nomeTime: 'ARIQUEMES BEACH VÔLEI',
+                cidade: 'Ariquemes',
+                estado: 'RO',
+                responsavelNome: 'Felipe Fagundes',
+                email: 'felipe@ariquemesbeach.com.br',
+                whatsapp: '(69) 99312-5500',
+                instagram: '@ariquemesbeach',
+                dataInscricao: '28/09/2026',
+                horaInscricao: '16:00',
+                dataHoraCompleta: '28/09/2026 às 16:00',
+                status: 'Homologado',
+                logo: 'logos/logo_avv.png',
+                campeonatoId: 'circuito-praia',
+                campeonatoNome: 'CIRCUITO RONDONIENSE DE VÔLEI DE PRAIA',
+                categorias: ['Adulto Masculino'],
+                atletas: [
+                    {
+                        id: '882042',
+                        nome: 'LUCAS MEDEIROS BARRETO',
+                        cpf: '719.330.122-45',
+                        rg: '654987 SSP/RO',
+                        nasc: '18/06/1995',
+                        genero: 'Masculino',
+                        categoria: 'Adulto Masculino',
+                        posicao: 'Defensor de Praia',
+                        whats: '(69) 99312-5500',
+                        dataHora: '28/09/2026 às 16:15',
+                        foto: 'logos/mascote_coelho.png'
+                    },
+                    {
+                        id: '882043',
+                        nome: 'THIAGO ALBUQUERQUE LIMA',
+                        cpf: '810.442.991-34',
+                        rg: '712390 SSP/RO',
+                        nasc: '09/12/1993',
+                        genero: 'Masculino',
+                        categoria: 'Adulto Masculino',
+                        posicao: 'Bloqueador de Praia',
+                        whats: '(69) 99312-5500',
+                        dataHora: '28/09/2026 às 16:30',
+                        foto: 'logos/mascote_coelho.png'
+                    }
+                ],
+                comissao: [
+                    {
+                        id: '140501',
+                        nome: 'FELIPE FAGUNDES',
+                        funcao: 'Técnico de Areia',
+                        cpf: '188.774.220-65',
+                        cref: '003889-G/RO',
+                        foto: 'logos/mascote_coelho.png'
+                    }
+                ]
+            }
+        ];
+
+        // Inicialização ao abrir o Painel ADM
+        document.addEventListener('DOMContentLoaded', () => {
+            carregarCampeonatos();
+            carregarBancoEquipesIntegrado();
+            atualizarTudoPainelAdm();
+
+            // Sincronização em tempo real entre abas do navegador
+            window.addEventListener('storage', (e) => {
+                if (e.key === 'avv_equipes_completo_db' || e.key === 'avv_inscricoes_teste') {
+                    carregarBancoEquipesIntegrado();
+                    atualizarTudoPainelAdm();
+                    if (equipeAbertaId) {
+                        const eqAtualizada = equipesSistema.find(eq => String(eq.id) === String(equipeAbertaId));
+                        if (eqAtualizada) renderizarConteudoPaginaEquipe(eqAtualizada);
+                    }
+                } else if (e.key === 'avv_banco_campeonatos') {
+                    carregarCampeonatos();
+                    renderizarGridCampeonatos();
+                }
+            });
+        });
+
+        function carregarBancoEquipesIntegrado() {
+            const salvoDb = localStorage.getItem('avv_equipes_completo_db');
+            if (salvoDb) {
+                try {
+                    equipesSistema = JSON.parse(salvoDb);
+                } catch (e) {
+                    equipesSistema = [...equipesIniciaisPadrao];
+                }
+            } else {
+                equipesSistema = [...equipesIniciaisPadrao];
+            }
+
+            const preCadastrosFormulario = JSON.parse(localStorage.getItem('avv_inscricoes_teste') || '[]');
+            let houveAdicao = false;
+
+            preCadastrosFormulario.forEach(pre => {
+                const jaExiste = equipesSistema.some(eq => 
+                    String(eq.protocolo) === String(pre.protocolo) || 
+                    String(eq.numeroInscricao) === String(pre.numeroInscricao) ||
+                    eq.nomeTime.toLowerCase().trim() === (pre.nomeTime || '').toLowerCase().trim()
+                );
+
+                if (!jaExiste && pre.nomeTime) {
+                    const cats = Array.isArray(pre.categorias) && pre.categorias.length > 0 
+                        ? pre.categorias 
+                        : ['Adulto Masculino'];
+                    equipesSistema.unshift({
+                        id: 'eq-' + (pre.id || Date.now()),
+                        numeroInscricao: pre.numeroInscricao || Math.floor(100000 + Math.random() * 900000),
+                        protocolo: pre.protocolo || ('AVV-' + (pre.numeroInscricao || '999999')),
+                        nomeTime: pre.nomeTime.toUpperCase(),
+                        cidade: pre.cidade || 'Vilhena',
+                        estado: pre.estado || 'RO',
+                        responsavelNome: pre.responsavelNome || 'Dirigente Responsável',
+                        email: pre.email || 'contato@equipe.com.br',
+                        whatsapp: pre.whatsapp || '(69) 99999-9999',
+                        instagram: pre.instagram || '',
+                        dataInscricao: pre.dataInscricao || new Date().toLocaleDateString('pt-BR'),
+                        horaInscricao: pre.horaInscricao || '10:00',
+                        dataHoraCompleta: pre.dataHoraCompleta || `${new Date().toLocaleDateString('pt-BR')} às 10:00`,
+                        status: pre.status === 'Homologado' ? 'Homologado' : 'Pendente',
+                        logo: 'logos/logo_avv.png',
+                        campeonatoId: 'superliga-masc',
+                        campeonatoNome: pre.campeonato && pre.campeonato !== 'Aguardando Seleção no Painel' ? pre.campeonato : 'SUPERLIGA INTERIORANA - POLO VILHENA - MASCULINO',
+                        categorias: cats,
+                        atletas: Array.isArray(pre.atletas) ? pre.atletas : [],
+                        comissao: Array.isArray(pre.comissao) ? pre.comissao : []
+                    });
+                    houveAdicao = true;
+                }
+            });
+
+            if (!salvoDb || houveAdicao) {
+                salvarBancoEquipesIntegrado();
+            }
+        }
+
+        function salvarBancoEquipesIntegrado() {
+            salvarStorageSeguroAdm('avv_equipes_completo_db', JSON.stringify(equipesSistema));
+        }
+
+        function atualizarTudoPainelAdm() {
+            atualizarIndicadoresTopo();
+            renderizarBlocosEquipes();
+            renderizarGridCampeonatos();
+            popularFiltrosCentralImpressao();
+            atualizarPreviaCentralImpressao();
+        }
+
+        // ======================================================================
+        // 2. INDICADORES E VISÃO GERAL
+        // ======================================================================
+        function atualizarIndicadoresTopo() {
+            const totalEquipes = equipesSistema.length;
+            const pendentes = equipesSistema.filter(e => e.status !== 'Homologado').length;
+            const totalAtletas = equipesSistema.reduce((acc, eq) => acc + (eq.atletas ? eq.atletas.length : 0), 0);
+            const totalChamps = Object.keys(campeonatosAdm).length;
+
+            document.getElementById('stat-adm-equipes-total').textContent = totalEquipes;
+            document.getElementById('stat-adm-equipes-pendentes').textContent = pendentes;
+            document.getElementById('stat-adm-total-atletas').textContent = totalAtletas;
+            document.getElementById('stat-adm-champs-total').textContent = totalChamps;
+
+            const badgeMenu = document.getElementById('badge-adm-novos-cadastros');
+            if (badgeMenu) {
+                badgeMenu.textContent = pendentes;
+                badgeMenu.style.display = pendentes > 0 ? 'inline-block' : 'none';
+            }
+
+            // Renderiza os blocos de resumo no Dashboard
+            const gridResumo = document.getElementById('dashboard-grid-equipes-resumo');
+            if (gridResumo) {
+                gridResumo.innerHTML = '';
+                equipesSistema.slice(0, 6).forEach(eq => {
+                    gridResumo.appendChild(criarElementoBlocoEquipe(eq));
+                });
+            }
+
+            // Renderiza lista rápida de campeonatos no Dashboard
+            const listaChampsDash = document.getElementById('dashboard-lista-campeonatos');
+            if (listaChampsDash) {
+                listaChampsDash.innerHTML = '';
+                Object.keys(campeonatosAdm).forEach(id => {
+                    const c = campeonatosAdm[id];
+                    const qtdInscritas = equipesSistema.filter(e => e.campeonatoId === c.id).length;
+                    const div = document.createElement('div');
+                    div.style.cssText = 'display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; gap: 10px; flex-wrap: wrap;';
+                    div.innerHTML = `
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <span style="width: 8px; height: 8px; border-radius: 50%; background: #16a34a; flex-shrink: 0;"></span>
+                            <div>
+                                <strong style="font-size: 12.5px; color: #0f1c3f; display: block;">${c.nome}</strong>
+                                <span style="font-size: 11px; color: #64748b;">${c.fase} &bull; <strong>${qtdInscritas} equipe(s) inscrita(s)</strong></span>
+                            </div>
+                        </div>
+                        <button onclick="filtrarEquipesPorCampeonato('${c.id}')" class="btn-champ-secondary" style="height: 30px; font-size: 11px;">
+                            Ver Equipes (${qtdInscritas})
+                            ${SVG_ICONS.arrowRight}
+                        </button>
+                    `;
+                    listaChampsDash.appendChild(div);
+                });
+            }
+        }
+
+        function irParaEquipesPendentes() {
+            document.getElementById('filtro-status-equipes').value = 'Pendente';
+            switchAdmTab('equipes', document.getElementById('nav-adm-equipes'));
+            renderizarBlocosEquipes();
+        }
+
+        function filtrarEquipesPorCampeonato(campId) {
+            const selectCamp = document.getElementById('filtro-campeonato-equipes');
+            if (selectCamp) selectCamp.value = campId;
+            switchAdmTab('equipes', document.getElementById('nav-adm-equipes'));
+            fecharPaginaEquipeAdm();
+            renderizarBlocosEquipes();
+        }
+
+        // ======================================================================
+        // 3. CARDS DE EQUIPES EXECUTIVOS (100% SVG, ALINHADOS E SOFISTICADOS)
+        // ======================================================================
+        function criarElementoBlocoEquipe(eq) {
+            const card = document.createElement('div');
+            const isHomologado = eq.status === 'Homologado';
+            card.className = 'card-equipe-bloco';
+            card.onclick = () => abrirPaginaEquipeAdm(eq.id);
+
+            const statusBadge = isHomologado
+                ? `<span class="badge-status-aprovado" style="font-size: 11px; padding: 4px 10px; font-weight: 700; border-radius: 4px;">${SVG_ICONS.check} Homologada</span>`
+                : `<span class="badge-status-pendente" style="font-size: 11px; padding: 4px 10px; font-weight: 700; border-radius: 4px;">${SVG_ICONS.clock} Pendente</span>`;
+
+            const catsSet = new Set(eq.categorias || []);
+            (eq.atletas || []).forEach(a => { if (a.categoria) catsSet.add(a.categoria); });
+            const listaCats = Array.from(catsSet);
+
+            const chipsCategorias = listaCats.map(cat => {
+                const countCat = (eq.atletas || []).filter(a => a.categoria === cat).length;
+                return `<span class="chip-cat-adm">${cat} <strong>${countCat}</strong></span>`;
+            }).join('');
+
+            const totalAtletas = (eq.atletas || []).length;
+            const totalComissao = (eq.comissao || []).length;
+
+            card.innerHTML = `
+                <div>
+                    <!-- TOPO: IDENTIDADE VISUAL COM LOGO AMPLIADA E NOME EM DESTAQUE -->
+                    <div class="equipe-bloco-header">
+                        <div class="equipe-bloco-identidade">
+                            <div class="equipe-bloco-logo-wrap">
+                                <img src="${eq.logo || 'logos/logo_avv.png'}" class="equipe-bloco-logo" alt="Escudo">
+                            </div>
+                            <div class="equipe-bloco-title-box">
+                                <h3 class="equipe-bloco-nome" title="${eq.nomeTime}">${eq.nomeTime}</h3>
+                                <div class="equipe-bloco-cidade">
+                                    ${SVG_ICONS.pin}
+                                    <span>${eq.cidade} - ${eq.estado}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CORPO DO CARD COM METADADOS E SELO DE STATUS EM LINHA DEDICADA -->
+                    <div class="equipe-bloco-body">
+                        
+                        <div class="equipe-bloco-status-strip">
+                            <span style="font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">Status da Inscrição:</span>
+                            ${statusBadge}
+                        </div>
+
+                        <div class="equipe-bloco-meta-row">
+                            <div class="equipe-meta-item">
+                                <span>Responsável</span>
+                                <strong title="${eq.responsavelNome || '---'}">${eq.responsavelNome || '---'}</strong>
+                            </div>
+                            <div class="equipe-meta-item">
+                                <span>Protocolo Oficial</span>
+                                <strong>${eq.protocolo || 'AVV-' + eq.numeroInscricao}</strong>
+                            </div>
+                        </div>
+
+                        <div class="equipe-bloco-cats">
+                            ${chipsCategorias || '<span class="chip-cat-adm">Adulto Masculino <strong>0</strong></span>'}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="equipe-bloco-footer">
+                    <div class="equipe-bloco-stats">
+                        <span>${SVG_ICONS.users} <strong>${totalAtletas}</strong> Atletas &bull; <strong>${totalComissao}</strong> Comissão</span>
+                    </div>
+                    <span class="equipe-bloco-cta">
+                        Ver Equipe ${SVG_ICONS.arrowRight}
+                    </span>
+                </div>
+            `;
+            return card;
+        }
+
+        function renderizarBlocosEquipes() {
+            const container = document.getElementById('grid-blocos-equipes-principal');
+            if (!container) return;
+            container.innerHTML = '';
+
+            const termo = (document.getElementById('filtro-busca-equipes')?.value || '').toLowerCase().trim();
+            const catFiltro = document.getElementById('filtro-categoria-equipes')?.value || 'todas';
+            const campFiltro = document.getElementById('filtro-campeonato-equipes')?.value || 'todos';
+            const statusFiltro = document.getElementById('filtro-status-equipes')?.value || 'todos';
+
+            const filtradas = equipesSistema.filter(eq => {
+                const matchTermo = !termo ||
+                    (eq.nomeTime && eq.nomeTime.toLowerCase().includes(termo)) ||
+                    (eq.cidade && eq.cidade.toLowerCase().includes(termo)) ||
+                    (eq.responsavelNome && eq.responsavelNome.toLowerCase().includes(termo)) ||
+                    (eq.protocolo && eq.protocolo.toLowerCase().includes(termo));
+
+                const catsEquipe = new Set(eq.categorias || []);
+                (eq.atletas || []).forEach(a => { if (a.categoria) catsEquipe.add(a.categoria); });
+                const matchCat = catFiltro === 'todas' || catsEquipe.has(catFiltro);
+
+                const matchCamp = campFiltro === 'todos' || eq.campeonatoId === campFiltro;
+                const matchStatus = statusFiltro === 'todos' ||
+                    (statusFiltro === 'Homologado' && eq.status === 'Homologado') ||
+                    (statusFiltro === 'Pendente' && eq.status !== 'Homologado');
+
+                return matchTermo && matchCat && matchCamp && matchStatus;
+            });
+
+            if (filtradas.length === 0) {
+                container.innerHTML = `
+                    <div style="grid-column: 1 / -1; background: #ffffff; border: 1px dashed #cbd5e1; border-radius: 8px; padding: 36px; text-align: center; color: #64748b;">
+                        <strong style="font-size: 14px; color: #0f1c3f; display: block; margin-bottom: 4px;">Nenhuma equipe encontrada para este filtro</strong>
+                        <span>Altere os critérios de busca acima ou cadastre uma nova delegação.</span>
+                    </div>
+                `;
+                return;
+            }
+
+            filtradas.forEach(eq => {
+                container.appendChild(criarElementoBlocoEquipe(eq));
+            });
+        }
+
+        // ======================================================================
+        // 4. PÁGINA INTERNA DEDICADA DA EQUIPE (ATLETAS + IMPRESSÃO POR CATEGORIA)
+        // ======================================================================
+        function abrirPaginaEquipeAdm(equipeId, categoriaPreSelecionada = 'todas') {
+            const eq = equipesSistema.find(e => String(e.id) === String(equipeId));
+            if (!eq) return;
+
+            equipeAbertaId = eq.id;
+            categoriaAtivaEquipe = categoriaPreSelecionada;
+
+            switchAdmTab('equipes', document.getElementById('nav-adm-equipes'));
+
+            document.getElementById('adm-subview-lista-equipes').style.display = 'none';
+            document.getElementById('adm-subview-detalhe-equipe').style.display = 'block';
+
+            renderizarConteudoPaginaEquipe(eq);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function fecharPaginaEquipeAdm() {
+            equipeAbertaId = null;
+            document.getElementById('adm-subview-detalhe-equipe').style.display = 'none';
+            document.getElementById('adm-subview-lista-equipes').style.display = 'block';
+            renderizarBlocosEquipes();
+            atualizarIndicadoresTopo();
+        }
+
+        function renderizarConteudoPaginaEquipe(eq) {
+            document.getElementById('pag-eq-logo').src = eq.logo || 'logos/logo_avv.png';
+            document.getElementById('pag-eq-nome').textContent = eq.nomeTime;
+            document.getElementById('pag-eq-subtitulo').textContent = `${eq.cidade} - ${eq.estado} • Protocolo: ${eq.protocolo || 'AVV-' + eq.numeroInscricao} • Cadastro: ${eq.dataHoraCompleta || eq.dataInscricao}`;
+            document.getElementById('pag-eq-dirigente').textContent = eq.responsavelNome || 'Dirigente Responsável';
+            document.getElementById('pag-eq-whats').textContent = eq.whatsapp || '(69) 99999-9999';
+            document.getElementById('pag-eq-email').textContent = eq.email || 'contato@equipe.com.br';
+            document.getElementById('pag-eq-campeonato').textContent = eq.campeonatoNome || 'Superliga Interiorana';
+
+            const badgeStatus = document.getElementById('pag-eq-status-badge');
+            const boxAcoesStatus = document.getElementById('equipe-detalhe-acoes-status');
+
+            if (eq.status === 'Homologado') {
+                badgeStatus.className = 'badge-status-aprovado';
+                badgeStatus.innerHTML = `${SVG_ICONS.check} Homologada`;
+                boxAcoesStatus.innerHTML = `
+                    <span class="badge-status-aprovado" style="padding: 7px 12px;">
+                        ${SVG_ICONS.check} Homologada
+                    </span>
+                    <button onclick="alterarStatusEquipeAtual('Pendente')" class="btn-champ-secondary">
+                        Reabrir para Análise
+                    </button>
+                `;
+            } else {
+                badgeStatus.className = 'badge-status-pendente';
+                badgeStatus.innerHTML = `${SVG_ICONS.clock} Aguardando Homologação`;
+                boxAcoesStatus.innerHTML = `
+                    <button onclick="alterarStatusEquipeAtual('Homologado')" class="btn-action-text-green" style="height: 36px; font-size: 12px; padding: 0 16px;">
+                        ${SVG_ICONS.check} Aprovar e Homologar Equipe
+                    </button>
+                    <button onclick="excluirEquipeAtual()" style="background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c; padding: 7px 14px; border-radius: 6px; font-size: 11.5px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;">
+                        ${SVG_ICONS.xCircle} Recusar Solicitação
+                    </button>
+                `;
+            }
+
+            const catsSet = new Set(eq.categorias || []);
+            (eq.atletas || []).forEach(a => { if (a.categoria) catsSet.add(a.categoria); });
+            const listaCats = Array.from(catsSet);
+
+            const tabsContainer = document.getElementById('pag-eq-categorias-tabs');
+            tabsContainer.innerHTML = '';
+
+            const btnTodas = document.createElement('button');
+            btnTodas.className = `btn-cat-tab ${categoriaAtivaEquipe === 'todas' ? 'active' : ''}`;
+            btnTodas.innerHTML = `Todas as Categorias da Equipe <span class="count-pill">${(eq.atletas || []).length}</span>`;
+            btnTodas.onclick = () => selecionarCategoriaPaginaEquipe('todas');
+            tabsContainer.appendChild(btnTodas);
+
+            listaCats.forEach(cat => {
+                const qtd = (eq.atletas || []).filter(a => a.categoria === cat).length;
+                const btn = document.createElement('button');
+                btn.className = `btn-cat-tab ${categoriaAtivaEquipe === cat ? 'active' : ''}`;
+                btn.innerHTML = `${cat} <span class="count-pill">${qtd}</span>`;
+                btn.onclick = () => selecionarCategoriaPaginaEquipe(cat);
+                tabsContainer.appendChild(btn);
+            });
+
+            renderizarTabelaAtletasPaginaEquipe(eq);
+            renderizarComissaoPaginaEquipe(eq);
+        }
+
+        function selecionarCategoriaPaginaEquipe(cat) {
+            categoriaAtivaEquipe = cat;
+            const eq = equipesSistema.find(e => String(e.id) === String(equipeAbertaId));
+            if (eq) renderizarConteudoPaginaEquipe(eq);
+        }
+
+        function renderizarTabelaAtletasPaginaEquipe(eq) {
+            const tbody = document.getElementById('pag-eq-tbody-atletas');
+            tbody.innerHTML = '';
+
+            const todosAtletas = eq.atletas || [];
+            const atletasFiltrados = categoriaAtivaEquipe === 'todas'
+                ? todosAtletas
+                : todosAtletas.filter(a => a.categoria === categoriaAtivaEquipe);
+
+            document.getElementById('pag-eq-count-atletas').textContent = atletasFiltrados.length;
+            document.getElementById('count-btn-imprimir-cat').textContent = atletasFiltrados.length;
+            document.getElementById('label-cat-ativa-impressao').textContent = categoriaAtivaEquipe === 'todas'
+                ? `Todas as Categorias (${atletasFiltrados.length} atletas)`
+                : `${categoriaAtivaEquipe} (${atletasFiltrados.length} atletas)`;
+
+            const chkAll = document.getElementById('chk-adm-all-atletas');
+            if (chkAll) chkAll.checked = false;
+
+            if (atletasFiltrados.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="9" style="text-align: center; padding: 28px; color: #64748b;">
+                            Nenhum atleta cadastrado na categoria <strong>${categoriaAtivaEquipe}</strong> para esta equipe.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            atletasFiltrados.forEach(atleta => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="text-align: center;">
+                        <input type="checkbox" class="chk-adm-atleta-print" value="${atleta.id}" style="width: 15px; height: 15px; cursor: pointer;">
+                    </td>
+                    <td style="text-align: center;">
+                        <img src="${atleta.foto || 'logos/mascote_coelho.png'}" style="width: 36px; height: 40px; border-radius: 4px; object-fit: cover; border: 1px solid #cbd5e1; background: #f8fafc;" alt="Foto">
+                    </td>
+                    <td>
+                        <strong style="color: #0f1c3f; font-size: 13px;">${atleta.nome}</strong>
+                    </td>
+                    <td><strong>${atleta.id}</strong></td>
+                    <td><span class="chip-cat-adm">${atleta.categoria || 'Adulto Masculino'}</span></td>
+                    <td><strong style="color: #1d4ed8;">${atleta.posicao || 'Ponteiro'}</strong></td>
+                    <td style="font-size: 11.5px; line-height: 1.4;">
+                        <div>CPF: <strong style="color: #334155;">${atleta.cpf || '---'}</strong></div>
+                        <div style="color: #64748b; font-size: 10.5px;">RG: ${atleta.rg || '---'}</div>
+                    </td>
+                    <td style="font-size: 12px; color: #475569;">${atleta.nasc || '---'}</td>
+                    <td style="text-align: center;">
+                        <button onclick="abrirFichaIndividualAtletaAdm('${eq.id}', '${atleta.id}')" class="btn-clean-action btn-clean-neutral" style="height: 30px; font-size: 11px; padding: 0 10px;">
+                            ${SVG_ICONS.fileText} Ficha A4
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function renderizarComissaoPaginaEquipe(eq) {
+            const container = document.getElementById('pag-eq-lista-comissao');
+            const comissao = eq.comissao || [];
+            document.getElementById('pag-eq-count-comissao').textContent = `${comissao.length} Membro(s)`;
+            container.innerHTML = '';
+
+            if (comissao.length === 0) {
+                container.innerHTML = `<div style="grid-column: 1 / -1; color: #64748b; font-size: 12px; text-align: center; padding: 18px;">Nenhum membro da comissão técnica registrado para esta equipe.</div>`;
+                return;
+            }
+
+            comissao.forEach(tec => {
+                const card = document.createElement('div');
+                card.className = 'card-comissao-membro';
+                card.innerHTML = `
+                    <div class="comissao-membro-left">
+                        <img src="${tec.foto || 'logos/mascote_coelho.png'}" class="comissao-membro-foto" alt="Foto">
+                        <div class="comissao-membro-info">
+                            <h4 class="comissao-membro-nome" title="${tec.nome}">${tec.nome}</h4>
+                            <span class="comissao-membro-funcao">${tec.funcao || 'Técnico'}</span>
+                            <div class="comissao-membro-meta">
+                                <span>CPF: <strong>${tec.cpf || '---'}</strong></span>
+                                ${tec.cref && tec.cref !== '---' ? `<span>CREF: <strong>${tec.cref}</strong></span>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="badge-status-aprovado" style="font-size: 9.5px; padding: 4px 8px;">${SVG_ICONS.check} Homologado</span>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function alterarStatusEquipeAtual(novoStatus) {
+            const eq = equipesSistema.find(e => String(e.id) === String(equipeAbertaId));
+            if (!eq) return;
+            eq.status = novoStatus;
+            salvarBancoEquipesIntegrado();
+            renderizarConteudoPaginaEquipe(eq);
+            atualizarIndicadoresTopo();
+        }
+
+        function excluirEquipeAtual() {
+            const eq = equipesSistema.find(e => String(e.id) === String(equipeAbertaId));
+            if (!eq) return;
+
+            exibirModalConfirmacao({
+                titulo: 'Recusar e Excluir Equipe',
+                mensagem: `Deseja realmente recusar e remover em definitivo o cadastro da equipe "${eq.nomeTime}" do sistema? Todos os vínculos e inscrições serão cancelados.`,
+                tipo: 'danger',
+                textoBotao: 'Recusar e Excluir',
+                corBotao: '#dc2626',
+                onConfirm: () => {
+                    equipesSistema = equipesSistema.filter(e => String(e.id) !== String(equipeAbertaId));
+                    salvarBancoEquipesIntegrado();
+                    fecharPaginaEquipeAdm();
+                }
+            });
+        }
+
+        // ======================================================================
+        // 5. GERAÇÃO E IMPRESSÃO DE FICHAS OFICIAIS A4 (INDIVIDUAL E EM LOTE POR CATEGORIA)
+        // ======================================================================
+        function gerarHtmlFolhaFichaA4(atleta, equipe, indexPagina = 1, totalPaginas = 1) {
+            const agora = new Date();
+            const dataHoje = agora.toLocaleDateString('pt-BR');
+            const horaHoje = agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+            const authCode = 'AVV-' + atleta.id + '-' + Math.random().toString(36).substring(2, 7).toUpperCase();
+            const nomeCamp = equipe.campeonatoNome || 'COMPETIÇÕES OFICIAIS TEMPORADA 2026';
+            const catAtleta = atleta.categoria || (equipe.categorias && equipe.categorias[0]) || 'Adulto Masculino';
+
+            return `
+                <div class="watermark-avv">
+                    <img src="logos/logo_avv.png" alt="AVV Marca d'Água">
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #0f1c3f; padding-bottom: 8px; margin-bottom: 12px; position: relative; z-index: 2;">
+                    <div>
+                        <span style="font-size: 11px; font-weight: 800; color: #0f1c3f; text-transform: uppercase; letter-spacing: 0.5px;">${nomeCamp}</span>
+                        <div style="font-size: 9px; color: #64748b; font-weight: 600;">ASSOCIAÇÃO VILHENENSE DE VOLEIBOL &bull; FICHA OFICIAL POR CATEGORIA</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 12px; font-weight: 800; color: #0f1c3f;">INSCRIÇÃO Nº: <span>${atleta.id}</span></div>
+                        <div style="font-size: 9px; color: #64748b;">Emitido em: ${dataHoje} às ${horaHoje}</div>
+                    </div>
+                </div>
+
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; position: relative; z-index: 2;">
+                    <div style="width: 76px; height: 92px; border: 1px solid #0f1c3f; border-radius: 4px; overflow: hidden; background: #f8fafc;">
+                        <img src="${atleta.foto || 'logos/mascote_coelho.png'}" style="width: 100%; height: 100%; object-fit: cover;" alt="Foto Atleta">
+                    </div>
+                    <div style="text-align: center; flex: 1; padding: 0 12px;">
+                        <h2 style="font-size: 17px; font-weight: 900; color: #0f1c3f; text-transform: uppercase; margin: 0; letter-spacing: 0.5px;">FICHA DE INSCRIÇÃO DE ATLETA</h2>
+                        <div style="display: inline-block; margin-top: 5px; background: #0f1c3f; color: #c5a021; font-size: 10.5px; font-weight: 800; padding: 3px 12px; border-radius: 4px; text-transform: uppercase;">
+                            EQUIPE: ${equipe.nomeTime} &bull; CATEGORIA: ${catAtleta}
+                        </div>
+                    </div>
+                    <div style="width: 76px; text-align: right;">
+                        <img src="${equipe.logo || 'logos/logo_avv.png'}" style="width: 60px; height: auto;" alt="Logo AVV">
+                    </div>
+                </div>
+
+                <div style="border: 1px solid #0f1c3f; border-radius: 4px; overflow: hidden; margin-bottom: 14px; position: relative; z-index: 2;">
+                    <div style="background: #0f1c3f; color: #ffffff; padding: 5px 10px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; text-align: center;">
+                        DADOS DO ATLETA
+                    </div>
+                    <table class="tabela-ficha-dados">
+                        <tr>
+                            <td style="width: 33%;">
+                                <label>Nº DA INSCRIÇÃO</label>
+                                <strong>${atleta.id}</strong>
+                            </td>
+                            <td style="width: 33%;">
+                                <label>CATEGORIA</label>
+                                <strong style="color: #1d4ed8;">${catAtleta}</strong>
+                            </td>
+                            <td style="width: 34%;">
+                                <label>EQUIPE</label>
+                                <strong>${equipe.nomeTime}</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <label>NOME DO ATLETA</label>
+                                <strong style="font-size: 12px;">${atleta.nome.toUpperCase()}</strong>
+                            </td>
+                            <td>
+                                <label>DATA DE NASCIMENTO</label>
+                                <strong>${atleta.nasc || '---'}</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>CPF</label>
+                                <strong>${atleta.cpf || '---'}</strong>
+                            </td>
+                            <td>
+                                <label>RG</label>
+                                <strong>${atleta.rg || '---'}</strong>
+                            </td>
+                            <td>
+                                <label>GÊNERO</label>
+                                <strong>${atleta.genero || 'Masculino'}</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>POSIÇÃO</label>
+                                <strong style="color: #1d72f2;">${atleta.posicao || 'Ponteiro'}</strong>
+                            </td>
+                            <td>
+                                <label>TELEFONE</label>
+                                <strong>${atleta.whats || equipe.whatsapp || '---'}</strong>
+                            </td>
+                            <td>
+                                <label>CIDADE</label>
+                                <strong>${equipe.cidade} - ${equipe.estado}</strong>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div style="border: 1px solid #cbd5e1; border-radius: 4px; padding: 12px 16px; margin-bottom: 12px; background: rgba(255,255,255,0.9); position: relative; z-index: 2;">
+                    <h4 style="font-size: 10.5px; font-weight: 800; color: #0f1c3f; text-transform: uppercase; margin: 0 0 6px 0; text-align: center;">
+                        AUTORIZAÇÃO DO RESPONSÁVEL LEGAL (PARA ATLETAS MENORES DE 18 ANOS)
+                    </h4>
+                    <p style="font-size: 9.5px; color: #334155; line-height: 1.4; margin: 0 0 12px 0; text-align: justify;">
+                        Autorizo o(a) atleta acima identificado(a) a participar dos jogos e competições oficiais da <strong>Associação Vilhenense de Voleibol (AVV)</strong> pela equipe <strong>${equipe.nomeTime}</strong> na categoria <strong>${catAtleta}</strong>, declarando que se encontra em plenas condições de saúde para a prática esportiva.
+                    </p>
+                    <div style="display: flex; gap: 16px; font-size: 9.5px; color: #334155; margin-bottom: 18px;">
+                        <div style="flex: 2;">
+                            <label style="display: block; font-size: 8.5px; font-weight: 700; color: #475569; margin-bottom: 16px;">Nome Legível do Responsável:</label>
+                            <div style="border-bottom: 1px solid #94a3b8;"></div>
+                        </div>
+                        <div style="flex: 1;">
+                            <label style="display: block; font-size: 8.5px; font-weight: 700; color: #475569; margin-bottom: 16px;">Documento (RG/CPF):</label>
+                            <div style="border-bottom: 1px solid #94a3b8;"></div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 24px; text-align: center;">
+                        <div style="width: 320px; border-top: 1px solid #0f1c3f; margin: 0 auto 4px auto;"></div>
+                        <span style="font-size: 9px; font-weight: 700; color: #0f1c3f; text-transform: uppercase;">Assinatura do Pai, Mãe ou Responsável Legal</span>
+                    </div>
+                </div>
+
+                <div style="font-size: 8.5px; color: #475569; line-height: 1.35; margin-bottom: 16px; text-align: justify; background: rgba(255,255,255,0.9); padding: 8px 12px; border: 1px dashed #cbd5e1; border-radius: 4px; position: relative; z-index: 2;">
+                    <p style="margin: 0 0 3px 0;">&bull; Declaro estar física e clinicamente apto(a) a participar dos eventos promovidos pela Associação Vilhenense de Voleibol (AVV).</p>
+                    <p style="margin: 0 0 3px 0;">&bull; Declaro estar ciente e de pleno acordo com o Regulamento Geral da competição e as diretrizes disciplinares estabelecidas.</p>
+                    <p style="margin: 0;">&bull; Autorizo o uso gratuito de imagem e voz para fins de divulgação esportiva e arquivo institucional da AVV.</p>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 40px; margin-bottom: 10px; position: relative; z-index: 2;">
+                    <div style="text-align: center; width: 44%;">
+                        <div style="border-top: 1px solid #0f1c3f; margin-bottom: 4px;"></div>
+                        <span style="font-size: 9px; font-weight: 700; color: #0f1c3f; text-transform: uppercase;">Assinatura do Atleta</span>
+                    </div>
+                    <div style="text-align: center; width: 44%;">
+                        <div style="border-top: 1px solid #0f1c3f; margin-bottom: 4px;"></div>
+                        <span style="font-size: 9px; font-weight: 700; color: #0f1c3f; text-transform: uppercase;">Diretoria Técnica AVV &bull; Homologação</span>
+                    </div>
+                </div>
+
+                <div style="margin-top: 14px; border-top: 1px solid #cbd5e1; padding-top: 6px; display: flex; justify-content: space-between; font-size: 8px; color: #94a3b8; position: relative; z-index: 2;">
+                    <span>AVV - Sistema Oficial de Competições &bull; Ficha ${indexPagina} de ${totalPaginas}</span>
+                    <span>Autenticação Eletrônica: ${authCode}</span>
+                </div>
+            `;
+        }
+
+        function abrirFichaIndividualAtletaAdm(equipeId, atletaId) {
+            const eq = equipesSistema.find(e => String(e.id) === String(equipeId));
+            if (!eq) return;
+            const atleta = (eq.atletas || []).find(a => String(a.id) === String(atletaId));
+            if (!atleta) return;
+
+            const container = document.getElementById('adm-folha-individual-container');
+            container.innerHTML = gerarHtmlFolhaFichaA4(atleta, eq, 1, 1);
+            document.getElementById('modal-adm-ficha-atleta').style.display = 'flex';
+        }
+
+        function fecharFichaAtletaAdm() {
+            document.getElementById('modal-adm-ficha-atleta').style.display = 'none';
+        }
+
+        function toggleSelecionarTodosAtletasAdm(checked) {
+            document.querySelectorAll('.chk-adm-atleta-print').forEach(chk => {
+                chk.checked = checked;
+            });
+        }
+
+        function imprimirTodasFichasDaEquipeCategoriaAtual() {
+            const eq = equipesSistema.find(e => String(e.id) === String(equipeAbertaId));
+            if (!eq) return;
+
+            const atletasParaImprimir = categoriaAtivaEquipe === 'todas'
+                ? (eq.atletas || [])
+                : (eq.atletas || []).filter(a => a.categoria === categoriaAtivaEquipe);
+
+            if (atletasParaImprimir.length === 0) {
+                alert('Não há atletas cadastrados nesta categoria para imprimir.');
+                return;
+            }
+
+            executarImpressaoLoteFichas(atletasParaImprimir.map(a => ({ atleta: a, equipe: eq })));
+        }
+
+        function imprimirFichasSelecionadasAdm() {
+            const eq = equipesSistema.find(e => String(e.id) === String(equipeAbertaId));
+            if (!eq) return;
+
+            const idsMarcados = Array.from(document.querySelectorAll('.chk-adm-atleta-print:checked')).map(c => String(c.value));
+            if (idsMarcados.length === 0) {
+                alert('Marque pelo menos um atleta na caixa de seleção da tabela ou clique em "Imprimir Todas desta Categoria".');
+                return;
+            }
+
+            const selecionados = (eq.atletas || []).filter(a => idsMarcados.includes(String(a.id)));
+            executarImpressaoLoteFichas(selecionados.map(a => ({ atleta: a, equipe: eq })));
+        }
+
+        function imprimirRelacaoNominalCategoriaAtual() {
+            const eq = equipesSistema.find(e => String(e.id) === String(equipeAbertaId));
+            if (!eq) return;
+
+            const atletasLista = categoriaAtivaEquipe === 'todas'
+                ? (eq.atletas || [])
+                : (eq.atletas || []).filter(a => a.categoria === categoriaAtivaEquipe);
+
+            if (atletasLista.length === 0) {
+                alert('Não há atletas nesta categoria para gerar a relação nominal.');
+                return;
+            }
+
+            executarImpressaoSumulaNominal(eq, categoriaAtivaEquipe, atletasLista);
+        }
+
+        function executarImpressaoLoteFichas(listaParesAtletaEquipe) {
+            const areaMultiplas = document.getElementById('area-fichas-multiplas');
+            areaMultiplas.innerHTML = '';
+
+            const total = listaParesAtletaEquipe.length;
+            listaParesAtletaEquipe.forEach((par, idx) => {
+                const folha = document.createElement('div');
+                folha.className = 'folha-a4-avv';
+                folha.innerHTML = gerarHtmlFolhaFichaA4(par.atleta, par.equipe, idx + 1, total);
+                areaMultiplas.appendChild(folha);
+            });
+
+            areaMultiplas.style.display = 'block';
+            setTimeout(() => {
+                window.print();
+                areaMultiplas.style.display = 'none';
+            }, 250);
+        }
+
+        function executarImpressaoSumulaNominal(equipe, categoriaLabel, atletasLista) {
+            const areaMultiplas = document.getElementById('area-fichas-multiplas');
+            areaMultiplas.innerHTML = '';
+
+            const agora = new Date();
+            const dataHoje = agora.toLocaleDateString('pt-BR');
+            const horaHoje = agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+            const catTexto = categoriaLabel === 'todas' ? 'TODAS AS CATEGORIAS DA EQUIPE' : categoriaLabel.toUpperCase();
+
+            const linhasAtletas = atletasLista.map((a, i) => `
+                <tr>
+                    <td style="text-align: center; font-weight: 800;">${i + 1}</td>
+                    <td><strong>${a.id}</strong></td>
+                    <td><strong>${a.nome.toUpperCase()}</strong></td>
+                    <td>${a.categoria || 'Adulto'}</td>
+                    <td>${a.posicao || '---'}</td>
+                    <td>${a.cpf || '---'}</td>
+                    <td>${a.rg || '---'}</td>
+                    <td>${a.nasc || '---'}</td>
+                </tr>
+            `).join('');
+
+            const linhasComissao = (equipe.comissao || []).map(c => `
+                <tr>
+                    <td><strong>${c.id || '---'}</strong></td>
+                    <td><strong>${c.nome}</strong></td>
+                    <td>${c.funcao || 'Técnico'}</td>
+                    <td>${c.cpf || '---'}</td>
+                    <td>${c.cref || '---'}</td>
+                </tr>
+            `).join('');
+
+            const folha = document.createElement('div');
+            folha.className = 'folha-a4-avv';
+            folha.innerHTML = `
+                <div class="watermark-avv">
+                    <img src="logos/logo_avv.png" alt="AVV Marca d'Água">
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #0f1c3f; padding-bottom: 10px; margin-bottom: 16px; position: relative; z-index: 2;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <img src="logos/logo_avv.png" style="width: 48px; height: 48px; object-fit: contain;" alt="AVV">
+                        <div>
+                            <h3 style="font-size: 13px; font-weight: 900; color: #0f1c3f; margin: 0;">ASSOCIAÇÃO VILHENENSE DE VOLEIBOL - AVV</h3>
+                            <span style="font-size: 10px; color: #64748b; font-weight: 700;">RELAÇÃO NOMINAL DE INSCRITOS</span>
+                        </div>
+                    </div>
+                    <div style="text-align: right; font-size: 10px; color: #475569;">
+                        <strong>Protocolo: ${equipe.protocolo || 'AVV-' + equipe.numeroInscricao}</strong><br>
+                        Emitido em: ${dataHoje} às ${horaHoje}
+                    </div>
+                </div>
+
+                <div style="background: #f8fafc; border: 1px solid #0f1c3f; border-radius: 4px; padding: 12px 16px; margin-bottom: 16px; position: relative; z-index: 2;">
+                    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; font-size: 11px;">
+                        <div>
+                            <span style="font-size: 9px; color: #64748b; font-weight: 700; display: block;">EQUIPE:</span>
+                            <strong style="font-size: 13px; color: #0f1c3f;">${equipe.nomeTime} (${equipe.cidade} - ${equipe.estado})</strong>
+                        </div>
+                        <div>
+                            <span style="font-size: 9px; color: #64748b; font-weight: 700; display: block;">CATEGORIA:</span>
+                            <strong style="font-size: 12px; color: #1d4ed8;">${catTexto}</strong>
+                        </div>
+                        <div>
+                            <span style="font-size: 9px; color: #64748b; font-weight: 700; display: block;">RESPONSÁVEL:</span>
+                            <strong style="font-size: 11px; color: #0f1c3f;">${equipe.responsavelNome}</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 18px; position: relative; z-index: 2;">
+                    <div style="background: #0f1c3f; color: #ffffff; padding: 6px 10px; font-size: 10px; font-weight: 800; text-transform: uppercase;">
+                        1. QUADRO NOMINAL DE ATLETAS INSCRITOS (${atletasLista.length} ATLETAS)
+                    </div>
+                    <table class="tabela-ficha-dados">
+                        <thead>
+                            <tr style="background: #f1f5f9; font-weight: 800; color: #0f1c3f;">
+                                <td style="width: 34px; text-align: center;">#</td>
+                                <td>INSCRIÇÃO</td>
+                                <td>NOME COMPLETO DO ATLETA</td>
+                                <td>CATEGORIA</td>
+                                <td>POSIÇÃO</td>
+                                <td>CPF</td>
+                                <td>RG</td>
+                                <td>NASCIMENTO</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${linhasAtletas}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div style="margin-bottom: 24px; position: relative; z-index: 2;">
+                    <div style="background: #0f1c3f; color: #ffffff; padding: 6px 10px; font-size: 10px; font-weight: 800; text-transform: uppercase;">
+                        2. COMISSÃO TÉCNICA HOMOLOGADA (${(equipe.comissao || []).length} MEMBROS)
+                    </div>
+                    <table class="tabela-ficha-dados">
+                        <thead>
+                            <tr style="background: #f1f5f9; font-weight: 800; color: #0f1c3f;">
+                                <td>INSCRIÇÃO</td>
+                                <td>NOME COMPLETO</td>
+                                <td>FUNÇÃO</td>
+                                <td>CPF</td>
+                                <td>CREF</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${linhasComissao || '<tr><td colspan="5" style="text-align:center;">Sem membros cadastrados</td></tr>'}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 48px; position: relative; z-index: 2;">
+                    <div style="text-align: center; width: 44%;">
+                        <div style="border-top: 1px solid #0f1c3f; margin-bottom: 4px;"></div>
+                        <span style="font-size: 9px; font-weight: 700; color: #0f1c3f; text-transform: uppercase;">Assinatura do Responsável</span>
+                    </div>
+                    <div style="text-align: center; width: 44%;">
+                        <div style="border-top: 1px solid #0f1c3f; margin-bottom: 4px;"></div>
+                        <span style="font-size: 9px; font-weight: 700; color: #0f1c3f; text-transform: uppercase;">Diretoria Técnica AVV</span>
+                    </div>
+                </div>
+            `;
+
+            areaMultiplas.appendChild(folha);
+            areaMultiplas.style.display = 'block';
+            setTimeout(() => {
+                window.print();
+                areaMultiplas.style.display = 'none';
+            }, 250);
+        }
+
+        // ======================================================================
+        // 6. CENTRAL DE IMPRESSÃO DE FICHAS POR CATEGORIA (ABA 4)
+        // ======================================================================
+        function popularFiltrosCentralImpressao() {
+            const selectEq = document.getElementById('imp-select-equipe');
+            const selectCampFiltro = document.getElementById('filtro-campeonato-equipes');
+
+            if (selectEq) {
+                const valorAtual = selectEq.value || 'todas';
+                selectEq.innerHTML = `<option value="todas">Todas as Equipes Cadastradas</option>` +
+                    equipesSistema.map(eq => `<option value="${eq.id}">${eq.nomeTime} (${eq.cidade}-${eq.estado})</option>`).join('');
+                selectEq.value = valorAtual;
+            }
+
+            if (selectCampFiltro) {
+                const valCamp = selectCampFiltro.value || 'todos';
+                selectCampFiltro.innerHTML = `<option value="todos">Todos os Campeonatos</option>` +
+                    Object.keys(campeonatosAdm).map(id => `<option value="${id}">${campeonatosAdm[id].nome}</option>`).join('');
+                selectCampFiltro.value = valCamp;
+            }
+        }
+
+        function obterParesFiltradosCentralImpressao() {
+            const eqId = document.getElementById('imp-select-equipe')?.value || 'todas';
+            const cat = document.getElementById('imp-select-categoria')?.value || 'todas';
+
+            const pares = [];
+            equipesSistema.forEach(eq => {
+                if (eqId !== 'todas' && String(eq.id) !== String(eqId)) return;
+                (eq.atletas || []).forEach(atleta => {
+                    const catAtleta = atleta.categoria || 'Adulto Masculino';
+                    if (cat !== 'todas' && catAtleta !== cat) return;
+                    pares.push({ atleta, equipe: eq });
+                });
+            });
+            return pares;
+        }
+
+        function atualizarPreviaCentralImpressao() {
+            const tbody = document.getElementById('imp-tbody-previa');
+            if (!tbody) return;
+
+            const pares = obterParesFiltradosCentralImpressao();
+            document.getElementById('imp-count-fichas').textContent = pares.length;
+
+            const eqSelect = document.getElementById('imp-select-equipe');
+            const catSelect = document.getElementById('imp-select-categoria');
+            const nomeEq = eqSelect?.options[eqSelect.selectedIndex]?.text || 'Todas as Equipes';
+            const nomeCat = catSelect?.value === 'todas' ? 'Todas as Categorias' : catSelect?.value;
+            document.getElementById('imp-resumo-filtro').textContent = `${nomeEq} • ${nomeCat} (${pares.length} fichas prontas)`;
+
+            tbody.innerHTML = '';
+            if (pares.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align: center; padding: 28px; color: #64748b;">
+                            Nenhum atleta encontrado para a combinação de Equipe e Categoria selecionada.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            pares.forEach(({ atleta, equipe }) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="text-align: center;">
+                        <img src="${atleta.foto || 'logos/mascote_coelho.png'}" style="width: 38px; height: 42px; border-radius: 4px; object-fit: cover; border: 1px solid #cbd5e1;" alt="Foto">
+                    </td>
+                    <td>
+                        <strong style="color: #0f1c3f;">${atleta.nome}</strong>
+                        <div style="font-size: 11px; color: #64748b;">Inscrição nº ${atleta.id}</div>
+                    </td>
+                    <td>
+                        <strong style="color: #1e293b; cursor: pointer; text-decoration: underline;" onclick="abrirPaginaEquipeAdm('${equipe.id}')">${equipe.nomeTime}</strong>
+                    </td>
+                    <td><span class="chip-cat-adm">${atleta.categoria || 'Adulto Masculino'}</span></td>
+                    <td><strong style="color: #1d4ed8;">${atleta.posicao || 'Ponteiro'}</strong></td>
+                    <td>CPF: ${atleta.cpf || '---'} &bull; Nasc: ${atleta.nasc || '---'}</td>
+                    <td style="text-align: center;">
+                        <button onclick="abrirFichaIndividualAtletaAdm('${equipe.id}', '${atleta.id}')" class="btn-action-text-green" style="font-size: 11px; padding: 4px 10px; height: 28px;">
+                            ${SVG_ICONS.fileText} Ficha A4
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function dispararImpressaoCentralFichas() {
+            const pares = obterParesFiltradosCentralImpressao();
+            if (pares.length === 0) {
+                alert('Nenhum atleta encontrado no filtro atual para imprimir.');
+                return;
+            }
+            executarImpressaoLoteFichas(pares);
+        }
+
+        function dispararImpressaoCentralSumula() {
+            const eqId = document.getElementById('imp-select-equipe')?.value || 'todas';
+            const cat = document.getElementById('imp-select-categoria')?.value || 'todas';
+            const pares = obterParesFiltradosCentralImpressao();
+
+            if (pares.length === 0) {
+                alert('Nenhum atleta encontrado no filtro atual para imprimir a relação nominal.');
+                return;
+            }
+
+            if (eqId !== 'todas') {
+                const eq = equipesSistema.find(e => String(e.id) === String(eqId));
+                if (eq) {
+                    executarImpressaoSumulaNominal(eq, cat, pares.map(p => p.atleta));
+                    return;
+                }
+            }
+
+            const eqConsolidada = {
+                nomeTime: 'RELAÇÃO GERAL DE EQUIPES FILIADAS - AVV',
+                cidade: 'Vilhena',
+                estado: 'RO',
+                protocolo: 'AVV-GERAL-2026',
+                responsavelNome: 'Diretoria Técnica AVV',
+                comissao: []
+            };
+            executarImpressaoSumulaNominal(eqConsolidada, cat, pares.map(p => p.atleta));
+        }
+
+        // ======================================================================
+        // 7. GESTÃO DE CAMPEONATOS OFICIAIS (DESIGN EXECUTIVO, LIMPO E TABULAR)
+        // ======================================================================
+        function carregarCampeonatos() {
+            const salvos = localStorage.getItem('avv_banco_campeonatos');
+            if (salvos) {
+                try {
+                    campeonatosAdm = JSON.parse(salvos);
+                    // Garante que campeonatos padrão tenham os banners atualizados
+                    Object.keys(bancoPadraoCampeonatos).forEach(k => {
+                        if (campeonatosAdm[k] && !campeonatosAdm[k].banner) {
+                            campeonatosAdm[k].banner = bancoPadraoCampeonatos[k].banner;
+                        }
+                    });
+                } catch (e) {
+                    campeonatosAdm = { ...bancoPadraoCampeonatos };
+                }
+            } else {
+                campeonatosAdm = { ...bancoPadraoCampeonatos };
+                salvarCampeonatosNoStorage();
+            }
+        }
+
+        function salvarCampeonatosNoStorage() {
+            salvarStorageSeguroAdm('avv_banco_campeonatos', JSON.stringify(campeonatosAdm));
+        }
+
+        function renderizarGridCampeonatos() {
+            const container = document.getElementById('grid-adm-campeonatos');
+            if (!container) return;
+            container.innerHTML = '';
+
+            const ids = Object.keys(campeonatosAdm);
+
+            ids.forEach(id => {
+                const c = campeonatosAdm[id];
+                const equipesInscritas = equipesSistema.filter(e => e.campeonatoId === c.id);
+
+                // Formata prazo de forma limpa para a célula tabular
+                const prazoResumido = (c.fase || '').replace(/Inscrições Abertas\s*/i, '').trim() || c.fase;
+
+                const card = document.createElement('div');
+                card.className = 'card-champ-adm';
+
+                const badgesHtml = (c.categoriasAceitas || []).map(cat =>
+                    `<span class="champ-cat-pill">${cat}</span>`
+                ).join('');
+
+                const isAtivo = c.ativo !== false; // padrão ativo se não especificado
+                const statusLabel = isAtivo ? 'Ativo' : 'Inativo';
+                const statusDotColor = isAtivo ? '#16a34a' : '#94a3b8';
+                const statusTextColor = isAtivo ? '#15803d' : '#64748b';
+                const statusBg = isAtivo ? 'rgba(255,255,255,0.95)' : 'rgba(241,245,249,0.95)';
+
+                const bannerUrl = c.banner || 'avv_superliga_athlete.png';
+                const bannerHtml = `
+                    <div style="height: 120px; width: 100%; position: relative; overflow: hidden; background: #0f1c3f;">
+                        <img src="${bannerUrl}" alt="${c.nome}" style="width: 100%; height: 100%; object-fit: cover; opacity: ${isAtivo ? '0.88' : '0.4'}; transition: transform 0.3s ease;">
+                        <div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(15,28,63,0.1) 0%, rgba(15,28,63,0.7) 100%);"></div>
+                        <div style="position: absolute; top: 10px; left: 12px; right: 12px; display: flex; justify-content: space-between; align-items: center; gap: 8px;">
+                            <span class="champ-modality-tag" style="background: rgba(15,28,63,0.85); color: #ffffff; border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(4px);">${c.modalidade}</span>
+                            <button type="button" onclick="event.stopPropagation(); alternarStatusAtivoCampeonato('${c.id}')" title="Clique para alternar entre Ativo e Inativo (visível ou oculto para os usuários)" style="background: ${statusBg}; color: ${statusTextColor}; border: 1px solid rgba(0,0,0,0.1); padding: 3px 9px; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.15); font-size: 11px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; transition: all 0.15s ease;">
+                                <span style="display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: ${statusDotColor};"></span>
+                                ${statusLabel}
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                card.innerHTML = `
+                    <div>
+                        ${bannerHtml}
+                        <div class="card-champ-adm-header" style="border-top: none;">
+                            <h4 class="champ-title-h4" title="${c.nome}">${c.nome}</h4>
+                        </div>
+
+                        <div class="card-champ-adm-body">
+                            <div class="champ-metrics-strip">
+                                <div class="champ-metric-cell">
+                                    <span>Prazo Inscrição</span>
+                                    <strong title="${c.fase}">${prazoResumido}</strong>
+                                </div>
+                                <div class="champ-metric-cell">
+                                    <span>Elenco Máx.</span>
+                                    <strong>${c.limiteAtletas || 12} Atletas</strong>
+                                </div>
+                                <div class="champ-metric-cell">
+                                    <span>Inscritos</span>
+                                    <strong style="color: ${equipesInscritas.length > 0 ? '#15803d' : '#64748b'};">${equipesInscritas.length} Equipe(s)</strong>
+                                </div>
+                            </div>
+
+                            <div class="champ-cats-section">
+                                <span class="champ-cats-label">Categorias Homologadas (${(c.categoriasAceitas || []).length})</span>
+                                <div class="champ-cats-list">
+                                    ${badgesHtml}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-champ-adm-footer">
+                        <button onclick="filtrarEquipesPorCampeonato('${c.id}')" class="btn-champ-primary" title="Visualizar as equipes inscritas neste torneio">
+                            ${SVG_ICONS.users}
+                            Ver Equipes Inscritas (${equipesInscritas.length})
+                        </button>
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                            <button onclick="editarCampeonato('${c.id}')" class="btn-champ-secondary" title="Configurar diretrizes e regulamento">
+                                ${SVG_ICONS.settings}
+                                Configurar
+                            </button>
+                            <button onclick="excluirCampeonato('${c.id}')" class="btn-champ-icon-danger" title="Excluir campeonato">
+                                ${SVG_ICONS.trash}
+                            </button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function alternarStatusAtivoCampeonato(id) {
+            const c = campeonatosAdm[id];
+            if (!c) return;
+
+            const vaiAtivar = c.ativo === false;
+            const titulo = vaiAtivar ? 'Ativar Campeonato?' : 'Desativar Campeonato?';
+            const mensagem = vaiAtivar
+                ? `Deseja realmente ativar o campeonato "${c.nome}"? Ele passará a ser exibido publicamente no painel dos clubes para recebimento de inscrições.`
+                : `Deseja desativar o campeonato "${c.nome}"? Ele será imediatamente ocultado da página dos usuários/clubes, permitindo que você altere configurações em sigilo.`;
+
+            exibirModalConfirmacao({
+                titulo,
+                mensagem,
+                tipo: vaiAtivar ? 'success' : 'warning',
+                textoBotao: vaiAtivar ? 'Sim, Ativar' : 'Sim, Desativar',
+                corBotao: vaiAtivar ? '#16a34a' : '#d97706',
+                onConfirm: () => {
+                    c.ativo = vaiAtivar;
+                    salvarCampeonatosNoStorage();
+                    renderizarGridCampeonatos();
+                }
+            });
+        }
+
+        function atualizarBadgeArquivoBanner(valor, nomeArquivoCustomizado) {
+            const badge = document.getElementById('champ-banner-file-badge');
+            const nomeSpan = document.getElementById('champ-banner-file-name');
+            if (!badge || !nomeSpan) return;
+
+            const nome = (nomeArquivoCustomizado || valor || '').trim();
+            if (nome) {
+                // Pega somente o nome do arquivo se for um caminho ou dataURL
+                let label = nome;
+                if (label.startsWith('data:')) {
+                    label = nomeArquivoCustomizado || 'Imagem anexada (.png/.jpg)';
+                } else if (label.includes('/') || label.includes('\\')) {
+                    label = label.split(/[/\\]/).pop();
+                }
+                nomeSpan.textContent = label;
+                badge.style.display = 'inline-flex';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
+        function previewUploadBannerCampeonato(event) {
+            const file = event.target.files && event.target.files[0];
+            if (!file) return;
+            comprimirImagemCanvasAdm(file, 720, 240, 0.82, (compressedUrl) => {
+                document.getElementById('champ-form-banner').value = compressedUrl;
+                atualizarBadgeArquivoBanner(compressedUrl, file.name);
+            });
+        }
+
+        function atualizarOpcoesCategoriasNaipe() {
+            sincronizarCategoriasFinais();
+        }
+
+        function sincronizarCategoriasFinais() {
+            const masc = document.getElementById('naipe-masculino').checked;
+            const fem = document.getElementById('naipe-feminino').checked;
+
+            const basesMarcadas = Array.from(document.querySelectorAll('.cat-base-chk:checked')).map(el => el.value);
+            const containerPreview = document.getElementById('champ-categorias-resultantes-preview');
+            const hiddenContainer = document.getElementById('champ-cats-hidden-container');
+
+            if (!containerPreview || !hiddenContainer) return;
+
+            containerPreview.innerHTML = '';
+            hiddenContainer.innerHTML = '';
+
+            if (!masc && !fem) {
+                containerPreview.innerHTML = '<span style="font-size: 11px; color: #dc2626; font-weight: 700;">Selecione ao menos um naipe (Masculino e/ou Feminino)</span>';
+                return;
+            }
+
+            if (basesMarcadas.length === 0) {
+                containerPreview.innerHTML = '<span style="font-size: 11px; color: #dc2626; font-weight: 700;">Marque ao menos uma categoria base (Sub-13, Sub-15, Sub-18 ou Adulto)</span>';
+                return;
+            }
+
+            basesMarcadas.forEach(base => {
+                if (masc) {
+                    const nomeCompleto = `${base} Masculino`;
+                    adicionarTagECatHidden(nomeCompleto, containerPreview, hiddenContainer);
+                }
+                if (fem) {
+                    const nomeCompleto = `${base} Feminino`;
+                    adicionarTagECatHidden(nomeCompleto, containerPreview, hiddenContainer);
+                }
+            });
+        }
+
+        function adicionarTagECatHidden(nomeCompleto, previewEl, hiddenEl) {
+            const pill = document.createElement('span');
+            pill.className = 'champ-cat-pill';
+            pill.style.background = '#0f1c3f';
+            pill.style.color = '#ffffff';
+            pill.style.border = 'none';
+            pill.textContent = nomeCompleto;
+            previewEl.appendChild(pill);
+
+            const input = document.createElement('input');
+            input.type = 'checkbox';
+            input.name = 'cat_champ';
+            input.value = nomeCompleto;
+            input.checked = true;
+            hiddenEl.appendChild(input);
+        }
+
+        function preencherCategoriasNoFormulario(catsAceitas) {
+            const lista = catsAceitas || [];
+            const temMasc = lista.some(c => c.includes('Masculino'));
+            const temFem = lista.some(c => c.includes('Feminino'));
+
+            document.getElementById('naipe-masculino').checked = temMasc || (!temMasc && !temFem);
+            document.getElementById('naipe-feminino').checked = temFem;
+
+            document.querySelectorAll('.cat-base-chk').forEach(chk => {
+                const base = chk.value;
+                const marcada = lista.some(c => c.startsWith(base));
+                chk.checked = marcada;
+            });
+
+            sincronizarCategoriasFinais();
+        }
+
+        function abrirModalCriarCampeonato() {
+            document.getElementById('champ-edit-id').value = '';
+            document.getElementById('champ-form-nome').value = '';
+            document.getElementById('champ-form-banner').value = 'avv_superliga_athlete.png';
+            atualizarBadgeArquivoBanner('avv_superliga_athlete.png');
+            document.getElementById('champ-form-fase').value = 'Inscrições Abertas até ' + new Date(Date.now() + 30*24*60*60*1000).toLocaleDateString('pt-BR');
+            document.getElementById('champ-form-taxa').value = 'Isento / Filiação Ativa';
+            document.getElementById('champ-form-limite').value = 12;
+            document.getElementById('champ-form-desc').value = '';
+            document.getElementById('champ-form-reg').value = `CAPÍTULO I - DA FINALIDADE\nArt. 1º - Torneio oficial homologado pela AVV 2026.\n\nCAPÍTULO II - REQUISITOS\nArt. 2º - Atletas federados com documentação regularizada.`;
+            
+            // Padrão: Adulto Masculino
+            document.getElementById('naipe-masculino').checked = true;
+            document.getElementById('naipe-feminino').checked = false;
+            document.querySelectorAll('.cat-base-chk').forEach(chk => {
+                chk.checked = (chk.value === 'Adulto');
+            });
+            sincronizarCategoriasFinais();
+
+            document.getElementById('modal-criar-campeonato').style.display = 'flex';
+        }
+
+        function fecharModalCriarCampeonato() {
+            document.getElementById('modal-criar-campeonato').style.display = 'none';
+        }
+
+        function editarCampeonato(id) {
+            const c = campeonatosAdm[id];
+            if (!c) return;
+            document.getElementById('champ-edit-id').value = c.id;
+            document.getElementById('champ-form-nome').value = c.nome;
+            document.getElementById('champ-form-modalidade').value = c.modalidade;
+            document.getElementById('champ-form-banner').value = c.banner || '';
+            atualizarBadgeArquivoBanner(c.banner || '');
+            document.getElementById('champ-form-fase').value = c.fase;
+            document.getElementById('champ-form-taxa').value = c.taxa;
+            document.getElementById('champ-form-limite').value = c.limiteAtletas || 12;
+            document.getElementById('champ-form-desc').value = c.descricao;
+            document.getElementById('champ-form-reg').value = c.regulamento ? c.regulamento.replace(/<[^>]+>/g, '\n').trim() : '';
+
+            preencherCategoriasNoFormulario(c.categoriasAceitas || []);
+            document.getElementById('modal-criar-campeonato').style.display = 'flex';
+        }
+
+        function salvarNovoCampeonato(e) {
+            e.preventDefault();
+            const editId = document.getElementById('champ-edit-id').value;
+            const nome = document.getElementById('champ-form-nome').value.trim();
+            const modalidade = document.getElementById('champ-form-modalidade').value;
+            const banner = document.getElementById('champ-form-banner').value.trim();
+            const fase = document.getElementById('champ-form-fase').value.trim();
+            const taxa = document.getElementById('champ-form-taxa').value.trim();
+            const limite = parseInt(document.getElementById('champ-form-limite').value) || 12;
+            const desc = document.getElementById('champ-form-desc').value.trim();
+            const regTexto = document.getElementById('champ-form-reg').value.trim();
+
+            const categoriasMarcadas = Array.from(document.querySelectorAll('input[name="cat_champ"]:checked')).map(c => c.value);
+            if (categoriasMarcadas.length === 0) {
+                alert('Selecione ao menos 1 categoria aceita neste campeonato.');
+                return;
+            }
+
+            const id = editId || ('camp-' + Date.now());
+            const ativoAtual = editId && campeonatosAdm[editId] ? (campeonatosAdm[editId].ativo !== false) : true;
+            campeonatosAdm[id] = {
+                id,
+                nome: nome.toUpperCase(),
+                modalidade,
+                banner: banner || (campeonatosAdm[id] && campeonatosAdm[id].banner) || 'avv_superliga_athlete.png',
+                fase,
+                taxa,
+                limiteAtletas: limite,
+                ativo: ativoAtual,
+                descricao: desc || `Competição oficial de ${modalidade} realizada pela AVV.`,
+                categoriasAceitas: categoriasMarcadas,
+                regulamento: `<h4>REGULAMENTO OFICIAL - AVV 2026</h4><p>${regTexto.replace(/\n/g, '<br>')}</p>`
+            };
+
+            salvarCampeonatosNoStorage();
+            atualizarTudoPainelAdm();
+            fecharModalCriarCampeonato();
+            alert(`Campeonato "${nome.toUpperCase()}" salvo com sucesso!`);
+        }
+
+        function excluirCampeonato(id) {
+            const c = campeonatosAdm[id];
+            const nomeCamp = c ? c.nome : 'este campeonato';
+
+            exibirModalConfirmacao({
+                titulo: 'Excluir Campeonato',
+                mensagem: `Tem certeza que deseja excluir em definitivo o campeonato "${nomeCamp}"? Esta ação removerá o torneio de toda a base de dados.`,
+                tipo: 'danger',
+                textoBotao: 'Excluir Definitivamente',
+                corBotao: '#dc2626',
+                onConfirm: () => {
+                    delete campeonatosAdm[id];
+                    salvarCampeonatosNoStorage();
+                    atualizarTudoPainelAdm();
+                }
+            });
+        }
+
+        function simularEnvioNovoCadastro() {
+            const num = Math.floor(100000 + Math.random() * 900000);
+            const agora = new Date();
+            const dataStr = agora.toLocaleDateString('pt-BR');
+            const horaStr = agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+
+            const cidades = ['Ji-Paraná', 'Ariquemes', 'Pimenta Bueno', 'Rolim de Moura', 'Porto Velho'];
+            const cidadeSorteada = cidades[Math.floor(Math.random() * cidades.length)];
+
+            const novaEq = {
+                id: 'eq-' + Date.now(),
+                numeroInscricao: String(num),
+                protocolo: 'AVV-' + num,
+                nomeTime: `${cidadeSorteada.toUpperCase()} VÔLEI CLUBE`,
+                cidade: cidadeSorteada,
+                estado: 'RO',
+                responsavelNome: 'Carlos Eduardo Mendes',
+                email: `contato@${cidadeSorteada.toLowerCase().replace(/[^a-z]/g, '')}volei.com.br`,
+                whatsapp: '(69) 99244-8811',
+                instagram: `@volei_${cidadeSorteada.toLowerCase().replace(/[^a-z]/g, '')}`,
+                dataInscricao: dataStr,
+                horaInscricao: horaStr,
+                dataHoraCompleta: `${dataStr} às ${horaStr}`,
+                status: 'Pendente',
+                logo: 'logos/logo_avv.png',
+                campeonatoId: 'estadual-base',
+                campeonatoNome: 'CAMPEONATO ESTADUAL DE CATEGORIAS DE BASE (SUB-13, SUB-15 E SUB-18)',
+                categorias: ['Sub-18 Masculino', 'Sub-15 Masculino'],
+                atletas: [
+                    {
+                        id: String(num + 1),
+                        nome: 'GABRIEL HENRIQUE SOUZA',
+                        cpf: '512.309.441-10',
+                        rg: '881203 SESDEC/RO',
+                        nasc: '11/05/2009',
+                        genero: 'Masculino',
+                        categoria: 'Sub-18 Masculino',
+                        posicao: 'Ponteiro',
+                        whats: '(69) 99244-8811',
+                        dataHora: `${dataStr} às ${horaStr}`,
+                        foto: 'logos/mascote_coelho.png'
+                    },
+                    {
+                        id: String(num + 2),
+                        nome: 'MATHEUS VINÍCIUS ALVES',
+                        cpf: '619.882.104-55',
+                        rg: '910234 SESDEC/RO',
+                        nasc: '22/09/2011',
+                        genero: 'Masculino',
+                        categoria: 'Sub-15 Masculino',
+                        posicao: 'Levantador',
+                        whats: '(69) 99244-8811',
+                        dataHora: `${dataStr} às ${horaStr}`,
+                        foto: 'logos/mascote_coelho.png'
+                    }
+                ],
+                comissao: [
+                    {
+                        id: String(num + 9),
+                        nome: 'CARLOS EDUARDO MENDES',
+                        funcao: 'Técnico Principal',
+                        cpf: '309.112.840-20',
+                        cref: '004912-G/RO',
+                        foto: 'logos/mascote_coelho.png'
+                    }
+                ]
+            };
+
+            equipesSistema.unshift(novaEq);
+            salvarBancoEquipesIntegrado();
+            atualizarTudoPainelAdm();
+            abrirPaginaEquipeAdm(novaEq.id);
+        }
+
+        function switchAdmTab(tabName, btn) {
+            document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.sidebar-menu-fed button').forEach(b => b.classList.remove('active'));
+
+            const target = document.getElementById('tab-adm-' + tabName);
+            if (target) target.classList.add('active');
+            if (btn) btn.classList.add('active');
+
+            if (tabName === 'equipes' && !equipeAbertaId) {
+                document.getElementById('adm-subview-detalhe-equipe').style.display = 'none';
+                document.getElementById('adm-subview-lista-equipes').style.display = 'block';
+            }
+
+            const titulos = {
+                'dashboard': 'Visão Geral',
+                'equipes': 'Equipes',
+                'campeonatos': 'Campeonatos',
+                'impressao': 'Imprimir Fichas'
+            };
+            document.getElementById('breadcrumb-title-adm').textContent = titulos[tabName] || 'Administração';
+        }
+
+        function fazerLogoutAdm() {
+            if (confirm('Deseja realmente encerrar a sessão de Administrador da AVV?')) {
+                localStorage.removeItem('avv_sessao_adm');
+                window.location.href = 'login.html';
+            }
+        }
+    </script>
+</body>
+</html>

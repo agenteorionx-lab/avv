@@ -1,0 +1,933 @@
+/* ==========================================================================
+   PAINEL DE ADMINISTRAÇÃO AVV (FEDERAÇÃO / DIRETORIA TÉCNICA)
+   Design Executivo, Sofisticado, Tabular e 100% em SVG
+   ========================================================================== */
+
+:root {
+  --adm-navy: #0f1c3f;
+  --adm-navy-light: #1e293b;
+  --adm-gold: #c5a021;
+  --adm-green: #107c41;
+  --adm-green-light: #dcfce7;
+  --adm-red: #dc2626;
+  --adm-blue: #1d4ed8;
+  --adm-sidebar: #141728;
+}
+
+/* ==========================================================================
+   CARDS DE INDICADORES (KPIs) NO TOPO
+   ========================================================================== */
+.stats-grid-adm {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 1100px) {
+  .stats-grid-adm {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.stat-card-adm {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 20px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card-adm::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: #0f1c3f;
+  opacity: 0.85;
+}
+
+.stat-card-adm:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(15, 28, 63, 0.07);
+  border-color: #cbd5e1;
+}
+
+.stat-card-adm .stat-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.stat-card-adm .stat-info h3 {
+  font-size: 26px;
+  font-weight: 800;
+  color: #0f1c3f;
+  line-height: 1;
+  margin-bottom: 6px;
+  letter-spacing: -0.5px;
+}
+
+.stat-card-adm .stat-info p {
+  font-size: 11px;
+  color: #64748b;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin: 0;
+}
+
+/* ==========================================================================
+   BARRA DE FILTROS E BUSCA
+   ========================================================================== */
+.filter-bar-adm {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+}
+
+.search-input-adm {
+  flex: 1;
+  min-width: 240px;
+  height: 38px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 0 12px 0 36px;
+  font-size: 12.5px;
+  color: #1e293b;
+  background: #f8fafc url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="%2364748b" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>') no-repeat 11px center;
+  outline: none;
+  font-family: inherit;
+  transition: border-color 0.15s, background-color 0.15s;
+}
+
+.search-input-adm:focus {
+  border-color: #0f1c3f;
+  background-color: #ffffff;
+}
+
+.select-filter-adm {
+  height: 38px;
+  padding: 0 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #0f1c3f;
+  background: #f8fafc;
+  cursor: pointer;
+  font-family: inherit;
+  outline: none;
+}
+
+.select-filter-adm:focus {
+  border-color: #0f1c3f;
+  background: #ffffff;
+}
+
+/* ==========================================================================
+   BADGES DE STATUS EXECUTIVOS (COM ÍCONES SVG)
+   ========================================================================== */
+.badge-status-pendente {
+  background: #fffbeb;
+  color: #b45309;
+  border: 1px solid #fde68a;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.badge-status-aprovado {
+  background: #f0fdf4;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.badge-status-rejeitado {
+  background: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+   CARDS DE EQUIPES (DESIGN EXECUTIVO, LIMPO E ALINHADO)
+   ========================================================================== */
+.grid-equipes-adm {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 18px;
+}
+
+.card-equipe-bloco {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  overflow: hidden;
+}
+
+.card-equipe-bloco:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(15, 28, 63, 0.08);
+  border-color: #cbd5e1;
+}
+
+.equipe-bloco-header {
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  border-bottom: 1px solid #f1f5f9;
+  background: #ffffff;
+}
+
+.equipe-bloco-identidade {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+}
+
+.equipe-bloco-logo-wrap {
+  width: 58px;
+  height: 58px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  background: #f8fafc;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.equipe-bloco-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.equipe-bloco-title-box {
+  flex: 1;
+  min-width: 0;
+}
+
+.equipe-bloco-nome {
+  font-size: 15.5px;
+  font-weight: 800;
+  color: #0f1c3f;
+  text-transform: uppercase;
+  line-height: 1.3;
+  margin: 0 0 4px 0;
+  letter-spacing: 0.3px;
+  word-break: break-word;
+}
+
+.equipe-bloco-cidade {
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.equipe-bloco-status-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  margin-bottom: 4px;
+}
+
+.equipe-bloco-body {
+  padding: 14px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.equipe-bloco-meta-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed #e2e8f0;
+}
+
+.equipe-meta-item span {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-bottom: 2px;
+}
+
+.equipe-meta-item strong {
+  font-size: 12px;
+  font-weight: 700;
+  color: #334155;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.equipe-bloco-cats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chip-cat-adm {
+  background: #f8fafc;
+  color: #1e293b;
+  border: 1px solid #cbd5e1;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.chip-cat-adm strong {
+  color: #1d4ed8;
+  font-weight: 800;
+}
+
+.equipe-bloco-footer {
+  background: #f8fafc;
+  padding: 11px 20px;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11.5px;
+  color: #475569;
+}
+
+.equipe-bloco-stats {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 600;
+}
+
+.equipe-bloco-stats span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.equipe-bloco-cta {
+  font-size: 11px;
+  font-weight: 700;
+  color: #0f1c3f;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  transition: color 0.15s, transform 0.15s;
+}
+
+.card-equipe-bloco:hover .equipe-bloco-cta {
+  color: #1d4ed8;
+  transform: translateX(2px);
+}
+
+/* ==========================================================================
+   CARDS DE CAMPEONATOS NO ADM (DESIGN SOFISTICADO E MINIMALISTA)
+   ========================================================================== */
+.grid-champs-adm {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 20px;
+}
+
+.card-champ-adm {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-top: 3px solid #0f1c3f;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.2s ease;
+}
+
+.card-champ-adm:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(15, 28, 63, 0.08);
+  border-color: #cbd5e1;
+  border-top-color: #c5a021;
+}
+
+.card-champ-adm-header {
+  padding: 18px 22px 14px 22px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.champ-top-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  gap: 8px;
+}
+
+.champ-modality-tag {
+  font-size: 10px;
+  font-weight: 700;
+  color: #475569;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  padding: 3px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.champ-status-indicator {
+  font-size: 11px;
+  font-weight: 700;
+  color: #15803d;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.champ-status-indicator::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #16a34a;
+}
+
+.champ-title-h4 {
+  font-size: 14px;
+  font-weight: 800;
+  color: #0f1c3f;
+  line-height: 1.4;
+  margin: 0;
+  text-transform: uppercase;
+  min-height: 39px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.card-champ-adm-body {
+  padding: 16px 22px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+/* FAIXA DE MÉTRICAS EM 3 COLUNAS TABULARES */
+.champ-metrics-strip {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr 1fr;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  background: #f8fafc;
+  overflow: hidden;
+}
+
+.champ-metric-cell {
+  padding: 10px 12px;
+  border-right: 1px solid #e2e8f0;
+}
+
+.champ-metric-cell:last-child {
+  border-right: none;
+}
+
+.champ-metric-cell span {
+  display: block;
+  font-size: 9.5px;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-bottom: 3px;
+}
+
+.champ-metric-cell strong {
+  display: block;
+  font-size: 12px;
+  font-weight: 800;
+  color: #0f1c3f;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.champ-cats-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.champ-cats-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.champ-cats-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.champ-cat-pill {
+  background: #ffffff;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 4px;
+}
+
+.card-champ-adm-footer {
+  background: #f8fafc;
+  padding: 12px 22px;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-champ-primary {
+  background: #0f1c3f;
+  color: #ffffff;
+  border: 1px solid #0f1c3f;
+  height: 34px;
+  padding: 0 14px;
+  border-radius: 5px;
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  transition: all 0.15s ease;
+  font-family: inherit;
+}
+
+.btn-champ-primary:hover {
+  background: #1e293b;
+}
+
+.btn-champ-secondary {
+  background: #ffffff;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+  height: 34px;
+  padding: 0 11px;
+  border-radius: 5px;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.15s ease;
+  font-family: inherit;
+}
+
+.btn-champ-secondary:hover {
+  background: #f1f5f9;
+  color: #0f1c3f;
+  border-color: #94a3b8;
+}
+
+.btn-champ-icon-danger {
+  background: transparent;
+  color: #94a3b8;
+  border: 1px solid transparent;
+  width: 34px;
+  height: 34px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.btn-champ-icon-danger:hover {
+  background: #fef2f2;
+  color: #dc2626;
+  border-color: #fecaca;
+}
+
+/* ==========================================================================
+   PÁGINA INTERNA DEDICADA DA EQUIPE (AO CLICAR NO BLOCO DA EQUIPE)
+   ========================================================================== */
+.equipe-detalhe-header-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  margin-bottom: 20px;
+}
+
+.equipe-detalhe-banner {
+  background: #0f1c3f;
+  color: #ffffff;
+  padding: 18px 24px;
+  border-bottom: 3px solid #c5a021;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.equipe-detalhe-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  padding: 16px 24px;
+  background: #f8fafc;
+}
+
+.equipe-detalhe-info-item span {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 3px;
+}
+
+.equipe-detalhe-info-item strong {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: #1e293b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ABAS DE CATEGORIAS DENTRO DA EQUIPE */
+.categorias-tabs-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.btn-cat-tab {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #475569;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.15s ease;
+  font-family: inherit;
+}
+
+.btn-cat-tab:hover {
+  border-color: #0f1c3f;
+  color: #0f1c3f;
+  background: #f8fafc;
+}
+
+.btn-cat-tab.active {
+  background: #0f1c3f;
+  color: #ffffff;
+  border-color: #0f1c3f;
+}
+
+.btn-cat-tab .count-pill {
+  background: #f1f5f9;
+  color: #0f1c3f;
+  padding: 1px 7px;
+  border-radius: 10px;
+  font-size: 10.5px;
+  font-weight: 800;
+}
+
+.btn-cat-tab.active .count-pill {
+  background: #c5a021;
+  color: #0f1c3f;
+}
+
+/* BARRA DE IMPRESSÃO DE FICHAS POR CATEGORIA - DESIGN EXECUTIVO & CLEAN */
+.barra-impressao-categoria {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 14px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+}
+
+.barra-impressao-info-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f1c3f;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.barra-impressao-info-sub {
+  font-size: 11.5px;
+  color: #64748b;
+  display: block;
+  margin-top: 2px;
+}
+
+.barra-impressao-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.btn-clean-action {
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 6px;
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: inherit;
+  transition: all 0.15s ease;
+  border: 1px solid transparent;
+}
+
+.btn-clean-neutral {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  color: #334155;
+}
+.btn-clean-neutral:hover {
+  background: #f8fafc;
+  border-color: #94a3b8;
+  color: #0f1c3f;
+}
+
+.btn-clean-navy {
+  background: #0f1c3f;
+  color: #ffffff;
+}
+.btn-clean-navy:hover {
+  background: #1e293b;
+}
+
+.btn-clean-gold {
+  background: #c5a021;
+  color: #0f1c3f;
+}
+.btn-clean-gold:hover {
+  background: #b38f18;
+}
+
+.btn-clean-green {
+  background: #15803d;
+  color: #ffffff;
+}
+.btn-clean-green:hover {
+  background: #166534;
+}
+
+/* CARDS DE COMISSÃO TÉCNICA - EXECUTIVOS & CLEAN */
+.grid-comissao-tecnica {
+  padding: 18px 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+  background: #f8fafc;
+}
+
+.card-comissao-membro {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03);
+  transition: all 0.2s ease;
+}
+
+.card-comissao-membro:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 12px rgba(15, 28, 63, 0.06);
+  transform: translateY(-1px);
+}
+
+.comissao-membro-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.comissao-membro-foto {
+  width: 48px;
+  height: 52px;
+  border-radius: 6px;
+  object-fit: cover;
+  border: 1px solid #cbd5e1;
+  background: #f8fafc;
+  flex-shrink: 0;
+}
+
+.comissao-membro-info {
+  min-width: 0;
+}
+
+.comissao-membro-nome {
+  font-size: 13px;
+  font-weight: 800;
+  color: #0f1c3f;
+  text-transform: uppercase;
+  line-height: 1.3;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.comissao-membro-funcao {
+  font-size: 11px;
+  color: #0f766e;
+  font-weight: 700;
+  display: inline-block;
+  margin-bottom: 3px;
+}
+
+.comissao-membro-meta {
+  font-size: 11px;
+  color: #64748b;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* TABELAS DO ADM */
+.table-adm {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-adm th {
+  background: #0f1c3f;
+  color: #ffffff;
+  padding: 11px 16px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-align: left;
+}
+
+.table-adm td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 12.5px;
+  color: #334155;
+  vertical-align: middle;
+}
+
+.table-adm tbody tr:hover {
+  background: #f8fafc;
+}

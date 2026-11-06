@@ -1,0 +1,36 @@
+services:
+  avv-portal:
+    image: avv-portal-app:latest
+    networks:
+      - traefik_public
+    ports:
+      - "3005:3005"
+    environment:
+      - PORT=3005
+    deploy:
+      restart_policy:
+        condition: on-failure
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=traefik_public"
+
+        # Roteamento HTTPS imediato via subcaminho (/avv) nos domínios ativos da OrionX
+        - "traefik.http.routers.avv-subpath.rule=(Host(`sistema.orionxbrasil.com`) || Host(`painel.orionxbrasil.com`)) && PathPrefix(`/avv`)"
+        - "traefik.http.routers.avv-subpath.priority=100"
+        - "traefik.http.routers.avv-subpath.entrypoints=websecure"
+        - "traefik.http.routers.avv-subpath.tls=true"
+        - "traefik.http.routers.avv-subpath.tls.certresolver=le"
+        - "traefik.http.routers.avv-subpath.service=avv-portal-svc"
+
+        # Roteamento dedicado caso aponte avv.orionxbrasil.com futuramente
+        - "traefik.http.routers.avv-domain.rule=Host(`avv.orionxbrasil.com`)"
+        - "traefik.http.routers.avv-domain.entrypoints=websecure"
+        - "traefik.http.routers.avv-domain.tls=true"
+        - "traefik.http.routers.avv-domain.tls.certresolver=le"
+        - "traefik.http.routers.avv-domain.service=avv-portal-svc"
+
+        - "traefik.http.services.avv-portal-svc.loadbalancer.server.port=3005"
+
+networks:
+  traefik_public:
+    external: true

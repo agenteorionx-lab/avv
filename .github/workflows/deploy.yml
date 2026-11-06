@@ -1,0 +1,47 @@
+name: Deploy AVV - VPS Contabo
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Deploy de arquivos para a VPS via SCP
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          source: "index.html,inscricao.html,inscricao.css,inscricao.js,login.html,painel-time.html,painel-adm.html,painel.css,painel-adm.css,style.css,script.js,privacidade.html,termos.html,server.js,package.json,package-lock.json,Dockerfile,docker-compose.yml,*.png,logos/*,equipe/*,patrocinadores/*,tecnicos/*"
+          target: "/root/avv"
+
+      - name: Build da imagem e Deploy no Docker Swarm
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          script: |
+            echo "--- INICIANDO DEPLOY SISTEMA AVV ---"
+            mkdir -p /root/avv
+            cd /root/avv
+
+            # 1. Build da imagem Docker localmente no servidor
+            docker build --no-cache -t avv-portal-app:latest . || { echo "❌ FALHA NO BUILD DOCKER AVV"; exit 1; }
+
+            # 2. Deploy da stack no Swarm
+            docker stack deploy -c docker-compose.yml avv-portal
+
+            # 3. Forçar atualização do serviço para aplicar a nova imagem
+            docker service update --image avv-portal-app:latest --force avv-portal_avv-portal
+
+            # 4. Limpar imagens antigas sem uso
+            docker image prune -f
+
+            echo "✅ DEPLOY AVV CONCLUÍDO COM SUCESSO."
