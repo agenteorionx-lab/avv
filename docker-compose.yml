@@ -22,8 +22,8 @@ services:
         - "traefik.http.routers.avv-subpath.tls.certresolver=le"
         - "traefik.http.routers.avv-subpath.service=avv-portal-svc"
 
-        # Roteamento dedicado caso aponte avv.orionxbrasil.com futuramente
-        - "traefik.http.routers.avv-domain.rule=Host(`avv.orionxbrasil.com`)"
+        # Roteamento dedicado para o domínio oficial avvvoleibol.com.br
+        - "traefik.http.routers.avv-domain.rule=Host(`avvvoleibol.com.br`) || Host(`www.avvvoleibol.com.br`) || Host(`avv.orionxbrasil.com`)"
         - "traefik.http.routers.avv-domain.entrypoints=websecure"
         - "traefik.http.routers.avv-domain.tls=true"
         - "traefik.http.routers.avv-domain.tls.certresolver=le"
