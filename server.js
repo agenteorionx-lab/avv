@@ -84,9 +84,9 @@ function carregarBancoDados() {
                 campeonatos: parsed.campeonatos && typeof parsed.campeonatos === 'object' ? parsed.campeonatos : {},
                 adm: parsed.adm || {
                     usuario: 'Administrador Geral',
-                    email: 'admin@avv.com.br',
+                    email: process.env.ADM_DEFAULT_EMAIL || 'avvvoleibol@gmail.com',
                     setor: 'Diretoria Técnica AVV',
-                    senhaHash: hashSenhaSegura(process.env.ADM_DEFAULT_PASS || 'admin123')
+                    senhaHash: hashSenhaSegura(process.env.ADM_DEFAULT_PASS || '@Avv_23#')
                 }
             };
         }
@@ -99,9 +99,9 @@ function carregarBancoDados() {
         campeonatos: {},
         adm: {
             usuario: 'Administrador Geral',
-            email: 'admin@avv.com.br',
+            email: process.env.ADM_DEFAULT_EMAIL || 'avvvoleibol@gmail.com',
             setor: 'Diretoria Técnica AVV',
-            senhaHash: hashSenhaSegura(process.env.ADM_DEFAULT_PASS || 'admin123')
+            senhaHash: hashSenhaSegura(process.env.ADM_DEFAULT_PASS || '@Avv_23#')
         }
     };
     salvarBancoDados(dbInicial);
@@ -262,8 +262,8 @@ app.post(['/api/auth/login', '/avv/api/auth/login'], (req, res) => {
         const db = carregarBancoDados();
 
         if (tipo === 'adm') {
-            const emailAdmValido = (db.adm.email || 'admin@avv.com.br').toLowerCase();
-            const usuarioValido = loginLimpo === 'admin' || loginLimpo === emailAdmValido || loginLimpo === 'admin@avv.com.br';
+            const emailAdmValido = (db.adm.email || 'avvvoleibol@gmail.com').toLowerCase();
+            const usuarioValido = loginLimpo === 'admin' || loginLimpo === emailAdmValido || loginLimpo === 'avvvoleibol@gmail.com' || loginLimpo === 'admin@avv.com.br';
             const senhaCorreta = verificarSenhaSegura(senha, db.adm.senhaHash);
 
             if (!usuarioValido || !senhaCorreta) {
@@ -275,7 +275,7 @@ app.post(['/api/auth/login', '/avv/api/auth/login'], (req, res) => {
                 sessao: {
                     tipo: 'adm',
                     usuario: db.adm.usuario || 'Administrador Geral',
-                    email: db.adm.email || 'admin@avv.com.br',
+                    email: db.adm.email || 'avvvoleibol@gmail.com',
                     setor: db.adm.setor || 'Diretoria Técnica AVV',
                     timestamp: Date.now()
                 }
@@ -721,10 +721,10 @@ app.listen(PORT, async () => {
     if (conectado) {
         const estadoLocal = carregarBancoDados();
         const estadoMySQL = await carregarEstadoDoMySQL();
-        if (estadoMySQL && (estadoMySQL.equipes.length > 0 || Object.keys(estadoMySQL.campeonatos).length > 0)) {
+        if (estadoMySQL) {
             salvarBancoDados({
-                equipes: estadoMySQL.equipes,
-                campeonatos: estadoMySQL.campeonatos,
+                equipes: estadoMySQL.equipes || estadoLocal.equipes,
+                campeonatos: estadoMySQL.campeonatos || estadoLocal.campeonatos,
                 adm: estadoMySQL.adm || estadoLocal.adm
             }, false);
             console.log(`✅ Dados sincronizados do MySQL (avv_db) para o cache local.`);
