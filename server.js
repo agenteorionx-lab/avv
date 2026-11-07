@@ -1,4 +1,5 @@
 const express = require('express');
+const compression = require('compression');
 const path = require('path');
 const fs = require('fs');
 const cors = require('cors');
@@ -13,6 +14,7 @@ const PORT = process.env.PORT || 3000;
 // ============================================================================
 // 1. SEGURANÇA & MIDDLEWARES GLOBAIS
 // ============================================================================
+app.use(compression());
 app.use(cors());
 app.use(express.json({ limit: '5mb' }));
 app.use(express.urlencoded({ extended: true, limit: '5mb' }));
@@ -35,9 +37,15 @@ app.use((req, res, next) => {
     next();
 });
 
+// Cache inteligente para estáticos: 1 dia para imagens, css e js
+const staticOpts = {
+    maxAge: '1d',
+    etag: true
+};
+
 // Serve os arquivos estáticos da AVV tanto na raiz (/) quanto em (/avv)
-app.use(express.static(__dirname));
-app.use('/avv', express.static(__dirname));
+app.use(express.static(__dirname, staticOpts));
+app.use('/avv', express.static(__dirname, staticOpts));
 
 // ============================================================================
 // 2. BANCO DE DADOS OFICIAL PERSISTENTE (ARQUIVO JSON SEGURO E ATÔMICO)
