@@ -3,12 +3,19 @@ services:
     image: avv-portal-app:latest
     networks:
       - traefik_public
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     ports:
       - "3006:3006"
     env_file:
       - .env
     environment:
       - PORT=3006
+      - DB_HOST=host.docker.internal
+      - DB_PORT=3306
+      - DB_USER=orionx_db
+      - DB_PASSWORD=@_sist.orion2904
+      - DB_NAME=avv_db
     deploy:
       restart_policy:
         condition: on-failure

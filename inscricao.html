@@ -24,7 +24,7 @@
     <header class="site-header">
         <div class="container">
             <a href="index.html" class="site-brand" style="display: flex; align-items: center; gap: 10px; text-decoration: none;">
-                <img src="logos/logo_avv_oficial.png" alt="Associação Vilhenense de Voleibol" style="height: 52px; max-height: 54px; width: auto; object-fit: contain;">
+                <img src="logos/logo_banner_avv.png" alt="Associação Vilhenense de Voleibol" style="height: 48px; max-height: 50px; width: auto; object-fit: contain; border-radius: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.18);">
             </a>
             <nav class="site-nav">
                 <a href="index.html">Portal AVV</a>
@@ -164,7 +164,7 @@
             <div class="footer-grid">
                 <div class="footer-col">
                     <div style="margin-bottom: 16px;">
-                        <img src="logos/logo_avv_oficial.png" alt="Associação Vilhenense de Voleibol" style="height: 60px; max-height: 65px; width: auto; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));">
+                        <img src="logos/logo_banner_avv.png" alt="Associação Vilhenense de Voleibol" style="height: 55px; max-height: 60px; width: auto; object-fit: contain; border-radius: 4px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));">
                     </div>
                     <p style="font-size: 13px; line-height: 1.6; color: #cbd5e1; margin-bottom: 16px;">Entidade máxima de fomento e desenvolvimento do voleibol de quadra e areia em Vilhena e na Região Sul de Rondônia. Fundada em 2003.</p>
                     
@@ -210,14 +210,9 @@
                 </div>
             </div>
 
-            <div class="footer-bottom" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; text-align: center;">
-                <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 14px;">
-                    <span>&copy; 2026 AVV - Associação Vilhenense de Voleibol. Todos os direitos reservados.</span>
-                    <div class="legal-footer-links" style="margin: 0;">
-                        <a href="termos.html">Termos de Uso</a> &bull;
-                        <a href="privacidade.html">Política de Privacidade</a> &bull;
-                        <a href="login.html">Área do Time</a>
-                    </div>
+            <div class="footer-bottom" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; text-align: center;">
+                <div style="font-size: 11.5px; color: #94a3b8; font-weight: 600;">
+                    &copy; 2026 Associação Vilhenense de Voleibol. Todos os direitos reservados.
                 </div>
                 <div style="display: inline-flex; align-items: center; justify-content: center; gap: 7px; font-size: 11px; color: #94a3b8;">
                     <span>Desenvolvido por</span>
@@ -245,12 +240,20 @@
             e.target.value = val;
         });
 
-        document.getElementById('form-pre-inscricao').addEventListener('submit', (e) => {
+        let envioInscricaoEmAndamento = false;
+        document.getElementById('form-pre-inscricao').addEventListener('submit', async (e) => {
             e.preventDefault();
+            if (envioInscricaoEmAndamento) return;
 
             const senha = document.getElementById('senhaAcesso').value;
             const confirma = document.getElementById('confirmarSenha').value;
             const emailDigitado = document.getElementById('email').value.trim().toLowerCase();
+
+            if (!senha || senha.length < 6) {
+                alert('A senha de acesso deve possuir no mínimo 6 caracteres.');
+                document.getElementById('senhaAcesso').focus();
+                return;
+            }
 
             if (senha !== confirma) {
                 alert('A confirmação de senha não coincide com a senha criada.');
@@ -258,7 +261,7 @@
                 return;
             }
 
-            // Prevenção de duplicidade de e-mail cadastrado
+            // Prevenção de duplicidade de e-mail cadastrado localmente
             try {
                 const equipesExistentes = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
                 const jaCadastrado = equipesExistentes.find(eq => (eq.email || '').toLowerCase() === emailDigitado);
@@ -269,8 +272,13 @@
                 }
             } catch (err) {}
 
+            envioInscricaoEmAndamento = true;
             const btnSubmit = e.target.querySelector('button[type="submit"]');
-            if (btnSubmit) btnSubmit.disabled = true;
+            const textoOriginalBtn = btnSubmit ? btnSubmit.innerHTML : '';
+            if (btnSubmit) {
+                btnSubmit.disabled = true;
+                btnSubmit.innerHTML = 'Registrando no Banco de Dados...';
+            }
 
             const agora = new Date();
             const dataInscricao = agora.toLocaleDateString('pt-BR');
@@ -288,24 +296,40 @@
                 cidade: document.getElementById('cidade').value.trim(),
                 nomeTime: document.getElementById('nomeTime').value.trim(),
                 responsavelNome: document.getElementById('nomeResponsavel').value.trim(),
-                email: document.getElementById('email').value.trim().toLowerCase(),
+                email: emailDigitado,
                 whatsapp: document.getElementById('whatsapp').value.trim(),
                 instagram: document.getElementById('instagram').value.trim(),
                 senha: senha,
                 status: 'Pendente',
+                categoria: 'Adulto Masculino',
                 categorias: ['Adulto Masculino'],
                 atletas: [],
                 comissao: [],
                 campeonato: 'Aguardando Seleção no Painel'
             };
 
-            // Salva na lista de inscrições
-            const times = JSON.parse(localStorage.getItem('avv_inscricoes_teste') || '[]');
-            times.push(timeData);
-            localStorage.setItem('avv_inscricoes_teste', JSON.stringify(times));
-
-            // Salva diretamente no banco unificado de equipes para o ADM e Painel do Time
             try {
+                const resp = await fetch('api/equipes/cadastrar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(timeData)
+                });
+                const resJson = await resp.json();
+                if (!resp.ok && resJson.duplicado) {
+                    alert(`${resJson.mensagem}\n\nVocê será direcionado para a tela de Login.`);
+                    window.location.href = 'login.html';
+                    return;
+                }
+            } catch (err) {
+                console.warn('Servidor em sincronização local:', err);
+            }
+
+            // Salva na lista de inscrições e banco unificado local
+            try {
+                const times = JSON.parse(localStorage.getItem('avv_inscricoes_teste') || '[]');
+                times.push(timeData);
+                localStorage.setItem('avv_inscricoes_teste', JSON.stringify(times));
+
                 const equipesDb = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
                 equipesDb.unshift(timeData);
                 localStorage.setItem('avv_equipes_completo_db', JSON.stringify(equipesDb));
@@ -333,6 +357,9 @@
             if (metaInfoBox) {
                 metaInfoBox.textContent = `Realizada em ${dataInscricao} às ${horaInscricao}`;
             }
+
+            envioInscricaoEmAndamento = false;
+            if (btnSubmit) btnSubmit.innerHTML = textoOriginalBtn;
         });
     </script>
 </body>

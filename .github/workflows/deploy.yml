@@ -18,7 +18,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PASSWORD }}
-          source: "index.html,inscricao.html,inscricao.css,inscricao.js,login.html,painel-time.html,painel-adm.html,painel.css,painel-adm.css,style.css,script.js,privacidade.html,termos.html,server.js,package.json,package-lock.json,Dockerfile,docker-compose.yml,*.png,logos/*,equipe/*,patrocinadores/*,tecnicos/*"
+          source: "index.html,inscricao.html,inscricao.css,inscricao.js,login.html,painel-time.html,painel-adm.html,painel.css,painel-adm.css,style.css,script.js,privacidade.html,termos.html,server.js,db.js,database.sql,package.json,package-lock.json,Dockerfile,docker-compose.yml,*.png,logos/*,equipe/*,patrocinadores/*,tecnicos/*"
           target: "/root/avv"
 
       - name: Build da imagem e Deploy no Docker Swarm

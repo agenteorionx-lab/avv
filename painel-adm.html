@@ -578,40 +578,10 @@
 
             </section>
             <!-- RODAPÉ CORPORATIVO AVV + ORIONX -->
-            <footer style="margin-top: 36px; padding: 22px 10px; border-top: 1px solid #e2e8f0; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;">
+            <footer style="margin-top: 36px; padding: 22px 10px; border-top: 1px solid #e2e8f0; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;">
                 <div style="font-size: 11.5px; color: #64748b; font-weight: 600;">
-                    &copy; 2026 Associação Vilhenense de Voleibol (AVV) &bull; Sistema Oficial de Gestão Esportiva
+                    &copy; 2026 Associação Vilhenense de Voleibol. Todos os direitos reservados.
                 </div>
-                
-    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-        <!-- INSTAGRAM -->
-        <a href="https://www.instagram.com/avv_voleivilhena/" target="_blank" rel="noopener noreferrer" title="Instagram Oficial da AVV" style="width: 32px; height: 32px; border-radius: 50%; background: #f1f5f9; border: 1px solid #cbd5e1; display: inline-flex; align-items: center; justify-content: center; color: #475569; text-decoration: none; transition: transform 0.2s, background 0.2s;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-            </svg>
-        </a>
-        <!-- FACEBOOK -->
-        <a href="https://www.facebook.com/AVVVILHENARO" target="_blank" rel="noopener noreferrer" title="Facebook Oficial da AVV" style="width: 32px; height: 32px; border-radius: 50%; background: #f1f5f9; border: 1px solid #cbd5e1; display: inline-flex; align-items: center; justify-content: center; color: #475569; text-decoration: none; transition: transform 0.2s, background 0.2s;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
-            </svg>
-        </a>
-        <!-- YOUTUBE -->
-        <a href="https://www.youtube.com/@avv-voleivilhena6374" target="_blank" rel="noopener noreferrer" title="Canal Oficial no YouTube" style="width: 32px; height: 32px; border-radius: 50%; background: #f1f5f9; border: 1px solid #cbd5e1; display: inline-flex; align-items: center; justify-content: center; color: #475569; text-decoration: none; transition: transform 0.2s, background 0.2s;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.42a2.78 2.78 0 0 0-1.94 2C1 8.11 1 12 1 12s0 3.89.46 5.58a2.78 2.78 0 0 0 1.94 2c1.72.42 8.6.42 8.6.42s6.88 0 8.6-.42a2.78 2.78 0 0 0 1.94-2C23 15.89 23 12 23 12s0-3.89-.46-5.58z"></path>
-                <polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"></polygon>
-            </svg>
-        </a>
-        <!-- WHATSAPP -->
-        <a href="https://wa.me/5569992099604" target="_blank" rel="noopener noreferrer" title="Fale Conosco no WhatsApp" style="width: 32px; height: 32px; border-radius: 50%; background: #f1f5f9; border: 1px solid #cbd5e1; display: inline-flex; align-items: center; justify-content: center; color: #475569; text-decoration: none; transition: transform 0.2s, background 0.2s;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
-            </svg>
-        </a>
-    </div>
                 <div style="display: inline-flex; align-items: center; justify-content: center; gap: 7px; font-size: 11px; color: #94a3b8;">
                     <span>Desenvolvido por</span>
                     <a href="https://orionxbrasil.com/" target="_blank" rel="noopener noreferrer" title="OrionX Brasil" style="display: inline-flex; align-items: center; text-decoration: none;">
@@ -991,7 +961,7 @@
         const equipesIniciaisPadrao = [];
 
         // Inicialização ao abrir o Painel ADM
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             const sessaoAdm = JSON.parse(localStorage.getItem('avv_sessao_adm') || 'null');
             if (!sessaoAdm || sessaoAdm.tipo !== 'adm') {
                 window.location.href = 'login.html';
@@ -1004,6 +974,49 @@
                     localStorage.setItem('avv_banco_campeonatos', JSON.stringify({}));
                 } catch(e) {}
                 localStorage.setItem('avv_sistema_limpo_v4', 'true');
+            }
+
+            // Sincroniza dados do Banco de Dados Oficial do Servidor
+            try {
+                const resp = await fetch('api/dados-sistema');
+                const serverData = await resp.json();
+                if (resp.ok && serverData.ok) {
+                    if (serverData.campeonatos && Object.keys(serverData.campeonatos).length > 0) {
+                        localStorage.setItem('avv_banco_campeonatos', JSON.stringify(serverData.campeonatos));
+                    }
+                    if (Array.isArray(serverData.equipes) && serverData.equipes.length > 0) {
+                        const localDb = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
+                        serverData.equipes.forEach(eqSrv => {
+                            const idx = localDb.findIndex(
+                                l => String(l.id) === String(eqSrv.id) ||
+                                     (l.email && eqSrv.email && l.email.toLowerCase() === eqSrv.email.toLowerCase())
+                            );
+                            if (idx !== -1) {
+                                localDb[idx] = { ...localDb[idx], ...eqSrv };
+                            } else {
+                                localDb.push(eqSrv);
+                            }
+                        });
+                        localStorage.setItem('avv_equipes_completo_db', JSON.stringify(localDb));
+                    }
+                }
+            } catch (err) {}
+
+            // Atualiza perfil visual do ADM
+            if (sessaoAdm.usuario && document.getElementById('adm-user-display-name')) {
+                document.getElementById('adm-user-display-name').textContent = sessaoAdm.usuario;
+            }
+            if (sessaoAdm.setor && document.getElementById('adm-user-display-role')) {
+                document.getElementById('adm-user-display-role').textContent = sessaoAdm.setor;
+            }
+            if (sessaoAdm.usuario && document.getElementById('adm-prof-nome')) {
+                document.getElementById('adm-prof-nome').value = sessaoAdm.usuario;
+            }
+            if (sessaoAdm.setor && document.getElementById('adm-prof-setor')) {
+                document.getElementById('adm-prof-setor').value = sessaoAdm.setor;
+            }
+            if (sessaoAdm.email && document.getElementById('adm-prof-email')) {
+                document.getElementById('adm-prof-email').value = sessaoAdm.email;
             }
 
             carregarCampeonatos();
@@ -1053,7 +1066,7 @@
                         ? pre.categorias 
                         : ['Adulto Masculino'];
                     equipesSistema.unshift({
-                        id: 'eq-' + (pre.id || Date.now()),
+                        id: pre.id ? String(pre.id) : ('eq-' + Date.now()),
                         numeroInscricao: pre.numeroInscricao || Math.floor(100000 + Math.random() * 900000),
                         protocolo: pre.protocolo || ('AVV-' + (pre.numeroInscricao || '999999')),
                         nomeTime: pre.nomeTime.toUpperCase(),
@@ -1063,13 +1076,14 @@
                         email: pre.email || 'contato@equipe.com.br',
                         whatsapp: pre.whatsapp || '(69) 99999-9999',
                         instagram: pre.instagram || '',
+                        senha: pre.senha,
                         dataInscricao: pre.dataInscricao || new Date().toLocaleDateString('pt-BR'),
                         horaInscricao: pre.horaInscricao || '10:00',
                         dataHoraCompleta: pre.dataHoraCompleta || `${new Date().toLocaleDateString('pt-BR')} às 10:00`,
                         status: pre.status === 'Homologado' ? 'Homologado' : 'Pendente',
-                        logo: 'logos/logo_avv.png',
-                        campeonatoId: 'superliga-masc',
-                        campeonatoNome: pre.campeonato && pre.campeonato !== 'Aguardando Seleção no Painel' ? pre.campeonato : 'SUPERLIGA INTERIORANA - POLO VILHENA - MASCULINO',
+                        logo: pre.logo || 'logos/logo_avv.png',
+                        campeonatoId: pre.campeonatoId || '',
+                        campeonatoNome: pre.campeonato && pre.campeonato !== 'Aguardando Seleção no Painel' ? pre.campeonato : 'Aguardando Seleção no Painel',
                         categorias: cats,
                         atletas: Array.isArray(pre.atletas) ? pre.atletas : [],
                         comissao: Array.isArray(pre.comissao) ? pre.comissao : []
@@ -1085,6 +1099,11 @@
 
         function salvarBancoEquipesIntegrado() {
             salvarStorageSeguroAdm('avv_equipes_completo_db', JSON.stringify(equipesSistema));
+            fetch('api/equipes/sincronizar', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ equipesLista: equipesSistema })
+            }).catch(() => {});
         }
 
         function atualizarTudoPainelAdm() {
@@ -1497,8 +1516,14 @@
                 textoBotao: 'Recusar e Excluir',
                 corBotao: '#dc2626',
                 onConfirm: () => {
+                    const idRemovido = equipeAbertaId;
                     equipesSistema = equipesSistema.filter(e => String(e.id) !== String(equipeAbertaId));
                     salvarBancoEquipesIntegrado();
+                    fetch('api/equipes/excluir', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ id: idRemovido })
+                    }).catch(() => {});
                     fecharPaginaEquipeAdm();
                 }
             });
@@ -2024,6 +2049,11 @@
 
         function salvarCampeonatosNoStorage() {
             salvarStorageSeguroAdm('avv_banco_campeonatos', JSON.stringify(campeonatosAdm));
+            fetch('api/campeonatos/sincronizar', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ campeonatos: campeonatosAdm })
+            }).catch(() => {});
         }
 
         function renderizarGridCampeonatos() {
@@ -2493,25 +2523,24 @@
             };
 
             localStorage.setItem('avv_sessao_adm', JSON.stringify(dadosAdm));
+            fetch('api/adm/perfil', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ usuario: nome, setor: setor || 'Diretoria Técnica AVV', email })
+            }).catch(() => {});
+
             const elNome = document.getElementById('adm-user-display-name');
             const elRole = document.getElementById('adm-user-display-role');
             if (elNome) elNome.textContent = nome;
             if (elRole) elRole.textContent = setor || 'Diretoria Técnica AVV';
 
-            alert('Dados do Administrador atualizados com sucesso!');
+            alert('Dados do Administrador atualizados e salvos no banco de dados!');
         }
 
-        function alterarSenhaAdm() {
+        async function alterarSenhaAdm() {
             const atual = document.getElementById('adm-pass-atual')?.value;
             const nova = document.getElementById('adm-pass-nova')?.value;
             const confirma = document.getElementById('adm-pass-confirma')?.value;
-
-            const senhaGravada = localStorage.getItem('avv_adm_senha') || 'admin123';
-
-            if (atual !== senhaGravada) {
-                alert('Senha atual incorreta.');
-                return;
-            }
 
             if (!nova || nova.length < 6) {
                 alert('A nova senha deve ter no mínimo 6 caracteres.');
@@ -2521,6 +2550,28 @@
             if (nova !== confirma) {
                 alert('A confirmação não coincide com a nova senha digitada.');
                 return;
+            }
+
+            try {
+                const resp = await fetch('api/auth/alterar-senha', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ tipo: 'adm', senhaAtual: atual, novaSenha: nova })
+                });
+                const resJson = await resp.json();
+                if (!resp.ok && resp.status === 401) {
+                    const senhaGravadaLocal = localStorage.getItem('avv_adm_senha') || 'admin123';
+                    if (atual !== senhaGravadaLocal) {
+                        alert(resJson.mensagem || 'Senha atual incorreta.');
+                        return;
+                    }
+                }
+            } catch (err) {
+                const senhaGravadaLocal = localStorage.getItem('avv_adm_senha') || 'admin123';
+                if (atual !== senhaGravadaLocal) {
+                    alert('Senha atual incorreta.');
+                    return;
+                }
             }
 
             localStorage.setItem('avv_adm_senha', nova);
