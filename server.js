@@ -271,7 +271,7 @@ app.post(['/api/auth/login', '/avv/api/auth/login'], (req, res) => {
 
         if (tipo === 'adm') {
             const emailAdmValido = (db.adm.email || 'avvvoleibol@gmail.com').toLowerCase();
-            const usuarioValido = loginLimpo === 'admin' || loginLimpo === emailAdmValido || loginLimpo === 'avvvoleibol@gmail.com' || loginLimpo === 'admin@avv.com.br';
+            const usuarioValido = loginLimpo === 'admin' || loginLimpo === emailAdmValido || loginLimpo === 'avvvoleibol@gmail.com';
             const senhaCorreta = verificarSenhaSegura(senha, db.adm.senhaHash);
 
             if (!usuarioValido || !senhaCorreta) {

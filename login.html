@@ -59,10 +59,15 @@
             margin-bottom: 5px;
             letter-spacing: 0.3px;
         }
+        .login-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
         .login-input-field {
             width: 100%;
             height: 42px;
-            padding: 0 12px;
+            padding: 0 40px 0 12px;
             border: 1.5px solid #cbd5e1;
             border-radius: 4px;
             font-size: 13px;
@@ -70,6 +75,26 @@
             transition: border-color 0.2s;
             font-family: 'Inter', sans-serif;
             background: #ffffff;
+        }
+        .btn-toggle-senha {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            padding: 6px;
+            cursor: pointer;
+            color: #64748b;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            transition: color 0.15s, background-color 0.15s;
+        }
+        .btn-toggle-senha:hover {
+            color: #0f1c3f;
+            background-color: #f1f5f9;
         }
         .login-input-field:focus {
             outline: none;
@@ -177,7 +202,12 @@
                             <label for="time-login-pass" style="margin-bottom: 0;">Senha de Acesso</label>
                             <a href="javascript:void(0)" onclick="abrirModalRecuperarSenha()" style="font-size: 10.5px; color: #2563eb; text-decoration: none; font-weight: 600;">Esqueceu a senha?</a>
                         </div>
-                        <input type="password" id="time-login-pass" class="login-input-field" placeholder="Digite sua senha cadastrada" required>
+                        <div class="login-input-wrapper">
+                            <input type="password" id="time-login-pass" class="login-input-field" placeholder="Digite sua senha cadastrada" required autocomplete="current-password">
+                            <button type="button" class="btn-toggle-senha" onclick="alternarVisibilidadeSenha('time-login-pass', this)" aria-label="Mostrar ou ocultar senha" title="Mostrar/Ocultar Senha">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icone-olho-fechado"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                            </button>
+                        </div>
                     </div>
 
                     <button type="submit" class="btn-login-submit" style="background: #16a34a;">
@@ -197,12 +227,17 @@
                 <form id="form-login-adm" onsubmit="executarLoginAdm(event)" style="display: none;">
                     <div class="login-input-group">
                         <label for="adm-login-user">Usuário Administrativo ou E-mail</label>
-                        <input type="text" id="adm-login-user" class="login-input-field" placeholder="admin@avv.com.br ou admin" value="admin@avv.com.br" required>
+                        <input type="text" id="adm-login-user" class="login-input-field" placeholder="Digite seu usuário ou e-mail institucional" value="" required autocomplete="username">
                     </div>
 
                     <div class="login-input-group">
                         <label for="adm-login-pass">Senha Administrativa</label>
-                        <input type="password" id="adm-login-pass" class="login-input-field" placeholder="Senha do Administrador" value="admin123" required>
+                        <div class="login-input-wrapper">
+                            <input type="password" id="adm-login-pass" class="login-input-field" placeholder="Digite sua senha administrativa" value="" required autocomplete="current-password">
+                            <button type="button" class="btn-toggle-senha" onclick="alternarVisibilidadeSenha('adm-login-pass', this)" aria-label="Mostrar ou ocultar senha" title="Mostrar/Ocultar Senha">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icone-olho-fechado"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                            </button>
+                        </div>
                     </div>
 
                     <button type="submit" class="btn-login-submit">
@@ -317,6 +352,18 @@
 
     <script>
         let tipoLoginAtual = 'time';
+
+        function alternarVisibilidadeSenha(inputId, btnEl) {
+            const input = document.getElementById(inputId);
+            if (!input) return;
+            const ehPassword = input.type === 'password';
+            input.type = ehPassword ? 'text' : 'password';
+
+            const iconeOlhoAberto = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
+            const iconeOlhoFechado = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`;
+
+            btnEl.innerHTML = ehPassword ? iconeOlhoAberto : iconeOlhoFechado;
+        }
 
         function alternarTipoLogin(tipo) {
             tipoLoginAtual = tipo;
@@ -495,24 +542,11 @@
                 const dadosApi = await resp.json();
 
                 if (resp.ok && dadosApi.ok) {
+                    if (dadosApi.sessao?.tipo !== 'adm') {
+                        exibirAlertaLogin('Este login pertence a um Clube/Time e não possui permissões administrativas.', 'error');
+                        return;
+                    }
                     localStorage.setItem('avv_sessao_adm', JSON.stringify(dadosApi.sessao));
-                    exibirAlertaLogin('Acesso de Administrador confirmado. Entrando no painel...', 'success');
-                    setTimeout(() => { window.location.href = 'painel-adm.html'; }, 500);
-                    return;
-                }
-
-                // Fallback caso a senha tenha sido alterada antes no localStorage
-                const senhaAdmValida = localStorage.getItem('avv_adm_senha') || 'admin123';
-                if ((user === 'admin@avv.com.br' || user === 'admin') && pass === senhaAdmValida) {
-                    const dadosSalvos = JSON.parse(localStorage.getItem('avv_sessao_adm') || '{}');
-                    const sessaoAdm = {
-                        tipo: 'adm',
-                        usuario: dadosSalvos.usuario || 'Administrador Geral',
-                        email: dadosSalvos.email || 'admin@avv.com.br',
-                        setor: dadosSalvos.setor || 'Diretoria Técnica AVV',
-                        timestamp: Date.now()
-                    };
-                    localStorage.setItem('avv_sessao_adm', JSON.stringify(sessaoAdm));
                     exibirAlertaLogin('Acesso de Administrador confirmado. Entrando no painel...', 'success');
                     setTimeout(() => { window.location.href = 'painel-adm.html'; }, 500);
                     return;
@@ -520,22 +554,8 @@
 
                 exibirAlertaLogin(dadosApi.mensagem || 'Credenciais administrativas inválidas.', 'error');
             } catch (err) {
-                const senhaAdmValida = localStorage.getItem('avv_adm_senha') || 'admin123';
-                if ((user === 'admin@avv.com.br' || user === 'admin') && pass === senhaAdmValida) {
-                    const dadosSalvos = JSON.parse(localStorage.getItem('avv_sessao_adm') || '{}');
-                    const sessaoAdm = {
-                        tipo: 'adm',
-                        usuario: dadosSalvos.usuario || 'Administrador Geral',
-                        email: dadosSalvos.email || 'admin@avv.com.br',
-                        setor: dadosSalvos.setor || 'Diretoria Técnica AVV',
-                        timestamp: Date.now()
-                    };
-                    localStorage.setItem('avv_sessao_adm', JSON.stringify(sessaoAdm));
-                    exibirAlertaLogin('Acesso de Administrador confirmado. Entrando no painel...', 'success');
-                    setTimeout(() => { window.location.href = 'painel-adm.html'; }, 500);
-                } else {
-                    exibirAlertaLogin('Credenciais administrativas inválidas.', 'error');
-                }
+                console.warn('Erro na autenticacao remota adm:', err);
+                exibirAlertaLogin('Não foi possível conectar ao servidor. Verifique sua conexão e tente novamente.', 'error');
             } finally {
                 loginAdmEmAndamento = false;
                 if (btn) {
