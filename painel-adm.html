@@ -13,8 +13,11 @@
 </head>
 <body>
 
+    <!-- SIDEBAR OVERLAY MOBILE -->
+    <div id="adm-sidebar-overlay" class="sidebar-overlay" onclick="fecharSidebarMobileAdm()"></div>
+
     <!-- SIDEBAR LATERAL DO ADMINISTRADOR -->
-    <aside class="sidebar-fed" style="background-color: var(--adm-sidebar);">
+    <aside class="sidebar-fed" id="adm-sidebar-principal" style="background-color: var(--adm-sidebar);">
         <div class="sidebar-fed-header">
             <img src="logos/logo_avv.png" alt="AVV Logo" class="sidebar-fed-logo">
             <div class="sidebar-fed-title">
@@ -110,9 +113,14 @@
         
         <!-- TOPBAR BRANCA -->
         <header class="topbar-fed">
-            <div class="topbar-breadcrumb">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
-                <span>Administração &bull; <strong id="breadcrumb-title-adm">Visão Geral</strong></span>
+            <div style="display: flex; align-items: center;">
+                <button type="button" class="btn-mobile-menu" onclick="abrirSidebarMobileAdm()" aria-label="Abrir menu de navegação" title="Abrir Menu">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                </button>
+                <div class="topbar-breadcrumb">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+                    <span>Administração &bull; <strong id="breadcrumb-title-adm">Visão Geral</strong></span>
+                </div>
             </div>
 
             <div class="topbar-right">
@@ -2585,6 +2593,32 @@
             localStorage.removeItem('avv_sessao_adm');
             window.location.href = 'login.html';
         }
+
+        // Funções para controle do Menu Lateral em Telas Menores (Mobile / Tablet)
+        function abrirSidebarMobileAdm() {
+            const sidebar = document.getElementById('adm-sidebar-principal');
+            const overlay = document.getElementById('adm-sidebar-overlay');
+            if (sidebar) sidebar.classList.add('mobile-open');
+            if (overlay) overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function fecharSidebarMobileAdm() {
+            const sidebar = document.getElementById('adm-sidebar-principal');
+            const overlay = document.getElementById('adm-sidebar-overlay');
+            if (sidebar) sidebar.classList.remove('mobile-open');
+            if (overlay) overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Fecha a sidebar mobile automaticamente ao trocar de aba no ADM
+        const switchAdmTabOriginal = window.switchAdmTab;
+        window.switchAdmTab = function(tabName, btn) {
+            fecharSidebarMobileAdm();
+            if (typeof switchAdmTabOriginal === 'function') {
+                switchAdmTabOriginal(tabName, btn);
+            }
+        };
 
     </script>
 </body>
