@@ -288,34 +288,27 @@
                                 </div>
                             </div>
 
-                            <!-- LINHA 4: STATUS DA SUA EQUIPE E INSCRIÇÃO DIRETA COM SELETOR DE EQUIPES -->
-                            <div id="box-status-elegibilidade" style="padding: 18px 22px; border-radius: 6px; border: 1px solid #cbd5e1; display: flex; flex-direction: column; gap: 14px; background: #f8fafc;">
-                                
-                                <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 14px;">
-                                    <div style="flex: 1; min-width: 280px;">
-                                        <label for="select-equipe-inscricao-torneio" style="display: block; font-size: 11px; font-weight: 800; color: #0f1c3f; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px;">
-                                            Selecione a Equipe da sua Agremiação para Participar:
-                                        </label>
-                                        <select id="select-equipe-inscricao-torneio" onchange="aoTrocarEquipeInscricaoTorneio(this.value)" style="width: 100%; max-width: 480px; height: 38px; padding: 0 12px; border: 1.5px solid #cbd5e1; border-radius: 4px; font-size: 13px; font-weight: 700; color: #0f1c3f; background: #ffffff;">
-                                            <!-- Preenchido dinamicamente com as equipes do clube -->
-                                        </select>
-                                    </div>
+                            <!-- LINHA 4: SELEÇÃO VISUAL DAS EQUIPES DO CLUBE POR CATEGORIA -->
+                            <div style="border: 1px solid #cbd5e1; border-radius: 6px; padding: 20px; background: #ffffff;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
                                     <div>
-                                        <button id="btn-confirmar-inscricao-subchamp" onclick="confirmarInscricaoPelaSubpagina()" class="btn-action-text-green" style="height: 40px; padding: 0 22px; font-size: 12px; font-weight: 800; border-radius: 4px; box-shadow: 0 2px 6px rgba(22, 163, 74, 0.25);">
-                                            ✓ Inscrever Equipe Selecionada
-                                        </button>
+                                        <div style="font-size: 12px; font-weight: 800; color: #0f1c3f; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px;">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1d72f2" stroke-width="2.5"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                                            Equipes da sua Agremiação para este Campeonato
+                                        </div>
+                                        <div style="font-size: 11px; color: #64748b; margin-top: 2px;">
+                                            Selecione a equipe já cadastrada para inscrever instantaneamente, ou clique para cadastrar o elenco da categoria desejada.
+                                        </div>
                                     </div>
+                                    <span style="font-size: 11px; font-weight: 700; color: #0f1c3f; background: #f1f5f9; padding: 4px 10px; border-radius: 4px; border: 1px solid #e2e8f0;">
+                                        Inscrição Direta por Categoria
+                                    </span>
                                 </div>
 
-                                <div id="champ-elegibilidade-msg-box" style="padding: 10px 14px; border-radius: 4px; font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
-                                    <div id="champ-elegibilidade-msg">
-                                        <!-- Mensagem dinâmica de elegibilidade ou bloqueio -->
-                                    </div>
-                                    <div id="champ-elegibilidade-extra-info" style="font-size: 11px; color: #64748b;">
-                                        <!-- Informação de elenco / status -->
-                                    </div>
+                                <!-- GRADE DE CARDS/BOTÕES DE CATEGORIA -->
+                                <div id="grid-categorias-inscricao-torneio" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 14px;">
+                                    <!-- Preenchido dinamicamente por renderizarCardsInscricaoPorCategoria() -->
                                 </div>
-
                             </div>
 
                         </div>
@@ -1986,8 +1979,8 @@
                     });
                 }
 
-                // Popula o seletor de equipes com as equipes reais do clube
-                popularSeletorEquipesInscricaoTorneio(dados);
+                // Renderiza a grade moderna de categorias/equipes com inscrição direta e cadastro rápido
+                renderizarCardsInscricaoPorCategoria(dados);
 
                 // Alterna a visão na aba de Campeonatos
                 const viewLista = document.getElementById('subpane-lista-campeonatos');
@@ -2002,69 +1995,202 @@
             }
         }
 
-        // Popula o seletor com todas as equipes do clube e valida a primeira selecionada
-        function popularSeletorEquipesInscricaoTorneio(dadosCampeonato) {
-            const select = document.getElementById('select-equipe-inscricao-torneio');
-            if (!select) return;
+        // Variável de controle para fluxo de inscrição automática pós cadastro de elenco/equipe
+        let inscricaoAutomaticaPendente = null;
 
-            const equipes = obterListaEquipesClube();
-            select.innerHTML = '';
+        // Renderiza os Cards/Botões por categoria aceita no campeonato
+        function renderizarCardsInscricaoPorCategoria(dadosCampeonato) {
+            const container = document.getElementById('grid-categorias-inscricao-torneio');
+            if (!container) return;
+            container.innerHTML = '';
 
-            if (equipes.length === 0) {
-                select.innerHTML = '<option value="">Nenhuma equipe cadastrada no seu clube</option>';
-                atualizarValidacaoElegibilidade(null, dadosCampeonato);
-                return;
-            }
+            const catsAceitas = Array.isArray(dadosCampeonato.categoriasAceitas) ? dadosCampeonato.categoriasAceitas : ['Adulto Masculino'];
+            const equipesClube = obterListaEquipesClube();
+            const { equipe: equipeLogada } = obterEquipeAtualDoBanco();
+            const atletasClube = (equipeLogada && Array.isArray(equipeLogada.atletas)) ? equipeLogada.atletas : [];
 
-            equipes.forEach(eq => {
-                const opt = document.createElement('option');
-                opt.value = eq.id;
-                opt.textContent = `${eq.nomeTime} • Categoria: ${eq.categoria} (${eq.cidade}-${eq.estado})`;
-                select.appendChild(opt);
+            // Obtém lista de inscrições já confirmadas para verificar duplicidade
+            const inscricoesFeitas = obterInscricoesConfirmadasClube();
+
+            catsAceitas.forEach(categoria => {
+                const catNorm = categoria.trim().toLowerCase();
+
+                // 1. Verifica se já está inscrita neste campeonato nesta categoria
+                const jaInscrita = inscricoesFeitas.some(ins => {
+                    const mesmoCamp = (ins.campeonatoNome && ins.campeonatoNome.trim().toLowerCase() === dadosCampeonato.nome.trim().toLowerCase()) ||
+                                      (ins.campeonatoId && String(ins.campeonatoId) === String(dadosCampeonato.id));
+                    const mesmaCat = (ins.categoria && ins.categoria.trim().toLowerCase() === catNorm);
+                    return mesmoCamp && mesmaCat;
+                });
+
+                // 2. Busca equipes do clube que atendam a essa categoria
+                const equipesDaCategoria = equipesClube.filter(eq => {
+                    const catEq = (eq.categoria || '').trim().toLowerCase();
+                    return catEq === catNorm;
+                });
+
+                // 3. Conta atletas vinculados a essa categoria
+                const atletasDaCategoria = atletasClube.filter(at => {
+                    const catAt = (at.categoria || '').trim().toLowerCase();
+                    return catAt === catNorm;
+                });
+
+                const temEquipe = equipesDaCategoria.length > 0;
+                const totalAtletas = atletasDaCategoria.length;
+                const equipeAlvo = temEquipe ? equipesDaCategoria[0] : null;
+
+                const card = document.createElement('div');
+                card.style.cssText = 'border-radius: 6px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between; gap: 12px; transition: all 0.2s ease; position: relative;';
+
+                if (jaInscrita) {
+                    // Estado: Já Inscrita
+                    card.style.background = '#f0fdf4';
+                    card.style.border = '1.5px solid #86efac';
+                    card.innerHTML = `
+                        <div>
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+                                <span style="font-size: 13px; font-weight: 800; color: #166534; text-transform: uppercase;">${categoria}</span>
+                                <span style="background: #22c55e; color: #fff; font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 4px; display: inline-flex; align-items: center; gap: 4px;">
+                                    ✓ JÁ INSCRITA
+                                </span>
+                            </div>
+                            <div style="font-size: 11.5px; color: #15803d; line-height: 1.4;">
+                                Equipe: <strong>${(equipeAlvo && equipeAlvo.nomeTime) || (equipeLogada && equipeLogada.nomeTime) || 'Sua Agremiação'}</strong><br>
+                                Elenco: <strong>${totalAtletas} atleta(s)</strong> registrado(s)
+                            </div>
+                        </div>
+                        <button type="button" onclick="switchFedTab('inscricoes', document.querySelectorAll('.sidebar-menu-fed button')[1])" style="width: 100%; height: 36px; background: #ffffff; color: #166534; border: 1px solid #86efac; border-radius: 4px; font-size: 11.5px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                            Ver Inscrição Confirmada →
+                        </button>
+                    `;
+                } else if (temEquipe) {
+                    // Estado: Equipe cadastrada e pronta para inscrição imediata
+                    card.style.background = '#ffffff';
+                    card.style.border = '1.5px solid #bfdbfe';
+                    card.style.boxShadow = '0 2px 8px rgba(15, 28, 63, 0.06)';
+                    card.innerHTML = `
+                        <div>
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+                                <span style="font-size: 13px; font-weight: 800; color: #0f1c3f; text-transform: uppercase;">${categoria}</span>
+                                <span style="background: #eff6ff; color: #1d72f2; font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 4px; border: 1px solid #bfdbfe;">
+                                    EQUIPE HABILITADA
+                                </span>
+                            </div>
+                            <div style="font-size: 11.5px; color: #475569; line-height: 1.4;">
+                                Time: <strong style="color: #0f1c3f;">${equipeAlvo.nomeTime}</strong><br>
+                                Atletas na Categoria: <strong style="color: #1d72f2;">${totalAtletas} atleta(s)</strong>
+                            </div>
+                        </div>
+                        <button type="button" onclick="inscreverEquipeDiretaCategoria('${equipeAlvo.id}', '${categoria.replace(/'/g, "\\'")}')" class="btn-action-text-green" style="width: 100%; height: 38px; font-size: 12px; font-weight: 800; justify-content: center; border-radius: 4px; box-shadow: 0 2px 6px rgba(22, 163, 74, 0.25);">
+                            ✓ Inscrever Esta Equipe
+                        </button>
+                    `;
+                } else {
+                    // Estado: Não possui equipe/elenco cadastrado nesta categoria
+                    card.style.background = '#f8fafc';
+                    card.style.border = '1.5px dashed #cbd5e1';
+                    card.innerHTML = `
+                        <div>
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+                                <span style="font-size: 13px; font-weight: 800; color: #475569; text-transform: uppercase;">${categoria}</span>
+                                <span style="background: #f1f5f9; color: #64748b; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 4px; border: 1px solid #e2e8f0;">
+                                    SEM ELENCO
+                                </span>
+                            </div>
+                            <div style="font-size: 11.5px; color: #64748b; line-height: 1.4;">
+                                Sua agremiação ainda não possui equipe cadastrada no <strong>${categoria}</strong>.
+                            </div>
+                        </div>
+                        <button type="button" onclick="iniciarFluxoCadastroEInscricao('${categoria.replace(/'/g, "\\'")}')" style="width: 100%; height: 38px; background: #0f1c3f; color: #ffffff; border: none; border-radius: 4px; font-size: 11.5px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: background 0.2s;" onmouseover="this.style.background='#1d72f2'" onmouseout="this.style.background='#0f1c3f'">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            + Cadastrar Elenco & Inscrever
+                        </button>
+                    `;
+                }
+
+                container.appendChild(card);
             });
-
-            aoTrocarEquipeInscricaoTorneio(select.value);
         }
 
-        function aoTrocarEquipeInscricaoTorneio(equipeId) {
+        // Obtém inscrições realizadas salvas
+        function obterInscricoesConfirmadasClube() {
+            try {
+                const salvas = localStorage.getItem('avv_inscricoes_confirmadas_clube');
+                if (salvas) return JSON.parse(salvas);
+            } catch(e) {}
+            return [];
+        }
+
+        // Inscrição Direta de uma equipe já cadastrada na categoria
+        function inscreverEquipeDiretaCategoria(equipeId, categoria) {
+            if (!campeonatoSelecionadoSubpagina) return;
             const equipes = obterListaEquipesClube();
-            const equipeEscolhida = equipes.find(e => String(e.id) === String(equipeId));
-            atualizarValidacaoElegibilidade(equipeEscolhida, campeonatoSelecionadoSubpagina);
-        }
+            let equipeEscolhida = equipes.find(e => String(e.id) === String(equipeId));
 
-        function atualizarValidacaoElegibilidade(equipe, dadosCampeonato) {
-            const boxElegibilidade = document.getElementById('box-status-elegibilidade');
-            const msgBox = document.getElementById('champ-elegibilidade-msg-box');
-            const msgEl = document.getElementById('champ-elegibilidade-msg');
-            const extraEl = document.getElementById('champ-elegibilidade-extra-info');
-            const btnConfirmar = document.getElementById('btn-confirmar-inscricao-subchamp');
+            if (!equipeEscolhida) {
+                const { equipe: eqLogada } = obterEquipeAtualDoBanco();
+                equipeEscolhida = eqLogada;
+            }
 
-            if (!equipe || !dadosCampeonato) {
-                msgEl.innerHTML = '<span style="color: #991b1b;">Nenhuma equipe selecionada.</span>';
-                if (btnConfirmar) btnConfirmar.disabled = true;
+            if (!equipeEscolhida) {
+                alert('Erro ao localizar equipe.');
                 return;
             }
 
-            const catsAceitas = Array.isArray(dadosCampeonato.categoriasAceitas) ? dadosCampeonato.categoriasAceitas : [];
-            const catEquipe = (equipe.categoria || '').trim().toLowerCase();
+            fecharSubpaginaCampeonato();
+            inscreverTorneio(campeonatoSelecionadoSubpagina.nome, equipeEscolhida, categoria);
+        }
 
-            // Verifica se a categoria da equipe bate com alguma aceita
-            const ehElegivel = catsAceitas.some(c => c.trim().toLowerCase() === catEquipe);
+        // Fluxo dinâmico: Cadastrar elenco/equipe na categoria e finalizar inscrição automaticamente
+        function iniciarFluxoCadastroEInscricao(categoria) {
+            if (!campeonatoSelecionadoSubpagina) return;
 
-            if (ehElegivel) {
-                boxElegibilidade.style.borderColor = '#86efac';
-                msgBox.style.background = '#dcfce7';
-                msgBox.style.border = '1px solid #bbf7d0';
-                msgEl.innerHTML = `<span style="color: #166534; display: inline-flex; align-items: center; gap: 6px;">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                    <strong>Equipe Habilitada!</strong> A categoria <em>"${equipe.categoria}"</em> cumpre as diretrizes deste campeonato.
-                </span>`;
-                extraEl.innerHTML = `<span style="color: #15803d; font-weight: 700;">Status: Pronta para inscrição</span>`;
-                
-                btnConfirmar.disabled = false;
-                btnConfirmar.style.opacity = '1';
-                btnConfirmar.style.cursor = 'pointer';
-                btnConfirmar.style.background = 'var(--btn-green)';
+            // Salva na memória o campeonato e a categoria aguardando finalização
+            inscricaoAutomaticaPendente = {
+                campeonatoId: campeonatoSelecionadoSubpagina.id,
+                campeonatoNome: campeonatoSelecionadoSubpagina.nome,
+                categoria: categoria
+            };
+
+            // Detecta naipe e categoria base a partir do nome (ex: "Sub-13 Masculino" -> "Sub-13" e "Masculino")
+            const ehFem = categoria.toLowerCase().includes('feminino');
+            const ehMasc = categoria.toLowerCase().includes('masculino');
+            const naipe = ehFem ? 'Feminino' : 'Masculino';
+
+            let catBase = 'Adulto';
+            if (categoria.includes('Sub-13')) catBase = 'Sub-13';
+            else if (categoria.includes('Sub-15')) catBase = 'Sub-15';
+            else if (categoria.includes('Sub-18')) catBase = 'Sub-18';
+            else if (categoria.includes('Adulto')) catBase = 'Adulto';
+
+            // Abre o modal de cadastro de equipe pré-preenchendo os dados da categoria desejada
+            abrirModalTime('novo');
+
+            // Ajusta o título do modal para informar o usuário com clareza
+            const tituloModal = document.querySelector('#modal-equipe h4');
+            if (tituloModal) {
+                tituloModal.textContent = `Cadastrar Elenco: ${categoria} (Inscrição Automática)`;
+            }
+
+            // Seleciona automaticamente os radios de Naipe e Categoria
+            if (ehFem) {
+                const rFem = document.getElementById('naipe-fem');
+                if (rFem) rFem.checked = true;
+            } else {
+                const rMasc = document.getElementById('naipe-masc');
+                if (rMasc) rMasc.checked = true;
+            }
+
+            const radioCat = document.querySelector(`input[name="cat-time"][value="${catBase}"]`);
+            if (radioCat) radioCat.checked = true;
+
+            // Pré-preenche o nome do time com base no clube logado
+            const elUserTeam = document.getElementById('user-display-team')?.textContent.trim();
+            const elTeamName = document.getElementById('team-modal-name');
+            if (elTeamName && elUserTeam && elUserTeam !== 'SUA EQUIPE' && !elTeamName.value) {
+                elTeamName.value = `${elUserTeam} - ${catBase} ${naipe}`;
+            }
+        }
             } else {
                 boxElegibilidade.style.borderColor = '#fca5a5';
                 msgBox.style.background = '#fee2e2';
@@ -2143,14 +2269,14 @@
         }
 
         // Inscrever no Torneio e mover para a aba Inscrições Realizadas com vínculo de equipe
-        function inscreverTorneio(nomeCamp, equipe) {
+        function inscreverTorneio(nomeCamp, equipe, categoriaParam) {
             const numeroInscricao = Math.floor(100000 + Math.random() * 900000);
             const agora = new Date();
             const dataStr = agora.toLocaleDateString('pt-BR');
             const horaStr = agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
 
             const nomeEquipe = equipe ? equipe.nomeTime : (document.getElementById('team-name-card')?.textContent.trim() || 'Sua Equipe');
-            const catEquipe = equipe ? equipe.categoria : (document.getElementById('team-cat-card')?.textContent.trim() || 'Adulto Masculino');
+            const catEquipe = categoriaParam || (equipe ? equipe.categoria : (document.getElementById('team-cat-card')?.textContent.trim() || 'Adulto Masculino'));
 
             const container = document.getElementById('lista-inscricoes-confirmadas');
             const msgVazio = document.getElementById('msg-sem-inscricoes-confirmadas');
@@ -2178,6 +2304,20 @@
                 </div>
             `;
             container.prepend(item);
+
+            // Salva na lista de inscrições confirmadas da agremiação
+            try {
+                const insList = obterInscricoesConfirmadasClube();
+                insList.unshift({
+                    campeonatoNome: nomeCamp,
+                    campeonatoId: campeonatoSelecionadoSubpagina?.id || 'camp-' + Date.now(),
+                    equipeNome: nomeEquipe,
+                    categoria: catEquipe,
+                    numeroInscricao: String(numeroInscricao),
+                    dataHora: `${dataStr} às ${horaStr}`
+                });
+                localStorage.setItem('avv_inscricoes_confirmadas_clube', JSON.stringify(insList));
+            } catch(e) {}
 
             // Atualiza no banco unificado para refletir no ADM
             try {
@@ -2219,6 +2359,33 @@
             atletaFotoDataUrl = 'logos/mascote_coelho.png';
             
             document.getElementById('modal-atleta').style.display = 'flex';
+        }
+
+        function abrirModalAtletaComCategoria(catDesejada) {
+            abrirModalAtleta();
+            const selectCat = document.getElementById('modal-ath-categoria');
+            if (selectCat && catDesejada) {
+                // Se não existir essa opção no select, adiciona dinamicamente
+                let existe = false;
+                for (let i = 0; i < selectCat.options.length; i++) {
+                    if (selectCat.options[i].value.toLowerCase() === catDesejada.toLowerCase()) {
+                        selectCat.selectedIndex = i;
+                        existe = true;
+                        break;
+                    }
+                }
+                if (!existe) {
+                    const novaOpt = document.createElement('option');
+                    novaOpt.value = catDesejada;
+                    novaOpt.textContent = catDesejada;
+                    novaOpt.selected = true;
+                    selectCat.appendChild(novaOpt);
+                }
+            }
+            const tituloModal = document.getElementById('modal-atleta-titulo');
+            if (tituloModal) {
+                tituloModal.textContent = `Cadastrar Atleta: ${catDesejada} (Finalizar Inscrição)`;
+            }
         }
 
         function fecharModalAtleta() {
@@ -2364,6 +2531,24 @@
             }
 
             fecharModalAtleta();
+
+            // Se havia uma inscrição automática de campeonato pendente aguardando o cadastro de atletas
+            if (inscricaoAutomaticaPendente) {
+                const pendente = { ...inscricaoAutomaticaPendente };
+                inscricaoAutomaticaPendente = null;
+
+                const { equipe } = obterEquipeAtualDoBanco();
+                const equipeParaInscricao = equipe || {
+                    id: 'eq-' + Date.now(),
+                    nomeTime: document.getElementById('team-name-card')?.textContent.trim() || 'Sua Agremiação',
+                    categoria: pendente.categoria
+                };
+
+                setTimeout(() => {
+                    fecharSubpaginaCampeonato();
+                    inscreverTorneio(pendente.campeonatoNome, equipeParaInscricao, pendente.categoria);
+                }, 300);
+            }
         }
 
         function demitirAtleta(cardId, nome) {
@@ -2768,8 +2953,31 @@
             }
 
             atualizarContadoresTime();
-            alert(`Equipe registrada/atualizada com sucesso!\nCategoria: ${catEscolhida} (${naipeEscolhido})\nNº da Inscrição: ${numInscricao}\nData/Hora: ${dataStr} às ${horaStr}`);
+            alert(`Equipe registrada com sucesso!\nCategoria: ${catEscolhida} (${naipeEscolhido})\nNº da Inscrição: ${numInscricao}`);
             fecharModalTime();
+
+            // Se havia uma inscrição automática pendente iniciada a partir do card do campeonato
+            if (inscricaoAutomaticaPendente) {
+                const pendente = { ...inscricaoAutomaticaPendente };
+                inscricaoAutomaticaPendente = null;
+
+                const { equipe: eqAtualizada } = obterEquipeAtualDoBanco();
+                const equipeParaInscricao = eqAtualizada || {
+                    id: 'eq-' + Date.now(),
+                    nomeTime: nome.toUpperCase(),
+                    categoria: categoriaCompleta
+                };
+
+                // Pergunta ao dirigente se deseja cadastrar agora os atletas desta categoria ou prosseguir direto para a confirmação
+                const querCadastrarAtletas = confirm(`Equipe "${nome.toUpperCase()}" criada na categoria "${categoriaCompleta}"!\n\nDeseja cadastrar agora os atletas do elenco antes de finalizar a inscrição do campeonato?\n\n[OK] Cadastrar Atleta agora e inscrever ao salvar.\n[Cancelar] Finalizar e confirmar a inscrição do campeonato imediatamente.`);
+
+                if (querCadastrarAtletas) {
+                    inscricaoAutomaticaPendente = pendente;
+                    abrirModalAtletaComCategoria(pendente.categoria);
+                } else {
+                    inscreverTorneio(pendente.campeonatoNome, equipeParaInscricao, pendente.categoria);
+                }
+            }
         }
 
         // Funções da aba Perfil / Meus Dados
