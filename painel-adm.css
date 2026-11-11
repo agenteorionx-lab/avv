@@ -202,7 +202,7 @@
    ========================================================================== */
 .grid-equipes-adm {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(430px, 1fr));
   gap: 18px;
 }
 
@@ -403,7 +403,7 @@
    ========================================================================== */
 .grid-champs-adm {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(430px, 1fr));
   gap: 20px;
 }
 
@@ -830,7 +830,7 @@
 .grid-comissao-tecnica {
   padding: 18px 20px;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(430px, 1fr));
   gap: 16px;
   background: #f8fafc;
 }

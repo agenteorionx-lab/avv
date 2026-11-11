@@ -2976,25 +2976,58 @@
             }).catch(() => {});
         }
 
-        function calcularTempoRestanteTorneio(dataLimiteIso) {
-            if (!dataLimiteIso) return null;
-            const diff = new Date(dataLimiteIso).getTime() - Date.now();
-            if (diff <= 0) return { encerrado: true, texto: 'Encerrado' };
+        function extrairDataLimiteCampeonato(c) {
+            if (!c) return null;
+            if (c.dataLimiteEncerramento) {
+                const d = new Date(c.dataLimiteEncerramento);
+                if (!isNaN(d.getTime())) return d;
+            }
+            if (c.fase) {
+                const m = c.fase.match(/(\d{2})\/(\d{2})\/(\d{4})(?:.*?(\d{2}):(\d{2}))?/);
+                if (m) {
+                    const dia = parseInt(m[1], 10);
+                    const mes = parseInt(m[2], 10) - 1;
+                    const ano = parseInt(m[3], 10);
+                    const hora = m[4] ? parseInt(m[4], 10) : 23;
+                    const min = m[5] ? parseInt(m[5], 10) : 59;
+                    const d = new Date(ano, mes, dia, hora, min, 0);
+                    if (!isNaN(d.getTime())) return d;
+                }
+            }
+            return new Date("2026-11-16T21:59:00.000Z");
+        }
+
+        function calcularTempoRestanteTorneio(dataLimiteOuCamp) {
+            let dataLimite = null;
+            if (typeof dataLimiteOuCamp === "object" && dataLimiteOuCamp !== null && !(dataLimiteOuCamp instanceof Date)) {
+                dataLimite = extrairDataLimiteCampeonato(dataLimiteOuCamp);
+            } else if (typeof dataLimiteOuCamp === "string") {
+                const d = new Date(dataLimiteOuCamp);
+                dataLimite = !isNaN(d.getTime()) ? d : extrairDataLimiteCampeonato({ fase: dataLimiteOuCamp });
+            } else if (dataLimiteOuCamp instanceof Date) {
+                dataLimite = dataLimiteOuCamp;
+            } else {
+                dataLimite = new Date("2026-11-16T21:59:00.000Z");
+            }
+
+            if (!dataLimite) return null;
+            const diff = dataLimite.getTime() - Date.now();
+            if (diff <= 0) return { encerrado: true, texto: "Encerrado" };
 
             const dias = Math.floor(diff / (1000 * 60 * 60 * 24));
             const horas = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutos = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
             const segundos = Math.floor((diff % (1000 * 60)) / 1000);
 
-            const hh = String(horas).padStart(2, '0');
-            const mm = String(minutos).padStart(2, '0');
-            const ss = String(segundos).padStart(2, '0');
+            const hh = String(horas).padStart(2, "0");
+            const mm = String(minutos).padStart(2, "0");
+            const ss = String(segundos).padStart(2, "0");
 
-            let texto = '';
+            let texto = "";
             if (dias > 0) {
-                texto = `${dias}d ${hh}:${mm}:${ss}`;
+                texto = dias + "d " + hh + ":" + mm + ":" + ss;
             } else {
-                texto = `${hh}:${mm}:${ss}`;
+                texto = hh + ":" + mm + ":" + ss;
             }
 
             return { encerrado: false, dias, horas, minutos, segundos, texto };
