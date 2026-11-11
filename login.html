@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="inscricao.css">
+    <script src="avv-dialogs.js"></script>
     <style>
         .login-card {
             background: #ffffff;
@@ -451,7 +452,7 @@
                     }
 
                     exibirAlertaLogin('Acesso autorizado! Redirecionando para o painel do clube...', 'success');
-                    setTimeout(() => { window.location.href = 'painel-time.html'; }, 500);
+                    setTimeout(() => { window.location.replace('painel-time.html'); }, 400);
                     return;
                 }
 
@@ -486,7 +487,7 @@
                         };
                         localStorage.setItem('avv_sessao_ativa', JSON.stringify(sessao));
                         exibirAlertaLogin('Acesso autorizado! Redirecionando para o painel do clube...', 'success');
-                        setTimeout(() => { window.location.href = 'painel-time.html'; }, 500);
+                        setTimeout(() => { window.location.replace('painel-time.html'); }, 400);
                         return;
                     }
                 }
@@ -519,7 +520,7 @@
                 };
                 localStorage.setItem('avv_sessao_ativa', JSON.stringify(sessao));
                 exibirAlertaLogin('Acesso autorizado! Redirecionando para o painel do clube...', 'success');
-                setTimeout(() => { window.location.href = 'painel-time.html'; }, 500);
+                setTimeout(() => { window.location.replace('painel-time.html'); }, 400);
             } finally {
                 loginTimeEmAndamento = false;
                 if (btn) {
@@ -561,7 +562,7 @@
                     }
                     localStorage.setItem('avv_sessao_adm', JSON.stringify(dadosApi.sessao));
                     exibirAlertaLogin('Acesso de Administrador confirmado. Entrando no painel...', 'success');
-                    setTimeout(() => { window.location.href = 'painel-adm.html'; }, 500);
+                    setTimeout(() => { window.location.replace('painel-adm.html'); }, 400);
                     return;
                 }
 
@@ -727,6 +728,33 @@
                 fecharModalRecuperarSenha();
             }
         });
+
+        // Redirecionamento automático caso já esteja autenticado
+        (function verificarSessaoPrevia() {
+            try {
+                const sessaoTime = JSON.parse(localStorage.getItem('avv_sessao_ativa') || 'null');
+                if (sessaoTime && sessaoTime.tipo === 'time') {
+                    const agora = Date.now();
+                    const limite = 24 * 60 * 60 * 1000; // 24 horas
+                    const ultimoAcesso = Number(sessaoTime.ultimoAcesso || sessaoTime.timestamp || 0);
+                    if (ultimoAcesso && (agora - ultimoAcesso < limite)) {
+                        window.location.replace('painel-time.html');
+                        return;
+                    }
+                }
+
+                const sessaoAdm = JSON.parse(localStorage.getItem('avv_sessao_adm') || 'null');
+                if (sessaoAdm && sessaoAdm.tipo === 'adm') {
+                    const agora = Date.now();
+                    const limite = 24 * 60 * 60 * 1000;
+                    const ultimoAcesso = Number(sessaoAdm.ultimoAcesso || sessaoAdm.timestamp || 0);
+                    if (ultimoAcesso && (agora - ultimoAcesso < limite)) {
+                        window.location.replace('painel-adm.html');
+                        return;
+                    }
+                }
+            } catch(e) {}
+        })();
 
         // Verifica se a página foi aberta por um link do e-mail com ?token=XYZ
         document.addEventListener('DOMContentLoaded', () => {

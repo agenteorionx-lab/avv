@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="painel.css?v=5">
     <link rel="stylesheet" href="painel-adm.css?v=5">
+    <script src="avv-dialogs.js"></script>
 </head>
 <body>
 
@@ -623,33 +624,38 @@
                     <input type="text" id="champ-form-nome" required style="width: 100%; height: 38px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12.5px;" placeholder="Ex: COPA RONDÔNIA DE VOLEIBOL - ETAPA CONE SUL">
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1.2fr 1fr; gap: 14px;">
                     <div>
                         <label style="display: block; font-size: 11px; font-weight: 800; color: #0f1c3f; text-transform: uppercase; margin-bottom: 4px;">Modalidade <span style="color: #ef4444;">*</span></label>
-                        <select id="champ-form-modalidade" required style="width: 100%; height: 38px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12.5px; background: #fff;">
-                            <option value="Vôlei de Quadra Adulto Oficial">Vôlei de Quadra Adulto Oficial</option>
-                            <option value="Vôlei de Quadra Categorias de Base">Vôlei de Quadra Categorias de Base</option>
-                            <option value="Vôlei de Areia">Vôlei de Areia</option>
-                            <option value="Vôlei Master">Vôlei Master</option>
+                        <select id="champ-form-modalidade" required style="width: 100%; height: 38px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12.5px; background: #fff; font-weight: 700; color: #0f1c3f;">
+                            <option value="Quadra">Quadra</option>
+                            <option value="Areia">Areia</option>
                         </select>
                     </div>
 
                     <div>
-                        <label style="display: block; font-size: 11px; font-weight: 800; color: #0f1c3f; text-transform: uppercase; margin-bottom: 4px;">Prazo de Inscrições <span style="color: #ef4444;">*</span></label>
-                        <input type="text" id="champ-form-fase" required style="width: 100%; height: 38px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12.5px;" placeholder="Ex: Inscrições Abertas até 20/12/2026">
+                        <label style="display: block; font-size: 11px; font-weight: 800; color: #0f1c3f; text-transform: uppercase; margin-bottom: 4px;">Status do Torneio <span style="color: #ef4444;">*</span></label>
+                        <select id="champ-form-status" style="width: 100%; height: 38px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12.5px; background: #fff; font-weight: 700; color: #0f1c3f;">
+                            <option value="ativo">Inscrições Abertas (Ativo)</option>
+                            <option value="encerrado">Inscrições Encerradas</option>
+                            <option value="inativo">Inabilitado / Oculto</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label style="display: block; font-size: 11px; font-weight: 800; color: #0f1c3f; text-transform: uppercase; margin-bottom: 4px;">Data Limite Encerramento <span style="color: #ef4444;">*</span></label>
+                        <input type="datetime-local" id="champ-form-data-limite" required style="width: 100%; height: 38px; padding: 0 10px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12px; font-weight: 600; color: #0f1c3f;" onchange="aoMudarDataLimiteInscricao(this.value)">
+                    </div>
+
+                    <div>
+                        <label style="display: block; font-size: 11px; font-weight: 800; color: #0f1c3f; text-transform: uppercase; margin-bottom: 4px;">Descrição do Prazo</label>
+                        <input type="text" id="champ-form-fase" required style="width: 100%; height: 38px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12px;" placeholder="Ex: Inscrições até 20/12/2026 às 23:59">
                     </div>
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
-                    <div>
-                        <label style="display: block; font-size: 11px; font-weight: 800; color: #0f1c3f; text-transform: uppercase; margin-bottom: 4px;">Taxa de Participação</label>
-                        <input type="text" id="champ-form-taxa" style="width: 100%; height: 38px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12.5px;" value="Isento / Filiação Ativa">
-                    </div>
-
-                    <div>
-                        <label style="display: block; font-size: 11px; font-weight: 800; color: #0f1c3f; text-transform: uppercase; margin-bottom: 4px;">Limite Máx. de Atletas por Equipe</label>
-                        <input type="number" id="champ-form-limite" style="width: 100%; height: 38px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12.5px;" value="12" min="2" max="20">
-                    </div>
+                <div>
+                    <label style="display: block; font-size: 11px; font-weight: 800; color: #0f1c3f; text-transform: uppercase; margin-bottom: 4px;">Limite Máx. de Atletas por Equipe</label>
+                    <input type="number" id="champ-form-limite" style="width: 100%; max-width: 240px; height: 38px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12.5px;" value="12" min="2" max="25">
                 </div>
 
                 <div>
@@ -697,8 +703,8 @@
                             </div>
                         </div>
 
-                        <!-- CATEGORIAS OFICIAIS (SUB-13, SUB-15, SUB-18, ADULTO) -->
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px;">
+                        <!-- CATEGORIAS OFICIAIS (SUB-13, SUB-15, SUB-18, ADULTO) + CATEGORIA PERSONALIZADA -->
+                        <div id="grade-chk-categorias-base" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px;">
                             <label style="display: flex; align-items: center; gap: 8px; font-size: 12.5px; font-weight: 700; color: #0f1c3f; background: #ffffff; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 4px; cursor: pointer;">
                                 <input type="checkbox" class="cat-base-chk" value="Sub-13" onchange="sincronizarCategoriasFinais()" style="cursor: pointer;">
                                 Sub-13
@@ -715,6 +721,19 @@
                                 <input type="checkbox" class="cat-base-chk" value="Adulto" checked onchange="sincronizarCategoriasFinais()" style="cursor: pointer;">
                                 Adulto
                             </label>
+                        </div>
+
+                        <!-- CAMPO PARA ADICIONAR NOVA CATEGORIA PERSONALIZADA -->
+                        <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 4px; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px;">
+                            <label style="font-size: 11px; font-weight: 700; color: #0f1c3f; text-transform: uppercase;">
+                                + Criar Outra Categoria Personalizada
+                            </label>
+                            <div style="display: flex; gap: 8px;">
+                                <input type="text" id="input-nova-categoria-personalizada" placeholder="Ex: Sub-21, Master +35, Escolar..." style="flex: 1; height: 34px; padding: 0 10px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12px;">
+                                <button type="button" onclick="adicionarNovaCategoriaCustomizada()" class="btn-clean-action btn-clean-navy" style="height: 34px; padding: 0 14px; font-size: 11px; font-weight: 700; cursor: pointer; white-space: nowrap;">
+                                    + Adicionar Categoria
+                                </button>
+                            </div>
                         </div>
 
                         <!-- RESUMO GERADO AUTOMATICAMENTE -->
@@ -972,9 +991,21 @@
         document.addEventListener('DOMContentLoaded', async () => {
             const sessaoAdm = JSON.parse(localStorage.getItem('avv_sessao_adm') || 'null');
             if (!sessaoAdm || sessaoAdm.tipo !== 'adm') {
-                window.location.href = 'login.html';
+                window.location.replace('login.html');
                 return;
             }
+
+            // Valida prazo de inatividade (1 hora sem interação)
+            const agora = Date.now();
+            const limiteInatividade = 60 * 60 * 1000;
+            const ultimoAcesso = Number(sessaoAdm.ultimoAcesso || sessaoAdm.timestamp || 0);
+            if (ultimoAcesso && (agora - ultimoAcesso > limiteInatividade)) {
+                localStorage.removeItem('avv_sessao_adm');
+                alert('Sua sessão de Administrador expirou por inatividade. Faça login novamente.');
+                window.location.replace('login.html');
+                return;
+            }
+            renovarAtividadeSessaoAdm();
             // Remove dados fictícios de demonstração caso tenham ficado salvos no navegador
             if (!localStorage.getItem('avv_sistema_limpo_v4')) {
                 try {
@@ -1030,6 +1061,14 @@
             carregarCampeonatos();
             carregarBancoEquipesIntegrado();
             atualizarTudoPainelAdm();
+
+            // Atualização contínua do Timer a cada 1 segundo quando estiver visualizando campeonatos
+            setInterval(() => {
+                const tabCamp = document.getElementById('tab-adm-campeonatos');
+                if (tabCamp && tabCamp.classList.contains('active')) {
+                    renderizarGridCampeonatos();
+                }
+            }, 1000);
 
             // Sincronização em tempo real entre abas do navegador
             window.addEventListener('storage', (e) => {
@@ -1461,13 +1500,35 @@
                     </td>
                     <td style="font-size: 12px; color: #475569;">${atleta.nasc || '---'}</td>
                     <td style="text-align: center;">
-                        <button onclick="abrirFichaIndividualAtletaAdm('${eq.id}', '${atleta.id}')" class="btn-clean-action btn-clean-neutral" style="height: 30px; font-size: 11px; padding: 0 10px;">
-                            ${SVG_ICONS.fileText} Ficha A4
-                        </button>
+                        <div style="display: flex; gap: 6px; justify-content: center;">
+                            <button onclick="abrirFichaIndividualAtletaAdm('${eq.id}', '${atleta.id}')" class="btn-clean-action btn-clean-neutral" style="height: 30px; font-size: 11px; padding: 0 10px;" title="Visualizar Ficha A4">
+                                ${SVG_ICONS.fileText} Ficha
+                            </button>
+                            <button onclick="excluirAtletaDaEquipeAdm('${eq.id}', '${atleta.id}', '${atleta.nome}')" class="btn-clean-action" style="background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c; height: 30px; padding: 0 8px;" title="Remover Atleta da Equipe">
+                                ${SVG_ICONS.trash}
+                            </button>
+                        </div>
                     </td>
                 `;
                 tbody.appendChild(tr);
             });
+        }
+
+        async function excluirAtletaDaEquipeAdm(equipeId, atletaId, nomeAtleta) {
+            const conf = await avvConfirm(`Deseja realmente remover o atleta "${nomeAtleta}" desta equipe?`, 'Remover Atleta da Equipe', {
+                tipo: 'danger',
+                textoConfirmar: 'Sim, Remover',
+                corConfirmar: '#dc2626'
+            });
+            if (conf) {
+                const eq = equipesSistema.find(e => String(e.id) === String(equipeId));
+                if (eq && Array.isArray(eq.atletas)) {
+                    eq.atletas = eq.atletas.filter(a => String(a.id) !== String(atletaId));
+                    salvarBancoEquipesIntegrado();
+                    renderizarConteudoPaginaEquipe(eq);
+                    avvAlert(`Atleta "${nomeAtleta}" removido com sucesso da equipe!`, 'Atleta Removido', 'success');
+                }
+            }
         }
 
         function renderizarComissaoPaginaEquipe(eq) {
@@ -2064,6 +2125,28 @@
             }).catch(() => {});
         }
 
+        function calcularTempoRestanteTorneio(dataLimiteIso) {
+            if (!dataLimiteIso) return null;
+            const diff = new Date(dataLimiteIso).getTime() - Date.now();
+            if (diff <= 0) return { encerrado: true, texto: 'Inscrições Encerradas' };
+
+            const dias = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const horas = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutos = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const segundos = Math.floor((diff % (1000 * 60)) / 1000);
+
+            let texto = '';
+            if (dias > 0) {
+                texto = `${dias}d ${horas}h ${minutos}m`;
+            } else if (horas > 0) {
+                texto = `${horas}h ${minutos}m ${segundos}s`;
+            } else {
+                texto = `${minutos}m ${segundos}s`;
+            }
+
+            return { encerrado: false, dias, horas, minutos, segundos, texto };
+        }
+
         function renderizarGridCampeonatos() {
             const container = document.getElementById('grid-adm-campeonatos');
             if (!container) return;
@@ -2085,20 +2168,68 @@
                     `<span class="champ-cat-pill">${cat}</span>`
                 ).join('');
 
-                const isAtivo = c.ativo !== false; // padrão ativo se não especificado
-                const statusLabel = isAtivo ? 'Ativo' : 'Inativo';
-                const statusDotColor = isAtivo ? '#16a34a' : '#94a3b8';
-                const statusTextColor = isAtivo ? '#15803d' : '#64748b';
-                const statusBg = isAtivo ? 'rgba(255,255,255,0.95)' : 'rgba(241,245,249,0.95)';
+                // Checagem do Timer e Encerramento Automático
+                const timerInfo = calcularTempoRestanteTorneio(c.dataLimiteEncerramento);
+                let timerHtml = '';
+
+                if (timerInfo) {
+                    if (timerInfo.encerrado) {
+                        // Se ultrapassou o prazo limite e ainda estava como ativo, encerra
+                        if (c.statusTorneio === 'ativo') {
+                            c.statusTorneio = 'encerrado';
+                            salvarCampeonatosNoStorage();
+                        }
+                        timerHtml = `
+                            <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 4px; padding: 6px 10px; margin-top: 8px; display: flex; align-items: center; justify-content: space-between; font-size: 11px; font-weight: 700; color: #dc2626;">
+                                <span style="display: flex; align-items: center; gap: 5px;">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                    Prazo de Inscrições Esgotado
+                                </span>
+                                <span style="background: #dc2626; color: #fff; padding: 2px 6px; border-radius: 3px; font-size: 10px;">ENCERRADO</span>
+                            </div>
+                        `;
+                    } else {
+                        timerHtml = `
+                            <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 4px; padding: 6px 10px; margin-top: 8px; display: flex; align-items: center; justify-content: space-between; font-size: 11px; font-weight: 700; color: #1d72f2;">
+                                <span style="display: flex; align-items: center; gap: 5px;">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                    Tempo Restante para Inscrição:
+                                </span>
+                                <span style="background: #1d72f2; color: #fff; padding: 2px 6px; border-radius: 3px; font-size: 10.5px; font-family: monospace;">⏳ ${timerInfo.texto}</span>
+                            </div>
+                        `;
+                    }
+                }
+
+                // Status do campeonato: ativo (aberto), encerrado ou inativo (inabilitado)
+                const isEncerrado = c.statusTorneio === 'encerrado';
+                const isInativo = c.ativo === false || c.statusTorneio === 'inativo';
+                
+                let statusLabel = 'Inscrições Abertas';
+                let statusDotColor = '#16a34a';
+                let statusTextColor = '#15803d';
+                let statusBg = 'rgba(220, 252, 231, 0.95)';
+
+                if (isInativo) {
+                    statusLabel = 'Inabilitado';
+                    statusDotColor = '#ef4444';
+                    statusTextColor = '#b91c1c';
+                    statusBg = 'rgba(254, 226, 226, 0.95)';
+                } else if (isEncerrado) {
+                    statusLabel = 'Encerrado';
+                    statusDotColor = '#f59e0b';
+                    statusTextColor = '#b45309';
+                    statusBg = 'rgba(254, 243, 199, 0.95)';
+                }
 
                 const bannerUrl = c.banner || 'avv_superliga_athlete.png';
                 const bannerHtml = `
                     <div style="height: 120px; width: 100%; position: relative; overflow: hidden; background: #0f1c3f;">
-                        <img src="${bannerUrl}" alt="${c.nome}" style="width: 100%; height: 100%; object-fit: cover; opacity: ${isAtivo ? '0.88' : '0.4'}; transition: transform 0.3s ease;">
+                        <img src="${bannerUrl}" alt="${c.nome}" style="width: 100%; height: 100%; object-fit: cover; opacity: ${isInativo ? '0.4' : '0.88'}; transition: transform 0.3s ease;">
                         <div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(15,28,63,0.1) 0%, rgba(15,28,63,0.7) 100%);"></div>
                         <div style="position: absolute; top: 10px; left: 12px; right: 12px; display: flex; justify-content: space-between; align-items: center; gap: 8px;">
                             <span class="champ-modality-tag" style="background: rgba(15,28,63,0.85); color: #ffffff; border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(4px);">${c.modalidade}</span>
-                            <button type="button" onclick="event.stopPropagation(); alternarStatusAtivoCampeonato('${c.id}')" title="Clique para alternar entre Ativo e Inativo (visível ou oculto para os usuários)" style="background: ${statusBg}; color: ${statusTextColor}; border: 1px solid rgba(0,0,0,0.1); padding: 3px 9px; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.15); font-size: 11px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; transition: all 0.15s ease;">
+                            <button type="button" onclick="event.stopPropagation(); alternarStatusRapidoCampeonato('${c.id}')" title="Clique para alternar o status deste campeonato" style="background: ${statusBg}; color: ${statusTextColor}; border: 1px solid rgba(0,0,0,0.1); padding: 3px 9px; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.15); font-size: 11px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; transition: all 0.15s ease;">
                                 <span style="display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: ${statusDotColor};"></span>
                                 ${statusLabel}
                             </button>
@@ -2129,6 +2260,8 @@
                                 </div>
                             </div>
 
+                            ${timerHtml}
+
                             <div class="champ-cats-section">
                                 <span class="champ-cats-label">Categorias Homologadas (${(c.categoriasAceitas || []).length})</span>
                                 <div class="champ-cats-list">
@@ -2141,14 +2274,17 @@
                     <div class="card-champ-adm-footer">
                         <button onclick="filtrarEquipesPorCampeonato('${c.id}')" class="btn-champ-primary" title="Visualizar as equipes inscritas neste torneio">
                             ${SVG_ICONS.users}
-                            Ver Equipes Inscritas (${equipesInscritas.length})
+                            Ver Equipes (${equipesInscritas.length})
                         </button>
                         <div style="display: flex; align-items: center; gap: 6px;">
-                            <button onclick="editarCampeonato('${c.id}')" class="btn-champ-secondary" title="Configurar diretrizes e regulamento">
+                            <button onclick="alternarStatusRapidoCampeonato('${c.id}')" class="btn-champ-secondary" title="${isEncerrado ? 'Reabrir inscrições deste campeonato' : (isInativo ? 'Ativar torneio' : 'Encerrar inscrições ou inabilitar campeonato')}" style="padding: 0 10px; font-size: 11px;">
+                                ${isEncerrado ? 'Reabrir' : (isInativo ? 'Ativar' : 'Encerrar')}
+                            </button>
+                            <button onclick="editarCampeonato('${c.id}')" class="btn-champ-secondary" title="Configurar diretrizes, regulamento e status">
                                 ${SVG_ICONS.settings}
                                 Configurar
                             </button>
-                            <button onclick="excluirCampeonato('${c.id}')" class="btn-champ-icon-danger" title="Excluir campeonato">
+                            <button onclick="excluirCampeonato('${c.id}')" class="btn-champ-icon-danger" title="Excluir campeonato em definitivo">
                                 ${SVG_ICONS.trash}
                             </button>
                         </div>
@@ -2158,28 +2294,59 @@
             });
         }
 
-        function alternarStatusAtivoCampeonato(id) {
+        async function alternarStatusRapidoCampeonato(id) {
             const c = campeonatosAdm[id];
             if (!c) return;
 
-            const vaiAtivar = c.ativo === false;
-            const titulo = vaiAtivar ? 'Ativar Campeonato?' : 'Desativar Campeonato?';
-            const mensagem = vaiAtivar
-                ? `Deseja realmente ativar o campeonato "${c.nome}"? Ele passará a ser exibido publicamente no painel dos clubes para recebimento de inscrições.`
-                : `Deseja desativar o campeonato "${c.nome}"? Ele será imediatamente ocultado da página dos usuários/clubes, permitindo que você altere configurações em sigilo.`;
+            const isEncerrado = c.statusTorneio === 'encerrado';
+            const isInativo = c.ativo === false || c.statusTorneio === 'inativo';
 
-            exibirModalConfirmacao({
-                titulo,
-                mensagem,
-                tipo: vaiAtivar ? 'success' : 'warning',
-                textoBotao: vaiAtivar ? 'Sim, Ativar' : 'Sim, Desativar',
-                corBotao: vaiAtivar ? '#16a34a' : '#d97706',
-                onConfirm: () => {
-                    c.ativo = vaiAtivar;
+            if (isInativo) {
+                const conf = await avvConfirm(`Deseja ativar e reabrir o campeonato "${c.nome}"? Ele voltará a ser exibido para os clubes receberem inscrições.`, 'Ativar Campeonato', {
+                    tipo: 'success',
+                    textoConfirmar: 'Sim, Ativar Torneio',
+                    corConfirmar: '#16a34a'
+                });
+                if (conf) {
+                    c.ativo = true;
+                    c.statusTorneio = 'ativo';
                     salvarCampeonatosNoStorage();
                     renderizarGridCampeonatos();
+                    avvAlert(`Campeonato "${c.nome}" ativado com sucesso!`, 'Torneio Ativo', 'success');
                 }
-            });
+            } else if (isEncerrado) {
+                const conf = await avvConfirm(`Deseja reabrir as inscrições para o campeonato "${c.nome}"?`, 'Reabrir Inscrições', {
+                    tipo: 'success',
+                    textoConfirmar: 'Reabrir Inscrições',
+                    corConfirmar: '#16a34a'
+                });
+                if (conf) {
+                    c.ativo = true;
+                    c.statusTorneio = 'ativo';
+                    salvarCampeonatosNoStorage();
+                    renderizarGridCampeonatos();
+                    avvAlert(`Inscrições reabertas com sucesso para "${c.nome}"!`, 'Inscrições Reabertas', 'success');
+                }
+            } else {
+                // Aberto -> pode Encerrar ou Inabilitar
+                const conf = await avvConfirm(`Deseja encerrar as inscrições do campeonato "${c.nome}"?\n\nEle continuará visível para consulta, mas não aceitará novas equipes.`, 'Encerrar Inscrições', {
+                    tipo: 'warning',
+                    textoConfirmar: 'Sim, Encerrar Inscrições',
+                    textoCancelar: 'Cancelar',
+                    corConfirmar: '#d97706'
+                });
+                if (conf) {
+                    c.ativo = true;
+                    c.statusTorneio = 'encerrado';
+                    salvarCampeonatosNoStorage();
+                    renderizarGridCampeonatos();
+                    avvAlert(`Campeonato "${c.nome}" encerrado! Novas inscrições foram bloqueadas.`, 'Inscrições Encerradas', 'warning');
+                }
+            }
+        }
+
+        function alternarStatusAtivoCampeonato(id) {
+            alternarStatusRapidoCampeonato(id);
         }
 
         function atualizarBadgeArquivoBanner(valor, nomeArquivoCustomizado) {
@@ -2276,22 +2443,107 @@
             document.getElementById('naipe-masculino').checked = temMasc || (!temMasc && !temFem);
             document.getElementById('naipe-feminino').checked = temFem;
 
+            // Extrai as categorias base removendo os sufixos Masculino/Feminino
+            const basesDetectadas = new Set();
+            lista.forEach(c => {
+                const limpa = c.replace(/\s+(Masculino|Feminino)$/i, '').trim();
+                if (limpa) basesDetectadas.add(limpa);
+            });
+
+            // Se houver bases customizadas que não estão no grid padrão, adiciona-as
+            basesDetectadas.forEach(base => {
+                garantirCategoriaBaseNoGrid(base);
+            });
+
             document.querySelectorAll('.cat-base-chk').forEach(chk => {
-                const base = chk.value;
-                const marcada = lista.some(c => c.startsWith(base));
-                chk.checked = marcada;
+                chk.checked = basesDetectadas.has(chk.value);
             });
 
             sincronizarCategoriasFinais();
         }
 
+        // Adiciona dinamicamente uma categoria personalizada criada pelo administrador
+        function adicionarNovaCategoriaCustomizada() {
+            const input = document.getElementById('input-nova-categoria-personalizada');
+            if (!input) return;
+            const valor = input.value.trim();
+            if (!valor) {
+                alert('Digite o nome da categoria que deseja criar (Ex: Sub-21, Master +35, Escolar).');
+                return;
+            }
+
+            garantirCategoriaBaseNoGrid(valor, true);
+            input.value = '';
+            sincronizarCategoriasFinais();
+        }
+
+        function garantirCategoriaBaseNoGrid(nomeBase, marcar = false) {
+            const grid = document.getElementById('grade-chk-categorias-base');
+            if (!grid) return;
+
+            // Checa se já existe checkbox com esse valor
+            const chkExistente = Array.from(grid.querySelectorAll('.cat-base-chk')).find(c => c.value.toLowerCase() === nomeBase.toLowerCase());
+            if (chkExistente) {
+                if (marcar) chkExistente.checked = true;
+                return;
+            }
+
+            // Cria o novo card/checkbox
+            const label = document.createElement('label');
+            label.style.cssText = 'display: flex; align-items: center; gap: 8px; font-size: 12.5px; font-weight: 700; color: #0f1c3f; background: #ffffff; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 4px; cursor: pointer;';
+            label.innerHTML = `
+                <input type="checkbox" class="cat-base-chk" value="${nomeBase}" ${marcar ? 'checked' : ''} onchange="sincronizarCategoriasFinais()" style="cursor: pointer;">
+                ${nomeBase}
+            `;
+            grid.appendChild(label);
+        }
+
+        function formatarDataIsoParaInputLocal(isoStr) {
+            if (!isoStr) return '';
+            try {
+                const d = new Date(isoStr);
+                if (isNaN(d.getTime())) return '';
+                const ano = d.getFullYear();
+                const mes = String(d.getMonth() + 1).padStart(2, '0');
+                const dia = String(d.getDate()).padStart(2, '0');
+                const hora = String(d.getHours()).padStart(2, '0');
+                const min = String(d.getMinutes()).padStart(2, '0');
+                return `${ano}-${mes}-${dia}T${hora}:${min}`;
+            } catch(e) {
+                return '';
+            }
+        }
+
+        function aoMudarDataLimiteInscricao(val) {
+            if (!val) return;
+            try {
+                const d = new Date(val);
+                if (!isNaN(d.getTime())) {
+                    const dia = String(d.getDate()).padStart(2, '0');
+                    const mes = String(d.getMonth() + 1).padStart(2, '0');
+                    const ano = d.getFullYear();
+                    const hora = String(d.getHours()).padStart(2, '0');
+                    const min = String(d.getMinutes()).padStart(2, '0');
+                    document.getElementById('champ-form-fase').value = `Inscrições Abertas até ${dia}/${mes}/${ano} às ${hora}:${min}`;
+                }
+            } catch(e) {}
+        }
+
         function abrirModalCriarCampeonato() {
             document.getElementById('champ-edit-id').value = '';
             document.getElementById('champ-form-nome').value = '';
+            document.getElementById('champ-form-modalidade').value = 'Quadra';
+            document.getElementById('champ-form-status').value = 'ativo';
             document.getElementById('champ-form-banner').value = 'avv_superliga_athlete.png';
             atualizarBadgeArquivoBanner('avv_superliga_athlete.png');
-            document.getElementById('champ-form-fase').value = 'Inscrições Abertas até ' + new Date(Date.now() + 30*24*60*60*1000).toLocaleDateString('pt-BR');
-            document.getElementById('champ-form-taxa').value = 'Isento / Filiação Ativa';
+
+            // Data limite padrão: daqui a 30 dias às 23:59
+            const dPadrao = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+            dPadrao.setHours(23, 59, 0, 0);
+            const inputDataLimite = document.getElementById('champ-form-data-limite');
+            if (inputDataLimite) inputDataLimite.value = formatarDataIsoParaInputLocal(dPadrao);
+            aoMudarDataLimiteInscricao(inputDataLimite.value);
+
             document.getElementById('champ-form-limite').value = 12;
             document.getElementById('champ-form-desc').value = '';
             document.getElementById('champ-form-reg').value = `CAPÍTULO I - DA FINALIDADE\nArt. 1º - Torneio oficial homologado pela AVV 2026.\n\nCAPÍTULO II - REQUISITOS\nArt. 2º - Atletas federados com documentação regularizada.`;
@@ -2316,11 +2568,31 @@
             if (!c) return;
             document.getElementById('champ-edit-id').value = c.id;
             document.getElementById('champ-form-nome').value = c.nome;
-            document.getElementById('champ-form-modalidade').value = c.modalidade;
+            // Converte modalidade antiga ou normaliza para Quadra / Areia
+            const modAtual = (c.modalidade || '').toLowerCase();
+            document.getElementById('champ-form-modalidade').value = modAtual.includes('areia') ? 'Areia' : 'Quadra';
+            
+            // Status do torneio
+            let stAtual = 'ativo';
+            if (c.ativo === false || c.statusTorneio === 'inativo') stAtual = 'inativo';
+            else if (c.statusTorneio === 'encerrado') stAtual = 'encerrado';
+            document.getElementById('champ-form-status').value = stAtual;
+
+            // Data limite de encerramento
+            const inputDataLimite = document.getElementById('champ-form-data-limite');
+            if (inputDataLimite) {
+                if (c.dataLimiteEncerramento) {
+                    inputDataLimite.value = formatarDataIsoParaInputLocal(c.dataLimiteEncerramento);
+                } else {
+                    const dPadrao = new Date(Date.now() + 15 * 24 * 60 * 60 * 1000);
+                    dPadrao.setHours(23, 59, 0, 0);
+                    inputDataLimite.value = formatarDataIsoParaInputLocal(dPadrao);
+                }
+            }
+
             document.getElementById('champ-form-banner').value = c.banner || '';
             atualizarBadgeArquivoBanner(c.banner || '');
-            document.getElementById('champ-form-fase').value = c.fase;
-            document.getElementById('champ-form-taxa').value = c.taxa;
+            document.getElementById('champ-form-fase').value = c.fase || '';
             document.getElementById('champ-form-limite').value = c.limiteAtletas || 12;
             document.getElementById('champ-form-desc').value = c.descricao;
             document.getElementById('champ-form-reg').value = c.regulamento ? c.regulamento.replace(/<[^>]+>/g, '\n').trim() : '';
@@ -2334,30 +2606,35 @@
             const editId = document.getElementById('champ-edit-id').value;
             const nome = document.getElementById('champ-form-nome').value.trim();
             const modalidade = document.getElementById('champ-form-modalidade').value;
+            const statusTorneio = document.getElementById('champ-form-status')?.value || 'ativo';
+            const dataLimiteEncerramento = document.getElementById('champ-form-data-limite')?.value || '';
             const banner = document.getElementById('champ-form-banner').value.trim();
             const fase = document.getElementById('champ-form-fase').value.trim();
-            const taxa = document.getElementById('champ-form-taxa').value.trim();
+            const taxa = 'Gratuito / Filiação Regular';
             const limite = parseInt(document.getElementById('champ-form-limite').value) || 12;
             const desc = document.getElementById('champ-form-desc').value.trim();
             const regTexto = document.getElementById('champ-form-reg').value.trim();
 
             const categoriasMarcadas = Array.from(document.querySelectorAll('input[name="cat_champ"]:checked')).map(c => c.value);
             if (categoriasMarcadas.length === 0) {
-                alert('Selecione ao menos 1 categoria aceita neste campeonato.');
+                avvAlert('Selecione ao menos 1 categoria aceita neste campeonato.', 'Seleção Necessária', 'warning');
                 return;
             }
 
             const id = editId || ('camp-' + Date.now());
-            const ativoAtual = editId && campeonatosAdm[editId] ? (campeonatosAdm[editId].ativo !== false) : true;
+            const ehAtivo = statusTorneio !== 'inativo';
+
             campeonatosAdm[id] = {
                 id,
                 nome: nome.toUpperCase(),
                 modalidade,
                 banner: banner || (campeonatosAdm[id] && campeonatosAdm[id].banner) || 'avv_superliga_athlete.png',
                 fase,
+                dataLimiteEncerramento: dataLimiteEncerramento ? new Date(dataLimiteEncerramento).toISOString() : (campeonatosAdm[id]?.dataLimiteEncerramento || null),
                 taxa,
                 limiteAtletas: limite,
-                ativo: ativoAtual,
+                ativo: ehAtivo,
+                statusTorneio: statusTorneio,
                 descricao: desc || `Competição oficial de ${modalidade} realizada pela AVV.`,
                 categoriasAceitas: categoriasMarcadas,
                 regulamento: `<h4>REGULAMENTO OFICIAL - AVV 2026</h4><p>${regTexto.replace(/\n/g, '<br>')}</p>`
@@ -2366,7 +2643,7 @@
             salvarCampeonatosNoStorage();
             atualizarTudoPainelAdm();
             fecharModalCriarCampeonato();
-            alert(`Campeonato "${nome.toUpperCase()}" salvo com sucesso!`);
+            avvAlert(`Campeonato "${nome.toUpperCase()}" salvo com sucesso!\nStatus: ${statusTorneio === 'encerrado' ? 'Inscrições Encerradas' : (statusTorneio === 'inativo' ? 'Inabilitado' : 'Inscrições Abertas')}`, 'Campeonato Salvo', 'success');
         }
 
         function excluirCampeonato(id) {
@@ -2375,7 +2652,7 @@
 
             exibirModalConfirmacao({
                 titulo: 'Excluir Campeonato',
-                mensagem: `Tem certeza que deseja excluir em definitivo o campeonato "${nomeCamp}"? Esta ação removerá o torneio de toda a base de dados.`,
+                mensagem: `Tem certeza que deseja excluir em definitivo o campeonato "${nomeCamp}"?\n\nEsta ação removerá o torneio de toda a base de dados do sistema e dos painéis de usuários.`,
                 tipo: 'danger',
                 textoBotao: 'Excluir Definitivamente',
                 corBotao: '#dc2626',
@@ -2383,6 +2660,7 @@
                     delete campeonatosAdm[id];
                     salvarCampeonatosNoStorage();
                     atualizarTudoPainelAdm();
+                    avvAlert(`Campeonato "${nomeCamp}" excluído com sucesso do sistema!`, 'Campeonato Excluído', 'success');
                 }
             });
         }
@@ -2483,10 +2761,94 @@
             document.getElementById('breadcrumb-title-adm').textContent = titulos[tabName] || 'Administração';
         }
 
-        function fazerLogoutAdm() {
-            if (confirm('Deseja realmente encerrar a sessão de Administrador da AVV?')) {
+        // ======================================================================
+        // CONTROLE DE SESSÃO COM EXPIRAÇÃO POR INATIVIDADE E PROTEÇÃO DO HISTÓRICO ADM
+        // ======================================================================
+        const TEMPO_EXPIRACAO_ADM_MS = 60 * 60 * 1000; // 1 hora de inatividade
+        let timerInatividadeAdm = null;
+
+        function renovarAtividadeSessaoAdm() {
+            try {
+                const sessao = JSON.parse(localStorage.getItem('avv_sessao_adm') || 'null');
+                if (sessao && sessao.tipo === 'adm') {
+                    sessao.ultimoAcesso = Date.now();
+                    localStorage.setItem('avv_sessao_adm', JSON.stringify(sessao));
+                }
+            } catch(e) {}
+
+            clearTimeout(timerInatividadeAdm);
+            timerInatividadeAdm = setTimeout(() => {
+                desconectarPorInatividadeAdm();
+            }, TEMPO_EXPIRACAO_ADM_MS);
+        }
+
+        async function desconectarPorInatividadeAdm() {
+            localStorage.removeItem('avv_sessao_adm');
+            await avvAlert('Sua sessão de Administrador expirou por inatividade.\nPor favor, faça login novamente para continuar.', 'Sessão Expirada', 'warning');
+            window.location.replace('login.html');
+        }
+
+        ['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll', 'click'].forEach(evt => {
+            window.addEventListener(evt, renovarAtividadeSessaoAdm, { passive: true });
+        });
+
+        // Controle de histórico do navegador (evita cair no login ao clicar em voltar)
+        (function configurarHistoricoInternoAdm() {
+            history.pushState({ painel: 'adm', timestamp: Date.now() }, document.title, window.location.href);
+
+            window.addEventListener('popstate', (e) => {
+                const sessao = JSON.parse(localStorage.getItem('avv_sessao_adm') || 'null');
+                if (!sessao || sessao.tipo !== 'adm') {
+                    return;
+                }
+
+                // 1. Fecha modais abertos
+                const modalCamp = document.getElementById('modal-criar-campeonato');
+                const modalPrevia = document.getElementById('modal-previa-ficha-atleta');
+
+                if (modalCamp && modalCamp.style.display !== 'none' && modalCamp.style.display !== '') {
+                    fecharModalCriarCampeonato();
+                    history.pushState({ painel: 'adm' }, document.title, window.location.href);
+                    return;
+                }
+                if (modalPrevia && modalPrevia.style.display !== 'none' && modalPrevia.style.display !== '') {
+                    fecharModalPreviaFicha();
+                    history.pushState({ painel: 'adm' }, document.title, window.location.href);
+                    return;
+                }
+
+                // 2. Se estiver vendo a página interna de uma equipe, volta para a lista de equipes
+                const viewDetalheEq = document.getElementById('adm-subview-detalhe-equipe');
+                if (viewDetalheEq && viewDetalheEq.style.display !== 'none') {
+                    fecharPaginaEquipeAdm();
+                    history.pushState({ painel: 'adm' }, document.title, window.location.href);
+                    return;
+                }
+
+                // 3. Se estiver em outra aba que não seja o dashboard, volta para o dashboard
+                const tabDash = document.getElementById('tab-adm-dashboard');
+                if (tabDash && !tabDash.classList.contains('active')) {
+                    const btnDash = document.querySelector('.sidebar-menu-fed button');
+                    switchAdmTab('dashboard', btnDash);
+                    history.pushState({ painel: 'adm' }, document.title, window.location.href);
+                    return;
+                }
+
+                // Mantém na tela inicial do ADM
+                history.pushState({ painel: 'adm' }, document.title, window.location.href);
+            });
+        })();
+
+        async function fazerLogoutAdm() {
+            const confirmou = await avvConfirm('Deseja realmente encerrar a sessão de Administrador da AVV?', 'Encerrar Sessão ADM', {
+                tipo: 'warning',
+                textoConfirmar: 'Sim, Sair',
+                corConfirmar: '#0f1c3f'
+            });
+            if (confirmou) {
+                clearTimeout(timerInatividadeAdm);
                 localStorage.removeItem('avv_sessao_adm');
-                window.location.href = 'login.html';
+                window.location.replace('login.html');
             }
         }
     
