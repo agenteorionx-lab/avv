@@ -392,6 +392,35 @@
                         </button>
                     </div>
 
+                    <!-- GUIA PASSO A PASSO PARA HOMOLOGAÇÃO OFICIAL -->
+                    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-left: 4px solid #c5a021; border-radius: 6px; padding: 14px 18px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+                        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 10px;">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <div style="width: 24px; height: 24px; border-radius: 50%; background: #fef3c7; color: #b45309; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800;">
+                                    i
+                                </div>
+                                <h4 style="margin: 0; font-size: 13px; font-weight: 800; color: #0f1c3f; text-transform: uppercase; letter-spacing: 0.3px;">
+                                    Como funciona a homologação da equipe pela Federação (AVV)
+                                </h4>
+                            </div>
+                            <span style="font-size: 11px; color: #64748b; font-weight: 600;">Regulamento Oficial 2026</span>
+                        </div>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; font-size: 12px; color: #475569;">
+                            <div style="background: #f8fafc; padding: 10px 12px; border-radius: 4px; border: 1px solid #e2e8f0;">
+                                <strong style="color: #0f1c3f; display: block; margin-bottom: 2px;">Passo 1: Criar a Equipe</strong>
+                                Cadastre a equipe na categoria desejada (Sub-13, Sub-15, Sub-18 ou Adulto).
+                            </div>
+                            <div style="background: #f8fafc; padding: 10px 12px; border-radius: 4px; border: 1px solid #e2e8f0;">
+                                <strong style="color: #0f1c3f; display: block; margin-bottom: 2px;">Passo 2: Vincular no Mínimo 6 Atletas</strong>
+                                Clique em <strong>Visualizar</strong> na equipe e adicione pelo menos 6 atletas aptos no elenco.
+                            </div>
+                            <div style="background: #f0fdf4; padding: 10px 12px; border-radius: 4px; border: 1px solid #bbf7d0;">
+                                <strong style="color: #15803d; display: block; margin-bottom: 2px;">Passo 3: Envio Automático ao ADM</strong>
+                                Ao atingir 6 atletas e solicitar a inscrição no campeonato, a equipe vai automaticamente para a fila de homologação.
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="fed-card-container">
                         <div class="fed-header-gold">EQUIPES CADASTRADAS PELO SEU CLUBE</div>
                         
@@ -641,19 +670,31 @@
                             </select>
                         </div>
 
-                        <!-- CATEGORIA -->
+                        <!-- CATEGORIAS DE DISPUTA -->
                         <div>
-                            <label style="display: block; font-size: 11px; font-weight: 700; color: #334155; margin-bottom: 4px;">CATEGORIA DE DISPUTA *</label>
-                            <select id="modal-ath-categoria" style="width: 100%; height: 38px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 4px;">
-                                <option value="Adulto Masculino">Adulto Masculino</option>
-                                <option value="Adulto Feminino">Adulto Feminino</option>
-                                <option value="Sub-18 Masculino">Sub-18 Masculino</option>
-                                <option value="Sub-18 Feminino">Sub-18 Feminino</option>
-                                <option value="Sub-15 Masculino">Sub-15 Masculino</option>
-                                <option value="Sub-15 Feminino">Sub-15 Feminino</option>
-                                <option value="Sub-13 Masculino">Sub-13 Masculino</option>
-                                <option value="Sub-13 Feminino">Sub-13 Feminino</option>
-                            </select>
+                            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px;">
+                                <label style="font-size: 11px; font-weight: 700; color: #334155; margin: 0;">CATEGORIAS DE DISPUTA *</label>
+                                <span style="font-size: 10px; color: #64748b;">(Selecione uma ou mais)</span>
+                            </div>
+                            <div id="modal-ath-categorias-container" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; background: #f8fafc;">
+                                <label style="display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; color: #1e293b; cursor: pointer; padding: 6px 10px; border-radius: 4px; background: #ffffff; border: 1px solid #e2e8f0; transition: all 0.2s ease;">
+                                    <input type="checkbox" name="modal-ath-cat" value="Sub-13" class="ath-cat-checkbox" style="cursor: pointer; width: 15px; height: 15px; accent-color: #0f766e;">
+                                    <span>Sub-13</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; color: #1e293b; cursor: pointer; padding: 6px 10px; border-radius: 4px; background: #ffffff; border: 1px solid #e2e8f0; transition: all 0.2s ease;">
+                                    <input type="checkbox" name="modal-ath-cat" value="Sub-15" class="ath-cat-checkbox" style="cursor: pointer; width: 15px; height: 15px; accent-color: #0f766e;">
+                                    <span>Sub-15</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; color: #1e293b; cursor: pointer; padding: 6px 10px; border-radius: 4px; background: #ffffff; border: 1px solid #e2e8f0; transition: all 0.2s ease;">
+                                    <input type="checkbox" name="modal-ath-cat" value="Sub-18" class="ath-cat-checkbox" style="cursor: pointer; width: 15px; height: 15px; accent-color: #0f766e;">
+                                    <span>Sub-18</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; color: #1e293b; cursor: pointer; padding: 6px 10px; border-radius: 4px; background: #ffffff; border: 1px solid #e2e8f0; transition: all 0.2s ease;">
+                                    <input type="checkbox" name="modal-ath-cat" value="Adulto" class="ath-cat-checkbox" style="cursor: pointer; width: 15px; height: 15px; accent-color: #0f766e;">
+                                    <span>Adulto</span>
+                                </label>
+                            </div>
+                            <small style="display: block; font-size: 10.5px; color: #64748b; margin-top: 4px;">Atletas das categorias de base podem atuar nas suas categorias de origem e também nas superiores.</small>
                         </div>
 
                         <!-- POSIÇÃO -->
@@ -1429,9 +1470,23 @@
                 item.style.background = '#ffffff';
                 const equipeIdStr = String(eq.id || 'eq-idx-' + index);
                 const equipeNomeSanitizado = (eq.nomeTime || 'Equipe').replace(/'/g, "\\'").replace(/"/g, '&quot;');
-                const statusBadge = eq.status === 'Homologado'
-                    ? '<span style="font-size: 10px; font-weight: 800; color: #15803d; background: #dcfce7; padding: 2px 7px; border-radius: 3px;">HOMOLOGADO</span>'
-                    : '<span style="font-size: 10px; font-weight: 800; color: #b45309; background: #fef3c7; padding: 2px 7px; border-radius: 3px;">AGUARDANDO HOMOLOGAÇÃO</span>';
+                const atletasVinculados = (eq.atletas || []).length;
+                let statusBadge = '';
+                let avisoMinimoAtletas = '';
+
+                if (atletasVinculados < 6) {
+                    statusBadge = '<span style="font-size: 10px; font-weight: 800; color: #b45309; background: #fef3c7; padding: 2px 7px; border-radius: 3px; border: 1px solid #fde68a;">INCOMPLETO (' + atletasVinculados + '/6)</span>';
+                    avisoMinimoAtletas = `
+                        <div style="margin-top: 6px; display: inline-flex; align-items: center; gap: 5px; background: #fffbeb; border: 1px solid #fef3c7; color: #b45309; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                            Mínimo de 6 atletas obrigatório para envio e homologação oficial (atual: ${atletasVinculados}).
+                        </div>
+                    `;
+                } else if (eq.status === 'Homologado') {
+                    statusBadge = '<span style="font-size: 10px; font-weight: 800; color: #15803d; background: #dcfce7; padding: 2px 7px; border-radius: 3px;">HOMOLOGADO</span>';
+                } else {
+                    statusBadge = '<span style="font-size: 10px; font-weight: 800; color: #1d4ed8; background: #dbeafe; padding: 2px 7px; border-radius: 3px;">AGUARDANDO HOMOLOGAÇÃO</span>';
+                }
 
                 item.innerHTML = `
                     <div class="item-left-block">
@@ -1446,9 +1501,10 @@
                                 <span><strong>Nº da Inscrição:</strong> ${eq.numeroInscricao || '---'}</span>
                                 <span><strong>Data/Hora:</strong> ${eq.dataInscricao || '--/--/----'} às ${eq.horaInscricao || '--:--'}</span>
                                 <span><strong>Categoria:</strong> <strong style="color: #1d4ed8;">${eq.categoria || (eq.categorias && eq.categorias[0]) || 'Adulto Masculino'}</strong></span>
-                                <span><strong>Atletas:</strong> ${(eq.atletas || []).length}/12</span>
+                                <span><strong>Atletas:</strong> ${atletasVinculados}/12</span>
                                 <span><strong>Comissão:</strong> ${(eq.comissao || []).length}</span>
                             </div>
+                            ${avisoMinimoAtletas}
                         </div>
                     </div>
                     <div style="display: flex; gap: 8px;">
@@ -1814,16 +1870,12 @@
                     const idx = db.findIndex(
                         e => !e.isContaClube && e.categoria !== '__CONTA_CLUBE__' && (
                             (sessao.equipeId && String(e.id) === String(sessao.equipeId)) ||
-                            (sessao.email && (e.email || '').toLowerCase() === (sessao.email || '').toLowerCase())
+                            (sessao.email && (e.email || '').toLowerCase().trim() === (sessao.email || '').toLowerCase().trim())
                         )
                     );
                     if (idx !== -1) return { db, idx, equipe: db[idx] };
                 }
-                const equipesValidas = db.filter(e => !e.isContaClube && e.categoria !== '__CONTA_CLUBE__');
-                if (equipesValidas.length > 0) {
-                    const idxPrimeira = db.findIndex(e => String(e.id) === String(equipesValidas[0].id));
-                    return { db, idx: idxPrimeira, equipe: equipesValidas[0] };
-                }
+                // Se a sessão da agremiação atual não tem equipe vinculada, retorna null (NUNCA puxar equipes de outros clubes!)
             } catch (err) {}
             return { db: [], idx: -1, equipe: null };
         }
@@ -1912,11 +1964,62 @@
             return txt.replace(/masculino|feminino/gi, '').trim() || 'Adulto';
         }
 
+        // Remove sufixos como " - SUB-18 MASCULINO", " - ADULTO FEMININO", etc.
+        // retornando exclusivamente o nome da equipe cadastrada pela agremiação
+        function limparNomeEquipePuro(txt) {
+            let nome = String(txt || '').trim();
+            if (!nome) return '';
+            // Remove sufixos com traço e categoria/naipe (ex: " - SUB-18 MASCULINO", " - ADULTO FEMININO")
+            nome = nome.replace(/\s*-\s*(sub[- ]?13|sub[- ]?15|sub[- ]?18|adulto)\s*(masculino|feminino)?/gi, '');
+            // Remove sufixos isolados de categoria ou naipe
+            nome = nome.replace(/\s*-\s*(masculino|feminino)/gi, '');
+            return nome.trim() || String(txt || '').trim();
+        }
+
+        // Obtém o nome oficial do clube ou agremiação registrado
+        function obterNomeOficialClube(sessaoObj) {
+            const sessao = sessaoObj || JSON.parse(localStorage.getItem('avv_sessao_ativa') || '{}');
+            if (sessao.nomeClube && sessao.nomeClube !== 'SUA EQUIPE' && sessao.nomeClube !== 'Sua Agremiação') {
+                return limparNomeEquipePuro(sessao.nomeClube);
+            }
+            if (sessao.nomeTime && sessao.nomeTime !== 'SUA EQUIPE' && sessao.nomeTime !== 'Sua Agremiação') {
+                return limparNomeEquipePuro(sessao.nomeTime);
+            }
+            return 'Sua Agremiação';
+        }
+
+        function extrairCategoriasAtleta(atleta) {
+            if (!atleta) return ['Adulto'];
+            if (Array.isArray(atleta.categorias) && atleta.categorias.length > 0) {
+                return atleta.categorias.map(c => extrairCategoriaBase(c));
+            }
+            if (atleta.categoria) {
+                // Pode ser string com vírgula ou uma única categoria
+                const partes = String(atleta.categoria).split(/[,;/]/);
+                const lista = partes.map(p => extrairCategoriaBase(p.trim())).filter(Boolean);
+                if (lista.length > 0) return [...new Set(lista)];
+            }
+            return ['Adulto'];
+        }
+
+        function extrairCategoriasAtleta(atleta) {
+            if (!atleta) return ['Adulto'];
+            if (Array.isArray(atleta.categorias) && atleta.categorias.length > 0) {
+                return atleta.categorias.map(c => extrairCategoriaBase(c));
+            }
+            if (atleta.categoria) {
+                // Pode ser string com vírgula ou uma única categoria
+                const partes = String(atleta.categoria).split(/[,;/]/);
+                const lista = partes.map(p => extrairCategoriaBase(p.trim())).filter(Boolean);
+                if (lista.length > 0) return [...new Set(lista)];
+            }
+            return ['Adulto'];
+        }
+
         function atletaCompativelComEquipe(atleta, equipe) {
             if (!atleta || !equipe) return false;
             
             // Naipe/Gênero rigorosamente idêntico (sem misturar)
-            // Se atleta.genero for informado, tem precedência absoluta
             const naipeAtleta = atleta.genero 
                 ? normalizarNaipe(atleta.genero) 
                 : normalizarNaipe(atleta.categoria);
@@ -1927,10 +2030,28 @@
 
             if (naipeAtleta !== naipeEquipe) return false;
 
-            // Categoria de disputa compatível
-            const catAtleta = extrairCategoriaBase(atleta.categoria);
+            // Categoria de disputa compatível:
+            // O atleta pode estar explicitamente na categoria da equipe,
+            // ou se for atleta de categoria de base, pode atuar em categorias superiores.
             const catEquipe = extrairCategoriaBase(equipe.categoria || (equipe.categorias && equipe.categorias[0]));
-            return catAtleta.toLowerCase() === catEquipe.toLowerCase();
+            const categoriasAtleta = extrairCategoriasAtleta(atleta);
+
+            // 1. Verifica se a categoria da equipe está na lista de categorias do atleta
+            const temCategoriaExata = categoriasAtleta.some(c => c.toLowerCase() === catEquipe.toLowerCase());
+            if (temCategoriaExata) return true;
+
+            // 2. Regra de ascensão: atletas menores podem jogar em categorias superiores
+            // Hierarquia: Sub-13 (13) < Sub-15 (15) < Sub-18 (18) < Adulto (99)
+            const nivelPorCategoria = { 'sub-13': 13, 'sub-15': 15, 'sub-18': 18, 'adulto': 99 };
+            const nivelEquipe = nivelPorCategoria[catEquipe.toLowerCase()] || 99;
+
+            // Se o atleta tiver alguma categoria de base menor ou igual à equipe, ele é elegível
+            const elegivelPorIdade = categoriasAtleta.some(cat => {
+                const nivelAtleta = nivelPorCategoria[cat.toLowerCase()];
+                return nivelAtleta !== undefined && nivelAtleta <= nivelEquipe;
+            });
+
+            return elegivelPorIdade;
         }
 
         // Renderiza todos os atletas cadastrados pelo clube na aba "Atletas"
@@ -2212,7 +2333,10 @@
                 if (elUserNome && sessao.responsavelNome) elUserNome.textContent = sessao.responsavelNome;
 
                 const elUserTeam = document.getElementById('user-display-team');
-                if (elUserTeam && (sessao.nomeTime || sessao.nomeClube)) elUserTeam.textContent = sessao.nomeClube || sessao.nomeTime;
+                if (elUserTeam) {
+                    const nomeClubePuro = obterNomeOficialClube(sessao);
+                    elUserTeam.textContent = nomeClubePuro;
+                }
 
                 // Recupera foto de perfil/logo se salva
                 const fotoDirigenteSalva = sessao.foto || localStorage.getItem('avv_dirigente_foto_teste') || (sessao.email ? localStorage.getItem('avv_foto_clube_' + sessao.email.toLowerCase()) : null);
@@ -2560,8 +2684,7 @@
             const isTorneioEncerrado = dadosCampeonato && dadosCampeonato.statusTorneio === 'encerrado';
             const catsAceitas = Array.isArray(dadosCampeonato.categoriasAceitas) ? dadosCampeonato.categoriasAceitas : ['Adulto Masculino'];
             const equipesClube = obterListaEquipesClube();
-            const { equipe: equipeLogada } = obterEquipeAtualDoBanco();
-            const atletasClube = (equipeLogada && Array.isArray(equipeLogada.atletas)) ? equipeLogada.atletas : [];
+            const atletasGeraisClube = obterBancoAtletasClube();
 
             // Obtém lista de inscrições já confirmadas para verificar duplicidade
             const inscricoesFeitas = obterInscricoesConfirmadasClube();
@@ -2577,21 +2700,22 @@
                     return mesmoCamp && mesmaCat;
                 });
 
-                // 2. Busca equipes do clube que atendam a essa categoria
+                // 2. Busca equipes REAIS deste clube que atendam a essa categoria
                 const equipesDaCategoria = equipesClube.filter(eq => {
                     const catEq = (eq.categoria || '').trim().toLowerCase();
                     return catEq === catNorm;
                 });
 
-                // 3. Conta atletas vinculados a essa categoria
-                const atletasDaCategoria = atletasClube.filter(at => {
-                    const catAt = (at.categoria || '').trim().toLowerCase();
-                    return catAt === catNorm;
-                });
-
                 const temEquipe = equipesDaCategoria.length > 0;
-                const totalAtletas = atletasDaCategoria.length;
                 const equipeAlvo = temEquipe ? equipesDaCategoria[0] : null;
+
+                // 3. Conta atletas vinculados a essa equipe ou a essa categoria no clube
+                let totalAtletas = 0;
+                if (equipeAlvo && Array.isArray(equipeAlvo.atletas)) {
+                    totalAtletas = equipeAlvo.atletas.length;
+                } else if (temEquipe) {
+                    totalAtletas = atletasGeraisClube.filter(at => (at.categoria || '').trim().toLowerCase() === catNorm).length;
+                }
 
                 const card = document.createElement('div');
                 card.style.cssText = 'border-radius: 6px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between; gap: 12px; transition: all 0.2s ease; position: relative;';
@@ -2638,22 +2762,32 @@
                         </button>
                     `;
                 } else if (temEquipe) {
-                    // Estado: Equipe cadastrada e pronta para inscrição imediata
+                    // Estado: Equipe cadastrada para esta categoria
                     card.style.background = '#ffffff';
-                    card.style.border = '1.5px solid #bfdbfe';
+                    card.style.border = totalAtletas >= 6 ? '1.5px solid #86efac' : '1.5px solid #bfdbfe';
                     card.style.boxShadow = '0 2px 8px rgba(15, 28, 63, 0.06)';
+
+                    const badgeHabilitada = totalAtletas >= 6
+                        ? '<span style="background: #dcfce7; color: #15803d; font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 4px; border: 1px solid #86efac;">✓ ELENCO COMPLETO</span>'
+                        : '<span style="background: #eff6ff; color: #1d72f2; font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 4px; border: 1px solid #bfdbfe;">EQUIPE HABILITADA</span>';
+
+                    const avisoMinimoCards = totalAtletas < 6
+                        ? `<div style="font-size: 10.5px; color: #b45309; background: #fffbeb; padding: 4px 6px; border-radius: 3px; border: 1px solid #fef3c7; margin-top: 4px;">
+                               ⚠ Requer mínimo de 6 atletas para homologação (atual: ${totalAtletas}/6).
+                           </div>`
+                        : '';
+
                     card.innerHTML = `
                         <div>
                             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
                                 <span style="font-size: 13px; font-weight: 800; color: #0f1c3f; text-transform: uppercase;">${categoria}</span>
-                                <span style="background: #eff6ff; color: #1d72f2; font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 4px; border: 1px solid #bfdbfe;">
-                                    EQUIPE HABILITADA
-                                </span>
+                                ${badgeHabilitada}
                             </div>
                             <div style="font-size: 11.5px; color: #475569; line-height: 1.4;">
                                 Time: <strong style="color: #0f1c3f;">${equipeAlvo.nomeTime}</strong><br>
-                                Atletas na Categoria: <strong style="color: #1d72f2;">${totalAtletas} atleta(s)</strong>
+                                Atletas na Categoria: <strong style="color: ${totalAtletas >= 6 ? '#16a34a' : '#1d72f2'};">${totalAtletas} atleta(s)</strong>
                             </div>
+                            ${avisoMinimoCards}
                         </div>
                         <button type="button" onclick="inscreverEquipeDiretaCategoria('${equipeAlvo.id}', '${categoria.replace(/'/g, "\\'")}')" class="btn-action-text-green" style="width: 100%; height: 38px; font-size: 12px; font-weight: 800; justify-content: center; border-radius: 4px; box-shadow: 0 2px 6px rgba(22, 163, 74, 0.25);">
                             ✓ Inscrever Esta Equipe
@@ -2686,13 +2820,31 @@
             });
         }
 
-        // Obtém inscrições realizadas salvas
+        function obterChaveInscricoesConfirmadasClube() {
+            try {
+                const sessao = JSON.parse(localStorage.getItem('avv_sessao_ativa') || '{}');
+                const idClube = (sessao.email || sessao.clubeId || 'default').toLowerCase().replace(/[^a-z0-9_-]/g, '_');
+                return `avv_inscricoes_confirmadas_${idClube}`;
+            } catch (e) {
+                return 'avv_inscricoes_confirmadas_default';
+            }
+        }
+
+        // Obtém inscrições realizadas salvas isoladas por agremiação
         function obterInscricoesConfirmadasClube() {
             try {
-                const salvas = localStorage.getItem('avv_inscricoes_confirmadas_clube');
+                const chave = obterChaveInscricoesConfirmadasClube();
+                const salvas = localStorage.getItem(chave);
                 if (salvas) return JSON.parse(salvas);
             } catch(e) {}
             return [];
+        }
+
+        function salvarInscricoesConfirmadasClube(lista) {
+            try {
+                const chave = obterChaveInscricoesConfirmadasClube();
+                localStorage.setItem(chave, JSON.stringify(lista));
+            } catch(e) {}
         }
 
         // Inscrição Direta de uma equipe já cadastrada na categoria
@@ -2759,11 +2911,11 @@
             const radioCat = document.querySelector(`input[name="cat-time"][value="${catBase}"]`);
             if (radioCat) radioCat.checked = true;
 
-            // Pré-preenche o nome do time com base no clube logado
-            const elUserTeam = document.getElementById('user-display-team')?.textContent.trim();
+            // Pré-preenche o nome do time com base no clube logado (apenas o nome oficial do clube, sem sufixo de categoria/naipe)
+            const nomeClubePuro = obterNomeOficialClube();
             const elTeamName = document.getElementById('team-modal-name');
-            if (elTeamName && elUserTeam && elUserTeam !== 'SUA EQUIPE' && !elTeamName.value) {
-                elTeamName.value = `${elUserTeam} - ${catBase} ${naipe}`;
+            if (elTeamName && nomeClubePuro && nomeClubePuro !== 'Sua Agremiação') {
+                elTeamName.value = nomeClubePuro;
             }
         }
 
@@ -2883,14 +3035,14 @@
                                     </div>
                                 </div>
                             </div>
-                            <div style="display: flex; align-items: center; gap: 8px;">
-                                <button type="button" class="btn-action-green" title="Gerenciar Atletas da Equipe" onclick="switchFedTab('meustimes', document.querySelectorAll('.sidebar-menu-fed button')[2])" style="padding: 6px 12px; font-size: 11px;">
+                            <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
+                                <button type="button" class="btn-action-text-green" title="Gerenciar Atletas da Equipe" onclick="switchFedTab('meustimes', document.querySelectorAll('.sidebar-menu-fed button')[2])" style="padding: 6px 12px; font-size: 11px; height: 32px; white-space: nowrap; text-transform: none; font-weight: 700; width: auto;">
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                                    Ver Elenco
+                                    <span>Ver Elenco</span>
                                 </button>
-                                <button type="button" title="Cancelar / Excluir Inscrição" onclick="cancelarInscricaoCampeonato('${ins.numeroInscricao}', '${(ins.campeonatoNome || '').replace(/'/g, "\\'")}')" style="background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; padding: 6px 10px; border-radius: 4px; font-size: 11px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; transition: all 0.2s ease;">
+                                <button type="button" title="Cancelar / Excluir Inscrição" onclick="cancelarInscricaoCampeonato('${ins.numeroInscricao}', '${(ins.campeonatoNome || '').replace(/'/g, "\\'")}')" style="background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; padding: 6px 10px; border-radius: 4px; font-size: 11px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; height: 32px; white-space: nowrap; transition: all 0.2s ease;">
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                                    Cancelar Inscrição
+                                    <span>Cancelar Inscrição</span>
                                 </button>
                             </div>
                         </div>
@@ -2943,7 +3095,7 @@
             let lista = obterInscricoesConfirmadasClube();
             const inscCancelada = lista.find(i => String(i.numeroInscricao) === String(numeroInscricao));
             lista = lista.filter(i => String(i.numeroInscricao) !== String(numeroInscricao));
-            localStorage.setItem('avv_inscricoes_confirmadas_clube', JSON.stringify(lista));
+            salvarInscricoesConfirmadasClube(lista);
 
             // Remove a flag de inscrito no campeonato no banco central
             try {
@@ -2993,7 +3145,7 @@
                     numeroInscricao: String(numeroInscricao),
                     dataHora: `${dataStr} às ${horaStr}`
                 });
-                localStorage.setItem('avv_inscricoes_confirmadas_clube', JSON.stringify(insList));
+                salvarInscricoesConfirmadasClube(insList);
             } catch(e) {}
 
             renderizarListaInscricoesConfirmadas();
@@ -3077,34 +3229,24 @@
             if (elProfWhats) {
                 elProfWhats.addEventListener('input', (e) => { e.target.value = formatarTelefone(e.target.value); });
             }
-
-            // Sincronização inteligente entre Categoria e Gênero no cadastro do atleta
-            const selectAthCat = document.getElementById('modal-ath-categoria');
-            const selectAthGen = document.getElementById('modal-ath-genero');
-            if (selectAthCat && selectAthGen) {
-                selectAthCat.addEventListener('change', (e) => {
-                    const catVal = String(e.target.value || '').toLowerCase();
-                    if (catVal.includes('fem')) {
-                        selectAthGen.value = 'Feminino';
-                    } else if (catVal.includes('masc')) {
-                        selectAthGen.value = 'Masculino';
-                    }
-                });
-                selectAthGen.addEventListener('change', (e) => {
-                    const genVal = String(e.target.value || '').toLowerCase();
-                    const catAtual = String(selectAthCat.value || '');
-                    const base = extrairCategoriaBase(catAtual);
-                    const novoNaipe = genVal.includes('fem') ? 'Feminino' : 'Masculino';
-                    const catEsperada = `${base} ${novoNaipe}`;
-                    for (let i = 0; i < selectAthCat.options.length; i++) {
-                        if (selectAthCat.options[i].value.toLowerCase() === catEsperada.toLowerCase()) {
-                            selectAthCat.selectedIndex = i;
-                            break;
-                        }
-                    }
-                });
-            }
         });
+
+        function setCheckboxesCategoriasAtleta(categorias) {
+            const boxes = document.querySelectorAll('.ath-cat-checkbox');
+            if (!boxes || boxes.length === 0) return;
+            const catsLower = (Array.isArray(categorias) ? categorias : [categorias])
+                .map(c => extrairCategoriaBase(c).toLowerCase());
+            
+            boxes.forEach(cb => {
+                cb.checked = catsLower.includes(cb.value.toLowerCase());
+            });
+        }
+
+        function getCategoriasSelecionadasAtleta() {
+            const boxes = document.querySelectorAll('.ath-cat-checkbox:checked');
+            const selecionadas = Array.from(boxes).map(cb => cb.value);
+            return selecionadas.length > 0 ? selecionadas : ['Adulto'];
+        }
 
         function abrirModalAtleta() {
             idAtletaEmEdicao = null;
@@ -3124,13 +3266,15 @@
             if (elWhats) elWhats.value = '';
             document.getElementById('modal-ath-foto-preview').src = 'logos/mascote_coelho.png';
             atletaFotoDataUrl = 'logos/mascote_coelho.png';
+
+            // Padrão: Adulto marcado
+            setCheckboxesCategoriasAtleta(['Adulto']);
             
             document.getElementById('modal-atleta').style.display = 'flex';
         }
 
         function abrirModalAtletaComCategoria(catDesejada) {
             abrirModalAtleta();
-            const selectCat = document.getElementById('modal-ath-categoria');
             const selectGen = document.getElementById('modal-ath-genero');
 
             if (catDesejada) {
@@ -3139,24 +3283,8 @@
                 if (selectGen) {
                     selectGen.value = ehFeminino ? 'Feminino' : 'Masculino';
                 }
-
-                if (selectCat) {
-                    let existe = false;
-                    for (let i = 0; i < selectCat.options.length; i++) {
-                        if (selectCat.options[i].value.toLowerCase() === catDesejada.toLowerCase()) {
-                            selectCat.selectedIndex = i;
-                            existe = true;
-                            break;
-                        }
-                    }
-                    if (!existe) {
-                        const novaOpt = document.createElement('option');
-                        novaOpt.value = catDesejada;
-                        novaOpt.textContent = catDesejada;
-                        novaOpt.selected = true;
-                        selectCat.appendChild(novaOpt);
-                    }
-                }
+                const catBase = extrairCategoriaBase(catDesejada);
+                setCheckboxesCategoriasAtleta([catBase]);
             }
             const tituloModal = document.getElementById('modal-atleta-titulo');
             if (tituloModal) {
@@ -3191,6 +3319,16 @@
             document.getElementById('modal-ath-genero').value = genero;
             document.getElementById('modal-ath-posicao').value = posicao;
 
+            // Busca os dados do atleta do banco para marcar suas categorias
+            const atletas = obterBancoAtletasClube();
+            const atletaObj = atletas.find(a => String(a.id) === String(numInscricao));
+            if (atletaObj) {
+                const cats = extrairCategoriasAtleta(atletaObj);
+                setCheckboxesCategoriasAtleta(cats);
+            } else {
+                setCheckboxesCategoriasAtleta(['Adulto']);
+            }
+
             // Busca foto atual do card se existir
             const imgExistente = document.getElementById('img-ath-' + numInscricao);
             if (imgExistente) {
@@ -3219,7 +3357,8 @@
             const nasc = formatarDataNascimento(document.getElementById('modal-ath-nasc').value.trim());
             const whats = formatarTelefone(document.getElementById('modal-ath-whats')?.value.trim() || '');
             const genero = document.getElementById('modal-ath-genero').value;
-            const categoria = document.getElementById('modal-ath-categoria')?.value || 'Adulto Masculino';
+            const categorias = getCategoriasSelecionadasAtleta();
+            const categoriaFormatada = categorias.map(c => `${c} ${genero}`).join(', ');
             const posicao = document.getElementById('modal-ath-posicao').value;
 
             // Fecha imediatamente o popup do atleta
@@ -3238,7 +3377,8 @@
                     nasc: nasc || '---',
                     whats: whats || '',
                     genero,
-                    categoria,
+                    categoria: categoriaFormatada,
+                    categorias: categorias,
                     posicao,
                     foto: atletaFotoDataUrl || (idx !== -1 ? atletasClube[idx].foto : 'logos/mascote_coelho.png'),
                     dataHora: idx !== -1 ? (atletasClube[idx].dataHora || dataHora) : dataHora
@@ -3282,7 +3422,8 @@
                     nasc: nasc || '---',
                     whats: whats || '',
                     genero,
-                    categoria,
+                    categoria: categoriaFormatada,
+                    categorias: categorias,
                     posicao,
                     foto: atletaFotoDataUrl || 'logos/mascote_coelho.png',
                     dataHora: dataHora || (new Date().toLocaleDateString('pt-BR') + ' às ' + new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }))
@@ -3292,7 +3433,7 @@
                 salvarBancoAtletasClube(atletasClube);
                 renderizarCardsAtletasDoClube();
 
-                avvAlert(`Atleta "${nome}" cadastrado com sucesso no banco geral do clube!\n\nCategoria: ${categoria} &bull; Gênero: ${genero}.\nPara vinculá-lo a uma equipe, vá na aba "Equipes", clique em "Visualizar" e em seguida "+ Incluir Atleta na Equipe".`, 'Atleta Cadastrado', 'success');
+                avvAlert(`Atleta "${nome}" cadastrado com sucesso no banco geral do clube!\n\nCategorias: ${categoriaFormatada} &bull; Gênero: ${genero}.\nPara vinculá-lo a uma equipe, vá na aba "Equipes", clique em "Visualizar" e em seguida "+ Incluir Atleta na Equipe".`, 'Atleta Cadastrado', 'success');
             }
 
             // Se havia uma inscrição automática de campeonato pendente aguardando o cadastro de atletas
@@ -3658,7 +3799,9 @@
 
             if (modo === 'novo' || !equipeIdParaEditar) {
                 if (campoEditId) campoEditId.value = '';
-                document.getElementById('team-modal-name').value = '';
+                // Sugere o nome oficial da agremiação sem categorias ou naipes anexados
+                const nomeClubeSugestao = obterNomeOficialClube();
+                document.getElementById('team-modal-name').value = (nomeClubeSugestao && nomeClubeSugestao !== 'Sua Agremiação') ? nomeClubeSugestao : '';
                 document.getElementById('team-modal-city').value = 'Vilhena';
                 document.getElementById('team-modal-uf').value = 'RO';
                 document.getElementById('team-modal-num').value = Math.floor(100000 + Math.random() * 900000);
@@ -3836,8 +3979,11 @@
                 // Atualiza sessão ativa
                 if (sessao) {
                     sessao.equipeId = equipeSalva.id;
-                    if (!sessao.nomeTime || sessao.nomeTime === 'SUA EQUIPE') {
-                        sessao.nomeTime = equipeSalva.nomeTime;
+                    if (!sessao.nomeClube || sessao.nomeClube === 'SUA EQUIPE' || sessao.nomeClube === 'Sua Agremiação') {
+                        sessao.nomeClube = limparNomeEquipePuro(equipeSalva.nomeTime);
+                    }
+                    if (!sessao.nomeTime || sessao.nomeTime === 'SUA EQUIPE' || sessao.nomeTime === 'Sua Agremiação') {
+                        sessao.nomeTime = limparNomeEquipePuro(equipeSalva.nomeTime);
                     }
                     localStorage.setItem('avv_sessao_ativa', JSON.stringify(sessao));
                 }
@@ -3859,11 +4005,11 @@
 
                     // Exibe confirmação visual e passa suavemente para a próxima etapa (cadastro do elenco de atletas)
                     const querCadastrarAtletas = await avvConfirm(
-                        `Equipe "${nome.toUpperCase()}" salva com sucesso na categoria "${categoriaCompleta}"!\n\nDeseja cadastrar os atletas do elenco agora (mínimo 1 atleta inicial para habilitar) ou confirmar a inscrição direta?`,
-                        'Equipe Registrada',
+                        `Equipe "${nome.toUpperCase()}" criada na categoria "${categoriaCompleta}"!\n\nImportante: Para que a inscrição seja homologada oficialmente pela organização, a equipe deverá conter no mínimo 6 atletas cadastrados (atual: 0).\n\nDeseja cadastrar os atletas do elenco agora ou confirmar a inscrição e completar o elenco depois?`,
+                        'CADASTRO DE ELENCO & INSCRIÇÃO',
                         {
                             tipo: 'success',
-                            textoConfirmar: 'Cadastrar Atletas do Elenco',
+                            textoConfirmar: 'Cadastrar Atletas Agora',
                             textoCancelar: 'Confirmar Inscrição Direta',
                             corConfirmar: '#16a34a'
                         }

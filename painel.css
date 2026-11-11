@@ -406,8 +406,7 @@ body {
   white-space: nowrap;
 }
 
-.btn-action-green:has(svg:only-child),
-.btn-action-green:not(:has(text)) {
+.btn-action-green:has(svg:only-child) {
   width: 34px;
   padding: 0;
 }
