@@ -16,8 +16,8 @@ const PORT = process.env.PORT || 3000;
 // ============================================================================
 app.use(compression());
 app.use(cors());
-app.use(express.json({ limit: '5mb' }));
-app.use(express.urlencoded({ extended: true, limit: '5mb' }));
+app.use(express.json({ limit: '25mb' }));
+app.use(express.urlencoded({ extended: true, limit: '25mb' }));
 
 // Cabeçalhos de segurança HTTP e bloqueio de acesso direto ao arquivo .env / data
 app.use((req, res, next) => {
@@ -88,7 +88,7 @@ const CAMPEONATO_OFICIAL_COPA_XXI = {
         nome: "XXI COPA AVV DE VOLEIBOL",
         modalidade: "Quadra",
         fase: "Inscrições Abertas até 16/11/2026 às 17:59",
-        dataLimiteEncerramento: "2026-11-16T20:59:00.000Z",
+        dataLimiteEncerramento: "2026-11-16T21:59:00.000Z",
         taxa: "Gratuito / Filiação Regular",
         limiteAtletas: 12,
         status: "Ativo",
@@ -477,6 +477,22 @@ app.post(['/api/equipes/excluir', '/avv/api/equipes/excluir'], (req, res) => {
         res.json({ ok: true });
     } catch (err) {
         res.status(500).json({ ok: false, mensagem: 'Erro ao excluir equipe.' });
+    }
+});
+
+// 4.5.1. Excluir conta de clube completa e todas as suas equipes (pelo ADM)
+app.post(['/api/equipes/excluir-conta', '/avv/api/equipes/excluir-conta'], (req, res) => {
+    try {
+        const { email } = req.body || {};
+        if (!email) return res.status(400).json({ ok: false, mensagem: 'E-mail obrigatório.' });
+        const emailNorm = String(email).toLowerCase().trim();
+        const db = carregarBancoDados();
+        db.equipes = db.equipes.filter(e => (e.email || '').toLowerCase().trim() !== emailNorm);
+        salvarBancoDados(db);
+        res.json({ ok: true, mensagem: `Conta ${emailNorm} e suas equipes foram removidas do servidor.` });
+    } catch (err) {
+        console.error('Erro ao excluir conta de clube:', err);
+        res.status(500).json({ ok: false, mensagem: 'Erro ao excluir conta de clube.' });
     }
 });
 

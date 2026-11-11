@@ -938,14 +938,14 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  background: #dcfce7;
-  color: #166534;
+  background: #f0fdf4;
+  color: #15803d;
   border: 1px solid #bbf7d0;
   font-size: 11px;
   font-weight: 700;
-  padding: 3px 8px;
+  padding: 4px 10px;
   border-radius: 4px;
-  text-transform: uppercase;
+  letter-spacing: 0.3px;
 }
 
 .badge-status-pendente {
@@ -963,21 +963,27 @@ body {
 }
 
 .btn-table-icon {
-  background: transparent;
+  background: #ffffff;
   border: 1px solid #cbd5e1;
-  padding: 4px 8px;
-  border-radius: 4px;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: 6px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  font-size: 11px;
+  justify-content: center;
+  font-size: 12px;
   font-weight: 600;
-  transition: all 0.15s;
+  transition: all 0.15s ease-in-out;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
 }
 
 .btn-table-icon:hover {
-  background: #e2e8f0;
+  background: #f1f5f9;
+  border-color: #94a3b8;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
 }
 
 /* ==========================================================================

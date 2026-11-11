@@ -1040,9 +1040,9 @@
                         <span><strong>Edição Extraordinária Liberada:</strong> A Diretoria da AVV concedeu autorização especial para que você realize alterações ou substituições no elenco desta equipe.</span>
                     </div>
 
-                    <div style="overflow-x: auto;">
-                        <table class="table-avv-roster">
-                            <thead>
+                    <div style="max-height: 295px; overflow-y: auto; overflow-x: auto; border: 1px solid #e2e8f0; border-top: none;">
+                        <table class="table-avv-roster" style="margin: 0;">
+                            <thead style="position: sticky; top: 0; z-index: 2; box-shadow: 0 1px 2px rgba(0,0,0,0.1);">
                                 <tr>
                                     <th style="width: 42px; text-align: center;">
                                         <input type="checkbox" id="chk-selecionar-todos-roster" class="chk-roster-custom" onchange="toggleSelecionarTodosRoster(this.checked)" title="Selecionar Todos">
@@ -1123,15 +1123,18 @@
             </div>
 
             <div style="padding: 20px; overflow-y: auto; flex: 1;">
-                <div style="margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #475569; flex-wrap: wrap; gap: 8px;">
-                    <div>
-                        <span>Selecione os atletas disponíveis no banco do clube:</span>
-                        <span id="selecao-atletas-contador-badge" style="display: none; margin-left: 8px; font-weight: 700; color: #16a34a; background: #dcfce7; padding: 2px 8px; border-radius: 12px; font-size: 11px;">0 selecionado(s)</span>
+                <div style="margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #475569; flex-wrap: wrap; gap: 10px;">
+                    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                        <span>Filtrar por Categoria:</span>
+                        <select id="modal-filtro-categoria-atleta" onchange="aoMudarFiltroCategoriaModalAtletas()" style="height: 32px; padding: 0 10px; font-size: 12px; font-weight: 700; border: 1px solid #cbd5e1; border-radius: 4px; color: #0f1c3f; background: #ffffff;">
+                            <option value="todas">Todas as Categorias</option>
+                        </select>
+                        <span id="selecao-atletas-contador-badge" style="display: none; margin-left: 4px; font-weight: 700; color: #16a34a; background: #dcfce7; padding: 2px 8px; border-radius: 12px; font-size: 11px;">0 selecionado(s)</span>
                     </div>
                     <span style="font-weight: 700; color: #166534;">Exibindo apenas cadastros homologados</span>
                 </div>
 
-                <div style="border: 1px solid #e2e8f0; border-radius: 4px; overflow: hidden;">
+                <div style="border: 1px solid #e2e8f0; border-radius: 4px; overflow: hidden; max-height: 360px; overflow-y: auto;">
                     <table class="table-avv-roster">
                         <thead>
                             <tr>
@@ -2401,23 +2404,28 @@
                     <td><strong style="color: #0f1c3f; font-size: 13px;">${num}</strong></td>
                     <td><span style="color: #1d72f2; font-weight: 700;">${posicao}</span></td>
                     <td>${genero}</td>
-                    <td><span class="badge-status-concluido">✓ Concluído</span></td>
+                    <td>
+                        <span class="badge-status-concluido">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            <span>Concluído</span>
+                        </span>
+                    </td>
                     <td style="text-align: center;">
-                        <div style="display: flex; gap: 6px; justify-content: center;">
+                        <div style="display: flex; gap: 6px; justify-content: center; align-items: center;">
                             ${prazoEncerrado ? '' : `
-                            <button class="btn-table-icon" style="color: #1d72f2;" title="Editar Atleta" onclick="fecharModalVisualizarEquipe(); abrirEdicaoAtleta('${num}', '${nome}', '${cpf}', '${rg}', '${nasc}', '${genero}', '${posicao}', '${whats}')">
-                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                            <button class="btn-table-icon" style="color: #1d4ed8; background: #eff6ff; border-color: #bfdbfe;" title="Editar Atleta" onclick="fecharModalVisualizarEquipe(); abrirEdicaoAtleta('${num}', '${nome}', '${cpf}', '${rg}', '${nasc}', '${genero}', '${posicao}', '${whats}')">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                             </button>`}
                             ${temFichaMenor ? `
-                            <button class="btn-table-icon" style="color: #0f766e;" title="Ficha Oficial" onclick="abrirFichaAtleta('${num}', '${nome}')">
-                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                            <button class="btn-table-icon" style="color: #047857; background: #ecfdf5; border-color: #a7f3d0;" title="Ficha Oficial A4" onclick="abrirFichaAtleta('${num}', '${nome}')">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
                             </button>` : ''}
                             ${prazoEncerrado ? `
                             <span title="Elenco congelado (inscrições encerradas)" style="display: inline-flex; align-items: center; color: #94a3b8; font-size: 11px;">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
                             </span>` : `
-                            <button class="btn-table-icon" style="color: #dc2626;" title="Remover da Equipe" onclick="removerAtletaDaEquipeTabela('row-roster-${num}', '${nome}')">
-                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                            <button class="btn-table-icon" style="color: #dc2626; background: #fef2f2; border-color: #fecaca;" title="Remover da Equipe" onclick="removerAtletaDaEquipeTabela('row-roster-${num}', '${nome}')">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                             </button>`}
                         </div>
                     </td>
@@ -2767,20 +2775,50 @@
                         if (serverData.campeonatos && Object.keys(serverData.campeonatos).length > 0) {
                             localStorage.setItem('avv_banco_campeonatos', JSON.stringify(serverData.campeonatos));
                         }
-                        if (Array.isArray(serverData.equipes) && serverData.equipes.length > 0) {
-                            const localDb = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
-                            serverData.equipes.forEach(eqSrv => {
-                                const idx = localDb.findIndex(l => String(l.id) === String(eqSrv.id) || (l.email && eqSrv.email && l.email.toLowerCase() === eqSrv.email.toLowerCase()));
-                                if (idx !== -1) {
-                                    localDb[idx] = { ...localDb[idx], ...eqSrv };
-                                } else {
-                                    localDb.push(eqSrv);
-                                }
-                            });
-                            localStorage.setItem('avv_equipes_completo_db', JSON.stringify(localDb));
+                        if (Array.isArray(serverData.equipes)) {
+                            // Se o servidor retornou a lista oficial de equipes, atualiza a base local
+                            if (serverData.equipes.length > 0) {
+                                const localDb = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
+                                serverData.equipes.forEach(eqSrv => {
+                                    const idx = localDb.findIndex(l => String(l.id) === String(eqSrv.id) || (l.email && eqSrv.email && l.email.toLowerCase() === eqSrv.email.toLowerCase()));
+                                    if (idx !== -1) {
+                                        localDb[idx] = { ...localDb[idx], ...eqSrv };
+                                    } else {
+                                        localDb.push(eqSrv);
+                                    }
+                                });
+                                localStorage.setItem('avv_equipes_completo_db', JSON.stringify(localDb));
+                            }
                         }
                     }
                 } catch (err) {}
+
+                // Valida se a conta da sessão ativa ainda é válida (não foi excluída nem bloqueada no ADM)
+                const dbAtualVerif = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
+                const emailSessaoNorm = (sessao.email || '').toLowerCase().trim();
+                const registrosDestaConta = dbAtualVerif.filter(e => (e.email || '').toLowerCase().trim() === emailSessaoNorm);
+
+                // Se houver registro com bloqueio ativo pelo ADM
+                const estaBloqueada = registrosDestaConta.some(e => e.bloqueado === true);
+                if (estaBloqueada) {
+                    localStorage.removeItem('avv_sessao_ativa');
+                    alert('Esta conta de agremiação foi temporariamente bloqueada pela Diretoria da AVV. Entre em contato com a organização.');
+                    window.location.replace('login.html');
+                    return;
+                }
+
+                // Se o banco possui equipes cadastradas no sistema, mas nenhuma pertence a esta conta (foi excluída pelo ADM)
+                if (dbAtualVerif.length > 0 && registrosDestaConta.length === 0) {
+                    // Confere se é uma conta recém-criada ou se foi excluída definitivamente
+                    const preInsc = JSON.parse(localStorage.getItem('avv_inscricoes_teste') || '[]');
+                    const temPreInsc = preInsc.some(item => (item.email || '').toLowerCase().trim() === emailSessaoNorm);
+                    if (!temPreInsc) {
+                        localStorage.removeItem('avv_sessao_ativa');
+                        alert('Esta conta de agremiação não foi encontrada ou foi excluída pela administração. Faça login novamente ou realize um novo cadastro.');
+                        window.location.replace('login.html');
+                        return;
+                    }
+                }
 
                 const dbEquipesCompleto = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
                 let equipesClube = obterEquipesDesteClube(dbEquipesCompleto, sessao);
@@ -2883,8 +2921,14 @@
             carregarCampeonatosPainelTime();
             renderizarListaInscricoesConfirmadas();
 
-            // Atualização do Timer do Torneio em tempo real a cada segundo
+            // Atualização do Timer do Torneio em tempo real a cada segundo nas duas visões
             setInterval(() => {
+                const tabCamp = document.getElementById('tab-campeonatos');
+                const viewLista = document.getElementById('subpane-lista-campeonatos');
+                if (tabCamp && tabCamp.classList.contains('active') && viewLista && viewLista.style.display !== 'none') {
+                    renderizarListaCampeonatosTime();
+                }
+
                 const viewDetalhes = document.getElementById('subpane-detalhes-campeonato');
                 if (viewDetalhes && viewDetalhes.style.display !== 'none' && campeonatoSelecionadoSubpagina) {
                     const timerInfo = calcularTempoRestanteTorneio(campeonatoSelecionadoSubpagina.dataLimiteEncerramento);
@@ -2965,9 +3009,42 @@
             renderizarListaCampeonatosTime();
         }
 
-        function calcularTempoRestanteTorneio(dataLimiteIso) {
-            if (!dataLimiteIso) return null;
-            const diff = new Date(dataLimiteIso).getTime() - Date.now();
+        function extrairDataLimiteCampeonato(c) {
+            if (!c) return null;
+            if (c.dataLimiteEncerramento) {
+                const d = new Date(c.dataLimiteEncerramento);
+                if (!isNaN(d.getTime())) return d;
+            }
+            if (c.fase) {
+                const m = c.fase.match(/(\d{2})\/(\d{2})\/(\d{4})(?:.*?(\d{2}):(\d{2}))?/);
+                if (m) {
+                    const dia = parseInt(m[1], 10);
+                    const mes = parseInt(m[2], 10) - 1;
+                    const ano = parseInt(m[3], 10);
+                    const hora = m[4] ? parseInt(m[4], 10) : 23;
+                    const min = m[5] ? parseInt(m[5], 10) : 59;
+                    const d = new Date(ano, mes, dia, hora, min, 0);
+                    if (!isNaN(d.getTime())) return d;
+                }
+            }
+            return new Date('2026-11-16T21:59:00.000Z');
+        }
+
+        function calcularTempoRestanteTorneio(dataLimiteOuCamp) {
+            let dataLimite = null;
+            if (typeof dataLimiteOuCamp === 'object' && dataLimiteOuCamp !== null && !(dataLimiteOuCamp instanceof Date)) {
+                dataLimite = extrairDataLimiteCampeonato(dataLimiteOuCamp);
+            } else if (typeof dataLimiteOuCamp === 'string') {
+                const d = new Date(dataLimiteOuCamp);
+                dataLimite = !isNaN(d.getTime()) ? d : extrairDataLimiteCampeonato({ fase: dataLimiteOuCamp });
+            } else if (dataLimiteOuCamp instanceof Date) {
+                dataLimite = dataLimiteOuCamp;
+            } else {
+                dataLimite = new Date('2026-11-16T21:59:00.000Z');
+            }
+
+            if (!dataLimite) return null;
+            const diff = dataLimite.getTime() - Date.now();
             if (diff <= 0) return { encerrado: true, texto: 'Encerrado' };
 
             const dias = Math.floor(diff / (1000 * 60 * 60 * 24));
@@ -3011,7 +3088,7 @@
                 if (!c || c.ativo === false || c.statusTorneio === 'inativo') return;
 
                 // Verificação automática do prazo limite: se esgotou, marca como encerrado
-                const timerInfo = calcularTempoRestanteTorneio(c.dataLimiteEncerramento);
+                const timerInfo = calcularTempoRestanteTorneio(c);
                 if (timerInfo && timerInfo.encerrado && c.statusTorneio === 'ativo') {
                     c.statusTorneio = 'encerrado';
                 }
@@ -3032,17 +3109,24 @@
 
                 let timerBadgeItem = '';
                 if (timerInfo && !timerInfo.encerrado) {
-                    timerBadgeItem = `<span style="background: #0f1c3f; color: #38bdf8; border: 1px solid #1e293b; font-size: 10.5px; font-weight: 700; padding: 2px 8px; border-radius: 4px; font-family: monospace; letter-spacing: 0.5px;">${timerInfo.texto}</span>`;
+                    timerBadgeItem = `<span style="background: linear-gradient(135deg, #091224 0%, #0f1c3f 100%); color: #38bdf8; border: 1px solid #1e3a8a; font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 4px; font-family: 'SFMono-Regular', Consolas, monospace; letter-spacing: 0.8px; box-shadow: 0 1px 4px rgba(0,0,0,0.2);">⏱ ${timerInfo.texto}</span>`;
+                } else if (timerInfo && timerInfo.encerrado) {
+                    timerBadgeItem = `<span style="background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; font-size: 10.5px; font-weight: 800; padding: 3px 8px; border-radius: 4px;">ENCERRADO</span>`;
                 }
 
                 item.innerHTML = `
                     <div class="item-left-block">
-                        <img src="logos/logo_avv.png" alt="Escudo" class="item-shield-img">
+                        <img src="${c.banner || 'avv_superliga_athlete.png'}" alt="${c.nome}" class="item-shield-img" style="object-fit: cover; border-radius: 4px; width: 44px; height: 44px;">
                         <div class="item-text-info">
-                            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                                <h4>${c.nome}</h4>
-                                ${badgeStatus}
-                                ${timerBadgeItem}
+                            <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;">
+                                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                                    <h4 style="margin: 0; font-size: 13.5px; font-weight: 800; color: #0f1c3f;">${c.nome}</h4>
+                                    ${badgeStatus}
+                                </div>
+                                <div style="display: inline-flex; align-items: center; gap: 6px; background: #0f1c3f; border: 1px solid #1e3a8a; padding: 4px 10px; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.15);">
+                                    <span style="font-size: 9.5px; text-transform: uppercase; color: #94a3b8; font-weight: 700; letter-spacing: 0.5px;">Encerra em:</span>
+                                    <span style="color: #38bdf8; font-size: 12px; font-weight: 900; font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace; letter-spacing: 0.8px;">${timerInfo ? timerInfo.texto : '--:--:--'}</span>
+                                </div>
                             </div>
                             <div class="item-meta-sub">
                                 <span><strong>Modalidade:</strong> ${c.modalidade || 'Quadra'}</span>
@@ -3211,7 +3295,8 @@
                 // 2. Busca equipes REAIS deste clube que atendam a essa categoria
                 const equipesDaCategoria = equipesClube.filter(eq => {
                     const catEq = (eq.categoria || '').trim().toLowerCase();
-                    return catEq === catNorm;
+                    const catsArray = Array.isArray(eq.categorias) ? eq.categorias.map(c => String(c).trim().toLowerCase()) : [];
+                    return catEq === catNorm || catsArray.includes(catNorm);
                 });
 
                 const temEquipe = equipesDaCategoria.length > 0;
@@ -3219,10 +3304,14 @@
 
                 // 3. Conta atletas vinculados a essa equipe ou a essa categoria no clube
                 let totalAtletas = 0;
-                if (equipeAlvo && Array.isArray(equipeAlvo.atletas)) {
+                if (equipeAlvo && Array.isArray(equipeAlvo.atletas) && equipeAlvo.atletas.length > 0) {
                     totalAtletas = equipeAlvo.atletas.length;
                 } else if (temEquipe) {
-                    totalAtletas = atletasGeraisClube.filter(at => (at.categoria || '').trim().toLowerCase() === catNorm).length;
+                    // Busca atletas no banco do clube que tenham compatibilidade com esta categoria
+                    totalAtletas = atletasGeraisClube.filter(at => {
+                        const catAt = String(at.categoria || '').trim().toLowerCase();
+                        return catAt.includes(catNorm) || catAt.includes(extrairCategoriaBase(categoria).toLowerCase());
+                    }).length;
                 }
 
                 const card = document.createElement('div');
@@ -3442,6 +3531,9 @@
                             cidade: eq.cidade,
                             estado: eq.estado,
                             categoria: cat,
+                            categorias: eq.categorias || [cat],
+                            atletas: Array.isArray(eq.atletas) ? eq.atletas : [],
+                            comissao: Array.isArray(eq.comissao) ? eq.comissao : [],
                             status: eq.status,
                             protocolo: eq.protocolo || ('AVV-' + eq.numeroInscricao)
                         };
@@ -3544,8 +3636,8 @@
                                 </div>
                             </div>
                             <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
-                                <button type="button" class="btn-action-text-green" title="Gerenciar Atletas da Equipe" onclick="switchFedTab('meustimes', document.querySelectorAll('.sidebar-menu-fed button')[2])" style="padding: 6px 12px; font-size: 11px; height: 32px; white-space: nowrap; text-transform: none; font-weight: 700; width: auto;">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                                <button type="button" class="btn-action-text-green" title="Visualizar Elenco e Ficha Cadastral da Equipe" onclick="abrirModalElencoPorInscricao('${ins.numeroInscricao}', '${(ins.equipeNome || '').replace(/'/g, "\\'")}', '${ins.categoria || ''}')" style="padding: 6px 14px; font-size: 11px; height: 32px; white-space: nowrap; text-transform: none; font-weight: 700; width: auto; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 1px 3px rgba(22,163,74,0.3);">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                                     <span>Ver Elenco</span>
                                 </button>
                                 <button type="button" title="Cancelar / Excluir Inscrição" onclick="cancelarInscricaoCampeonato('${ins.numeroInscricao}', '${(ins.campeonatoNome || '').replace(/'/g, "\\'")}')" style="background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; padding: 6px 10px; border-radius: 4px; font-size: 11px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; height: 32px; white-space: nowrap; transition: all 0.2s ease;">
@@ -3589,6 +3681,39 @@
 
                 container.appendChild(card);
             });
+        }
+
+        function abrirModalElencoPorInscricao(numInscricao, equipeNome, categoria) {
+            const db = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
+            const sessao = JSON.parse(localStorage.getItem('avv_sessao_ativa') || 'null');
+            const equipesClube = obterEquipesDesteClube(db, sessao);
+
+            const nomeLimpo = String(equipeNome || '').trim().toLowerCase();
+            const catLimpa = String(categoria || '').trim().toLowerCase();
+            const numLimpo = String(numInscricao || '').trim();
+
+            // 1. Tenta encontrar a equipe exata cadastrada
+            let equipeAlvo = equipesClube.find(e => 
+                String(e.numeroInscricao) === numLimpo ||
+                String(e.numeroInscricaoTorneio) === numLimpo ||
+                (e.nomeTime && e.nomeTime.trim().toLowerCase() === nomeLimpo && e.categoria && e.categoria.trim().toLowerCase() === catLimpa)
+            );
+
+            // 2. Tenta por nome da equipe
+            if (!equipeAlvo) {
+                equipeAlvo = equipesClube.find(e => e.nomeTime && e.nomeTime.trim().toLowerCase() === nomeLimpo);
+            }
+
+            // 3. Fallback: equipe atualmente selecionada ou primeira do clube
+            if (!equipeAlvo) {
+                equipeAlvo = equipeSelecionadaVisualizacao || equipesClube[0] || obterEquipeAtualDoBanco().equipe;
+            }
+
+            if (equipeAlvo) {
+                abrirModalVisualizarEquipe(equipeAlvo);
+            } else {
+                avvAlert('Não foi possível localizar os dados desta equipe no momento.', 'Aviso', 'warning');
+            }
         }
 
         async function cancelarInscricaoCampeonato(numeroInscricao, nomeCamp) {
@@ -4804,9 +4929,10 @@
         // =========================================================================
         // FUNÇÕES DA SUB-PÁGINA: VISUALIZAR EQUIPE E GERENCIAR ATLETAS EM LISTA
         // =========================================================================
-        function abrirModalVisualizarEquipe() {
-            const eq = equipeSelecionadaVisualizacao || obterEquipeAtualDoBanco().equipe;
+        function abrirModalVisualizarEquipe(equipeAlvo) {
+            const eq = equipeAlvo || equipeSelecionadaVisualizacao || obterEquipeAtualDoBanco().equipe;
             if (!eq) return;
+            equipeSelecionadaVisualizacao = eq;
 
             // Sincroniza dados da agremiação no cabeçalho do modal
             const nomeEquipe = eq.nomeTime || document.getElementById('team-name-card')?.textContent.trim() || 'AVV VILHENA / SICREDI';
@@ -4835,6 +4961,89 @@
             document.getElementById('modal-visualizar-equipe').style.display = 'none';
         }
 
+        let cacheAtletasElegiveisModal = [];
+
+        function renderizarLinhasTabelaModalAtletas(atletasFiltrados, equipe, catCompleta, naipeEquipe) {
+            const corpoBanco = document.getElementById('tabela-banco-atletas-corpo');
+            if (!corpoBanco) return;
+            corpoBanco.innerHTML = '';
+
+            if (atletasFiltrados.length === 0) {
+                corpoBanco.innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align: center; padding: 24px 16px; color: #64748b; font-size: 12.5px;">
+                            <div style="font-weight: 700; color: #b45309; margin-bottom: 4px;">Nenhum atleta encontrado para esta categoria</div>
+                            <div style="font-size: 11.5px;">Alterne a categoria no filtro acima para visualizar outros atletas.</div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            atletasFiltrados.forEach(atleta => {
+                const num = atleta.id;
+                const nome = (atleta.nome || 'ATLETA').toUpperCase();
+                const cpf = atleta.cpf || '---';
+                const posicao = atleta.posicao || 'Ponteiro';
+                const genero = atleta.genero || naipeEquipe;
+                const foto = atleta.foto || 'logos/mascote_coelho.png';
+                
+                const jaNoElenco = Array.isArray(equipe.atletas) && equipe.atletas.some(a => String(a.id) === String(num));
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="text-align: center;">
+                        <input type="checkbox" class="chk-atleta-selecionar-modal" value="${num}" ${jaNoElenco ? 'disabled title="Já está no elenco"' : 'title="Selecionar atleta"'} onchange="aoMudarCheckboxAtletaModal()" style="cursor: ${jaNoElenco ? 'not-allowed' : 'pointer'}; width: 16px; height: 16px;">
+                    </td>
+                    <td style="text-align: center;">
+                        <img src="${foto}" class="atleta-roster-thumb" alt="Foto">
+                    </td>
+                    <td>
+                        <strong style="color: #1e293b; font-size: 13px;">${nome}</strong>
+                        <div style="font-size: 11px; color: #64748b; margin-top: 2px;">CPF: ${cpf} &bull; ${atleta.categoria || catCompleta}</div>
+                    </td>
+                    <td><strong style="color: #0f1c3f; font-size: 13px;">${num}</strong></td>
+                    <td><span style="color: #1d72f2; font-weight: 700;">${posicao}</span></td>
+                    <td>
+                        ${jaNoElenco 
+                            ? '<span style="font-size: 10px; font-weight: 800; color: #15803d; background: #dcfce7; padding: 3px 8px; border-radius: 3px;">✓ NO ELENCO</span>'
+                            : '<span style="font-size: 10px; font-weight: 800; color: #0369a1; background: #e0f2fe; padding: 3px 8px; border-radius: 3px;">APTO</span>'
+                        }
+                    </td>
+                    <td style="text-align: center;">
+                        ${jaNoElenco
+                            ? '<button disabled style="background: #e2e8f0; color: #64748b; border: 1px solid #cbd5e1; padding: 5px 14px; border-radius: 4px; font-size: 11px; font-weight: 700; cursor: not-allowed;">Já Adicionado</button>'
+                            : `<button onclick="vincularAtletaAEquipeAtual('${num}')" class="btn-action-text-green" style="font-size: 11px; padding: 6px 14px; height: auto; text-transform: uppercase; font-weight: 700; letter-spacing: 0.3px;">+ Adicionar</button>`
+                        }
+                    </td>
+                `;
+                corpoBanco.appendChild(tr);
+            });
+        }
+
+        function aoMudarFiltroCategoriaModalAtletas() {
+            const equipe = equipeSelecionadaVisualizacao || obterEquipeAtualDoBanco().equipe;
+            if (!equipe) return;
+            const sel = document.getElementById('modal-filtro-categoria-atleta');
+            const valor = sel ? sel.value : 'todas';
+            const naipeEquipe = normalizarNaipe(equipe.genero || equipe.naipe || equipe.categoria);
+            const catBaseEquipe = extrairCategoriaBase(equipe.categoria || (equipe.categorias && equipe.categorias[0]));
+            const catCompleta = `${catBaseEquipe} ${naipeEquipe}`;
+
+            let filtrados = cacheAtletasElegiveisModal;
+            if (valor !== 'todas') {
+                filtrados = cacheAtletasElegiveisModal.filter(at => {
+                    const catAt = String(at.categoria || '').toLowerCase();
+                    return catAt.includes(valor.toLowerCase());
+                });
+            }
+            renderizarLinhasTabelaModalAtletas(filtrados, equipe, catCompleta, naipeEquipe);
+
+            const chkTodos = document.getElementById('chk-selecionar-todos-atletas-modal');
+            if (chkTodos) chkTodos.checked = false;
+            aoMudarCheckboxAtletaModal();
+        }
+
         function abrirModalAdicionarAtletaEquipe() {
             const equipe = equipeSelecionadaVisualizacao || obterEquipeAtualDoBanco().equipe;
             if (!equipe) {
@@ -4857,63 +5066,32 @@
             const elSub = document.querySelector('#modal-adicionar-atleta-time span[style*="font-size: 11px"]');
             if (elSub) elSub.textContent = `Elegibilidade: Apenas atletas do gênero "${naipeEquipe}" e categoria "${catBaseEquipe}"`;
 
-            const corpoBanco = document.getElementById('tabela-banco-atletas-corpo');
-            if (!corpoBanco) return;
-
-            corpoBanco.innerHTML = '';
             const todosAtletas = obterBancoAtletasClube();
             const atletasElegiveis = todosAtletas.filter(at => atletaCompativelComEquipe(at, equipe));
+            cacheAtletasElegiveisModal = atletasElegiveis;
 
-            if (atletasElegiveis.length === 0) {
-                corpoBanco.innerHTML = `
-                    <tr>
-                        <td colspan="7" style="text-align: center; padding: 28px 16px; color: #64748b; font-size: 12.5px;">
-                            <div style="font-weight: 700; color: #b45309; margin-bottom: 6px;">Nenhum atleta elegível encontrado no cadastro da agremiação</div>
-                            <div style="line-height: 1.5;">Para inscrever atletas nesta equipe (<strong>${catCompleta}</strong>), cadastre jogadores(as) na aba <strong>"Atletas"</strong> selecionando o gênero <strong>${naipeEquipe}</strong> e a categoria <strong>${catBaseEquipe}</strong>.</div>
-                        </td>
-                    </tr>
-                `;
-            } else {
-                atletasElegiveis.forEach(atleta => {
-                    const num = atleta.id;
-                    const nome = (atleta.nome || 'ATLETA').toUpperCase();
-                    const cpf = atleta.cpf || '---';
-                    const posicao = atleta.posicao || 'Ponteiro';
-                    const genero = atleta.genero || naipeEquipe;
-                    const foto = atleta.foto || 'logos/mascote_coelho.png';
-                    
-                    const jaNoElenco = Array.isArray(equipe.atletas) && equipe.atletas.some(a => String(a.id) === String(num));
-
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td style="text-align: center;">
-                            <input type="checkbox" class="chk-atleta-selecionar-modal" value="${num}" ${jaNoElenco ? 'disabled title="Já está no elenco"' : 'title="Selecionar atleta"'} onchange="aoMudarCheckboxAtletaModal()" style="cursor: ${jaNoElenco ? 'not-allowed' : 'pointer'}; width: 16px; height: 16px;">
-                        </td>
-                        <td style="text-align: center;">
-                            <img src="${foto}" class="atleta-roster-thumb" alt="Foto">
-                        </td>
-                        <td>
-                            <strong style="color: #1e293b; font-size: 13px;">${nome}</strong>
-                            <div style="font-size: 11px; color: #64748b; margin-top: 2px;">CPF: ${cpf} &bull; ${atleta.categoria || catCompleta}</div>
-                        </td>
-                        <td><strong style="color: #0f1c3f; font-size: 13px;">${num}</strong></td>
-                        <td><span style="color: #1d72f2; font-weight: 700;">${posicao}</span></td>
-                        <td>
-                            ${jaNoElenco 
-                                ? '<span style="font-size: 10px; font-weight: 800; color: #15803d; background: #dcfce7; padding: 3px 8px; border-radius: 3px;">✓ NO ELENCO</span>'
-                                : '<span style="font-size: 10px; font-weight: 800; color: #0369a1; background: #e0f2fe; padding: 3px 8px; border-radius: 3px;">APTO</span>'
-                            }
-                        </td>
-                        <td style="text-align: center;">
-                            ${jaNoElenco
-                                ? '<button disabled style="background: #e2e8f0; color: #64748b; border: 1px solid #cbd5e1; padding: 5px 14px; border-radius: 4px; font-size: 11px; font-weight: 700; cursor: not-allowed;">Já Adicionado</button>'
-                                : `<button onclick="vincularAtletaAEquipeAtual('${num}')" class="btn-action-text-green" style="font-size: 11px; padding: 6px 14px; height: auto; text-transform: uppercase; font-weight: 700; letter-spacing: 0.3px;">+ Adicionar</button>`
-                            }
-                        </td>
-                    `;
-                    corpoBanco.appendChild(tr);
+            // Popula o seletor de categorias dinamicamente com as categorias presentes no banco
+            const selectFiltro = document.getElementById('modal-filtro-categoria-atleta');
+            if (selectFiltro) {
+                selectFiltro.innerHTML = '<option value="todas">Todas as Categorias</option>';
+                const catsUnicas = new Set();
+                atletasElegiveis.forEach(at => {
+                    if (at.categoria) {
+                        at.categoria.split(/[,;/]/).forEach(c => {
+                            const trimmed = c.trim();
+                            if (trimmed) catsUnicas.add(trimmed);
+                        });
+                    }
+                });
+                Array.from(catsUnicas).sort().forEach(cat => {
+                    const opt = document.createElement('option');
+                    opt.value = cat;
+                    opt.textContent = cat;
+                    selectFiltro.appendChild(opt);
                 });
             }
+
+            renderizarLinhasTabelaModalAtletas(atletasElegiveis, equipe, catCompleta, naipeEquipe);
 
             const chkTodos = document.getElementById('chk-selecionar-todos-atletas-modal');
             if (chkTodos) chkTodos.checked = false;
