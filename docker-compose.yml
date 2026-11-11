@@ -16,6 +16,12 @@ services:
       - DB_USER=orionx_db
       - DB_PASSWORD=@_sist.orion2904
       - DB_NAME=avv_db
+      - SMTP_HOST=162.241.203.81
+      - SMTP_PORT=465
+      - SMTP_SECURE=true
+      - SMTP_USER=sistema@avvvoleibol.com.br
+      - SMTP_PASS=PlTKigQQz4Awe6^k
+      - SMTP_FROM="Associação Vilhenense de Voleibol <sistema@avvvoleibol.com.br>"
     deploy:
       restart_policy:
         condition: on-failure

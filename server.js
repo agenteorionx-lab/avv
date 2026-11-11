@@ -511,33 +511,24 @@ let transporterCache = null;
 async function criarTransporter() {
     if (transporterCache) return transporterCache;
 
-    if (process.env.SMTP_USER && process.env.SMTP_PASS) {
-        transporterCache = nodemailer.createTransport({
-            host: process.env.SMTP_HOST || '162.241.203.81',
-            port: Number(process.env.SMTP_PORT) || 465,
-            secure: process.env.SMTP_SECURE ? process.env.SMTP_SECURE === 'true' : true,
-            pool: true,
-            maxConnections: 3,
-            tls: {
-                rejectUnauthorized: false
-            },
-            auth: {
-                user: process.env.SMTP_USER,
-                pass: process.env.SMTP_PASS
-            }
-        });
-        return transporterCache;
-    }
+    const user = process.env.SMTP_USER || 'sistema@avvvoleibol.com.br';
+    const pass = process.env.SMTP_PASS || 'PlTKigQQz4Awe6^k';
+    const host = process.env.SMTP_HOST || '162.241.203.81';
+    const port = Number(process.env.SMTP_PORT) || 465;
+    const secure = process.env.SMTP_SECURE ? process.env.SMTP_SECURE === 'true' : true;
 
-    const contaTeste = await nodemailer.createTestAccount();
     transporterCache = nodemailer.createTransport({
-        host: 'smtp.ethereal.email',
-        port: 587,
-        secure: false,
+        host,
+        port,
+        secure,
         pool: true,
+        maxConnections: 3,
+        tls: {
+            rejectUnauthorized: false
+        },
         auth: {
-            user: contaTeste.user,
-            pass: contaTeste.pass
+            user,
+            pass
         }
     });
     return transporterCache;
