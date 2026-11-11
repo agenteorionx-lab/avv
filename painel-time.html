@@ -392,18 +392,18 @@
                         </button>
                     </div>
 
-                    <!-- GUIA PASSO A PASSO PARA HOMOLOGAÇÃO OFICIAL -->
-                    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-left: 4px solid #c5a021; border-radius: 6px; padding: 14px 18px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+                    <!-- GUIA PASSO A PASSO PARA INSCRIÇÃO DIRETA -->
+                    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-left: 4px solid #10b981; border-radius: 6px; padding: 14px 18px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
                         <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 10px;">
                             <div style="display: flex; align-items: center; gap: 8px;">
-                                <div style="width: 24px; height: 24px; border-radius: 50%; background: #fef3c7; color: #b45309; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800;">
-                                    i
+                                <div style="width: 24px; height: 24px; border-radius: 50%; background: #dcfce7; color: #15803d; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800;">
+                                    ✓
                                 </div>
                                 <h4 style="margin: 0; font-size: 13px; font-weight: 800; color: #0f1c3f; text-transform: uppercase; letter-spacing: 0.3px;">
-                                    Como funciona a homologação da equipe pela Federação (AVV)
+                                    Como funciona a inscrição e habilitação da sua equipe
                                 </h4>
                             </div>
-                            <span style="font-size: 11px; color: #64748b; font-weight: 600;">Regulamento Oficial 2026</span>
+                            <span style="font-size: 11px; color: #15803d; font-weight: 700; background: #f0fdf4; padding: 2px 8px; border-radius: 3px;">Inscrição Direta Habilitada</span>
                         </div>
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; font-size: 12px; color: #475569;">
                             <div style="background: #f8fafc; padding: 10px 12px; border-radius: 4px; border: 1px solid #e2e8f0;">
@@ -412,11 +412,11 @@
                             </div>
                             <div style="background: #f8fafc; padding: 10px 12px; border-radius: 4px; border: 1px solid #e2e8f0;">
                                 <strong style="color: #0f1c3f; display: block; margin-bottom: 2px;">Passo 2: Vincular no Mínimo 6 Atletas</strong>
-                                Clique em <strong>Visualizar</strong> na equipe e adicione pelo menos 6 atletas aptos no elenco.
+                                Clique em <strong>Visualizar</strong> na equipe e adicione pelo menos 6 atletas elegíveis ao elenco.
                             </div>
                             <div style="background: #f0fdf4; padding: 10px 12px; border-radius: 4px; border: 1px solid #bbf7d0;">
-                                <strong style="color: #15803d; display: block; margin-bottom: 2px;">Passo 3: Envio Automático ao ADM</strong>
-                                Ao atingir 6 atletas e solicitar a inscrição no campeonato, a equipe vai automaticamente para a fila de homologação.
+                                <strong style="color: #15803d; display: block; margin-bottom: 2px;">Passo 3: Equipe Pronta para Jogar</strong>
+                                Ao completar 6 atletas, a equipe torna-se <strong>APTA</strong> imediatamente, com ficha oficial pronta para impressão.
                             </div>
                         </div>
                     </div>
@@ -1000,10 +1000,22 @@
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
                                 Imprimir Fichas Selecionadas
                             </button>
-                            <button onclick="abrirModalAdicionarAtletaEquipe()" class="btn-action-text-green" style="font-size: 11px; padding: 6px 14px; height: 32px; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px;">
+                            <button id="btn-modal-incluir-atleta" onclick="abrirModalAdicionarAtletaEquipe()" class="btn-action-text-green" style="font-size: 11px; padding: 6px 14px; height: 32px; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px;">
                                 + Incluir Atleta na Equipe
                             </button>
                         </div>
+                    </div>
+
+                    <!-- AVISO DE CONGELAMENTO DE ELENCO POR PRAZO ENCERRADO -->
+                    <div id="aviso-elenco-bloqueado-prazo" style="display: none; padding: 12px 16px; background: #fffbeb; border-bottom: 1px solid #fef3c7; color: #92400e; font-size: 12px; font-weight: 600; align-items: center; gap: 8px;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                        <span><strong>Inscrições Encerradas para esta competição:</strong> O elenco foi congelado oficialmente. Alterações só podem ser liberadas pela Diretoria da AVV em casos excepcionais.</span>
+                    </div>
+
+                    <!-- AVISO DE LIBERAÇÃO EXTRAORDINÁRIA CONCEDIDA PELO ADM -->
+                    <div id="aviso-elenco-liberado-extraordinario" style="display: none; padding: 12px 16px; background: #f0fdf4; border-bottom: 1px solid #bbf7d0; color: #166534; font-size: 12px; font-weight: 700; align-items: center; gap: 8px;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        <span><strong>Edição Extraordinária Liberada:</strong> A Diretoria da AVV concedeu autorização especial para que você realize alterações ou substituições no elenco desta equipe.</span>
                     </div>
 
                     <div style="overflow-x: auto;">
@@ -1475,17 +1487,15 @@
                 let avisoMinimoAtletas = '';
 
                 if (atletasVinculados < 6) {
-                    statusBadge = '<span style="font-size: 10px; font-weight: 800; color: #b45309; background: #fef3c7; padding: 2px 7px; border-radius: 3px; border: 1px solid #fde68a;">INCOMPLETO (' + atletasVinculados + '/6)</span>';
+                    statusBadge = '<span style="font-size: 10px; font-weight: 800; color: #b45309; background: #fef3c7; padding: 2px 7px; border-radius: 3px; border: 1px solid #fde68a;">ELENCO PENDENTE (' + atletasVinculados + '/6)</span>';
                     avisoMinimoAtletas = `
                         <div style="margin-top: 6px; display: inline-flex; align-items: center; gap: 5px; background: #fffbeb; border: 1px solid #fef3c7; color: #b45309; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;">
                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-                            Mínimo de 6 atletas obrigatório para envio e homologação oficial (atual: ${atletasVinculados}).
+                            Mínimo de 6 atletas obrigatório para validação oficial da equipe (atual: ${atletasVinculados}).
                         </div>
                     `;
-                } else if (eq.status === 'Homologado') {
-                    statusBadge = '<span style="font-size: 10px; font-weight: 800; color: #15803d; background: #dcfce7; padding: 2px 7px; border-radius: 3px;">HOMOLOGADO</span>';
                 } else {
-                    statusBadge = '<span style="font-size: 10px; font-weight: 800; color: #1d4ed8; background: #dbeafe; padding: 2px 7px; border-radius: 3px;">AGUARDANDO HOMOLOGAÇÃO</span>';
+                    statusBadge = '<span style="font-size: 10px; font-weight: 800; color: #15803d; background: #dcfce7; padding: 2px 7px; border-radius: 3px; border: 1px solid #bbf7d0;">✓ EQUIPE APTA</span>';
                 }
 
                 item.innerHTML = `
@@ -2136,6 +2146,27 @@
             atualizarContadoresTime();
         }
 
+        // Verifica se as inscrições do campeonato associado a uma equipe já foram encerradas oficialmente
+        function verificarPrazoInscricaoEquipeEncerrado(equipe) {
+            if (!equipe) return false;
+            // Se o ADM concedeu liberação extraordinária para este time
+            if (equipe.liberacaoExtraordinariaAdm === true) return false;
+
+            const campId = equipe.campeonatoId;
+            if (!campId) return false;
+
+            // Busca no banco de campeonatos se o prazo já venceu
+            const c = bancoCampeonatos[campId];
+            if (!c) return false;
+
+            if (c.statusTorneio === 'encerrado') return true;
+            if (c.dataLimiteEncerramento) {
+                const timer = calcularTempoRestanteTorneio(c.dataLimiteEncerramento);
+                if (timer && timer.encerrado) return true;
+            }
+            return false;
+        }
+
         // Renderiza o elenco oficial exclusivo da equipe selecionada no modal "Visualizar Equipe"
         function renderizarRosterEquipeModal(equipe) {
             const corpoRoster = document.getElementById('vis-tabela-atletas-corpo');
@@ -2143,6 +2174,17 @@
 
             corpoRoster.innerHTML = '';
             const elenco = (equipe && Array.isArray(equipe.atletas)) ? equipe.atletas : [];
+            const prazoEncerrado = verificarPrazoInscricaoEquipeEncerrado(equipe);
+
+            // Controle de visibilidade do botão "+ Incluir Atleta" e dos avisos
+            const btnIncluir = document.getElementById('btn-modal-incluir-atleta');
+            const avisoBloqueio = document.getElementById('aviso-elenco-bloqueado-prazo');
+            const avisoLiberacao = document.getElementById('aviso-elenco-liberado-extraordinario');
+            const isLiberadoExtraordinario = equipe && equipe.liberacaoExtraordinariaAdm === true;
+
+            if (btnIncluir) btnIncluir.style.display = prazoEncerrado ? 'none' : 'inline-flex';
+            if (avisoBloqueio) avisoBloqueio.style.display = (prazoEncerrado && !isLiberadoExtraordinario) ? 'flex' : 'none';
+            if (avisoLiberacao) avisoLiberacao.style.display = isLiberadoExtraordinario ? 'flex' : 'none';
 
             if (elenco.length === 0) {
                 corpoRoster.innerHTML = `
@@ -2150,9 +2192,13 @@
                         <td colspan="7" style="text-align: center; padding: 32px 16px; color: #64748b; font-size: 13px;">
                             <div style="font-weight: 700; color: #334155; margin-bottom: 6px;">Nenhum atleta vinculado ao elenco desta equipe.</div>
                             <div style="margin-bottom: 12px; font-size: 12px; color: #94a3b8;">Vincule atletas elegíveis do banco do clube para participar das competições.</div>
+                            ${prazoEncerrado ? `
+                            <div style="display: inline-block; padding: 6px 14px; background: #fee2e2; color: #991b1b; font-size: 11px; font-weight: 700; border-radius: 4px;">
+                                Inscrições Encerradas para esta Competição
+                            </div>` : `
                             <button onclick="abrirModalAdicionarAtletaEquipe()" class="btn-action-text-green" style="font-size: 11px; padding: 6px 14px; height: 32px; display: inline-flex; align-items: center; gap: 6px;">
                                 + Incluir Atleta na Equipe
-                            </button>
+                            </button>`}
                         </td>
                     </tr>
                 `;
@@ -2188,16 +2234,21 @@
                     <td><span class="badge-status-concluido">✓ Concluído</span></td>
                     <td style="text-align: center;">
                         <div style="display: flex; gap: 6px; justify-content: center;">
+                            ${prazoEncerrado ? '' : `
                             <button class="btn-table-icon" style="color: #1d72f2;" title="Editar Atleta" onclick="fecharModalVisualizarEquipe(); abrirEdicaoAtleta('${num}', '${nome}', '${cpf}', '${rg}', '${nasc}', '${genero}', '${posicao}', '${whats}')">
                                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                            </button>
+                            </button>`}
                             ${temFichaMenor ? `
                             <button class="btn-table-icon" style="color: #0f766e;" title="Ficha Oficial" onclick="abrirFichaAtleta('${num}', '${nome}')">
                                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
                             </button>` : ''}
+                            ${prazoEncerrado ? `
+                            <span title="Elenco congelado (inscrições encerradas)" style="display: inline-flex; align-items: center; color: #94a3b8; font-size: 11px;">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                            </span>` : `
                             <button class="btn-table-icon" style="color: #dc2626;" title="Remover da Equipe" onclick="removerAtletaDaEquipeTabela('row-roster-${num}', '${nome}')">
                                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                            </button>
+                            </button>`}
                         </div>
                     </td>
                 `;
@@ -3943,7 +3994,7 @@
                 }
 
                 if (!equipeSalva) {
-                    // Modo Criação de Nova Equipe / Novo Time do Clube
+                    // Modo Criação de Nova Equipe / Novo Time do Clube (Direto Apto / Ativo)
                     const novaEq = {
                         id: 'eq-' + Date.now(),
                         numeroInscricao: String(numInscricao),
@@ -3956,7 +4007,7 @@
                         estado: uf,
                         responsavelNome: sessao.responsavelNome || 'Dirigente Responsável',
                         email: sessao.email || 'contato@equipe.com.br',
-                        status: 'Pendente',
+                        status: 'Homologado',
                         logo: teamLogoDataUrl || 'logos/logo_avv.png',
                         categoria: categoriaCompleta,
                         categorias: [categoriaCompleta],
@@ -4005,12 +4056,12 @@
 
                     // Exibe confirmação visual e passa suavemente para a próxima etapa (cadastro do elenco de atletas)
                     const querCadastrarAtletas = await avvConfirm(
-                        `Equipe "${nome.toUpperCase()}" criada na categoria "${categoriaCompleta}"!\n\nImportante: Para que a inscrição seja homologada oficialmente pela organização, a equipe deverá conter no mínimo 6 atletas cadastrados (atual: 0).\n\nDeseja cadastrar os atletas do elenco agora ou confirmar a inscrição e completar o elenco depois?`,
+                        `Equipe "${nome.toUpperCase()}" criada na categoria "${categoriaCompleta}"!\n\nLembrete: Para que a equipe fique apta a disputar a competição, ela deve possuir no mínimo 6 atletas cadastrados no elenco (atual: 0).\n\nDeseja cadastrar os atletas do elenco agora ou completar o elenco depois?`,
                         'CADASTRO DE ELENCO & INSCRIÇÃO',
                         {
                             tipo: 'success',
                             textoConfirmar: 'Cadastrar Atletas Agora',
-                            textoCancelar: 'Confirmar Inscrição Direta',
+                            textoCancelar: 'Completar Elenco Depois',
                             corConfirmar: '#16a34a'
                         }
                     );
@@ -4240,6 +4291,11 @@
                 return;
             }
 
+            if (verificarPrazoInscricaoEquipeEncerrado(equipe)) {
+                avvAlert('As inscrições deste campeonato foram encerradas oficialmente. O elenco desta equipe está congelado para esta competição.', 'Inscrições Encerradas', 'warning');
+                return;
+            }
+
             const naipeEquipe = normalizarNaipe(equipe.genero || equipe.naipe || equipe.categoria);
             const catBaseEquipe = extrairCategoriaBase(equipe.categoria || (equipe.categorias && equipe.categorias[0]));
             const catCompleta = `${catBaseEquipe} ${naipeEquipe}`;
@@ -4382,6 +4438,12 @@
         }
 
         async function removerAtletaDaEquipeTabela(rowId, nome) {
+            const equipe = equipeSelecionadaVisualizacao || obterEquipeAtualDoBanco().equipe;
+            if (equipe && verificarPrazoInscricaoEquipeEncerrado(equipe)) {
+                avvAlert('As inscrições deste campeonato foram encerradas oficialmente. O elenco desta equipe está congelado para esta competição.', 'Inscrições Encerradas', 'warning');
+                return;
+            }
+
             const confirmou = await avvConfirm(`Deseja desvincular o atleta "${nome}" desta equipe?\n\n(O atleta continuará cadastrado no clube e disponível para outros times compatíveis).`, 'Desvincular do Elenco', {
                 tipo: 'danger',
                 textoConfirmar: 'Sim, Desvincular',

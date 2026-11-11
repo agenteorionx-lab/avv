@@ -523,6 +523,10 @@
                     exibirAlertaLogin('E-mail não encontrado no sistema. Faça a pré-inscrição da sua equipe antes de acessar.', 'error');
                     return;
                 }
+                if (eq.bloqueado === true) {
+                    exibirAlertaLogin('Esta conta de agremiação está temporariamente bloqueada pela Diretoria da AVV. Entre em contato com a organização.', 'error');
+                    return;
+                }
                 if (eq.senha && eq.senha !== senha) {
                     exibirAlertaLogin('Senha incorreta para esta agremiação. Verifique e tente novamente.', 'error');
                     return;

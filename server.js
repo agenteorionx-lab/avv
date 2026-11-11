@@ -315,6 +315,15 @@ app.post(['/api/auth/login', '/avv/api/auth/login'], (req, res) => {
             });
         }
 
+        // Verifica se a conta do clube está bloqueada pelo administrador
+        if (eq.bloqueado === true) {
+            return res.status(403).json({
+                ok: false,
+                bloqueado: true,
+                mensagem: 'Esta conta de agremiação está temporariamente bloqueada pela Diretoria da AVV. Entre em contato com a organização para regularização.'
+            });
+        }
+
         const senhaValida = eq.senhaHash
             ? verificarSenhaSegura(senha, eq.senhaHash)
             : (!eq.senha || eq.senha === senha);
