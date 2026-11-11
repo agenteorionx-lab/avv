@@ -477,9 +477,11 @@
 
                         const sessao = {
                             tipo: 'time',
-                            equipeId: eqLocal.id,
+                            clubeId: eqLocal.id,
+                            equipeId: eqLocal.isContaClube ? null : eqLocal.id,
                             email: eqLocal.email,
-                            nomeTime: eqLocal.nomeTime,
+                            nomeClube: eqLocal.nomeClube || eqLocal.nomeTime,
+                            nomeTime: eqLocal.nomeClube || eqLocal.nomeTime,
                             responsavelNome: eqLocal.responsavelNome || 'Dirigente Responsável',
                             protocolo: eqLocal.protocolo || ('AVV-' + eqLocal.numeroInscricao),
                             numeroInscricao: eqLocal.numeroInscricao,
@@ -510,9 +512,11 @@
                 }
                 const sessao = {
                     tipo: 'time',
-                    equipeId: eq.id,
+                    clubeId: eq.id,
+                    equipeId: eq.isContaClube ? null : eq.id,
                     email: eq.email,
-                    nomeTime: eq.nomeTime,
+                    nomeClube: eq.nomeClube || eq.nomeTime,
+                    nomeTime: eq.nomeClube || eq.nomeTime,
                     responsavelNome: eq.responsavelNome || 'Dirigente Responsável',
                     protocolo: eq.protocolo || ('AVV-' + eq.numeroInscricao),
                     numeroInscricao: eq.numeroInscricao,

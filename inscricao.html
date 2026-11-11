@@ -286,8 +286,9 @@
             const horaInscricao = agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
             const numeroInscricaoTime = Math.floor(100000 + Math.random() * 900000);
 
-            const timeData = {
-                id: 'eq-' + Date.now(),
+            const contaClubeData = {
+                id: 'clube-' + Date.now(),
+                isContaClube: true,
                 numeroInscricao: numeroInscricaoTime,
                 protocolo: 'AVV-' + numeroInscricaoTime,
                 dataInscricao: dataInscricao,
@@ -295,25 +296,26 @@
                 dataHoraCompleta: `${dataInscricao} às ${horaInscricao}`,
                 estado: document.getElementById('estado').value.trim(),
                 cidade: document.getElementById('cidade').value.trim(),
+                nomeClube: document.getElementById('nomeTime').value.trim(),
                 nomeTime: document.getElementById('nomeTime').value.trim(),
                 responsavelNome: document.getElementById('nomeResponsavel').value.trim(),
                 email: emailDigitado,
                 whatsapp: document.getElementById('whatsapp').value.trim(),
                 instagram: document.getElementById('instagram').value.trim(),
                 senha: senha,
-                status: 'Pendente',
-                categoria: 'Adulto Masculino',
-                categorias: ['Adulto Masculino'],
+                status: 'Homologado',
+                categoria: '__CONTA_CLUBE__',
+                categorias: [],
                 atletas: [],
                 comissao: [],
-                campeonato: 'Aguardando Seleção no Painel'
+                campeonato: 'Aguardando Inscrição pelo Clube'
             };
 
             try {
                 const resp = await fetch('api/equipes/cadastrar', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(timeData)
+                    body: JSON.stringify(contaClubeData)
                 });
                 const resJson = await resp.json();
                 if (!resp.ok && resJson.duplicado) {
@@ -325,38 +327,40 @@
                 console.warn('Servidor em sincronização local:', err);
             }
 
-            // Salva na lista de inscrições e banco unificado local
+            // Salva no registro de contas e banco unificado local (marcado como isContaClube: true para não criar equipe fictícia)
             try {
                 const times = JSON.parse(localStorage.getItem('avv_inscricoes_teste') || '[]');
-                times.push(timeData);
+                times.push(contaClubeData);
                 localStorage.setItem('avv_inscricoes_teste', JSON.stringify(times));
 
                 const equipesDb = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
-                equipesDb.unshift(timeData);
+                equipesDb.unshift(contaClubeData);
                 localStorage.setItem('avv_equipes_completo_db', JSON.stringify(equipesDb));
             } catch(err) {}
 
-            // Inicia a sessão automaticamente para entrada imediata
+            // Inicia a sessão da agremiação/clube (sem equipe fixa pré-atribuída)
             const sessao = {
                 tipo: 'time',
-                equipeId: timeData.id,
-                email: timeData.email,
-                nomeTime: timeData.nomeTime,
-                responsavelNome: timeData.responsavelNome,
-                protocolo: timeData.protocolo,
-                numeroInscricao: timeData.numeroInscricao,
+                clubeId: contaClubeData.id,
+                equipeId: null,
+                email: contaClubeData.email,
+                nomeClube: contaClubeData.nomeClube,
+                nomeTime: contaClubeData.nomeClube,
+                responsavelNome: contaClubeData.responsavelNome,
+                protocolo: contaClubeData.protocolo,
+                numeroInscricao: contaClubeData.numeroInscricao,
                 timestamp: Date.now()
             };
             localStorage.setItem('avv_sessao_ativa', JSON.stringify(sessao));
 
             document.getElementById('form-pre-inscricao').style.display = 'none';
             document.getElementById('sucesso-box').style.display = 'block';
-            document.getElementById('res-time-nome').textContent = timeData.nomeTime;
-            document.getElementById('res-protocolo').textContent = `Inscrição nº ${timeData.numeroInscricao} (${timeData.protocolo})`;
+            document.getElementById('res-time-nome').textContent = contaClubeData.nomeClube;
+            document.getElementById('res-protocolo').textContent = `Cadastro de Clube nº ${contaClubeData.numeroInscricao} (${contaClubeData.protocolo})`;
             
             const metaInfoBox = document.getElementById('res-meta-datahora');
             if (metaInfoBox) {
-                metaInfoBox.textContent = `Realizada em ${dataInscricao} às ${horaInscricao}`;
+                metaInfoBox.textContent = `Realizado em ${dataInscricao} às ${horaInscricao}`;
             }
 
             envioInscricaoEmAndamento = false;

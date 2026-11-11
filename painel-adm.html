@@ -396,7 +396,7 @@
                                         <th>POSIÇÃO</th>
                                         <th>DOCUMENTOS</th>
                                         <th>NASCIMENTO</th>
-                                        <th style="text-align: center; width: 140px;">FICHA</th>
+                                        <th style="text-align: center; width: 140px;">AÇÕES</th>
                                     </tr>
                                 </thead>
                                 <tbody id="pag-eq-tbody-atletas">
@@ -505,7 +505,7 @@
                                     <th>CATEGORIA</th>
                                     <th>POSIÇÃO</th>
                                     <th>DOCUMENTOS</th>
-                                    <th style="text-align: center; width: 150px;">FICHA</th>
+                                    <th style="text-align: center; width: 140px;">AÇÕES</th>
                                 </tr>
                             </thead>
                             <tbody id="imp-tbody-previa">
@@ -814,6 +814,193 @@
     </div>
 
     <!-- ====================================================================== -->
+    <!-- MODAL: CARTEIRINHA DIGITAL DO ATLETA (VISUALIZAÇÃO COMPLETA DOS DADOS) -->
+    <!-- ====================================================================== -->
+    <div id="modal-adm-carteirinha-atleta" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 28, 63, 0.85); z-index: 3200; align-items: center; justify-content: center; backdrop-filter: blur(4px); padding: 15px;">
+        <div style="background: #ffffff; width: 100%; max-width: 520px; border-radius: 10px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); overflow: hidden; display: flex; flex-direction: column;">
+            
+            <!-- TOPO DA CARTEIRINHA COM PADRÃO AVV -->
+            <div style="background: linear-gradient(135deg, #0f1c3f 0%, #1a2f64 100%); color: #ffffff; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #c5a021;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <img src="logos/logo_avv.png" style="width: 32px; height: 32px; object-fit: contain;" alt="AVV">
+                    <div>
+                        <div style="font-size: 13px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase;">CARTEIRINHA DO ATLETA</div>
+                        <div style="font-size: 10.5px; color: #cbd5e1;">Associação Vilhenense de Voleibol &bull; AVV Oficial</div>
+                    </div>
+                </div>
+                <button type="button" onclick="fecharCarteirinhaAtletaAdm()" style="background: none; border: none; color: #ffffff; font-size: 24px; cursor: pointer; line-height: 1;">&times;</button>
+            </div>
+
+            <!-- CORPO: FOTO + DADOS OFICIAIS FORMATADOS -->
+            <div style="padding: 22px; background: #ffffff;">
+                <div style="display: flex; gap: 18px; align-items: flex-start; margin-bottom: 18px;">
+                    <div style="position: relative; flex-shrink: 0;">
+                        <img id="cart-ath-foto" src="logos/mascote_coelho.png" style="width: 100px; height: 120px; object-fit: cover; border-radius: 6px; border: 2px solid #0f1c3f; box-shadow: 0 4px 10px rgba(0,0,0,0.12); background: #f8fafc;" alt="Foto">
+                        <span id="cart-ath-status-pill" style="position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); background: #16a34a; color: #ffffff; font-size: 9.5px; font-weight: 800; padding: 2px 8px; border-radius: 10px; white-space: nowrap; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">HOMOLOGADO</span>
+                    </div>
+
+                    <div style="flex: 1; min-width: 0;">
+                        <div style="font-size: 10.5px; color: #64748b; font-weight: 700; text-transform: uppercase;">Registro Federativo</div>
+                        <div id="cart-ath-id" style="font-size: 16px; font-weight: 800; color: #c5a021; margin-bottom: 6px;">Nº 000000</div>
+                        
+                        <h4 id="cart-ath-nome" style="font-size: 15px; font-weight: 800; color: #0f1c3f; margin: 0 0 6px 0; line-height: 1.3; text-transform: uppercase; word-break: break-word;">NOME DO ATLETA</h4>
+                        
+                        <div style="display: inline-block; background: #eff6ff; color: #1d4ed8; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 4px; border: 1px solid #bfdbfe; margin-bottom: 4px;" id="cart-ath-categoria">
+                            Sub-15 Masculino
+                        </div>
+                        <div style="font-size: 11.5px; color: #475569;">
+                            Posição: <strong id="cart-ath-posicao" style="color: #0f1c3f;">Ponteiro</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GRADE DE DADOS CADASTRAIS DETALHADOS -->
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 14px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; font-size: 11.5px;">
+                    <div>
+                        <span style="color: #64748b; display: block; font-size: 10px; font-weight: 700; text-transform: uppercase;">CPF</span>
+                        <strong id="cart-ath-cpf" style="color: #0f1c3f;">000.000.000-00</strong>
+                    </div>
+                    <div>
+                        <span style="color: #64748b; display: block; font-size: 10px; font-weight: 700; text-transform: uppercase;">RG</span>
+                        <strong id="cart-ath-rg" style="color: #0f1c3f;">---</strong>
+                    </div>
+                    <div>
+                        <span style="color: #64748b; display: block; font-size: 10px; font-weight: 700; text-transform: uppercase;">Data de Nascimento</span>
+                        <strong id="cart-ath-nasc" style="color: #0f1c3f;">--/--/----</strong>
+                    </div>
+                    <div>
+                        <span style="color: #64748b; display: block; font-size: 10px; font-weight: 700; text-transform: uppercase;">Gênero / Naipe</span>
+                        <strong id="cart-ath-genero" style="color: #0f1c3f;">Masculino</strong>
+                    </div>
+                    <div style="grid-column: 1 / -1;">
+                        <span style="color: #64748b; display: block; font-size: 10px; font-weight: 700; text-transform: uppercase;">Equipe Vinculada</span>
+                        <strong id="cart-ath-equipe" style="color: #0f1c3f;">---</strong>
+                    </div>
+                    <div style="grid-column: 1 / -1;">
+                        <span style="color: #64748b; display: block; font-size: 10px; font-weight: 700; text-transform: uppercase;">Telefone / WhatsApp</span>
+                        <strong id="cart-ath-whats" style="color: #0f1c3f;">---</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RODAPÉ COM AÇÕES RÁPIDAS (EDITAR / FICHA / FECHAR) -->
+            <div style="background: #f1f5f9; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #e2e8f0;">
+                <button type="button" id="cart-btn-abrir-ficha" class="btn-action-text-green" style="font-size: 11px; padding: 6px 12px; height: 32px; background: #0f1c3f;">
+                    ${SVG_ICONS.fileText} Ver Ficha A4
+                </button>
+                <div style="display: flex; gap: 8px;">
+                    <button type="button" id="cart-btn-abrir-edicao" class="btn-action-text-green" style="font-size: 11px; padding: 6px 14px; height: 32px; background: #1d4ed8;">
+                        ${SVG_ICONS.edit} Editar Atleta
+                    </button>
+                    <button type="button" onclick="fecharCarteirinhaAtletaAdm()" style="padding: 6px 14px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 11.5px; font-weight: 700; color: #475569; cursor: pointer;">
+                        Fechar
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ====================================================================== -->
+    <!-- MODAL: EDITAR DADOS DO ATLETA PELO ADM                                  -->
+    <!-- ====================================================================== -->
+    <div id="modal-adm-editar-atleta" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 28, 63, 0.85); z-index: 3300; align-items: center; justify-content: center; backdrop-filter: blur(4px); padding: 15px;">
+        <div style="background: #ffffff; width: 100%; max-width: 560px; max-height: 90vh; border-radius: 8px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); overflow-y: auto; display: flex; flex-direction: column;">
+            
+            <div style="background: #0f1c3f; color: #ffffff; padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #c5a021;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    ${SVG_ICONS.edit}
+                    <span style="font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">EDITAR DADOS DO ATLETA (VISTORIA ADM)</span>
+                </div>
+                <button type="button" onclick="fecharModalEditarAtletaAdm()" style="background: none; border: none; color: #ffffff; font-size: 24px; cursor: pointer; line-height: 1;">&times;</button>
+            </div>
+
+            <form id="form-adm-editar-atleta" onsubmit="salvarEdicaoAtletaAdm(event)" style="padding: 22px; display: flex; flex-direction: column; gap: 14px;">
+                <input type="hidden" id="edit-ath-equipe-id">
+                <input type="hidden" id="edit-ath-id">
+
+                <div style="display: flex; gap: 14px; align-items: center; background: #f8fafc; padding: 12px; border: 1px solid #e2e8f0; border-radius: 6px;">
+                    <img id="edit-ath-foto-preview" src="logos/mascote_coelho.png" style="width: 54px; height: 60px; object-fit: cover; border-radius: 4px; border: 1px solid #cbd5e1; background: #ffffff;" alt="Foto">
+                    <div style="flex: 1;">
+                        <label style="display: block; font-size: 10.5px; font-weight: 700; color: #334155; margin-bottom: 4px;">FOTO DO ATLETA (MAX 5MB)</label>
+                        <input type="file" id="edit-ath-foto-input" accept="image/*" onchange="previewFotoEdicaoAtletaAdm(event)" style="font-size: 11px;">
+                    </div>
+                </div>
+
+                <div>
+                    <label style="display: block; font-size: 11px; font-weight: 700; color: #334155; margin-bottom: 4px;">NOME COMPLETO *</label>
+                    <input type="text" id="edit-ath-nome" required style="width: 100%; height: 38px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12.5px; text-transform: uppercase;">
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div>
+                        <label style="display: block; font-size: 11px; font-weight: 700; color: #334155; margin-bottom: 4px;">CPF *</label>
+                        <input type="text" id="edit-ath-cpf" required maxlength="14" style="width: 100%; height: 38px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12.5px;" placeholder="000.000.000-00">
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 11px; font-weight: 700; color: #334155; margin-bottom: 4px;">RG</label>
+                        <input type="text" id="edit-ath-rg" style="width: 100%; height: 38px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12.5px;" placeholder="Número do RG">
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div>
+                        <label style="display: block; font-size: 11px; font-weight: 700; color: #334155; margin-bottom: 4px;">DATA DE NASCIMENTO *</label>
+                        <input type="text" id="edit-ath-nasc" required maxlength="10" style="width: 100%; height: 38px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12.5px;" placeholder="DD/MM/AAAA">
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 11px; font-weight: 700; color: #334155; margin-bottom: 4px;">GÊNERO *</label>
+                        <select id="edit-ath-genero" style="width: 100%; height: 38px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12.5px;">
+                            <option value="Masculino">Masculino</option>
+                            <option value="Feminino">Feminino</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div>
+                        <label style="display: block; font-size: 11px; font-weight: 700; color: #334155; margin-bottom: 4px;">CATEGORIA *</label>
+                        <select id="edit-ath-categoria" style="width: 100%; height: 38px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12.5px;">
+                            <option value="Adulto Masculino">Adulto Masculino</option>
+                            <option value="Adulto Feminino">Adulto Feminino</option>
+                            <option value="Sub-18 Masculino">Sub-18 Masculino</option>
+                            <option value="Sub-18 Feminino">Sub-18 Feminino</option>
+                            <option value="Sub-15 Masculino">Sub-15 Masculino</option>
+                            <option value="Sub-15 Feminino">Sub-15 Feminino</option>
+                            <option value="Sub-13 Masculino">Sub-13 Masculino</option>
+                            <option value="Sub-13 Feminino">Sub-13 Feminino</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 11px; font-weight: 700; color: #334155; margin-bottom: 4px;">POSIÇÃO *</label>
+                        <select id="edit-ath-posicao" style="width: 100%; height: 38px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12.5px;">
+                            <option value="Ponteiro">Ponteiro</option>
+                            <option value="Levantador">Levantador</option>
+                            <option value="Central">Central</option>
+                            <option value="Oposto">Oposto</option>
+                            <option value="Líbero">Líbero</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label style="display: block; font-size: 11px; font-weight: 700; color: #334155; margin-bottom: 4px;">TELEFONE / WHATSAPP</label>
+                    <input type="text" id="edit-ath-whats" maxlength="15" style="width: 100%; height: 38px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12.5px;" placeholder="(99) 99999-9999">
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px; border-top: 1px solid #e2e8f0; padding-top: 14px;">
+                    <button type="button" onclick="fecharModalEditarAtletaAdm()" style="padding: 8px 16px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12px; font-weight: 600; color: #475569; cursor: pointer;">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn-action-text-green" style="padding: 8px 20px; font-size: 12px; height: 38px;">
+                        ✓ Salvar Alterações
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ====================================================================== -->
     <!-- MODAL PERSONALIZADO DE CONFIRMAÇÃO (DESIGN PROFISSIONAL / ZERO ALERT)  -->
     <!-- ====================================================================== -->
     <div id="modal-confirmacao-custom" class="no-print" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 28, 63, 0.75); z-index: 3900; align-items: center; justify-content: center; backdrop-filter: blur(5px); padding: 16px;">
@@ -850,6 +1037,14 @@
         // ======================================================================
         function comprimirImagemCanvasAdm(file, maxW, maxH, quality, callback) {
             if (!file) return;
+
+            // Limite de segurança de 5MB por arquivo
+            const limiteBytes = 5 * 1024 * 1024; // 5MB
+            if (file.size > limiteBytes) {
+                avvAlert(`O arquivo selecionado (${(file.size / (1024 * 1024)).toFixed(1)} MB) excede o limite máximo permitido de 5MB.\n\nPor favor, escolha uma imagem menor que 5MB para otimizar o carregamento.`, 'Arquivo Muito Pesado', 'warning');
+                return;
+            }
+
             const reader = new FileReader();
             reader.onload = function(e) {
                 const img = new Image();
@@ -905,7 +1100,9 @@
                 const modaisIds = [
                     'modal-confirmacao-custom',
                     'modal-criar-campeonato',
-                    'modal-adm-ficha-atleta'
+                    'modal-adm-ficha-atleta',
+                    'modal-adm-carteirinha-atleta',
+                    'modal-adm-editar-atleta'
                 ];
                 modaisIds.forEach(id => {
                     const el = document.getElementById(id);
@@ -924,6 +1121,8 @@
             users: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>`,
             arrowRight: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>`,
             settings: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg>`,
+            eye: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`,
+            edit: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>`,
             trash: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>`,
             fileText: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>`,
             xCircle: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`
@@ -1058,6 +1257,39 @@
                 document.getElementById('adm-prof-email').value = sessaoAdm.email;
             }
 
+            // Máscaras automáticas para os campos de edição de atleta no ADM
+            const elEditCpf = document.getElementById('edit-ath-cpf');
+            if (elEditCpf) {
+                elEditCpf.addEventListener('input', (e) => {
+                    let v = e.target.value.replace(/\D/g, '').slice(0, 11);
+                    if (v.length > 9) v = v.replace(/^(\d{3})(\d{3})(\d{3})(\d{1,2})$/, '$1.$2.$3-$4');
+                    else if (v.length > 6) v = v.replace(/^(\d{3})(\d{3})(\d{1,3})$/, '$1.$2.$3');
+                    else if (v.length > 3) v = v.replace(/^(\d{3})(\d{1,3})$/, '$1.$2');
+                    e.target.value = v;
+                });
+            }
+
+            const elEditNasc = document.getElementById('edit-ath-nasc');
+            if (elEditNasc) {
+                elEditNasc.addEventListener('input', (e) => {
+                    let v = e.target.value.replace(/\D/g, '').slice(0, 8);
+                    if (v.length > 4) v = v.replace(/^(\d{2})(\d{2})(\d{1,4})$/, '$1/$2/$3');
+                    else if (v.length > 2) v = v.replace(/^(\d{2})(\d{1,2})$/, '$1/$2');
+                    e.target.value = v;
+                });
+            }
+
+            const elEditWhats = document.getElementById('edit-ath-whats');
+            if (elEditWhats) {
+                elEditWhats.addEventListener('input', (e) => {
+                    let v = e.target.value.replace(/\D/g, '').slice(0, 11);
+                    if (v.length > 10) v = v.replace(/^(\d{2})(\d{5})(\d{4})$/, '($1) $2-$3');
+                    else if (v.length > 6) v = v.replace(/^(\d{2})(\d{4})(\d{0,4})$/, '($1) $2-$3');
+                    else if (v.length > 2) v = v.replace(/^(\d{2})(\d{0,5})$/, '($1) $2');
+                    e.target.value = v;
+                });
+            }
+
             carregarCampeonatos();
             carregarBancoEquipesIntegrado();
             atualizarTudoPainelAdm();
@@ -1086,6 +1318,31 @@
             });
         });
 
+        // Verifica se a equipe solicitou inscrição em campeonato (para exibição no painel ADM)
+        function equipeSolicitouInscricaoCampeonato(eq) {
+            if (!eq) return false;
+            // Se possui flag de inscrição confirmada/solicitada
+            if (eq.inscritoCampeonato === true) return true;
+            // Se possui ID ou Nome de campeonato válido associado
+            if (eq.campeonatoId && eq.campeonatoId !== 'superliga-masc' && eq.campeonatoId !== '') return true;
+            if (eq.campeonatoNome && eq.campeonatoNome !== 'Aguardando Seleção no Painel' && eq.campeonatoNome !== 'Superliga Interiorana' && eq.campeonatoNome !== '') return true;
+            // Verifica se consta nas inscrições salvas das agremiações
+            try {
+                const inscricoesSalvas = JSON.parse(localStorage.getItem('avv_inscricoes_confirmadas_clube') || '[]');
+                const encontrou = inscricoesSalvas.some(ins => 
+                    (ins.equipeNome && eq.nomeTime && ins.equipeNome.trim().toLowerCase() === eq.nomeTime.trim().toLowerCase()) ||
+                    (ins.numeroInscricao && (String(ins.numeroInscricao) === String(eq.numeroInscricao) || String(ins.numeroInscricao) === String(eq.numeroInscricaoTorneio)))
+                );
+                if (encontrou) return true;
+            } catch(e) {}
+            return false;
+        }
+
+        // Retorna a lista de equipes que solicitaram inscrição em campeonatos
+        function obterEquipesInscritasAdm() {
+            return equipesSistema.filter(eq => equipeSolicitouInscricaoCampeonato(eq));
+        }
+
         function carregarBancoEquipesIntegrado() {
             const salvoDb = localStorage.getItem('avv_equipes_completo_db');
             if (salvoDb) {
@@ -1102,6 +1359,9 @@
             let houveAdicao = false;
 
             preCadastrosFormulario.forEach(pre => {
+                // Se for cadastro apenas de conta de clube, não converte em equipe esportiva
+                if (pre.isContaClube || pre.categoria === '__CONTA_CLUBE__') return;
+
                 const jaExiste = equipesSistema.some(eq => 
                     String(eq.protocolo) === String(pre.protocolo) || 
                     String(eq.numeroInscricao) === String(pre.numeroInscricao) ||
@@ -1165,9 +1425,10 @@
         // 2. INDICADORES E VISÃO GERAL
         // ======================================================================
         function atualizarIndicadoresTopo() {
-            const totalEquipes = equipesSistema.length;
-            const pendentes = equipesSistema.filter(e => e.status !== 'Homologado').length;
-            const totalAtletas = equipesSistema.reduce((acc, eq) => acc + (eq.atletas ? eq.atletas.length : 0), 0);
+            const equipesInscritas = obterEquipesInscritasAdm();
+            const totalEquipes = equipesInscritas.length;
+            const pendentes = equipesInscritas.filter(e => e.status !== 'Homologado').length;
+            const totalAtletas = equipesInscritas.reduce((acc, eq) => acc + (eq.atletas ? eq.atletas.length : 0), 0);
             const totalChamps = Object.keys(campeonatosAdm).length;
 
             document.getElementById('stat-adm-equipes-total').textContent = totalEquipes;
@@ -1185,7 +1446,7 @@
             const gridResumo = document.getElementById('dashboard-grid-equipes-resumo');
             if (gridResumo) {
                 gridResumo.innerHTML = '';
-                equipesSistema.slice(0, 6).forEach(eq => {
+                equipesInscritas.slice(0, 6).forEach(eq => {
                     gridResumo.appendChild(criarElementoBlocoEquipe(eq));
                 });
             }
@@ -1321,7 +1582,10 @@
             const campFiltro = document.getElementById('filtro-campeonato-equipes')?.value || 'todos';
             const statusFiltro = document.getElementById('filtro-status-equipes')?.value || 'todos';
 
-            const filtradas = equipesSistema.filter(eq => {
+            // No painel do ADM, apenas exibem equipes que solicitaram inscrição em campeonatos
+            const equipesInscritas = obterEquipesInscritasAdm();
+
+            const filtradas = equipesInscritas.filter(eq => {
                 const matchTermo = !termo ||
                     (eq.nomeTime && eq.nomeTime.toLowerCase().includes(termo)) ||
                     (eq.cidade && eq.cidade.toLowerCase().includes(termo)) ||
@@ -1359,6 +1623,14 @@
         // 4. PÁGINA INTERNA DEDICADA DA EQUIPE (ATLETAS + IMPRESSÃO POR CATEGORIA)
         // ======================================================================
         function abrirPaginaEquipeAdm(equipeId, categoriaPreSelecionada = 'todas') {
+            const salvoDb = localStorage.getItem('avv_equipes_completo_db');
+            if (salvoDb) {
+                try {
+                    const parsed = JSON.parse(salvoDb);
+                    if (Array.isArray(parsed) && parsed.length > 0) equipesSistema = parsed;
+                } catch(e) {}
+            }
+
             const eq = equipesSistema.find(e => String(e.id) === String(equipeId));
             if (!eq) return;
 
@@ -1446,24 +1718,45 @@
 
         function selecionarCategoriaPaginaEquipe(cat) {
             categoriaAtivaEquipe = cat;
+            const salvoDb = localStorage.getItem('avv_equipes_completo_db');
+            if (salvoDb) {
+                try {
+                    const parsed = JSON.parse(salvoDb);
+                    if (Array.isArray(parsed) && parsed.length > 0) equipesSistema = parsed;
+                } catch(e) {}
+            }
             const eq = equipesSistema.find(e => String(e.id) === String(equipeAbertaId));
             if (eq) renderizarConteudoPaginaEquipe(eq);
         }
 
+        function normalizarTextoComparacao(txt) {
+            return String(txt || '').trim().toLowerCase();
+        }
+
         function renderizarTabelaAtletasPaginaEquipe(eq) {
             const tbody = document.getElementById('pag-eq-tbody-atletas');
+            if (!tbody) return;
             tbody.innerHTML = '';
 
-            const todosAtletas = eq.atletas || [];
-            const atletasFiltrados = categoriaAtivaEquipe === 'todas'
-                ? todosAtletas
-                : todosAtletas.filter(a => a.categoria === categoriaAtivaEquipe);
+            const todosAtletas = Array.isArray(eq.atletas) ? eq.atletas : [];
+            const catAtivaNorm = normalizarTextoComparacao(categoriaAtivaEquipe);
 
-            document.getElementById('pag-eq-count-atletas').textContent = atletasFiltrados.length;
-            document.getElementById('count-btn-imprimir-cat').textContent = atletasFiltrados.length;
-            document.getElementById('label-cat-ativa-impressao').textContent = categoriaAtivaEquipe === 'todas'
-                ? `Todas as Categorias (${atletasFiltrados.length} atletas)`
-                : `${categoriaAtivaEquipe} (${atletasFiltrados.length} atletas)`;
+            const atletasFiltrados = (catAtivaNorm === 'todas' || !catAtivaNorm)
+                ? todosAtletas
+                : todosAtletas.filter(a => normalizarTextoComparacao(a.categoria) === catAtivaNorm);
+
+            const elCountAtletas = document.getElementById('pag-eq-count-atletas');
+            if (elCountAtletas) elCountAtletas.textContent = atletasFiltrados.length;
+
+            const elBtnImp = document.getElementById('count-btn-imprimir-cat');
+            if (elBtnImp) elBtnImp.textContent = atletasFiltrados.length;
+
+            const elLabelImpressao = document.getElementById('label-cat-ativa-impressao');
+            if (elLabelImpressao) {
+                elLabelImpressao.textContent = catAtivaNorm === 'todas'
+                    ? `Todas as Categorias (${atletasFiltrados.length} atletas)`
+                    : `${categoriaAtivaEquipe} (${atletasFiltrados.length} atletas)`;
+            }
 
             const chkAll = document.getElementById('chk-adm-all-atletas');
             if (chkAll) chkAll.checked = false;
@@ -1481,30 +1774,45 @@
 
             atletasFiltrados.forEach(atleta => {
                 const tr = document.createElement('tr');
+                const atletaId = atleta.id || atleta.numeroInscricao || '---';
+                const atletaNome = (atleta.nome || 'ATLETA SEM NOME').toUpperCase();
+                const atletaFoto = atleta.foto || 'logos/mascote_coelho.png';
+                const atletaCategoria = atleta.categoria || eq.categoria || 'Adulto Masculino';
+                const atletaPosicao = atleta.posicao || 'Ponteiro';
+                const atletaCpf = atleta.cpf || '---';
+                const atletaRg = atleta.rg || '---';
+                const atletaNasc = atleta.nasc || atleta.dataNascimento || '---';
+
                 tr.innerHTML = `
                     <td style="text-align: center;">
-                        <input type="checkbox" class="chk-adm-atleta-print" value="${atleta.id}" style="width: 15px; height: 15px; cursor: pointer;">
+                        <input type="checkbox" class="chk-adm-atleta-print" value="${atletaId}" style="width: 15px; height: 15px; cursor: pointer;">
                     </td>
                     <td style="text-align: center;">
-                        <img src="${atleta.foto || 'logos/mascote_coelho.png'}" style="width: 36px; height: 40px; border-radius: 4px; object-fit: cover; border: 1px solid #cbd5e1; background: #f8fafc;" alt="Foto">
+                        <img src="${atletaFoto}" style="width: 36px; height: 40px; border-radius: 4px; object-fit: cover; border: 1px solid #cbd5e1; background: #f8fafc;" alt="Foto">
                     </td>
                     <td>
-                        <strong style="color: #0f1c3f; font-size: 13px;">${atleta.nome}</strong>
+                        <strong style="color: #0f1c3f; font-size: 13px;">${atletaNome}</strong>
                     </td>
-                    <td><strong>${atleta.id}</strong></td>
-                    <td><span class="chip-cat-adm">${atleta.categoria || 'Adulto Masculino'}</span></td>
-                    <td><strong style="color: #1d4ed8;">${atleta.posicao || 'Ponteiro'}</strong></td>
+                    <td><strong>${atletaId}</strong></td>
+                    <td><span class="chip-cat-adm">${atletaCategoria}</span></td>
+                    <td><strong style="color: #1d4ed8;">${atletaPosicao}</strong></td>
                     <td style="font-size: 11.5px; line-height: 1.4;">
-                        <div>CPF: <strong style="color: #334155;">${atleta.cpf || '---'}</strong></div>
-                        <div style="color: #64748b; font-size: 10.5px;">RG: ${atleta.rg || '---'}</div>
+                        <div>CPF: <strong style="color: #334155;">${atletaCpf}</strong></div>
+                        <div style="color: #64748b; font-size: 10.5px;">RG: ${atletaRg}</div>
                     </td>
-                    <td style="font-size: 12px; color: #475569;">${atleta.nasc || '---'}</td>
+                    <td style="font-size: 12px; color: #475569;">${atletaNasc}</td>
                     <td style="text-align: center;">
-                        <div style="display: flex; gap: 6px; justify-content: center;">
-                            <button onclick="abrirFichaIndividualAtletaAdm('${eq.id}', '${atleta.id}')" class="btn-clean-action btn-clean-neutral" style="height: 30px; font-size: 11px; padding: 0 10px;" title="Visualizar Ficha A4">
-                                ${SVG_ICONS.fileText} Ficha
+                        <div style="display: flex; gap: 5px; justify-content: center; align-items: center;">
+                            <button onclick="abrirCarteirinhaAtletaAdm('${eq.id}', '${atletaId}')" class="btn-clean-action" style="background: #eff6ff; border: 1px solid #bfdbfe; color: #1d4ed8; height: 30px; width: 32px; padding: 0; justify-content: center;" title="Ver Carteirinha / Dados Completos">
+                                ${SVG_ICONS.eye}
                             </button>
-                            <button onclick="excluirAtletaDaEquipeAdm('${eq.id}', '${atleta.id}', '${atleta.nome}')" class="btn-clean-action" style="background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c; height: 30px; padding: 0 8px;" title="Remover Atleta da Equipe">
+                            <button onclick="abrirModalEditarAtletaAdm('${eq.id}', '${atletaId}')" class="btn-clean-action" style="background: #fefce8; border: 1px solid #fef08a; color: #a16207; height: 30px; width: 32px; padding: 0; justify-content: center;" title="Editar Dados do Atleta">
+                                ${SVG_ICONS.edit}
+                            </button>
+                            <button onclick="abrirFichaIndividualAtletaAdm('${eq.id}', '${atletaId}')" class="btn-clean-action btn-clean-neutral" style="height: 30px; width: 32px; padding: 0; justify-content: center;" title="Imprimir Ficha Oficial A4">
+                                ${SVG_ICONS.fileText}
+                            </button>
+                            <button onclick="excluirAtletaDaEquipeAdm('${eq.id}', '${atletaId}', '${atletaNome.replace(/'/g, "\\'")}')" class="btn-clean-action" style="background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c; height: 30px; width: 32px; padding: 0; justify-content: center;" title="Remover Atleta da Equipe">
                                 ${SVG_ICONS.trash}
                             </button>
                         </div>
@@ -1762,6 +2070,223 @@
             document.getElementById('modal-adm-ficha-atleta').style.display = 'none';
         }
 
+        // ======================================================================
+        // CARTEIRINHA DIGITAL DO ATLETA (VISTORIA VISUAL COMPLETA)
+        // ======================================================================
+        let atletaIdEmFocoAdm = null;
+        let equipeIdEmFocoAdm = null;
+
+        function abrirCarteirinhaAtletaAdm(equipeId, atletaId) {
+            const eq = equipesSistema.find(e => String(e.id) === String(equipeId));
+            if (!eq) return;
+            const atleta = (eq.atletas || []).find(a => String(a.id) === String(atletaId));
+            if (!atleta) return;
+
+            atletaIdEmFocoAdm = atleta.id;
+            equipeIdEmFocoAdm = eq.id;
+
+            document.getElementById('cart-ath-foto').src = atleta.foto || 'logos/mascote_coelho.png';
+            document.getElementById('cart-ath-id').textContent = `Nº ${atleta.id || '---'}`;
+            document.getElementById('cart-ath-nome').textContent = (atleta.nome || 'ATLETA SEM NOME').toUpperCase();
+            document.getElementById('cart-ath-categoria').textContent = atleta.categoria || eq.categoria || 'Adulto Masculino';
+            document.getElementById('cart-ath-posicao').textContent = atleta.posicao || 'Ponteiro';
+            document.getElementById('cart-ath-cpf').textContent = atleta.cpf || '---';
+            document.getElementById('cart-ath-rg').textContent = atleta.rg || '---';
+            document.getElementById('cart-ath-nasc').textContent = atleta.nasc || '---';
+            document.getElementById('cart-ath-genero').textContent = atleta.genero || 'Masculino';
+            document.getElementById('cart-ath-equipe').textContent = `${eq.nomeTime} (${eq.cidade} - ${eq.estado})`;
+            document.getElementById('cart-ath-whats').textContent = atleta.whats || atleta.whatsapp || eq.whatsapp || '---';
+
+            // Configura botões de atalho da carteirinha
+            const btnFicha = document.getElementById('cart-btn-abrir-ficha');
+            if (btnFicha) {
+                btnFicha.onclick = () => {
+                    fecharCarteirinhaAtletaAdm();
+                    abrirFichaIndividualAtletaAdm(eq.id, atleta.id);
+                };
+            }
+
+            const btnEditar = document.getElementById('cart-btn-abrir-edicao');
+            if (btnEditar) {
+                btnEditar.onclick = () => {
+                    fecharCarteirinhaAtletaAdm();
+                    abrirModalEditarAtletaAdm(eq.id, atleta.id);
+                };
+            }
+
+            document.getElementById('modal-adm-carteirinha-atleta').style.display = 'flex';
+        }
+
+        function fecharCarteirinhaAtletaAdm() {
+            document.getElementById('modal-adm-carteirinha-atleta').style.display = 'none';
+        }
+
+        // ======================================================================
+        // EDIÇÃO DIRETA DOS DADOS DO ATLETA PELO ADMINISTRADOR
+        // ======================================================================
+        let atletaFotoDataUrlAdm = null;
+
+        function abrirModalEditarAtletaAdm(equipeId, atletaId) {
+            const eq = equipesSistema.find(e => String(e.id) === String(equipeId));
+            if (!eq) return;
+            const atleta = (eq.atletas || []).find(a => String(a.id) === String(atletaId));
+            if (!atleta) return;
+
+            document.getElementById('edit-ath-equipe-id').value = eq.id;
+            document.getElementById('edit-ath-id').value = atleta.id;
+            document.getElementById('edit-ath-nome').value = atleta.nome || '';
+            document.getElementById('edit-ath-cpf').value = atleta.cpf || '';
+            document.getElementById('edit-ath-rg').value = atleta.rg || '';
+            document.getElementById('edit-ath-nasc').value = atleta.nasc || '';
+            document.getElementById('edit-ath-whats').value = atleta.whats || atleta.whatsapp || '';
+
+            const selGen = document.getElementById('edit-ath-genero');
+            if (selGen) selGen.value = atleta.genero || 'Masculino';
+
+            const selCat = document.getElementById('edit-ath-categoria');
+            if (selCat) {
+                const catAlvo = atleta.categoria || eq.categoria || 'Adulto Masculino';
+                let achou = false;
+                for (let i = 0; i < selCat.options.length; i++) {
+                    if (selCat.options[i].value.toLowerCase() === catAlvo.toLowerCase()) {
+                        selCat.selectedIndex = i;
+                        achou = true;
+                        break;
+                    }
+                }
+                if (!achou) {
+                    const opt = document.createElement('option');
+                    opt.value = catAlvo;
+                    opt.textContent = catAlvo;
+                    opt.selected = true;
+                    selCat.appendChild(opt);
+                }
+            }
+
+            const selPos = document.getElementById('edit-ath-posicao');
+            if (selPos) selPos.value = atleta.posicao || 'Ponteiro';
+
+            const previewFoto = document.getElementById('edit-ath-foto-preview');
+            atletaFotoDataUrlAdm = atleta.foto || 'logos/mascote_coelho.png';
+            if (previewFoto) previewFoto.src = atletaFotoDataUrlAdm;
+
+            document.getElementById('modal-adm-editar-atleta').style.display = 'flex';
+        }
+
+        function fecharModalEditarAtletaAdm() {
+            document.getElementById('modal-adm-editar-atleta').style.display = 'none';
+        }
+
+        function previewFotoEdicaoAtletaAdm(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            // Validação de tamanho: máximo 5MB
+            const maxSize = 5 * 1024 * 1024;
+            if (file.size > maxSize) {
+                avvAlert('O arquivo selecionado excede o limite máximo de 5MB. Selecione uma imagem menor.', 'Arquivo Muito Pesado', 'warning');
+                event.target.value = '';
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    let width = img.width;
+                    let height = img.height;
+                    const maxDim = 600;
+                    if (width > height && width > maxDim) {
+                        height = Math.round((height * maxDim) / width);
+                        width = maxDim;
+                    } else if (height > maxDim) {
+                        width = Math.round((width * maxDim) / height);
+                        height = maxDim;
+                    }
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    atletaFotoDataUrlAdm = canvas.toDataURL('image/jpeg', 0.85);
+                    const preview = document.getElementById('edit-ath-foto-preview');
+                    if (preview) preview.src = atletaFotoDataUrlAdm;
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function salvarEdicaoAtletaAdm(e) {
+            e.preventDefault();
+
+            const equipeId = document.getElementById('edit-ath-equipe-id').value;
+            const atletaId = document.getElementById('edit-ath-id').value;
+
+            const nome = document.getElementById('edit-ath-nome').value.trim().toUpperCase();
+            const cpf = document.getElementById('edit-ath-cpf').value.trim();
+            const rg = document.getElementById('edit-ath-rg').value.trim();
+            const nasc = document.getElementById('edit-ath-nasc').value.trim();
+            const genero = document.getElementById('edit-ath-genero').value;
+            const categoria = document.getElementById('edit-ath-categoria').value;
+            const posicao = document.getElementById('edit-ath-posicao').value;
+            const whats = document.getElementById('edit-ath-whats').value.trim();
+
+            if (!nome || !cpf) {
+                avvAlert('Preencha os campos obrigatórios (*).', 'Campos Obrigatórios', 'warning');
+                return;
+            }
+
+            const eq = equipesSistema.find(eqObj => String(eqObj.id) === String(equipeId));
+            if (!eq || !Array.isArray(eq.atletas)) {
+                avvAlert('Equipe do atleta não localizada.', 'Erro', 'danger');
+                return;
+            }
+
+            const idxAt = eq.atletas.findIndex(a => String(a.id) === String(atletaId));
+            if (idxAt === -1) {
+                avvAlert('Atleta não localizado no elenco da equipe.', 'Erro', 'danger');
+                return;
+            }
+
+            // Atualiza os dados do atleta no elenco da equipe
+            eq.atletas[idxAt] = {
+                ...eq.atletas[idxAt],
+                nome,
+                cpf,
+                rg: rg || '---',
+                nasc: nasc || '---',
+                genero,
+                categoria,
+                posicao,
+                whats,
+                whatsapp: whats,
+                foto: atletaFotoDataUrlAdm || eq.atletas[idxAt].foto || 'logos/mascote_coelho.png'
+            };
+
+            // Sincroniza também no banco geral de atletas do clube caso exista
+            try {
+                const atletasClubeDb = JSON.parse(localStorage.getItem('avv_atletas_clube_db') || '[]');
+                const idxClube = atletasClubeDb.findIndex(a => String(a.id) === String(atletaId));
+                if (idxClube !== -1) {
+                    atletasClubeDb[idxClube] = { ...atletasClubeDb[idxClube], ...eq.atletas[idxAt] };
+                    localStorage.setItem('avv_atletas_clube_db', JSON.stringify(atletasClubeDb));
+                }
+            } catch(err) {}
+
+            // Persiste no banco de equipes
+            salvarBancoEquipesIntegrado();
+            fecharModalEditarAtletaAdm();
+
+            // Atualiza tabelas abertas
+            if (equipeAbertaId && String(equipeAbertaId) === String(equipeId)) {
+                renderizarConteudoPaginaEquipe(eq);
+            }
+            atualizarPreviaCentralImpressao();
+
+            avvAlert(`Dados do atleta "${nome}" atualizados com sucesso pelo Administrador!`, 'Atleta Atualizado', 'success');
+        }
+
         function toggleSelecionarTodosAtletasAdm(checked) {
             document.querySelectorAll('.chk-adm-atleta-print').forEach(chk => {
                 chk.checked = checked;
@@ -1972,11 +2497,12 @@
         function popularFiltrosCentralImpressao() {
             const selectEq = document.getElementById('imp-select-equipe');
             const selectCampFiltro = document.getElementById('filtro-campeonato-equipes');
+            const equipesInscritas = obterEquipesInscritasAdm();
 
             if (selectEq) {
                 const valorAtual = selectEq.value || 'todas';
-                selectEq.innerHTML = `<option value="todas">Todas as Equipes Cadastradas</option>` +
-                    equipesSistema.map(eq => `<option value="${eq.id}">${eq.nomeTime} (${eq.cidade}-${eq.estado})</option>`).join('');
+                selectEq.innerHTML = `<option value="todas">Todas as Equipes Inscritas</option>` +
+                    equipesInscritas.map(eq => `<option value="${eq.id}">${eq.nomeTime} (${eq.cidade}-${eq.estado})</option>`).join('');
                 selectEq.value = valorAtual;
             }
 
@@ -1991,9 +2517,10 @@
         function obterParesFiltradosCentralImpressao() {
             const eqId = document.getElementById('imp-select-equipe')?.value || 'todas';
             const cat = document.getElementById('imp-select-categoria')?.value || 'todas';
+            const equipesInscritas = obterEquipesInscritasAdm();
 
             const pares = [];
-            equipesSistema.forEach(eq => {
+            equipesInscritas.forEach(eq => {
                 if (eqId !== 'todas' && String(eq.id) !== String(eqId)) return;
                 (eq.atletas || []).forEach(atleta => {
                     const catAtleta = atleta.categoria || 'Adulto Masculino';
@@ -2046,9 +2573,17 @@
                     <td><strong style="color: #1d4ed8;">${atleta.posicao || 'Ponteiro'}</strong></td>
                     <td>CPF: ${atleta.cpf || '---'} &bull; Nasc: ${atleta.nasc || '---'}</td>
                     <td style="text-align: center;">
-                        <button onclick="abrirFichaIndividualAtletaAdm('${equipe.id}', '${atleta.id}')" class="btn-action-text-green" style="font-size: 11px; padding: 4px 10px; height: 28px;">
-                            ${SVG_ICONS.fileText} Ficha A4
-                        </button>
+                        <div style="display: flex; gap: 5px; justify-content: center; align-items: center;">
+                            <button onclick="abrirCarteirinhaAtletaAdm('${equipe.id}', '${atleta.id}')" class="btn-clean-action" style="background: #eff6ff; border: 1px solid #bfdbfe; color: #1d4ed8; height: 28px; width: 30px; padding: 0; justify-content: center;" title="Ver Carteirinha / Dados">
+                                ${SVG_ICONS.eye}
+                            </button>
+                            <button onclick="abrirModalEditarAtletaAdm('${equipe.id}', '${atleta.id}')" class="btn-clean-action" style="background: #fefce8; border: 1px solid #fef08a; color: #a16207; height: 28px; width: 30px; padding: 0; justify-content: center;" title="Editar Dados do Atleta">
+                                ${SVG_ICONS.edit}
+                            </button>
+                            <button onclick="abrirFichaIndividualAtletaAdm('${equipe.id}', '${atleta.id}')" class="btn-action-text-green" style="font-size: 11px; padding: 4px 8px; height: 28px;" title="Imprimir Ficha Oficial A4">
+                                ${SVG_ICONS.fileText}
+                            </button>
+                        </div>
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -2128,20 +2663,22 @@
         function calcularTempoRestanteTorneio(dataLimiteIso) {
             if (!dataLimiteIso) return null;
             const diff = new Date(dataLimiteIso).getTime() - Date.now();
-            if (diff <= 0) return { encerrado: true, texto: 'Inscrições Encerradas' };
+            if (diff <= 0) return { encerrado: true, texto: 'Encerrado' };
 
             const dias = Math.floor(diff / (1000 * 60 * 60 * 24));
             const horas = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutos = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
             const segundos = Math.floor((diff % (1000 * 60)) / 1000);
 
+            const hh = String(horas).padStart(2, '0');
+            const mm = String(minutos).padStart(2, '0');
+            const ss = String(segundos).padStart(2, '0');
+
             let texto = '';
             if (dias > 0) {
-                texto = `${dias}d ${horas}h ${minutos}m`;
-            } else if (horas > 0) {
-                texto = `${horas}h ${minutos}m ${segundos}s`;
+                texto = `${dias}d ${hh}:${mm}:${ss}`;
             } else {
-                texto = `${minutos}m ${segundos}s`;
+                texto = `${hh}:${mm}:${ss}`;
             }
 
             return { encerrado: false, dias, horas, minutos, segundos, texto };
@@ -2190,12 +2727,12 @@
                         `;
                     } else {
                         timerHtml = `
-                            <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 4px; padding: 6px 10px; margin-top: 8px; display: flex; align-items: center; justify-content: space-between; font-size: 11px; font-weight: 700; color: #1d72f2;">
-                                <span style="display: flex; align-items: center; gap: 5px;">
-                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                                    Tempo Restante para Inscrição:
+                            <div style="background: #0f1c3f; border: 1px solid #1e293b; border-radius: 6px; padding: 6px 12px; margin-top: 8px; display: flex; align-items: center; justify-content: space-between; font-size: 11px; font-weight: 700; color: #f8fafc;">
+                                <span style="display: flex; align-items: center; gap: 6px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; font-size: 10px;">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                    Encerramento das Inscrições
                                 </span>
-                                <span style="background: #1d72f2; color: #fff; padding: 2px 6px; border-radius: 3px; font-size: 10.5px; font-family: monospace;">⏳ ${timerInfo.texto}</span>
+                                <span style="background: #1e293b; color: #38bdf8; border: 1px solid #334155; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-family: monospace; font-weight: 800; letter-spacing: 0.6px;">${timerInfo.texto}</span>
                             </div>
                         `;
                     }
