@@ -339,23 +339,40 @@
                     </a>
                 </div>
 
+                <div id="recup-redefinir-alert" class="alert-login-box" style="display: none; margin-bottom: 14px;"></div>
+
                 <form id="form-recup-redefinir" onsubmit="concluirRedefinicaoSenha(event)">
                     <div class="login-input-group">
                         <label for="recup-codigo">Código de Segurança (6 dígitos)</label>
                         <input type="text" id="recup-codigo" class="login-input-field" placeholder="Ex: 596528" maxlength="6" style="text-align: center; font-size: 18px; font-weight: 800; letter-spacing: 4px;" required>
+                        <span style="font-size: 10.5px; color: #64748b; margin-top: 3px; display: block;">Insira o código de 6 números enviado para o seu e-mail.</span>
                     </div>
 
                     <div class="login-input-group">
-                        <label for="recup-nova-senha">Nova Senha</label>
-                        <input type="password" id="recup-nova-senha" class="login-input-field" placeholder="Mínimo de 6 dígitos" minlength="6" required>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                            <label for="recup-nova-senha" style="margin-bottom: 0;">Nova Senha</label>
+                        </div>
+                        <div class="login-input-wrapper">
+                            <input type="password" id="recup-nova-senha" class="login-input-field" placeholder="Mínimo de 6 caracteres" minlength="6" required autocomplete="new-password">
+                            <button type="button" class="btn-toggle-senha" onclick="alternarVisibilidadeSenha('recup-nova-senha', this)" aria-label="Mostrar ou ocultar senha">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icone-olho-fechado"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                            </button>
+                        </div>
                     </div>
 
                     <div class="login-input-group">
-                        <label for="recup-confirma-senha">Confirmar Nova Senha</label>
-                        <input type="password" id="recup-confirma-senha" class="login-input-field" placeholder="Repita a nova senha" minlength="6" required>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                            <label for="recup-confirma-senha" style="margin-bottom: 0;">Confirmar Nova Senha</label>
+                        </div>
+                        <div class="login-input-wrapper">
+                            <input type="password" id="recup-confirma-senha" class="login-input-field" placeholder="Repita a nova senha" minlength="6" required autocomplete="new-password">
+                            <button type="button" class="btn-toggle-senha" onclick="alternarVisibilidadeSenha('recup-confirma-senha', this)" aria-label="Mostrar ou ocultar senha">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icone-olho-fechado"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                            </button>
+                        </div>
                     </div>
 
-                    <button type="submit" class="btn-login-submit" style="background: var(--c-navy);">
+                    <button type="submit" id="btn-concluir-redefinicao" class="btn-login-submit" style="background: var(--c-navy);">
                         ✓ Salvar Nova Senha e Concluir
                     </button>
                 </form>
@@ -434,7 +451,7 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ tipo: 'time', login: email, senha })
                 });
-                const dadosApi = await resp.json();
+                const dadosApi = await parseResponseJsonSeguro(resp);
 
                 if (resp.ok && dadosApi.ok) {
                     localStorage.setItem('avv_sessao_ativa', JSON.stringify(dadosApi.sessao));
@@ -557,7 +574,7 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ tipo: 'adm', login: user, senha: pass })
                 });
-                const dadosApi = await resp.json();
+                const dadosApi = await parseResponseJsonSeguro(resp);
 
                 if (resp.ok && dadosApi.ok) {
                     if (dadosApi.sessao?.tipo !== 'adm') {
@@ -607,18 +624,41 @@
             document.getElementById('modal-recuperar-senha').style.display = 'none';
         }
 
+        async function parseResponseJsonSeguro(response) {
+            try {
+                const text = await response.text();
+                if (!text || !text.trim()) return {};
+                return JSON.parse(text);
+            } catch (err) {
+                console.warn('Resposta não é JSON válido:', err);
+                return {};
+            }
+        }
+
         async function enviarEmailRecuperacao(e) {
             e.preventDefault();
-            const email = document.getElementById('recup-email').value.trim().toLowerCase();
+            const emailInput = document.getElementById('recup-email');
+            const email = (emailInput.value || '').trim().toLowerCase();
             const btn = document.getElementById('btn-enviar-email-recup');
             const alertBox = document.getElementById('recup-alert-msg');
+            alertBox.style.display = 'none';
+
+            if (!email) {
+                alertBox.textContent = 'Por favor, digite o seu e-mail cadastrado.';
+                alertBox.className = 'alert-login-box error';
+                alertBox.style.display = 'block';
+                return;
+            }
 
             // Verifica se o e-mail existe localmente (ou delega para o servidor)
             let equipes = [];
             try {
                 equipes = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
             } catch(err) {}
-            const inscricoes = JSON.parse(localStorage.getItem('avv_inscricoes_teste') || '[]');
+            let inscricoes = [];
+            try {
+                inscricoes = JSON.parse(localStorage.getItem('avv_inscricoes_teste') || '[]');
+            } catch(err) {}
 
             const eq = equipes.find(item => (item.email || '').toLowerCase() === email) ||
                        inscricoes.find(item => (item.email || '').toLowerCase() === email);
@@ -637,28 +677,36 @@
                     })
                 });
 
-                const data = await response.json();
+                const data = await parseResponseJsonSeguro(response);
 
-                if (data.ok) {
+                if (response.ok && data.ok) {
                     emailRecuperacaoAtual = email;
                     document.getElementById('recup-email-enviado').textContent = email;
                     document.getElementById('recup-passo-1').style.display = 'none';
                     document.getElementById('recup-passo-2').style.display = 'block';
 
+                    // Feedback claro sobre a entrega do e-mail
+                    const feedbackBox = document.getElementById('recup-feedback-sucesso');
+                    if (feedbackBox) {
+                        feedbackBox.style.display = 'block';
+                    }
+
                     if (data.previewUrl) {
                         const boxPreview = document.getElementById('recup-preview-link-box');
                         const linkPreview = document.getElementById('recup-preview-link');
-                        linkPreview.href = data.previewUrl;
-                        boxPreview.style.display = 'block';
+                        if (boxPreview && linkPreview) {
+                            linkPreview.href = data.previewUrl;
+                            boxPreview.style.display = 'block';
+                        }
                     }
                 } else {
-                    alertBox.textContent = data.mensagem || 'Falha ao processar recuperação.';
+                    alertBox.textContent = data.mensagem || 'Falha ao processar recuperação de senha. Tente novamente em instantes.';
                     alertBox.className = 'alert-login-box error';
                     alertBox.style.display = 'block';
                 }
             } catch (err) {
-                console.error(err);
-                alertBox.textContent = 'Erro de conexão com o servidor de e-mail.';
+                console.error('Erro na requisição:', err);
+                alertBox.textContent = 'Erro de conexão com o servidor. Verifique sua rede e tente novamente.';
                 alertBox.className = 'alert-login-box error';
                 alertBox.style.display = 'block';
             } finally {
@@ -672,10 +720,35 @@
             const codigo = document.getElementById('recup-codigo').value.trim();
             const novaSenha = document.getElementById('recup-nova-senha').value;
             const confirmaSenha = document.getElementById('recup-confirma-senha').value;
+            const btnConcluir = document.getElementById('btn-concluir-redefinicao');
+            const alertRedefinir = document.getElementById('recup-redefinir-alert');
+            if (alertRedefinir) alertRedefinir.style.display = 'none';
 
             if (novaSenha !== confirmaSenha) {
-                alert('A confirmação de senha não coincide com a nova senha digitada.');
+                if (alertRedefinir) {
+                    alertRedefinir.textContent = 'A confirmação de senha não coincide com a nova senha digitada.';
+                    alertRedefinir.className = 'alert-login-box error';
+                    alertRedefinir.style.display = 'block';
+                } else {
+                    alert('A confirmação de senha não coincide com a nova senha digitada.');
+                }
                 return;
+            }
+
+            if (novaSenha.length < 6) {
+                if (alertRedefinir) {
+                    alertRedefinir.textContent = 'A nova senha deve possuir no mínimo 6 dígitos.';
+                    alertRedefinir.className = 'alert-login-box error';
+                    alertRedefinir.style.display = 'block';
+                } else {
+                    alert('A nova senha deve possuir no mínimo 6 dígitos.');
+                }
+                return;
+            }
+
+            if (btnConcluir) {
+                btnConcluir.disabled = true;
+                btnConcluir.innerHTML = 'Salvando nova senha...';
             }
 
             try {
@@ -690,21 +763,39 @@
                     })
                 });
 
-                const data = await response.json();
+                const data = await parseResponseJsonSeguro(response);
 
-                if (data.ok) {
+                if (response.ok && data.ok) {
                     // Atualiza a senha no banco local
                     atualizarSenhaNoBancoLocal(emailRecuperacaoAtual, novaSenha);
                     fecharModalRecuperarSenha();
                     document.getElementById('time-login-email').value = emailRecuperacaoAtual;
                     document.getElementById('time-login-pass').value = '';
-                    exibirAlertaLogin('✓ Senha redefinida com sucesso! Você já pode entrar com a nova senha.', 'success');
+                    exibirAlertaLogin('✓ Senha redefinida com sucesso! Você já pode entrar com sua nova senha.', 'success');
                 } else {
-                    alert(data.mensagem || 'Código de segurança incorreto.');
+                    const msgErro = data.mensagem || 'Código de segurança incorreto ou expirado. Verifique o código enviado no seu e-mail.';
+                    if (alertRedefinir) {
+                        alertRedefinir.textContent = msgErro;
+                        alertRedefinir.className = 'alert-login-box error';
+                        alertRedefinir.style.display = 'block';
+                    } else {
+                        alert(msgErro);
+                    }
                 }
             } catch (err) {
-                console.error(err);
-                alert('Erro ao redefinir senha no servidor.');
+                console.error('Erro ao redefinir:', err);
+                if (alertRedefinir) {
+                    alertRedefinir.textContent = 'Erro ao processar alteração no servidor. Tente novamente.';
+                    alertRedefinir.className = 'alert-login-box error';
+                    alertRedefinir.style.display = 'block';
+                } else {
+                    alert('Erro ao redefinir senha no servidor.');
+                }
+            } finally {
+                if (btnConcluir) {
+                    btnConcluir.disabled = false;
+                    btnConcluir.innerHTML = '✓ Salvar Nova Senha e Concluir';
+                }
             }
         }
 
