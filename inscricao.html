@@ -262,14 +262,29 @@
                 return;
             }
 
-            // Prevenção de duplicidade de e-mail cadastrado localmente
+            // Prevenção de duplicidade de e-mail e telefone/WhatsApp cadastrado localmente
+            const whatsDigitado = document.getElementById('whatsapp').value.trim();
+            const whatsDigitos = whatsDigitado.replace(/\D/g, '');
+
             try {
                 const equipesExistentes = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
-                const jaCadastrado = equipesExistentes.find(eq => (eq.email || '').toLowerCase() === emailDigitado);
-                if (jaCadastrado) {
-                    alert(`O e-mail "${emailDigitado}" já possui cadastro vinculado à equipe "${jaCadastrado.nomeTime}".\n\nVocê será direcionado para a tela de Login.`);
+                const inscricoesLocais = JSON.parse(localStorage.getItem('avv_inscricoes_teste') || '[]');
+                const todasContas = [...equipesExistentes, ...inscricoesLocais];
+
+                const jaCadastradoEmail = todasContas.find(eq => (eq.email || '').toLowerCase().trim() === emailDigitado);
+                if (jaCadastradoEmail) {
+                    alert(`O e-mail "${emailDigitado}" já possui cadastro vinculado à equipe "${jaCadastradoEmail.nomeTime || jaCadastradoEmail.nomeClube}".\n\nVocê será direcionado para a tela de Login.`);
                     window.location.href = 'login.html';
                     return;
+                }
+
+                if (whatsDigitos && whatsDigitos.length >= 8) {
+                    const jaCadastradoWhats = todasContas.find(eq => (eq.whatsapp || '').replace(/\D/g, '') === whatsDigitos);
+                    if (jaCadastradoWhats) {
+                        alert(`O telefone/WhatsApp "${whatsDigitado}" já está cadastrado para o clube "${jaCadastradoWhats.nomeTime || jaCadastradoWhats.nomeClube}".\n\nPor favor, informe outro número ou acesse o sistema pelo Login.`);
+                        document.getElementById('whatsapp').focus();
+                        return;
+                    }
                 }
             } catch (err) {}
 

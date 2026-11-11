@@ -1568,17 +1568,21 @@
             if (!sessao) return [];
 
             const emailSessao = (sessao.email || '').toLowerCase().trim();
-            const timeSessao = (sessao.nomeTime || '').toLowerCase().trim();
+            const clubeIdSessao = sessao.clubeId ? String(sessao.clubeId).trim() : '';
 
             const filtradas = db.filter(eq => {
                 // Descarta se for apenas o registro cadastral da conta do clube
                 if (eq.isContaClube || eq.categoria === '__CONTA_CLUBE__') return false;
 
                 const eqEmail = (eq.email || '').toLowerCase().trim();
-                const eqNome = (eq.nomeTime || '').toLowerCase().trim();
-                return (emailSessao && eqEmail === emailSessao) ||
-                       (timeSessao && eqNome.includes(timeSessao)) ||
-                       (sessao.equipeId && String(eq.id) === String(sessao.equipeId));
+                const eqClubeId = eq.clubeId ? String(eq.clubeId).trim() : '';
+
+                // O vínculo da equipe ao clube DEVE ser pelo e-mail oficial da conta do clube ou clubeId
+                if (emailSessao && eqEmail === emailSessao) return true;
+                if (clubeIdSessao && eqClubeId === clubeIdSessao) return true;
+                if (sessao.equipeId && String(eq.id) === String(sessao.equipeId)) return true;
+
+                return false;
             });
 
             return filtradas;
@@ -1842,14 +1846,25 @@
         }
 
         // =========================================================================
-        // BANCO GERAL DE ATLETAS DA AGREMIAÇÃO / CLUBE (DESVINCULADO DE TIME ESPECÍFICO)
+        // BANCO GERAL DE ATLETAS DA AGREMIAÇÃO / CLUBE (ISOLADO RIGOROSAMENTE POR CONTA DE CLUBE)
         // =========================================================================
+        function obterChaveStorageAtletasClube() {
+            try {
+                const sessao = JSON.parse(localStorage.getItem('avv_sessao_ativa') || '{}');
+                const idClube = (sessao.email || sessao.clubeId || 'default').toLowerCase().replace(/[^a-z0-9_-]/g, '_');
+                return `avv_atletas_clube_${idClube}`;
+            } catch (e) {
+                return 'avv_atletas_clube_default';
+            }
+        }
+
         function obterBancoAtletasClube() {
             try {
-                const salvos = localStorage.getItem('avv_atletas_clube_db');
+                const chave = obterChaveStorageAtletasClube();
+                const salvos = localStorage.getItem(chave);
                 let atletas = salvos ? JSON.parse(salvos) : [];
 
-                // Se o banco geral ainda estiver vazio, resgata atletas já salvos em equipes para não perder dados
+                // Se o banco isolado desta conta estiver vazio, resgata SOMENTE atletas das equipes DESTA CONTA
                 if (!Array.isArray(atletas) || atletas.length === 0) {
                     atletas = [];
                     const db = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
@@ -1865,7 +1880,7 @@
                         }
                     });
                     if (atletas.length > 0) {
-                        salvarStorageSeguro('avv_atletas_clube_db', JSON.stringify(atletas));
+                        salvarStorageSeguro(chave, JSON.stringify(atletas));
                     }
                 }
                 return Array.isArray(atletas) ? atletas : [];
@@ -1876,7 +1891,8 @@
 
         function salvarBancoAtletasClube(atletas) {
             try {
-                salvarStorageSeguro('avv_atletas_clube_db', JSON.stringify(atletas));
+                const chave = obterChaveStorageAtletasClube();
+                salvarStorageSeguro(chave, JSON.stringify(atletas));
             } catch (e) {}
         }
 

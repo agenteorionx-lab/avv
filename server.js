@@ -207,13 +207,28 @@ app.post(['/api/equipes/cadastrar', '/avv/api/equipes/cadastrar'], (req, res) =>
 
         const db = carregarBancoDados();
 
-        // Verifica duplicidade por e-mail
-        const existente = db.equipes.find(e => (e.email || '').toLowerCase() === email);
+        // Normalização do WhatsApp/Telefone para comparação (apenas dígitos)
+        const whatsLimpo = sanitizarTexto(body.whatsapp || '', 30).replace(/\D/g, '');
+
+        // Verifica duplicidade por e-mail ou telefone
+        const existente = db.equipes.find(e => {
+            const eEmail = (e.email || '').toLowerCase().trim();
+            const eWhats = (e.whatsapp || '').replace(/\D/g, '');
+            if (eEmail === email) return true;
+            if (whatsLimpo && whatsLimpo.length >= 8 && eWhats === whatsLimpo) return true;
+            return false;
+        });
+
         if (existente) {
+            const eEmail = (existente.email || '').toLowerCase().trim();
+            const motivo = (eEmail === email)
+                ? `O e-mail "${email}" já possui cadastro vinculado à equipe "${existente.nomeTime}".`
+                : `O telefone/WhatsApp "${body.whatsapp}" já possui cadastro vinculado à equipe "${existente.nomeTime}".`;
+
             return res.status(409).json({
                 ok: false,
                 duplicado: true,
-                mensagem: `O e-mail "${email}" já possui cadastro vinculado à equipe "${existente.nomeTime}".`,
+                mensagem: `${motivo} Utilize outro ou recupere o acesso na tela de login.`,
                 equipe: limparEquipeParaCliente(existente)
             });
         }
