@@ -532,18 +532,40 @@
 
                             <div style="display: flex; flex-direction: column; gap: 14px;">
                                 <div>
-                                    <label style="display: block; font-size: 11px; font-weight: 700; color: #334155; margin-bottom: 4px;">NOME COMPLETO *</label>
+                                    <label style="display: block; font-size: 11px; font-weight: 700; color: #334155; margin-bottom: 4px;">RAZÃO SOCIAL / NOME DO CLUBE OU AGREMIAÇÃO *</label>
+                                    <input type="text" id="prof-clube-nome" style="width: 100%; height: 38px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 13px;" placeholder="Ex: Vilhena Vôlei Clube">
+                                </div>
+
+                                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 10px;">
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #334155; margin-bottom: 4px;">CIDADE SEDE *</label>
+                                        <input type="text" id="prof-cidade" style="width: 100%; height: 38px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 13px;" placeholder="Ex: Vilhena">
+                                    </div>
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #334155; margin-bottom: 4px;">ESTADO (UF) *</label>
+                                        <input type="text" id="prof-estado" maxlength="2" style="width: 100%; height: 38px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 13px; text-transform: uppercase;" placeholder="RO">
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label style="display: block; font-size: 11px; font-weight: 700; color: #334155; margin-bottom: 4px;">NOME COMPLETO DO DIRIGENTE RESPONSÁVEL *</label>
                                     <input type="text" id="prof-nome" style="width: 100%; height: 38px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 13px;" value="Dirigente Responsável">
                                 </div>
 
                                 <div>
-                                    <label style="display: block; font-size: 11px; font-weight: 700; color: #334155; margin-bottom: 4px;">E-MAIL DE ACESSO *</label>
+                                    <label style="display: block; font-size: 11px; font-weight: 700; color: #334155; margin-bottom: 4px;">E-MAIL DE ACESSO (LOGIN) *</label>
                                     <input type="email" id="prof-email" style="width: 100%; height: 38px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 13px;" value="contato@avv.com.br">
                                 </div>
 
-                                <div>
-                                    <label style="display: block; font-size: 11px; font-weight: 700; color: #334155; margin-bottom: 4px;">Nº DO WHATSAPP (OPCIONAL)</label>
-                                    <input type="text" id="prof-whats" style="width: 100%; height: 38px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 13px;" value="(69) 99209-9604">
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #334155; margin-bottom: 4px;">TELEFONE / WHATSAPP *</label>
+                                        <input type="text" id="prof-whats" style="width: 100%; height: 38px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 13px;" placeholder="(69) 99999-9999">
+                                    </div>
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #334155; margin-bottom: 4px;">INSTAGRAM OFICIAL (@)</label>
+                                        <input type="text" id="prof-instagram" style="width: 100%; height: 38px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 13px;" placeholder="@nomedotime">
+                                    </div>
                                 </div>
 
                                 <button class="btn-action-text-green" style="align-self: flex-start; margin-top: 8px;" onclick="salvarDadosDirigente()">
@@ -1041,6 +1063,39 @@
                     </div>
                 </div>
 
+                <!-- SEÇÃO DA COMISSÃO TÉCNICA DA EQUIPE (MÁX. 2 MEMBROS) -->
+                <div class="fed-card-container" style="margin-bottom: 0;">
+                    <div class="fed-header-gold" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span>COMISSÃO TÉCNICA DA EQUIPE (<span id="vis-total-comissao-roster">0/2</span> - MÁX. 2 TÉCNICOS)</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                            <button id="btn-modal-incluir-tecnico" onclick="abrirModalAdicionarTecnicoEquipe()" class="btn-action-text-green" style="font-size: 11px; padding: 6px 14px; height: 32px; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px;">
+                                + Incluir Técnico na Equipe
+                            </button>
+                        </div>
+                    </div>
+
+                    <div style="overflow-x: auto;">
+                        <table class="table-avv-roster">
+                            <thead>
+                                <tr>
+                                    <th style="width: 70px; text-align: center;">FOTO</th>
+                                    <th>NOME DO TÉCNICO / MEMBRO</th>
+                                    <th>INSCRIÇÃO TÉCNICA</th>
+                                    <th>FUNÇÃO / CARGO</th>
+                                    <th>CPF</th>
+                                    <th>STATUS</th>
+                                    <th style="text-align: center; width: 140px;">AÇÕES</th>
+                                </tr>
+                            </thead>
+                            <tbody id="vis-tabela-comissao-corpo">
+                                <!-- Técnicos vinculados serão exibidos aqui -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
             </div>
 
             <!-- RODAPÉ DO MODAL -->
@@ -1068,8 +1123,11 @@
             </div>
 
             <div style="padding: 20px; overflow-y: auto; flex: 1;">
-                <div style="margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #475569;">
-                    <span>Selecione os atletas disponíveis no banco do clube:</span>
+                <div style="margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #475569; flex-wrap: wrap; gap: 8px;">
+                    <div>
+                        <span>Selecione os atletas disponíveis no banco do clube:</span>
+                        <span id="selecao-atletas-contador-badge" style="display: none; margin-left: 8px; font-weight: 700; color: #16a34a; background: #dcfce7; padding: 2px 8px; border-radius: 12px; font-size: 11px;">0 selecionado(s)</span>
+                    </div>
                     <span style="font-weight: 700; color: #166534;">Exibindo apenas cadastros homologados</span>
                 </div>
 
@@ -1077,6 +1135,9 @@
                     <table class="table-avv-roster">
                         <thead>
                             <tr>
+                                <th style="width: 40px; text-align: center;">
+                                    <input type="checkbox" id="chk-selecionar-todos-atletas-modal" onchange="alternarSelecionarTodosAtletasModal(this.checked)" style="cursor: pointer; width: 16px; height: 16px;" title="Marcar / Desmarcar todos os disponíveis">
+                                </th>
                                 <th style="width: 45px; text-align: center;">FOTO</th>
                                 <th>NOME DO ATLETA</th>
                                 <th>INSCRIÇÃO</th>
@@ -1087,7 +1148,7 @@
                         </thead>
                         <tbody id="tabela-banco-atletas-corpo">
                             <tr>
-                                <td colspan="6" style="text-align: center; padding: 24px; color: #64748b;">
+                                <td colspan="7" style="text-align: center; padding: 24px; color: #64748b;">
                                     Cadastre atletas na aba "Atletas" para vinculá-los à equipe.
                                 </td>
                             </tr>
@@ -1096,9 +1157,67 @@
                 </div>
             </div>
 
-            <div style="background: #f1f5f9; padding: 12px 20px; display: flex; justify-content: flex-end;">
+            <div style="background: #f1f5f9; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #e2e8f0;">
                 <button onclick="fecharModalAdicionarAtletaEquipe()" style="padding: 7px 16px; background: #64748b; color: #fff; border: none; border-radius: 4px; font-size: 12px; font-weight: 700; cursor: pointer;">
                     Voltar
+                </button>
+                <button id="btn-salvar-atletas-selecionados" onclick="salvarAtletasSelecionadosEmLote()" class="btn-action-text-green" style="font-size: 12px; padding: 8px 20px; height: auto; display: inline-flex; align-items: center; gap: 8px; font-weight: 700; box-shadow: 0 2px 6px rgba(22,163,74,0.3);">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    <span>Salvar Atletas Selecionados</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================================== -->
+    <!-- MODAL: INCLUIR TÉCNICO NA EQUIPE (BANCO DA COMISSÃO DO CLUBE)             -->
+    <!-- ========================================================================== -->
+    <div id="modal-adicionar-tecnico-equipe" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 28, 63, 0.8); z-index: 2800; align-items: center; justify-content: center; backdrop-filter: blur(4px); padding: 15px;">
+        <div style="background: #ffffff; width: 100%; max-width: 820px; max-height: 88vh; border-radius: 6px; box-shadow: 0 15px 40px rgba(0,0,0,0.4); display: flex; flex-direction: column; overflow: hidden;">
+            
+            <div style="background: #0f1c3f; color: #ffffff; padding: 14px 22px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #c5a021;">
+                <div>
+                    <h4 id="modal-add-tec-titulo" style="font-size: 14px; font-weight: 800; text-transform: uppercase; margin: 0; letter-spacing: 0.5px;">+ Incluir Técnico na Equipe</h4>
+                    <span style="font-size: 11px; color: #cbd5e1;">Selecione até 2 técnicos do banco da agremiação (os técnicos podem ser repetidos em outras equipes)</span>
+                </div>
+                <button onclick="fecharModalAdicionarTecnicoEquipe()" style="background: none; border: none; font-size: 22px; color: #ffffff; cursor: pointer;">&times;</button>
+            </div>
+
+            <div style="padding: 20px; overflow-y: auto; flex: 1;">
+                <div style="margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #475569; flex-wrap: wrap; gap: 8px;">
+                    <div>
+                        <span>Técnicos homologados no clube disponíveis para vinculação:</span>
+                    </div>
+                    <span style="font-weight: 700; color: #0f1c3f;">Limite Máximo: 2 Técnicos</span>
+                </div>
+
+                <div style="border: 1px solid #e2e8f0; border-radius: 4px; overflow: hidden;">
+                    <table class="table-avv-roster">
+                        <thead>
+                            <tr>
+                                <th style="width: 50px; text-align: center;">FOTO</th>
+                                <th>NOME DO MEMBRO</th>
+                                <th>INSCRIÇÃO TÉCNICA</th>
+                                <th>FUNÇÃO / CARGO</th>
+                                <th>CPF</th>
+                                <th>STATUS</th>
+                                <th style="text-align: center; width: 130px;">AÇÃO</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabela-banco-tecnicos-modal-corpo">
+                            <tr>
+                                <td colspan="7" style="text-align: center; padding: 24px; color: #64748b;">
+                                    Cadastre membros na aba "Comissão" para vinculá-los à equipe.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div style="background: #f1f5f9; padding: 12px 20px; display: flex; justify-content: flex-end; border-top: 1px solid #e2e8f0;">
+                <button onclick="fecharModalAdicionarTecnicoEquipe()" style="padding: 7px 16px; background: #64748b; color: #fff; border: none; border-radius: 4px; font-size: 12px; font-weight: 700; cursor: pointer;">
+                    Fechar
                 </button>
             </div>
         </div>
@@ -1958,6 +2077,57 @@
             } catch (e) {}
         }
 
+        // =========================================================================
+        // BANCO GERAL DA COMISSÃO TÉCNICA DO CLUBE (ISOLADO POR CONTA DE CLUBE)
+        // Permite cadastrar técnicos que podem ser associados a múltiplas equipes do clube
+        // =========================================================================
+        function obterChaveStorageComissaoClube() {
+            try {
+                const sessao = JSON.parse(localStorage.getItem('avv_sessao_ativa') || '{}');
+                const idClube = (sessao.email || sessao.clubeId || 'default').toLowerCase().replace(/[^a-z0-9_-]/g, '_');
+                return `avv_comissao_clube_${idClube}`;
+            } catch (e) {
+                return 'avv_comissao_clube_default';
+            }
+        }
+
+        function obterBancoComissaoClube() {
+            try {
+                const chave = obterChaveStorageComissaoClube();
+                const salvos = localStorage.getItem(chave);
+                let lista = salvos ? JSON.parse(salvos) : [];
+
+                if (!Array.isArray(lista) || lista.length === 0) {
+                    lista = [];
+                    const db = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
+                    const sessao = JSON.parse(localStorage.getItem('avv_sessao_ativa') || '{}');
+                    const equipes = obterEquipesDesteClube(db, sessao);
+                    equipes.forEach(eq => {
+                        if (Array.isArray(eq.comissao)) {
+                            eq.comissao.forEach(tc => {
+                                if (!lista.some(t => String(t.id) === String(tc.id))) {
+                                    lista.push({ ...tc });
+                                }
+                            });
+                        }
+                    });
+                    if (lista.length > 0) {
+                        salvarStorageSeguro(chave, JSON.stringify(lista));
+                    }
+                }
+                return Array.isArray(lista) ? lista : [];
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function salvarBancoComissaoClube(lista) {
+            try {
+                const chave = obterChaveStorageComissaoClube();
+                salvarStorageSeguro(chave, JSON.stringify(lista));
+            } catch (e) {}
+        }
+
         function normalizarNaipe(txt) {
             const s = String(txt || '').toLowerCase();
             if (s.includes('fem')) return 'Feminino';
@@ -2256,22 +2426,254 @@
             });
 
             atualizarContadorRosterModal();
+            renderizarComissaoEquipeModal(equipe);
         }
 
-        // Renderiza comissão técnica
-        function renderizarComissaoTecnica(equipe) {
+        // Renderiza a comissão técnica exclusiva vinculada a esta equipe específica
+        function renderizarComissaoEquipeModal(equipe) {
+            const corpoComissao = document.getElementById('vis-tabela-comissao-corpo');
+            if (!corpoComissao) return;
+
+            corpoComissao.innerHTML = '';
+            const comissao = (equipe && Array.isArray(equipe.comissao)) ? equipe.comissao : [];
+            const prazoEncerrado = verificarPrazoInscricaoEquipeEncerrado(equipe);
+
+            const elTotal = document.getElementById('vis-total-comissao-roster');
+            if (elTotal) elTotal.textContent = `${comissao.length}/2`;
+
+            const btnAdd = document.getElementById('btn-modal-incluir-tecnico');
+            if (btnAdd) {
+                if (prazoEncerrado) {
+                    btnAdd.style.display = 'none';
+                } else if (comissao.length >= 2) {
+                    btnAdd.style.display = 'none';
+                } else {
+                    btnAdd.style.display = 'inline-flex';
+                }
+            }
+
+            if (comissao.length === 0) {
+                corpoComissao.innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align: center; padding: 24px 16px; color: #64748b; font-size: 12.5px;">
+                            <div style="font-weight: 700; color: #334155; margin-bottom: 4px;">Nenhum técnico vinculado a esta equipe.</div>
+                            <div style="font-size: 11.5px; color: #94a3b8; margin-bottom: 10px;">Vincule até 2 membros da comissão técnica homologada do clube.</div>
+                            ${prazoEncerrado ? '' : `
+                            <button onclick="abrirModalAdicionarTecnicoEquipe()" class="btn-action-text-green" style="font-size: 11px; padding: 6px 14px; height: 30px; display: inline-flex; align-items: center; gap: 6px; margin: 0 auto;">
+                                + Incluir Técnico na Equipe
+                            </button>`}
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            comissao.forEach(tec => {
+                const num = tec.id;
+                const nome = (tec.nome || 'TÉCNICO').toUpperCase();
+                const funcao = tec.funcao || 'Técnico';
+                const cpf = tec.cpf || '---';
+                const foto = tec.foto || 'logos/mascote_coelho.png';
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="text-align: center;"><img src="${foto}" class="atleta-roster-thumb" alt="Foto"></td>
+                    <td><strong style="color: #1e293b; font-size: 13px;">${nome}</strong></td>
+                    <td><strong style="color: #0f1c3f; font-size: 13px;">${num}</strong></td>
+                    <td><span style="color: #0f766e; font-weight: 700;">${funcao}</span></td>
+                    <td>${cpf}</td>
+                    <td><span class="badge-status-concluido">✓ Homologado</span></td>
+                    <td style="text-align: center;">
+                        ${prazoEncerrado ? `
+                        <span title="Inscrições encerradas" style="color: #94a3b8; font-size: 11px;">Bloqueado</span>` : `
+                        <button class="btn-table-icon" style="color: #dc2626;" title="Desvincular Técnico da Equipe" onclick="removerTecnicoDaEquipe('${num}', '${nome}')">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                        </button>`}
+                    </td>
+                `;
+                corpoComissao.appendChild(tr);
+            });
+        }
+
+        function abrirModalAdicionarTecnicoEquipe() {
+            const equipe = equipeSelecionadaVisualizacao || obterEquipeAtualDoBanco().equipe;
+            if (!equipe) {
+                avvAlert('Nenhuma equipe selecionada.', 'Atenção', 'warning');
+                return;
+            }
+
+            if (verificarPrazoInscricaoEquipeEncerrado(equipe)) {
+                avvAlert('As inscrições deste campeonato foram encerradas oficialmente. O elenco e a comissão estão congelados.', 'Inscrições Encerradas', 'warning');
+                return;
+            }
+
+            equipe.comissao = equipe.comissao || [];
+            if (equipe.comissao.length >= 2) {
+                avvAlert('Limite atingido: Esta equipe já possui 2 técnicos vinculados (máximo regulamentar permitido por equipe).', 'Limite Regulamentar', 'warning');
+                return;
+            }
+
+            const corpoModal = document.getElementById('tabela-banco-tecnicos-modal-corpo');
+            if (!corpoModal) return;
+
+            corpoModal.innerHTML = '';
+            const todosTecnicos = obterBancoComissaoClube();
+
+            if (todosTecnicos.length === 0) {
+                corpoModal.innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align: center; padding: 28px 16px; color: #64748b; font-size: 12.5px;">
+                            <div style="font-weight: 700; color: #b45309; margin-bottom: 6px;">Nenhum membro da comissão técnica cadastrado no clube.</div>
+                            <div style="line-height: 1.5;">Vá até a aba <strong>"Comissão"</strong> no painel e cadastre seus técnicos.</div>
+                        </td>
+                    </tr>
+                `;
+            } else {
+                todosTecnicos.forEach(tec => {
+                    const num = tec.id;
+                    const nome = (tec.nome || 'TÉCNICO').toUpperCase();
+                    const funcao = tec.funcao || 'Técnico';
+                    const cpf = tec.cpf || '---';
+                    const foto = tec.foto || 'logos/mascote_coelho.png';
+
+                    const jaNestaEquipe = Array.isArray(equipe.comissao) && equipe.comissao.some(t => String(t.id) === String(num));
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td style="text-align: center;"><img src="${foto}" class="atleta-roster-thumb" alt="Foto"></td>
+                        <td><strong style="color: #1e293b; font-size: 13px;">${nome}</strong></td>
+                        <td><strong style="color: #0f1c3f; font-size: 13px;">${num}</strong></td>
+                        <td><span style="color: #0f766e; font-weight: 700;">${funcao}</span></td>
+                        <td>${cpf}</td>
+                        <td>
+                            ${jaNestaEquipe 
+                                ? '<span style="font-size: 10px; font-weight: 800; color: #15803d; background: #dcfce7; padding: 3px 8px; border-radius: 3px;">✓ NESTA EQUIPE</span>'
+                                : '<span style="font-size: 10px; font-weight: 800; color: #0369a1; background: #e0f2fe; padding: 3px 8px; border-radius: 3px;">HOMOLOGADO</span>'
+                            }
+                        </td>
+                        <td style="text-align: center;">
+                            ${jaNestaEquipe
+                                ? '<button disabled style="background: #e2e8f0; color: #64748b; border: 1px solid #cbd5e1; padding: 5px 14px; border-radius: 4px; font-size: 11px; font-weight: 700; cursor: not-allowed;">Já Vinculado</button>'
+                                : `<button onclick="vincularTecnicoAEquipe('${num}')" class="btn-action-text-green" style="font-size: 11px; padding: 6px 14px; height: auto; text-transform: uppercase; font-weight: 700; letter-spacing: 0.3px;">+ Vincular</button>`
+                            }
+                        </td>
+                    `;
+                    corpoModal.appendChild(tr);
+                });
+            }
+
+            document.getElementById('modal-adicionar-tecnico-equipe').style.display = 'flex';
+        }
+
+        function fecharModalAdicionarTecnicoEquipe() {
+            document.getElementById('modal-adicionar-tecnico-equipe').style.display = 'none';
+        }
+
+        function vincularTecnicoAEquipe(tecnicoId) {
+            const equipe = equipeSelecionadaVisualizacao || obterEquipeAtualDoBanco().equipe;
+            if (!equipe) return;
+
+            equipe.comissao = equipe.comissao || [];
+            if (equipe.comissao.length >= 2) {
+                avvAlert('Esta equipe já possui 2 técnicos vinculados (limite máximo permitido).', 'Limite Regulamentar', 'warning');
+                return;
+            }
+
+            if (equipe.comissao.some(t => String(t.id) === String(tecnicoId))) {
+                avvAlert('Este membro já está vinculado a esta equipe.', 'Aviso', 'warning');
+                return;
+            }
+
+            const bancoComissao = obterBancoComissaoClube();
+            const tec = bancoComissao.find(t => String(t.id) === String(tecnicoId));
+            if (!tec) {
+                avvAlert('Técnico não encontrado no banco do clube.', 'Erro', 'danger');
+                return;
+            }
+
+            // Insere na comissão desta equipe (permite repetir em outras equipes)
+            equipe.comissao.push({ ...tec });
+
+            const db = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
+            const idxEq = db.findIndex(e => String(e.id) === String(equipe.id));
+            if (idxEq !== -1) {
+                db[idxEq] = equipe;
+            } else {
+                db.unshift(equipe);
+            }
+            salvarStorageSeguro('avv_equipes_completo_db', JSON.stringify(db));
+            persistirEquipeNoBancoEServidor(equipe, db);
+
+            renderizarComissaoEquipeModal(equipe);
+            const sessao = JSON.parse(localStorage.getItem('avv_sessao_ativa') || '{}');
+            renderizarEquipesClubeView(obterEquipesDesteClube(db, sessao));
+
+            fecharModalAdicionarTecnicoEquipe();
+            avvAlert(`Técnico "${tec.nome}" vinculado com sucesso à equipe ${equipe.nomeTime}!`, 'Comissão Atualizada', 'success');
+        }
+
+        async function removerTecnicoDaEquipe(tecnicoId, nome) {
+            const equipe = equipeSelecionadaVisualizacao || obterEquipeAtualDoBanco().equipe;
+            if (!equipe) return;
+
+            if (verificarPrazoInscricaoEquipeEncerrado(equipe)) {
+                avvAlert('Inscrições encerradas para este campeonato.', 'Aviso', 'warning');
+                return;
+            }
+
+            const confirmou = await avvConfirm(`Deseja desvincular o técnico "${nome}" desta equipe?\n\n(Ele continuará cadastrado no banco da comissão técnica do clube e em outras equipes onde estiver associado).`, 'Desvincular Técnico', {
+                tipo: 'danger',
+                textoConfirmar: 'Sim, Desvincular',
+                corConfirmar: '#dc2626'
+            });
+
+            if (confirmou) {
+                equipe.comissao = (equipe.comissao || []).filter(t => String(t.id) !== String(tecnicoId));
+
+                const db = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
+                const idxEq = db.findIndex(e => String(e.id) === String(equipe.id));
+                if (idxEq !== -1) {
+                    db[idxEq] = equipe;
+                }
+                salvarStorageSeguro('avv_equipes_completo_db', JSON.stringify(db));
+                persistirEquipeNoBancoEServidor(equipe, db);
+
+                renderizarComissaoEquipeModal(equipe);
+                const sessao = JSON.parse(localStorage.getItem('avv_sessao_ativa') || '{}');
+                renderizarEquipesClubeView(obterEquipesDesteClube(db, sessao));
+
+                avvAlert(`Técnico "${nome}" desvinculado desta equipe.`, 'Comissão Atualizada', 'success');
+            }
+        }
+
+        // Renderiza a comissão técnica do clube (Aba "Comissão")
+        function renderizarComissaoTecnica() {
             const listaCardsTecnicos = document.getElementById('lista-cards-tecnicos');
             if (!listaCardsTecnicos) return;
 
             listaCardsTecnicos.innerHTML = '';
-            const comissao = (equipe && Array.isArray(equipe.comissao)) ? equipe.comissao : [];
+            const comissao = obterBancoComissaoClube();
+
+            if (comissao.length === 0) {
+                listaCardsTecnicos.innerHTML = `
+                    <div style="grid-column: 1 / -1; padding: 36px 20px; text-align: center; color: #64748b; font-size: 13px; background: #ffffff; border: 1px dashed #cbd5e1; border-radius: 4px;">
+                        <p style="margin: 0 0 10px 0; font-weight: 700; color: #334155;">Nenhum membro cadastrado na comissão técnica do clube.</p>
+                        <p style="margin: 0 0 14px 0; font-size: 12px; color: #64748b;">Cadastre técnicos e preparadores do seu clube. Em seguida, vincule-os manualmente às equipes desejadas (máximo 2 por equipe).</p>
+                        <button onclick="abrirModalTecnico()" class="btn-action-text-green" style="margin: 0 auto; font-size: 12px; height: 34px; padding: 0 16px;">
+                            + Cadastrar Primeiro Técnico
+                        </button>
+                    </div>
+                `;
+                atualizarContadoresTime();
+                return;
+            }
 
             comissao.forEach(tec => {
                 const num = tec.id || Math.floor(100000 + Math.random() * 900000);
                 const nome = (tec.nome || 'TÉCNICO').toUpperCase();
                 const funcao = tec.funcao || 'Técnico';
                 const cpf = tec.cpf || '---';
-                const dataHora = tec.dataHora || (equipe && equipe.dataHoraCompleta) || '---';
+                const dataHora = tec.dataHora || '---';
                 const foto = tec.foto || 'logos/mascote_coelho.png';
 
                 const card = document.createElement('div');
@@ -2313,22 +2715,29 @@
 
         function renderizarAtletasEComissaoSalvos(equipe) {
             renderizarCardsAtletasDoClube();
+            renderizarComissaoTecnica();
             if (equipe) {
                 renderizarRosterEquipeModal(equipe);
-                renderizarComissaoTecnica(equipe);
             }
         }
 
         // Puxa dados da pré-inscrição realizada e sessão ativa
         document.addEventListener('DOMContentLoaded', async () => {
             try {
-                // Limpeza de registros fictícios que possam ter ficado salvos em sessões de teste anteriores
-                if (!localStorage.getItem('avv_sistema_limpo_v4')) {
+                // Limpeza de registros fictícios que possam ter ficado salvos em sessões de teste anteriores (preserva o oficial XXI COPA AVV)
+                if (!localStorage.getItem('avv_sistema_limpo_v5')) {
                     try {
-                        localStorage.removeItem('avv_banco_campeonatos');
-                        localStorage.setItem('avv_banco_campeonatos', JSON.stringify({}));
+                        const salvosRaw = localStorage.getItem('avv_banco_campeonatos');
+                        let obj = {};
+                        if (salvosRaw) {
+                            try { obj = JSON.parse(salvosRaw) || {}; } catch(e) {}
+                        }
+                        if (!obj['camp-1794335645971']) {
+                            obj['camp-1794335645971'] = bancoPadraoCampeonatos['camp-1794335645971'];
+                        }
+                        localStorage.setItem('avv_banco_campeonatos', JSON.stringify(obj));
                     } catch(e) {}
-                    localStorage.setItem('avv_sistema_limpo_v4', 'true');
+                    localStorage.setItem('avv_sistema_limpo_v5', 'true');
                 }
 
                 // Prioriza a sessão ativa logada e verifica prazo de inatividade
@@ -2401,6 +2810,11 @@
 
                 if (document.getElementById('prof-nome') && sessao.responsavelNome) document.getElementById('prof-nome').value = sessao.responsavelNome;
                 if (document.getElementById('prof-email') && sessao.email) document.getElementById('prof-email').value = sessao.email;
+                if (document.getElementById('prof-clube-nome') && (sessao.nomeClube || sessao.nomeTime)) document.getElementById('prof-clube-nome').value = sessao.nomeClube || sessao.nomeTime;
+                if (document.getElementById('prof-cidade') && sessao.cidade) document.getElementById('prof-cidade').value = sessao.cidade;
+                if (document.getElementById('prof-estado') && sessao.estado) document.getElementById('prof-estado').value = sessao.estado;
+                if (document.getElementById('prof-whats') && sessao.whatsapp) document.getElementById('prof-whats').value = sessao.whatsapp;
+                if (document.getElementById('prof-instagram') && sessao.instagram) document.getElementById('prof-instagram').value = sessao.instagram;
 
                 let dadosEquipe = null;
                 if (sessao && sessao.equipeId) {
@@ -2412,6 +2826,22 @@
 
                 if (dadosEquipe) {
                     const ult = dadosEquipe;
+                    // Se não estava no objeto de sessão, carrega dos dados salvos da equipe
+                    if (document.getElementById('prof-clube-nome') && !document.getElementById('prof-clube-nome').value && (ult.nomeClube || ult.nomeTime)) {
+                        document.getElementById('prof-clube-nome').value = ult.nomeClube || ult.nomeTime;
+                    }
+                    if (document.getElementById('prof-cidade') && !document.getElementById('prof-cidade').value && ult.cidade) {
+                        document.getElementById('prof-cidade').value = ult.cidade;
+                    }
+                    if (document.getElementById('prof-estado') && !document.getElementById('prof-estado').value && ult.estado) {
+                        document.getElementById('prof-estado').value = ult.estado;
+                    }
+                    if (document.getElementById('prof-whats') && !document.getElementById('prof-whats').value && ult.whatsapp) {
+                        document.getElementById('prof-whats').value = ult.whatsapp;
+                    }
+                    if (document.getElementById('prof-instagram') && !document.getElementById('prof-instagram').value && ult.instagram) {
+                        document.getElementById('prof-instagram').value = ult.instagram;
+                    }
                     renderizarAtletasEComissaoSalvos(ult);
 
                     // Garante que a equipe selecionada esteja sincronizada no servidor
@@ -2491,18 +2921,45 @@
 
         // BANCO CENTRAL DE CAMPEONATOS (SINCRONIZADO COM O PAINEL DE ADMINISTRAÇÃO)
         let bancoCampeonatos = {};
-        const bancoPadraoCampeonatos = {};
+        const bancoPadraoCampeonatos = {
+            "camp-1794335645971": {
+                id: "camp-1794335645971",
+                nome: "XXI COPA AVV DE VOLEIBOL",
+                modalidade: "Quadra",
+                fase: "Inscrições Abertas até 16/11/2026 às 17:59",
+                dataLimiteEncerramento: "2026-11-16T20:59:00.000Z",
+                taxa: "Gratuito / Filiação Regular",
+                limiteAtletas: 12,
+                status: "Ativo",
+                ativo: true,
+                statusTorneio: "ativo",
+                banner: "avv_superliga_athlete.png",
+                descricao: "A Competição denominada 21ª - Copa AVV de Voleibol ocorrerá nas categorias SUB–15 (nascidos no ano de 2012 e mais novos), SUB-18 (nascidos no ano de 2009 e mais novos) e na categoria Adulto (aberto), na modalidade de Voleibol nos naipes masculino e feminino. A competição organizada pela Associação Vilhenense de Voleibol - AVV, reúne equipes do Estado de Rondônia e região. Sendo realizada no período de 19 a 22 de novembro 2026 na cidade de Vilhena – Rondônia.",
+                categoriasAceitas: [
+                    "Sub-15 Masculino",
+                    "Sub-15 Feminino",
+                    "Sub-18 Masculino",
+                    "Sub-18 Feminino",
+                    "Adulto Masculino",
+                    "Adulto Feminino"
+                ],
+                regulamento: "<h4>REGULAMENTO OFICIAL - AVV 2026</h4><p>REGULAMENTO OFICIAL - AVV 2026<br><br>CAPÍTULO I - DA FINALIDADE<br>Art. 1º - Torneio oficial homologado pela AVV 2026.<br><br>CAPÍTULO II - REQUISITOS<br>Art. 2º - Atletas federados com documentação regularizada.</p>"
+            }
+        };
 
         function carregarCampeonatosPainelTime() {
             const salvos = localStorage.getItem('avv_banco_campeonatos');
             if (salvos) {
                 try {
                     bancoCampeonatos = JSON.parse(salvos);
+                    if (!bancoCampeonatos || Object.keys(bancoCampeonatos).length === 0) {
+                        bancoCampeonatos = { ...bancoPadraoCampeonatos };
+                    }
                 } catch(e) {
-                    bancoCampeonatos = {};
+                    bancoCampeonatos = { ...bancoPadraoCampeonatos };
                 }
             } else {
-                bancoCampeonatos = {};
+                bancoCampeonatos = { ...bancoPadraoCampeonatos };
             }
 
             renderizarListaCampeonatosTime();
@@ -3748,41 +4205,63 @@
             const cpf = document.getElementById('modal-tec-cpf').value.trim();
             const funcao = document.getElementById('modal-tec-funcao').value;
 
-            const { db, idx, equipe } = obterEquipeAtualDoBanco();
+            const bancoComissao = obterBancoComissaoClube();
 
             if (idTecnicoEmEdicao) {
-                if (equipe) {
-                    equipe.comissao = equipe.comissao || [];
-                    const iTec = equipe.comissao.findIndex(t => String(t.id) === String(idTecnicoEmEdicao));
-                    if (iTec !== -1) {
-                        equipe.comissao[iTec] = {
-                            ...equipe.comissao[iTec],
-                            nome: nome.toUpperCase(),
-                            cpf: cpf || '---',
-                            funcao,
-                            dataHora,
-                            foto: tecnicoFotoDataUrl
-                        };
-                    }
-                    persistirEquipeNoBancoEServidor(equipe, db);
-                    renderizarAtletasEComissaoSalvos(equipe);
-                }
-                avvAlert(`Membro da Comissão Técnica "${nome}" atualizado com sucesso!`, 'Comissão Técnica', 'success');
-            } else {
-                if (equipe) {
-                    equipe.comissao = equipe.comissao || [];
-                    equipe.comissao.unshift({
-                        id: String(num),
+                const iTec = bancoComissao.findIndex(t => String(t.id) === String(idTecnicoEmEdicao));
+                if (iTec !== -1) {
+                    bancoComissao[iTec] = {
+                        ...bancoComissao[iTec],
                         nome: nome.toUpperCase(),
                         cpf: cpf || '---',
                         funcao,
                         dataHora,
                         foto: tecnicoFotoDataUrl
-                    });
-                    persistirEquipeNoBancoEServidor(equipe, db);
-                    renderizarAtletasEComissaoSalvos(equipe);
+                    };
                 }
-                avvAlert(`Membro da Comissão Técnica "${nome}" cadastrado com sucesso!`, 'Comissão Técnica', 'success');
+                salvarBancoComissaoClube(bancoComissao);
+
+                // Atualiza também nas equipes do clube onde esse técnico esteja vinculado
+                try {
+                    const db = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
+                    const sessao = JSON.parse(localStorage.getItem('avv_sessao_ativa') || '{}');
+                    const equipes = obterEquipesDesteClube(db, sessao);
+                    equipes.forEach(eq => {
+                        if (Array.isArray(eq.comissao)) {
+                            const idx = eq.comissao.findIndex(t => String(t.id) === String(idTecnicoEmEdicao));
+                            if (idx !== -1) {
+                                eq.comissao[idx] = {
+                                    ...eq.comissao[idx],
+                                    nome: nome.toUpperCase(),
+                                    cpf: cpf || '---',
+                                    funcao,
+                                    foto: tecnicoFotoDataUrl
+                                };
+                            }
+                        }
+                    });
+                    salvarStorageSeguro('avv_equipes_completo_db', JSON.stringify(db));
+                    fetch('api/equipes/sincronizar', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(db)
+                    }).catch(() => {});
+                } catch(e) {}
+
+                renderizarComissaoTecnica();
+                avvAlert(`Membro da Comissão Técnica "${nome}" atualizado com sucesso no cadastro do clube!`, 'Comissão Técnica', 'success');
+            } else {
+                bancoComissao.unshift({
+                    id: String(num),
+                    nome: nome.toUpperCase(),
+                    cpf: cpf || '---',
+                    funcao,
+                    dataHora,
+                    foto: tecnicoFotoDataUrl
+                });
+                salvarBancoComissaoClube(bancoComissao);
+                renderizarComissaoTecnica();
+                avvAlert(`Membro da Comissão Técnica "${nome}" cadastrado com sucesso no banco do clube!\n\nPara vinculá-lo a uma equipe (máx. 2 técnicos), abra a aba "Equipes", clique em "Visualizar" na equipe desejada e adicione-o na seção de Comissão Técnica.`, 'Comissão Técnica Cadastrada', 'success');
             }
 
             atualizarContadoresTime();
@@ -3790,7 +4269,7 @@
         }
 
         async function excluirTecnico(cardId, nome) {
-            const confirmou = await avvConfirm(`Tem certeza que deseja excluir o membro da comissão técnica "${nome}"?`, 'Excluir Técnico', {
+            const confirmou = await avvConfirm(`Tem certeza que deseja excluir o membro da comissão técnica "${nome}" do cadastro da agremiação?\n\nEle também será desvinculado de todas as equipes onde estiver associado.`, 'Excluir Técnico do Clube', {
                 tipo: 'danger',
                 textoConfirmar: 'Sim, Excluir',
                 corConfirmar: '#dc2626'
@@ -3799,14 +4278,34 @@
                 const el = document.getElementById(cardId);
                 if (el) el.remove();
                 const idTec = String(cardId).replace('tecnico-card-', '');
-                const { db, idx, equipe } = obterEquipeAtualDoBanco();
-                if (equipe && Array.isArray(equipe.comissao)) {
-                    equipe.comissao = equipe.comissao.filter(t => String(t.id) !== idTec);
-                    persistirEquipeNoBancoEServidor(equipe, db);
-                    renderizarAtletasEComissaoSalvos(equipe);
-                }
+                
+                // Remove do banco central de comissão do clube
+                let bancoComissao = obterBancoComissaoClube();
+                bancoComissao = bancoComissao.filter(t => String(t.id) !== idTec);
+                salvarBancoComissaoClube(bancoComissao);
+
+                // Remove das equipes onde estiver associado
+                try {
+                    const db = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
+                    const sessao = JSON.parse(localStorage.getItem('avv_sessao_ativa') || '{}');
+                    const equipes = obterEquipesDesteClube(db, sessao);
+                    equipes.forEach(eq => {
+                        if (Array.isArray(eq.comissao)) {
+                            eq.comissao = eq.comissao.filter(t => String(t.id) !== idTec);
+                        }
+                    });
+                    salvarStorageSeguro('avv_equipes_completo_db', JSON.stringify(db));
+                    fetch('api/equipes/sincronizar', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(db)
+                    }).catch(() => {});
+                    renderizarEquipesClubeView(equipes);
+                } catch (e) {}
+
+                renderizarComissaoTecnica();
                 atualizarContadoresTime();
-                avvAlert(`Membro "${nome}" removido com sucesso!`, 'Associação Vilhenense de Voleibol', 'success');
+                avvAlert(`Membro "${nome}" removido com sucesso do cadastro do clube!`, 'Associação Vilhenense de Voleibol', 'success');
             }
         }
 
@@ -4154,16 +4653,30 @@
         }
 
         function salvarDadosDirigente() {
+            const clubeNome = document.getElementById('prof-clube-nome') ? document.getElementById('prof-clube-nome').value.trim() : '';
+            const cidade = document.getElementById('prof-cidade') ? document.getElementById('prof-cidade').value.trim() : '';
+            const estado = document.getElementById('prof-estado') ? document.getElementById('prof-estado').value.trim().toUpperCase() : '';
             const nome = document.getElementById('prof-nome').value.trim();
             const email = document.getElementById('prof-email').value.trim().toLowerCase();
             const whats = document.getElementById('prof-whats').value.trim();
+            const insta = document.getElementById('prof-instagram') ? document.getElementById('prof-instagram').value.trim() : '';
 
-            if (!nome || !email) {
-                avvAlert('Preencha os campos obrigatórios (*).', 'Campos Obrigatórios', 'warning');
+            if (!nome || !email || !clubeNome) {
+                avvAlert('Preencha os campos obrigatórios (*) incluindo o Nome do Clube, Dirigente e E-mail.', 'Campos Obrigatórios', 'warning');
                 return;
             }
 
             document.getElementById('user-display-name').textContent = nome;
+            if (clubeNome) {
+                const elTeam = document.getElementById('user-display-team');
+                if (elTeam) elTeam.textContent = clubeNome.toUpperCase();
+                const elTeamCard = document.getElementById('team-name-card');
+                if (elTeamCard) elTeamCard.textContent = clubeNome.toUpperCase();
+            }
+            if (cidade || estado) {
+                const elTeamCity = document.getElementById('team-city-card');
+                if (elTeamCity) elTeamCity.textContent = `${cidade || 'Vilhena'} - ${estado || 'RO'}`;
+            }
 
             // Foto atual salva
             const fotoSalva = localStorage.getItem('avv_dirigente_foto_teste') || (JSON.parse(localStorage.getItem('avv_sessao_ativa') || '{}').foto);
@@ -4174,24 +4687,62 @@
                 document.getElementById('avatar-letters').textContent = initials || 'AE';
             }
 
-            // Persiste no banco de dados e na sessão
-            const { db, idx, equipe } = obterEquipeAtualDoBanco();
-            if (equipe) {
-                equipe.responsavelNome = nome;
-                equipe.email = email;
-                equipe.whatsapp = whats;
-                if (fotoSalva) equipe.fotoDirigente = fotoSalva;
-                persistirEquipeNoBancoEServidor(equipe, db);
+            // Persiste no banco de dados local e atualiza todas as equipes deste clube/e-mail
+            try {
+                const db = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
+                const emailAntigo = (JSON.parse(localStorage.getItem('avv_sessao_ativa') || '{}').email || '').toLowerCase();
+                
+                db.forEach(eq => {
+                    const eqEmail = (eq.email || '').toLowerCase();
+                    if (eqEmail === emailAntigo || eqEmail === email || (eq.isContaClube && eqEmail === emailAntigo)) {
+                        eq.responsavelNome = nome;
+                        eq.email = email;
+                        eq.whatsapp = whats;
+                        eq.nomeClube = clubeNome;
+                        if (cidade) eq.cidade = cidade;
+                        if (estado) eq.estado = estado;
+                        if (insta) eq.instagram = insta;
+                        if (fotoSalva) eq.fotoDirigente = fotoSalva;
+                    }
+                });
+
+                const { equipe } = obterEquipeAtualDoBanco();
+                if (equipe) {
+                    equipe.responsavelNome = nome;
+                    equipe.email = email;
+                    equipe.whatsapp = whats;
+                    equipe.nomeClube = clubeNome;
+                    if (cidade) equipe.cidade = cidade;
+                    if (estado) equipe.estado = estado;
+                    if (insta) equipe.instagram = insta;
+                    if (fotoSalva) equipe.fotoDirigente = fotoSalva;
+                    persistirEquipeNoBancoEServidor(equipe, db);
+                } else {
+                    localStorage.setItem('avv_equipes_completo_db', JSON.stringify(db));
+                    fetch('api/equipes/sincronizar', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(db)
+                    }).catch(e => console.warn('Erro ao sincronizar:', e));
+                }
+            } catch (e) {
+                console.warn('Erro ao atualizar clube no DB:', e);
             }
+
             const sessao = JSON.parse(localStorage.getItem('avv_sessao_ativa') || 'null');
             if (sessao) {
                 sessao.responsavelNome = nome;
                 sessao.email = email;
+                sessao.whatsapp = whats;
+                sessao.nomeClube = clubeNome;
+                sessao.cidade = cidade;
+                sessao.estado = estado;
+                sessao.instagram = insta;
                 if (fotoSalva) sessao.foto = fotoSalva;
                 localStorage.setItem('avv_sessao_ativa', JSON.stringify(sessao));
             }
 
-            avvAlert('Dados do dirigente atualizados e salvos com sucesso!', 'Perfil Atualizado', 'success');
+            avvAlert('Dados cadastrais da agremiação e do dirigente atualizados com sucesso!', 'Perfil Atualizado', 'success');
         }
 
         async function alterarSenhaDirigente() {
@@ -4316,7 +4867,7 @@
             if (atletasElegiveis.length === 0) {
                 corpoBanco.innerHTML = `
                     <tr>
-                        <td colspan="6" style="text-align: center; padding: 28px 16px; color: #64748b; font-size: 12.5px;">
+                        <td colspan="7" style="text-align: center; padding: 28px 16px; color: #64748b; font-size: 12.5px;">
                             <div style="font-weight: 700; color: #b45309; margin-bottom: 6px;">Nenhum atleta elegível encontrado no cadastro da agremiação</div>
                             <div style="line-height: 1.5;">Para inscrever atletas nesta equipe (<strong>${catCompleta}</strong>), cadastre jogadores(as) na aba <strong>"Atletas"</strong> selecionando o gênero <strong>${naipeEquipe}</strong> e a categoria <strong>${catBaseEquipe}</strong>.</div>
                         </td>
@@ -4335,6 +4886,9 @@
 
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
+                        <td style="text-align: center;">
+                            <input type="checkbox" class="chk-atleta-selecionar-modal" value="${num}" ${jaNoElenco ? 'disabled title="Já está no elenco"' : 'title="Selecionar atleta"'} onchange="aoMudarCheckboxAtletaModal()" style="cursor: ${jaNoElenco ? 'not-allowed' : 'pointer'}; width: 16px; height: 16px;">
+                        </td>
                         <td style="text-align: center;">
                             <img src="${foto}" class="atleta-roster-thumb" alt="Foto">
                         </td>
@@ -4361,7 +4915,105 @@
                 });
             }
 
+            const chkTodos = document.getElementById('chk-selecionar-todos-atletas-modal');
+            if (chkTodos) chkTodos.checked = false;
+            aoMudarCheckboxAtletaModal();
+
             document.getElementById('modal-adicionar-atleta-time').style.display = 'flex';
+        }
+
+        function alternarSelecionarTodosAtletasModal(marcar) {
+            const chks = document.querySelectorAll('.chk-atleta-selecionar-modal:not(:disabled)');
+            chks.forEach(chk => {
+                chk.checked = marcar;
+            });
+            aoMudarCheckboxAtletaModal();
+        }
+
+        function aoMudarCheckboxAtletaModal() {
+            const selecionados = document.querySelectorAll('.chk-atleta-selecionar-modal:checked').length;
+            const badge = document.getElementById('selecao-atletas-contador-badge');
+            const btnSalvar = document.getElementById('btn-salvar-atletas-selecionados');
+            if (badge) {
+                if (selecionados > 0) {
+                    badge.style.display = 'inline-block';
+                    badge.textContent = `${selecionados} selecionado(s)`;
+                } else {
+                    badge.style.display = 'none';
+                }
+            }
+            if (btnSalvar) {
+                const spanTxt = btnSalvar.querySelector('span');
+                if (spanTxt) {
+                    spanTxt.textContent = selecionados > 0 ? `Salvar ${selecionados} Atleta(s) Selecionado(s)` : 'Salvar Atletas Selecionados';
+                }
+            }
+        }
+
+        function salvarAtletasSelecionadosEmLote() {
+            const equipe = equipeSelecionadaVisualizacao || obterEquipeAtualDoBanco().equipe;
+            if (!equipe) {
+                avvAlert('Equipe não identificada.', 'Erro', 'danger');
+                return;
+            }
+
+            const chks = Array.from(document.querySelectorAll('.chk-atleta-selecionar-modal:checked'));
+            if (chks.length === 0) {
+                avvAlert('Marque ao menos um atleta na caixinha de seleção para salvar na equipe.', 'Nenhum Atleta Selecionado', 'warning');
+                return;
+            }
+
+            equipe.atletas = equipe.atletas || [];
+            const vagasRestantes = 12 - equipe.atletas.length;
+            if (vagasRestantes <= 0) {
+                avvAlert('O elenco desta equipe já atingiu o limite máximo regulamentar de 12 atletas.', 'Limite Regulamentar', 'warning');
+                return;
+            }
+
+            if (chks.length > vagasRestantes) {
+                avvAlert(`Você selecionou ${chks.length} atletas, porém esta equipe só possui ${vagasRestantes} vaga(s) disponível(is) para atingir o limite de 12. Desmarque alguns para continuar.`, 'Vagas Insuficientes', 'warning');
+                return;
+            }
+
+            const bancoClube = obterBancoAtletasClube();
+            let adicionados = 0;
+
+            chks.forEach(chk => {
+                const idAtleta = chk.value;
+                if (!equipe.atletas.some(a => String(a.id) === String(idAtleta))) {
+                    const at = bancoClube.find(a => String(a.id) === String(idAtleta));
+                    if (at && atletaCompativelComEquipe(at, equipe)) {
+                        equipe.atletas.push({ ...at });
+                        adicionados++;
+                    }
+                }
+            });
+
+            if (adicionados === 0) {
+                avvAlert('Nenhum novo atleta compatível pôde ser inserido.', 'Aviso', 'warning');
+                return;
+            }
+
+            // Persiste equipe no banco central
+            const db = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
+            const idxEq = db.findIndex(e => String(e.id) === String(equipe.id));
+            if (idxEq !== -1) {
+                db[idxEq] = equipe;
+            } else {
+                db.unshift(equipe);
+            }
+            salvarStorageSeguro('avv_equipes_completo_db', JSON.stringify(db));
+            persistirEquipeNoBancoEServidor(equipe, db);
+
+            // Atualiza a visualização do elenco da equipe
+            renderizarRosterEquipeModal(equipe);
+
+            // Atualiza a listagem de equipes
+            const sessao = JSON.parse(localStorage.getItem('avv_sessao_ativa') || '{}');
+            renderizarEquipesClubeView(obterEquipesDesteClube(db, sessao));
+
+            fecharModalAdicionarAtletaEquipe();
+            avvAlert(`Sucesso: ${adicionados} atleta(s) foram inseridos no elenco do time ${equipe.nomeTime}!`, 'Elenco Atualizado', 'success');
         }
 
         function fecharModalAdicionarAtletaEquipe() {

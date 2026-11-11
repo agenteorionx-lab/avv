@@ -82,14 +82,45 @@ function sanitizarTexto(valor, maxLen = 250) {
         .substring(0, maxLen);
 }
 
+const CAMPEONATO_OFICIAL_COPA_XXI = {
+    "camp-1794335645971": {
+        id: "camp-1794335645971",
+        nome: "XXI COPA AVV DE VOLEIBOL",
+        modalidade: "Quadra",
+        fase: "Inscrições Abertas até 16/11/2026 às 17:59",
+        dataLimiteEncerramento: "2026-11-16T20:59:00.000Z",
+        taxa: "Gratuito / Filiação Regular",
+        limiteAtletas: 12,
+        status: "Ativo",
+        ativo: true,
+        statusTorneio: "ativo",
+        banner: "avv_superliga_athlete.png",
+        descricao: "A Competição denominada 21ª - Copa AVV de Voleibol ocorrerá nas categorias SUB–15 (nascidos no ano de 2012 e mais novos), SUB-18 (nascidos no ano de 2009 e mais novos) e na categoria Adulto (aberto), na modalidade de Voleibol nos naipes masculino e feminino. A competição organizada pela Associação Vilhenense de Voleibol - AVV, reúne equipes do Estado de Rondônia e região. Sendo realizada no período de 19 a 22 de novembro 2026 na cidade de Vilhena – Rondônia.",
+        categoriasAceitas: [
+            "Sub-15 Masculino",
+            "Sub-15 Feminino",
+            "Sub-18 Masculino",
+            "Sub-18 Feminino",
+            "Adulto Masculino",
+            "Adulto Feminino"
+        ],
+        regulamento: "<h4>REGULAMENTO OFICIAL - AVV 2026</h4><p>REGULAMENTO OFICIAL - AVV 2026<br><br>CAPÍTULO I - DA FINALIDADE<br>Art. 1º - Torneio oficial homologado pela AVV 2026.<br><br>CAPÍTULO II - REQUISITOS<br>Art. 2º - Atletas federados com documentação regularizada.</p>"
+    }
+};
+
 function carregarBancoDados() {
     try {
         if (fs.existsSync(DB_FILE)) {
             const raw = fs.readFileSync(DB_FILE, 'utf-8');
             const parsed = JSON.parse(raw);
+            const camps = parsed.campeonatos && typeof parsed.campeonatos === 'object' ? parsed.campeonatos : {};
+            // Garante que o campeonato oficial XXI COPA AVV permaneça sempre ativo e presente
+            if (!camps['camp-1794335645971']) {
+                camps['camp-1794335645971'] = CAMPEONATO_OFICIAL_COPA_XXI['camp-1794335645971'];
+            }
             return {
                 equipes: Array.isArray(parsed.equipes) ? parsed.equipes : [],
-                campeonatos: parsed.campeonatos && typeof parsed.campeonatos === 'object' ? parsed.campeonatos : {},
+                campeonatos: camps,
                 adm: parsed.adm || {
                     usuario: 'Administrador Geral',
                     email: process.env.ADM_DEFAULT_EMAIL || 'avvvoleibol@gmail.com',
@@ -104,7 +135,7 @@ function carregarBancoDados() {
 
     const dbInicial = {
         equipes: [],
-        campeonatos: {},
+        campeonatos: { ...CAMPEONATO_OFICIAL_COPA_XXI },
         adm: {
             usuario: 'Administrador Geral',
             email: process.env.ADM_DEFAULT_EMAIL || 'avvvoleibol@gmail.com',

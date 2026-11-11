@@ -934,12 +934,14 @@
 
             <!-- RODAPÉ COM AÇÕES RÁPIDAS (EDITAR / FICHA / FECHAR) -->
             <div style="background: #f1f5f9; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #e2e8f0;">
-                <button type="button" id="cart-btn-abrir-ficha" class="btn-action-text-green" style="font-size: 11px; padding: 6px 12px; height: 32px; background: #0f1c3f;">
-                    ${SVG_ICONS.fileText} Ver Ficha A4
+                <button type="button" id="cart-btn-abrir-ficha" class="btn-action-text-green" style="font-size: 11px; padding: 6px 12px; height: 32px; background: #0f1c3f; display: inline-flex; align-items: center; gap: 6px;">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    <span>Ver Ficha A4</span>
                 </button>
                 <div style="display: flex; gap: 8px;">
-                    <button type="button" id="cart-btn-abrir-edicao" class="btn-action-text-green" style="font-size: 11px; padding: 6px 14px; height: 32px; background: #1d4ed8;">
-                        ${SVG_ICONS.edit} Editar Atleta
+                    <button type="button" id="cart-btn-abrir-edicao" class="btn-action-text-green" style="font-size: 11px; padding: 6px 14px; height: 32px; background: #1d4ed8; display: inline-flex; align-items: center; gap: 6px;">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                        <span>Editar Atleta</span>
                     </button>
                     <button type="button" onclick="fecharCarteirinhaAtletaAdm()" style="padding: 6px 14px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 11.5px; font-weight: 700; color: #475569; cursor: pointer;">
                         Fechar
@@ -958,7 +960,7 @@
             
             <div style="background: #0f1c3f; color: #ffffff; padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #c5a021;">
                 <div style="display: flex; align-items: center; gap: 10px;">
-                    ${SVG_ICONS.edit}
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                     <span style="font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">EDITAR DADOS DO ATLETA (VISTORIA ADM)</span>
                 </div>
                 <button type="button" onclick="fecharModalEditarAtletaAdm()" style="background: none; border: none; color: #ffffff; font-size: 24px; cursor: pointer; line-height: 1;">&times;</button>
@@ -1046,6 +1048,75 @@
                     </button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- ====================================================================== -->
+    <!-- MODAL DE VISUALIZAÇÃO: DADOS DA COMISSÃO TÉCNICA (ADMINISTRADOR)       -->
+    <!-- ====================================================================== -->
+    <div id="modal-adm-carteirinha-tecnico" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 28, 63, 0.85); z-index: 3200; align-items: center; justify-content: center; backdrop-filter: blur(4px); padding: 15px;">
+        <div style="background: #ffffff; width: 100%; max-width: 520px; border-radius: 10px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); overflow: hidden; display: flex; flex-direction: column;">
+            
+            <!-- TOPO DA CARTEIRINHA -->
+            <div style="background: linear-gradient(135deg, #0f1c3f 0%, #1a2f64 100%); color: #ffffff; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #c5a021;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <img src="logos/logo_avv.png" style="width: 32px; height: 32px; object-fit: contain;" alt="AVV">
+                    <div>
+                        <div style="font-size: 13px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase;">DADOS DA COMISSÃO TÉCNICA</div>
+                        <div style="font-size: 10.5px; color: #cbd5e1;">Associação Vilhenense de Voleibol &bull; AVV Oficial</div>
+                    </div>
+                </div>
+                <button type="button" onclick="fecharModalDetalhesTecnicoAdm()" style="background: none; border: none; color: #ffffff; font-size: 24px; cursor: pointer; line-height: 1;">&times;</button>
+            </div>
+
+            <!-- CORPO: FOTO + DADOS OFICIAIS FORMATADOS -->
+            <div style="padding: 22px; background: #ffffff;">
+                <div style="display: flex; gap: 18px; align-items: flex-start; margin-bottom: 18px;">
+                    <div style="position: relative; flex-shrink: 0;">
+                        <img id="cart-tec-foto" src="logos/mascote_coelho.png" style="width: 100px; height: 120px; object-fit: cover; border-radius: 6px; border: 2px solid #0f1c3f; box-shadow: 0 4px 10px rgba(0,0,0,0.12); background: #f8fafc;" alt="Foto do Técnico">
+                        <span style="position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); background: #16a34a; color: #ffffff; font-size: 9.5px; font-weight: 800; padding: 2px 8px; border-radius: 10px; white-space: nowrap; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">HOMOLOGADO</span>
+                    </div>
+
+                    <div style="flex: 1; min-width: 0;">
+                        <div style="font-size: 10.5px; color: #64748b; font-weight: 700; text-transform: uppercase;">Inscrição Técnica</div>
+                        <div id="cart-tec-id" style="font-size: 16px; font-weight: 800; color: #c5a021; margin-bottom: 6px;">Nº 000000</div>
+                        
+                        <h4 id="cart-tec-nome" style="font-size: 15px; font-weight: 800; color: #0f1c3f; margin: 0 0 6px 0; line-height: 1.3; text-transform: uppercase; word-break: break-word;">NOME DO TÉCNICO</h4>
+                        
+                        <div style="display: inline-block; background: #fef3c7; color: #92400e; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 4px; border: 1px solid #fde68a; margin-bottom: 4px;" id="cart-tec-funcao">
+                            Técnico
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GRADE DE DADOS CADASTRAIS DETALHADOS -->
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 14px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; font-size: 11.5px;">
+                    <div>
+                        <span style="color: #64748b; display: block; font-size: 10px; font-weight: 700; text-transform: uppercase;">CPF</span>
+                        <strong id="cart-tec-cpf" style="color: #0f1c3f;">000.000.000-00</strong>
+                    </div>
+                    <div>
+                        <span style="color: #64748b; display: block; font-size: 10px; font-weight: 700; text-transform: uppercase;">Registro CREF</span>
+                        <strong id="cart-tec-cref" style="color: #0f1c3f;">---</strong>
+                    </div>
+                    <div style="grid-column: 1 / -1;">
+                        <span style="color: #64748b; display: block; font-size: 10px; font-weight: 700; text-transform: uppercase;">Equipe Vinculada</span>
+                        <strong id="cart-tec-equipe" style="color: #0f1c3f;">---</strong>
+                    </div>
+                    <div style="grid-column: 1 / -1;">
+                        <span style="color: #64748b; display: block; font-size: 10px; font-weight: 700; text-transform: uppercase;">Data / Hora do Cadastro</span>
+                        <strong id="cart-tec-datahora" style="color: #0f1c3f;">---</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RODAPÉ -->
+            <div style="background: #f1f5f9; padding: 12px 20px; display: flex; justify-content: flex-end; align-items: center; border-top: 1px solid #e2e8f0;">
+                <button type="button" onclick="fecharModalDetalhesTecnicoAdm()" style="padding: 7px 18px; background: #0f1c3f; border: none; border-radius: 4px; font-size: 12px; font-weight: 700; color: #ffffff; cursor: pointer;">
+                    Fechar
+                </button>
+            </div>
+
         </div>
     </div>
 
@@ -1151,6 +1222,7 @@
                     'modal-criar-campeonato',
                     'modal-adm-ficha-atleta',
                     'modal-adm-carteirinha-atleta',
+                    'modal-adm-carteirinha-tecnico',
                     'modal-adm-editar-atleta'
                 ];
                 modaisIds.forEach(id => {
@@ -1174,7 +1246,9 @@
             edit: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>`,
             trash: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>`,
             fileText: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>`,
-            xCircle: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`
+            xCircle: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`,
+            lock: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>`,
+            unlock: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path></svg>`
         };
 
         // ======================================================================
@@ -1731,35 +1805,41 @@
 
             const isLiberadaExtraordinaria = eq.liberacaoExtraordinariaAdm === true;
             const botaoLiberacao = isLiberadaExtraordinaria
-                ? `<button onclick="alternarLiberacaoEdicaoEquipeAdm('${eq.id}', false)" style="background: #fef08a; border: 1px solid #fde047; color: #854d0e; padding: 7px 12px; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;" title="Clique para revogar a liberação de edição do clube">
-                       ${SVG_ICONS.clock} Bloquear Edição pelo Clube
+                ? `<button onclick="alternarLiberacaoEdicaoEquipeAdm('${eq.id}', false)" style="background: #fffbeb; border: 1px solid #fde68a; color: #92400e; padding: 7px 14px; border-radius: 6px; font-size: 11.5px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 7px; box-shadow: 0 1px 2px rgba(0,0,0,0.04);" title="Clique para revogar a liberação de edição do clube">
+                       ${SVG_ICONS.lock}
+                       <span>Bloquear Edição pelo Clube</span>
                    </button>`
-                : `<button onclick="alternarLiberacaoEdicaoEquipeAdm('${eq.id}', true)" style="background: #eff6ff; border: 1px solid #bfdbfe; color: #1d4ed8; padding: 7px 12px; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;" title="Libera a edição do elenco pelo clube mesmo após o encerramento do prazo">
-                       ${SVG_ICONS.check} 🔓 Liberar Edição pelo Clube (Exceção)
+                : `<button onclick="alternarLiberacaoEdicaoEquipeAdm('${eq.id}', true)" style="background: #eff6ff; border: 1px solid #bfdbfe; color: #1d4ed8; padding: 7px 14px; border-radius: 6px; font-size: 11.5px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 7px; box-shadow: 0 1px 2px rgba(0,0,0,0.04);" title="Libera a edição do elenco pelo clube mesmo após o encerramento do prazo">
+                       ${SVG_ICONS.unlock}
+                       <span>Liberar Edição pelo Clube (Exceção)</span>
                    </button>`;
 
             if (isApta) {
                 badgeStatus.className = 'badge-status-aprovado';
                 badgeStatus.innerHTML = `${SVG_ICONS.check} Equipe Apta (${totalAtletas} Atletas)${isLiberadaExtraordinaria ? ' &bull; [EDIÇÃO LIBERADA]' : ''}`;
                 boxAcoesStatus.innerHTML = `
-                    <span class="badge-status-aprovado" style="padding: 7px 12px; font-size: 12px; font-weight: 700;">
-                        ${SVG_ICONS.check} Equipe Pronta para o Torneio
-                    </span>
+                    <div style="background: #f0fdf4; border: 1px solid #bbf7d0; color: #15803d; padding: 7px 14px; border-radius: 6px; font-size: 11.5px; font-weight: 800; display: inline-flex; align-items: center; gap: 7px; letter-spacing: 0.3px;">
+                        ${SVG_ICONS.check}
+                        <span>EQUIPE PRONTA PARA O TORNEIO</span>
+                    </div>
                     ${botaoLiberacao}
-                    <button onclick="excluirEquipeAtual()" style="background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c; padding: 7px 14px; border-radius: 6px; font-size: 11.5px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;">
-                        ${SVG_ICONS.xCircle} Desclassificar / Excluir Equipe
+                    <button onclick="excluirEquipeAtual()" style="background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c; padding: 7px 14px; border-radius: 6px; font-size: 11.5px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 7px; box-shadow: 0 1px 2px rgba(0,0,0,0.04);">
+                        ${SVG_ICONS.xCircle}
+                        <span>Desclassificar / Excluir Equipe</span>
                     </button>
                 `;
             } else {
                 badgeStatus.className = 'badge-status-pendente';
                 badgeStatus.innerHTML = `${SVG_ICONS.clock} Elenco Incompleto (${totalAtletas}/6)${isLiberadaExtraordinaria ? ' &bull; [EDIÇÃO LIBERADA]' : ''}`;
                 boxAcoesStatus.innerHTML = `
-                    <span class="badge-status-pendente" style="padding: 7px 12px; font-size: 12px; font-weight: 700;">
-                        ${SVG_ICONS.clock} Aguardando Mínimo de 6 Atletas
-                    </span>
+                    <div style="background: #fefce8; border: 1px solid #fef08a; color: #854d0e; padding: 7px 14px; border-radius: 6px; font-size: 11.5px; font-weight: 800; display: inline-flex; align-items: center; gap: 7px; letter-spacing: 0.3px;">
+                        ${SVG_ICONS.clock}
+                        <span>AGUARDANDO MÍNIMO DE 6 ATLETAS</span>
+                    </div>
                     ${botaoLiberacao}
-                    <button onclick="excluirEquipeAtual()" style="background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c; padding: 7px 14px; border-radius: 6px; font-size: 11.5px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;">
-                        ${SVG_ICONS.xCircle} Desclassificar / Excluir Equipe
+                    <button onclick="excluirEquipeAtual()" style="background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c; padding: 7px 14px; border-radius: 6px; font-size: 11.5px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 7px; box-shadow: 0 1px 2px rgba(0,0,0,0.04);">
+                        ${SVG_ICONS.xCircle}
+                        <span>Desclassificar / Excluir Equipe</span>
                     </button>
                 `;
             }
@@ -1957,6 +2037,9 @@
             comissao.forEach(tec => {
                 const card = document.createElement('div');
                 card.className = 'card-comissao-membro';
+                card.style.cursor = 'pointer';
+                card.title = 'Clique para ver as informações completas do técnico';
+                card.onclick = () => abrirModalDetalhesTecnicoAdm(eq.id, tec.id);
                 card.innerHTML = `
                     <div class="comissao-membro-left">
                         <img src="${tec.foto || 'logos/mascote_coelho.png'}" class="comissao-membro-foto" alt="Foto">
@@ -1969,7 +2052,10 @@
                             </div>
                         </div>
                     </div>
-                    <div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <button type="button" class="btn-acao-tabela-view" style="width: 28px; height: 28px;" title="Ver detalhes do técnico" onclick="event.stopPropagation(); abrirModalDetalhesTecnicoAdm('${eq.id}', '${tec.id}');">
+                            ${SVG_ICONS.eye}
+                        </button>
                         <span class="badge-status-aprovado" style="font-size: 9.5px; padding: 4px 8px;">${SVG_ICONS.check} Homologado</span>
                     </div>
                 `;
@@ -2223,6 +2309,32 @@
 
         function fecharCarteirinhaAtletaAdm() {
             document.getElementById('modal-adm-carteirinha-atleta').style.display = 'none';
+        }
+
+        // ======================================================================
+        // VISUALIZAÇÃO DOS DETALHES DO TÉCNICO PELO ADMINISTRADOR
+        // ======================================================================
+        function abrirModalDetalhesTecnicoAdm(equipeId, tecnicoId) {
+            const eq = equipesSistema.find(e => String(e.id) === String(equipeId));
+            if (!eq) return;
+            const comissao = Array.isArray(eq.comissao) ? eq.comissao : [];
+            const tec = comissao.find(t => String(t.id) === String(tecnicoId));
+            if (!tec) return;
+
+            document.getElementById('cart-tec-foto').src = tec.foto || 'logos/mascote_coelho.png';
+            document.getElementById('cart-tec-id').textContent = `Nº ${tec.id || '---'}`;
+            document.getElementById('cart-tec-nome').textContent = (tec.nome || '---').toUpperCase();
+            document.getElementById('cart-tec-funcao').textContent = tec.funcao || 'Técnico';
+            document.getElementById('cart-tec-cpf').textContent = tec.cpf || '---';
+            document.getElementById('cart-tec-cref').textContent = (tec.cref && tec.cref !== '---') ? tec.cref : 'Não informado';
+            document.getElementById('cart-tec-equipe').textContent = `${eq.nomeTime} (${eq.cidade} - ${eq.estado})`;
+            document.getElementById('cart-tec-datahora').textContent = tec.dataHora || 'Cadastrado no Sistema';
+
+            document.getElementById('modal-adm-carteirinha-tecnico').style.display = 'flex';
+        }
+
+        function fecharModalDetalhesTecnicoAdm() {
+            document.getElementById('modal-adm-carteirinha-tecnico').style.display = 'none';
         }
 
         // ======================================================================
