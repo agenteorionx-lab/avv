@@ -37,13 +37,36 @@ app.use((req, res, next) => {
     next();
 });
 
-// Cache inteligente para estáticos: 1 dia para imagens, css e js
+// Middleware para desabilitar cache em requisições de API e páginas HTML
+// Garante que qualquer atualização no sistema apareça imediatamente em tempo real
+app.use((req, res, next) => {
+    const urlLower = req.path.toLowerCase();
+    if (
+        urlLower.endsWith('.html') ||
+        urlLower.endsWith('/') ||
+        urlLower.startsWith('/api/') ||
+        urlLower.startsWith('/avv/api/')
+    ) {
+        res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0');
+        res.setHeader('Pragma', 'no-cache');
+        res.setHeader('Expires', '0');
+    }
+    next();
+});
+
+// Configuração de estáticos com revalidação imediata (sem cache travado no navegador)
 const staticOpts = {
-    maxAge: '1d',
-    etag: true
+    maxAge: 0,
+    etag: false,
+    lastModified: false,
+    setHeaders: (res, path) => {
+        res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
+        res.setHeader('Pragma', 'no-cache');
+        res.setHeader('Expires', '0');
+    }
 };
 
-// Serve os arquivos estáticos da AVV tanto na raiz (/) quanto em (/avv)
+// Serve os arquivos estáticos da AVV tanto na raiz (/) quanto em (/avv) sem retenção de cache
 app.use(express.static(__dirname, staticOpts));
 app.use('/avv', express.static(__dirname, staticOpts));
 
