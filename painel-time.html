@@ -1022,6 +1022,10 @@
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
                                 Imprimir Fichas Selecionadas
                             </button>
+                            <button onclick="imprimirSumulaEquipeVisualizada()" class="btn-action-text-green" style="background: #091224; border: 1px solid #1e3a8a; color: #38bdf8; font-size: 11px; padding: 6px 14px; height: 32px; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.2);" title="Baixar / Imprimir Súmula Oficial e Relação Nominal da Equipe">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                                Súmula (Relação Nominal)
+                            </button>
                             <button id="btn-modal-incluir-atleta" onclick="abrirModalAdicionarAtletaEquipe()" class="btn-action-text-green" style="font-size: 11px; padding: 6px 14px; height: 32px; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px;">
                                 + Incluir Atleta na Equipe
                             </button>
@@ -1643,6 +1647,10 @@
                         <button type="button" class="btn-action-text-green" onclick="selecionarEquipeAtivaParaVisualizar('${equipeIdStr}')" title="Visualizar Dados da Equipe e Atletas Vinculados">
                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                             Visualizar
+                        </button>
+                        <button type="button" class="btn-action-text-green" onclick="imprimirSumulaPorEquipeId('${equipeIdStr}')" title="Baixar / Imprimir Súmula Oficial e Relação Nominal da Equipe" style="background: #0f1c3f; border: 1px solid #1e3a8a; color: #38bdf8; font-size: 11px; padding: 6px 12px; height: 32px; display: inline-flex; align-items: center; gap: 5px;">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                            Súmula
                         </button>
                         <button type="button" class="btn-action-green" title="Editar Dados da Equipe" onclick="abrirModalTime('editar', '${equipeIdStr}')">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
@@ -3641,6 +3649,10 @@
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                                     <span>Ver Elenco</span>
                                 </button>
+                                <button type="button" class="btn-action-text-green" title="Baixar / Imprimir Súmula Oficial e Relação Nominal Desta Equipe" onclick="imprimirSumulaPorInscricao('${ins.numeroInscricao}', '${(ins.equipeNome || '').replace(/'/g, "\\'")}', '${ins.categoria || ''}', '${(ins.campeonatoNome || '').replace(/'/g, "\\'")}')" style="background: #0f1c3f; border: 1px solid #1e3a8a; color: #38bdf8; padding: 6px 12px; font-size: 11px; height: 32px; white-space: nowrap; text-transform: none; font-weight: 700; width: auto; display: inline-flex; align-items: center; gap: 5px;">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                                    <span>Súmula</span>
+                                </button>
                                 <button type="button" title="Cancelar / Excluir Inscrição" onclick="cancelarInscricaoCampeonato('${ins.numeroInscricao}', '${(ins.campeonatoNome || '').replace(/'/g, "\\'")}')" style="background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; padding: 6px 10px; border-radius: 4px; font-size: 11px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; height: 32px; white-space: nowrap; transition: all 0.2s ease;">
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                                     <span>Cancelar Inscrição</span>
@@ -5528,6 +5540,213 @@
                 // Oculta novamente após disparar
                 areaMultiplas.style.display = 'none';
             }, 250);
+        }
+
+        // =========================================================================
+        // GERAÇÃO E IMPRESSÃO DE SÚMULA / RELAÇÃO NOMINAL DA EQUIPE
+        // =========================================================================
+        function executarImpressaoSumulaNominalTime(equipe, categoriaLabel, atletasLista, nomeTorneioCustom) {
+            const areaMultiplas = document.getElementById('area-fichas-multiplas');
+            if (!areaMultiplas) {
+                avvAlert('Área de impressão não encontrada.', 'Erro', 'danger');
+                return;
+            }
+
+            areaMultiplas.innerHTML = '';
+
+            const agora = new Date();
+            const dataHoje = agora.toLocaleDateString('pt-BR');
+            const horaHoje = agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+            const catTexto = (categoriaLabel || equipe.categoria || (equipe.categorias && equipe.categorias[0]) || 'ADULTO MASCULINO').toUpperCase();
+            const torneioTexto = (nomeTorneioCustom || 'ASSOCIAÇÃO VILHENENSE DE VOLEIBOL - AVV 2026').toUpperCase();
+
+            const listaAtletas = atletasLista || equipe.atletas || [];
+            if (listaAtletas.length === 0) {
+                avvAlert('Esta equipe ainda não possui atletas vinculados ao elenco para gerar a relação nominal.', 'Sem Atletas', 'warning');
+                return;
+            }
+
+            const linhasAtletas = listaAtletas.map((a, i) => `
+                <tr>
+                    <td style="text-align: center; font-weight: 800; padding: 6px 8px;">${i + 1}</td>
+                    <td style="padding: 6px 8px;"><strong>${a.id || a.numeroInscricao || '---'}</strong></td>
+                    <td style="padding: 6px 8px;"><strong>${(a.nome || 'ATLETA').toUpperCase()}</strong></td>
+                    <td style="padding: 6px 8px;">${a.categoria || catTexto}</td>
+                    <td style="padding: 6px 8px;"><strong style="color: #1d4ed8;">${a.posicao || 'Ponteiro'}</strong></td>
+                    <td style="padding: 6px 8px;">${a.cpf || '---'}</td>
+                    <td style="padding: 6px 8px;">${a.rg || '---'}</td>
+                    <td style="padding: 6px 8px;">${a.nasc || '---'}</td>
+                </tr>
+            `).join('');
+
+            const listaComissao = equipe.comissao || [];
+            const linhasComissao = listaComissao.map(c => `
+                <tr>
+                    <td style="padding: 6px 8px;"><strong>${c.id || '---'}</strong></td>
+                    <td style="padding: 6px 8px;"><strong>${(c.nome || '').toUpperCase()}</strong></td>
+                    <td style="padding: 6px 8px;">${c.funcao || 'Técnico'}</td>
+                    <td style="padding: 6px 8px;">${c.cpf || '---'}</td>
+                    <td style="padding: 6px 8px;">${c.cref || '---'}</td>
+                </tr>
+            `).join('');
+
+            const folha = document.createElement('div');
+            folha.className = 'folha-a4-avv';
+            folha.innerHTML = `
+                <div class="watermark-avv">
+                    <img src="logos/logo_avv.png" alt="AVV Marca d'Água">
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #0f1c3f; padding-bottom: 10px; margin-bottom: 16px; position: relative; z-index: 2;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <img src="${equipe.logo || 'logos/logo_avv.png'}" style="width: 48px; height: 48px; object-fit: contain; background: #fff; padding: 2px; border-radius: 4px;" alt="Logo">
+                        <div>
+                            <h3 style="font-size: 13px; font-weight: 900; color: #0f1c3f; margin: 0; text-transform: uppercase;">${torneioTexto}</h3>
+                            <span style="font-size: 10.5px; color: #64748b; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">SÚMULA OFICIAL &bull; RELAÇÃO NOMINAL DE INSCRITOS</span>
+                        </div>
+                    </div>
+                    <div style="text-align: right; font-size: 10px; color: #475569;">
+                        <strong>Protocolo: ${equipe.protocolo || 'AVV-' + (equipe.numeroInscricao || equipe.numeroInscricaoTorneio || 'OFICIAL')}</strong><br>
+                        Emitido em: ${dataHoje} às ${horaHoje}
+                    </div>
+                </div>
+
+                <div style="background: #f8fafc; border: 1px solid #0f1c3f; border-radius: 4px; padding: 12px 16px; margin-bottom: 16px; position: relative; z-index: 2;">
+                    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; font-size: 11px;">
+                        <div>
+                            <span style="font-size: 9px; color: #64748b; font-weight: 700; display: block;">EQUIPE / AGREMIAÇÃO:</span>
+                            <strong style="font-size: 13px; color: #0f1c3f;">${equipe.nomeTime} (${equipe.cidade || 'Vilhena'} - ${equipe.estado || 'RO'})</strong>
+                        </div>
+                        <div>
+                            <span style="font-size: 9px; color: #64748b; font-weight: 700; display: block;">CATEGORIA:</span>
+                            <strong style="font-size: 12px; color: #1d4ed8;">${catTexto}</strong>
+                        </div>
+                        <div>
+                            <span style="font-size: 9px; color: #64748b; font-weight: 700; display: block;">RESPONSÁVEL:</span>
+                            <strong style="font-size: 11px; color: #0f1c3f;">${equipe.responsavelNome || 'Dirigente do Clube'}</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 18px; position: relative; z-index: 2;">
+                    <div style="background: #0f1c3f; color: #ffffff; padding: 6px 10px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">
+                        1. QUADRO NOMINAL DE ATLETAS INSCRITOS (${listaAtletas.length} ATLETAS)
+                    </div>
+                    <table class="tabela-ficha-dados" style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background: #f1f5f9; font-weight: 800; color: #0f1c3f; font-size: 10px;">
+                                <td style="width: 32px; text-align: center; padding: 6px 8px;">#</td>
+                                <td style="padding: 6px 8px;">INSCRIÇÃO</td>
+                                <td style="padding: 6px 8px;">NOME COMPLETO DO ATLETA</td>
+                                <td style="padding: 6px 8px;">CATEGORIA</td>
+                                <td style="padding: 6px 8px;">POSIÇÃO</td>
+                                <td style="padding: 6px 8px;">CPF</td>
+                                <td style="padding: 6px 8px;">RG</td>
+                                <td style="padding: 6px 8px;">NASCIMENTO</td>
+                            </tr>
+                        </thead>
+                        <tbody style="font-size: 10.5px;">
+                            ${linhasAtletas}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div style="margin-bottom: 24px; position: relative; z-index: 2;">
+                    <div style="background: #0f1c3f; color: #ffffff; padding: 6px 10px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">
+                        2. COMISSÃO TÉCNICA HOMOLOGADA (${listaComissao.length} MEMBROS)
+                    </div>
+                    <table class="tabela-ficha-dados" style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background: #f1f5f9; font-weight: 800; color: #0f1c3f; font-size: 10px;">
+                                <td style="padding: 6px 8px;">INSCRIÇÃO</td>
+                                <td style="padding: 6px 8px;">NOME COMPLETO</td>
+                                <td style="padding: 6px 8px;">FUNÇÃO</td>
+                                <td style="padding: 6px 8px;">CPF</td>
+                                <td style="padding: 6px 8px;">CREF</td>
+                            </tr>
+                        </thead>
+                        <tbody style="font-size: 10.5px;">
+                            ${linhasComissao || '<tr><td colspan="5" style="text-align:center; padding: 8px; color: #64748b;">Nenhum membro de comissão técnica vinculado.</td></tr>'}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 44px; position: relative; z-index: 2;">
+                    <div style="text-align: center; width: 44%;">
+                        <div style="border-top: 1px solid #0f1c3f; margin-bottom: 4px;"></div>
+                        <span style="font-size: 9px; font-weight: 700; color: #0f1c3f; text-transform: uppercase;">Assinatura do Dirigente / Responsável</span>
+                    </div>
+                    <div style="text-align: center; width: 44%;">
+                        <div style="border-top: 1px solid #0f1c3f; margin-bottom: 4px;"></div>
+                        <span style="font-size: 9px; font-weight: 700; color: #0f1c3f; text-transform: uppercase;">Diretoria Técnica AVV &bull; Homologação</span>
+                    </div>
+                </div>
+
+                <div style="margin-top: 24px; border-top: 1px solid #cbd5e1; padding-top: 6px; display: flex; justify-content: space-between; font-size: 8px; color: #94a3b8; position: relative; z-index: 2;">
+                    <span>AVV - Sistema Oficial de Competições &bull; Relação Nominal Emitida pelo Painel do Clube</span>
+                    <span>Autenticação Oficial: AVV-SUMULA-${equipe.numeroInscricao || Math.floor(100000 + Math.random() * 900000)}</span>
+                </div>
+            `;
+
+            areaMultiplas.appendChild(folha);
+            areaMultiplas.style.display = 'block';
+
+            setTimeout(() => {
+                window.print();
+                areaMultiplas.style.display = 'none';
+            }, 250);
+        }
+
+        function imprimirSumulaEquipeVisualizada() {
+            const equipe = equipeSelecionadaVisualizacao || obterEquipeAtualDoBanco().equipe;
+            if (!equipe) {
+                avvAlert('Nenhuma equipe selecionada para gerar a súmula.', 'Atenção', 'warning');
+                return;
+            }
+            executarImpressaoSumulaNominalTime(equipe, equipe.categoria, equipe.atletas);
+        }
+
+        function imprimirSumulaPorEquipeId(equipeIdStr) {
+            const db = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
+            const sessao = JSON.parse(localStorage.getItem('avv_sessao_ativa') || 'null');
+            const equipesClube = obterEquipesDesteClube(db, sessao);
+
+            const eq = equipesClube.find(e => String(e.id) === String(equipeIdStr)) || db.find(e => String(e.id) === String(equipeIdStr));
+            if (!eq) {
+                avvAlert('Equipe não encontrada para impressão da súmula.', 'Erro', 'danger');
+                return;
+            }
+            executarImpressaoSumulaNominalTime(eq, eq.categoria, eq.atletas);
+        }
+
+        function imprimirSumulaPorInscricao(numInscricao, equipeNome, categoria, campeonatoNome) {
+            const db = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
+            const sessao = JSON.parse(localStorage.getItem('avv_sessao_ativa') || 'null');
+            const equipesClube = obterEquipesDesteClube(db, sessao);
+
+            const nomeLimpo = String(equipeNome || '').trim().toLowerCase();
+            const catLimpa = String(categoria || '').trim().toLowerCase();
+            const numLimpo = String(numInscricao || '').trim();
+
+            let equipeAlvo = equipesClube.find(e => 
+                String(e.numeroInscricao) === numLimpo ||
+                String(e.numeroInscricaoTorneio) === numLimpo ||
+                (e.nomeTime && e.nomeTime.trim().toLowerCase() === nomeLimpo && e.categoria && e.categoria.trim().toLowerCase() === catLimpa)
+            );
+
+            if (!equipeAlvo) {
+                equipeAlvo = equipesClube.find(e => e.nomeTime && e.nomeTime.trim().toLowerCase() === nomeLimpo);
+            }
+
+            if (!equipeAlvo) {
+                equipeAlvo = equipeSelecionadaVisualizacao || equipesClube[0] || obterEquipeAtualDoBanco().equipe;
+            }
+
+            if (equipeAlvo) {
+                executarImpressaoSumulaNominalTime(equipeAlvo, categoria || equipeAlvo.categoria, equipeAlvo.atletas, campeonatoNome);
+            } else {
+                avvAlert('Não foi possível localizar os dados desta equipe.', 'Atenção', 'warning');
+            }
         }
 
         // Funções para controle do Menu Lateral em Telas Menores (Mobile / Tablet)
