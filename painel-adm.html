@@ -805,8 +805,33 @@
                 </div>
 
                 <div>
-                    <label style="display: block; font-size: 11px; font-weight: 800; color: #0f1c3f; text-transform: uppercase; margin-bottom: 4px;">Conteúdo das Cláusulas do Regulamento Oficial (PDF)</label>
-                    <textarea id="champ-form-reg" rows="4" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12px; font-family: monospace; resize: vertical;" placeholder="Insira o texto dos artigos ou capítulos que irão compor o documento oficial em PDF..."></textarea>
+                    <label style="display: block; font-size: 11px; font-weight: 800; color: #0f1c3f; text-transform: uppercase; margin-bottom: 4px;">
+                        Regulamento Oficial do Torneio (Upload de PDF)
+                    </label>
+                    <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px;">
+                        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                            <input type="text" id="champ-form-reg-pdf" style="flex: 1; min-width: 200px; height: 38px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12px;" placeholder="Selecione o arquivo PDF oficial do regulamento" readonly>
+                            <label class="btn-clean-action btn-clean-navy" style="height: 38px; padding: 0 16px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; font-size: 11.5px; background: #0f1c3f; color: #ffffff;">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                                Inserir PDF do Regulamento
+                                <input type="file" id="champ-form-reg-file" accept="application/pdf" style="display: none;" onchange="uploadPdfRegulamentoCampeonato(event)">
+                            </label>
+                            <button type="button" id="btn-remover-pdf-regulamento" onclick="removerPdfRegulamentoCampeonato()" style="display: none; height: 38px; padding: 0 12px; background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; border-radius: 4px; font-size: 11.5px; font-weight: 700; cursor: pointer;">
+                                Remover PDF
+                            </button>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px;">
+                            <small style="font-size: 11px; color: #64748b; display: inline-flex; align-items: center; gap: 4px;">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                                Formato aceito: <strong>.pdf</strong> (máx. 15MB). Ficará disponível imediatamente para visualização e download de todos os clubes.
+                            </small>
+                            <div id="champ-reg-pdf-badge" style="display: none; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; color: #166534; background: #dcfce7; border: 1px solid #bbf7d0; padding: 3px 10px; border-radius: 4px;">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                <span id="champ-reg-pdf-name">regulamento.pdf</span>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" id="champ-form-reg-data">
                 </div>
 
                 <div style="display: flex; gap: 10px; margin-top: 6px;">
@@ -3265,6 +3290,54 @@
             });
         }
 
+        function uploadPdfRegulamentoCampeonato(event) {
+            const file = event.target.files && event.target.files[0];
+            if (!file) return;
+
+            if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+                avvAlert('Por favor, selecione um arquivo em formato PDF válido.', 'Arquivo Inválido', 'warning');
+                return;
+            }
+
+            if (file.size > 15 * 1024 * 1024) {
+                avvAlert('O tamanho do arquivo PDF excede o limite máximo permitido de 15MB.', 'Arquivo Muito Grande', 'warning');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const pdfBase64 = e.target.result;
+                document.getElementById('champ-form-reg-data').value = pdfBase64;
+                document.getElementById('champ-form-reg-pdf').value = file.name;
+                atualizarBadgeArquivoRegulamentoPdf(file.name);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function atualizarBadgeArquivoRegulamentoPdf(nomeArquivo) {
+            const badge = document.getElementById('champ-reg-pdf-badge');
+            const nomeSpan = document.getElementById('champ-reg-pdf-name');
+            const btnRemover = document.getElementById('btn-remover-pdf-regulamento');
+            if (!badge || !nomeSpan) return;
+
+            if (nomeArquivo && nomeArquivo.trim()) {
+                nomeSpan.textContent = nomeArquivo.trim();
+                badge.style.display = 'inline-flex';
+                if (btnRemover) btnRemover.style.display = 'inline-block';
+            } else {
+                badge.style.display = 'none';
+                if (btnRemover) btnRemover.style.display = 'none';
+            }
+        }
+
+        function removerPdfRegulamentoCampeonato() {
+            document.getElementById('champ-form-reg-data').value = '';
+            document.getElementById('champ-form-reg-pdf').value = '';
+            const fileInput = document.getElementById('champ-form-reg-file');
+            if (fileInput) fileInput.value = '';
+            atualizarBadgeArquivoRegulamentoPdf('');
+        }
+
         function atualizarOpcoesCategoriasNaipe() {
             sincronizarCategoriasFinais();
         }
@@ -3432,7 +3505,9 @@
 
             document.getElementById('champ-form-limite').value = 12;
             document.getElementById('champ-form-desc').value = '';
-            document.getElementById('champ-form-reg').value = `CAPÍTULO I - DA FINALIDADE\nArt. 1º - Torneio oficial homologado pela AVV 2026.\n\nCAPÍTULO II - REQUISITOS\nArt. 2º - Atletas federados com documentação regularizada.`;
+            document.getElementById('champ-form-reg-data').value = '';
+            document.getElementById('champ-form-reg-pdf').value = '';
+            atualizarBadgeArquivoRegulamentoPdf('');
             
             // Padrão: Adulto Masculino
             document.getElementById('naipe-masculino').checked = true;
@@ -3481,7 +3556,9 @@
             document.getElementById('champ-form-fase').value = c.fase || '';
             document.getElementById('champ-form-limite').value = c.limiteAtletas || 12;
             document.getElementById('champ-form-desc').value = c.descricao;
-            document.getElementById('champ-form-reg').value = c.regulamento ? c.regulamento.replace(/<[^>]+>/g, '\n').trim() : '';
+            document.getElementById('champ-form-reg-data').value = c.regulamentoPdf || '';
+            document.getElementById('champ-form-reg-pdf').value = c.regulamentoPdfNome || (c.regulamentoPdf ? 'regulamento_oficial.pdf' : '');
+            atualizarBadgeArquivoRegulamentoPdf(c.regulamentoPdfNome || (c.regulamentoPdf ? 'regulamento_oficial.pdf' : ''));
 
             preencherCategoriasNoFormulario(c.categoriasAceitas || []);
             document.getElementById('modal-criar-campeonato').style.display = 'flex';
@@ -3499,7 +3576,8 @@
             const taxa = 'Gratuito / Filiação Regular';
             const limite = parseInt(document.getElementById('champ-form-limite').value) || 12;
             const desc = document.getElementById('champ-form-desc').value.trim();
-            const regTexto = document.getElementById('champ-form-reg').value.trim();
+            const regulamentoPdf = document.getElementById('champ-form-reg-data').value.trim();
+            const regulamentoPdfNome = document.getElementById('champ-form-reg-pdf').value.trim();
 
             const categoriasMarcadas = Array.from(document.querySelectorAll('input[name="cat_champ"]:checked')).map(c => c.value);
             if (categoriasMarcadas.length === 0) {
@@ -3523,7 +3601,9 @@
                 statusTorneio: statusTorneio,
                 descricao: desc || `Competição oficial de ${modalidade} realizada pela AVV.`,
                 categoriasAceitas: categoriasMarcadas,
-                regulamento: `<h4>REGULAMENTO OFICIAL - AVV 2026</h4><p>${regTexto.replace(/\n/g, '<br>')}</p>`
+                regulamentoPdf: regulamentoPdf || (campeonatosAdm[id]?.regulamentoPdf || null),
+                regulamentoPdfNome: regulamentoPdfNome || (campeonatosAdm[id]?.regulamentoPdfNome || null),
+                regulamento: regulamentoPdf ? 'REGULAMENTO_PDF' : (campeonatosAdm[id]?.regulamento || '<h4>REGULAMENTO OFICIAL - AVV 2026</h4><p>Torneio oficial homologado pela AVV 2026.</p>')
             };
 
             salvarCampeonatosNoStorage();

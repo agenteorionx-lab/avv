@@ -1442,8 +1442,12 @@
                 </div>
             </div>
 
-            <!-- CORPO DO DOCUMENTO (FOLHA TIMBRADA A4 OFICIAL DA AVV) -->
-            <div style="flex: 1; overflow-y: auto; padding: 24px; background: #e2e8f0; display: flex; justify-content: center;">
+            <!-- CORPO DO DOCUMENTO (IFRAME LEITOR DE PDF OU FOLHA TIMBRADA DINÂMICA) -->
+            <div id="container-leitor-pdf-iframe" style="display: none; flex: 1; height: 78vh; background: #525659;">
+                <iframe id="iframe-pdf-viewer" style="width: 100%; height: 100%; border: none;" src="about:blank"></iframe>
+            </div>
+
+            <div id="container-leitor-pdf-html" style="flex: 1; overflow-y: auto; padding: 24px; background: #e2e8f0; display: flex; justify-content: center;">
                 <div class="folha-a4-avv" style="box-shadow: 0 4px 15px rgba(0,0,0,0.12); border-radius: 4px; padding: 32px 36px; min-height: 900px; background: #ffffff; position: relative;">
                     
                     <!-- MARCA D'ÁGUA SUAVE CENTRAL DA AVV -->
@@ -5540,6 +5544,72 @@
                 // Oculta novamente após disparar
                 areaMultiplas.style.display = 'none';
             }, 250);
+        }
+
+        // =========================================================================
+        // LEITOR E VISUALIZADOR DE REGULAMENTO EM PDF DO CAMPEONATO
+        // =========================================================================
+        function abrirModalPdfRegulamento(tipoOuChampId) {
+            const modal = document.getElementById('modal-pdf-regulamento');
+            if (!modal) return;
+
+            let camp = null;
+            if (tipoOuChampId && bancoCampeonatos && bancoCampeonatos[tipoOuChampId]) {
+                camp = bancoCampeonatos[tipoOuChampId];
+            } else if (campeonatoSelecionadoSubpagina) {
+                camp = campeonatoSelecionadoSubpagina;
+            } else if (bancoCampeonatos && Object.keys(bancoCampeonatos).length > 0) {
+                const primeiroId = Object.keys(bancoCampeonatos)[0];
+                camp = bancoCampeonatos[primeiroId];
+            }
+
+            const elTituloModal = document.getElementById('pdf-modal-title');
+            const elTituloDoc = document.getElementById('pdf-doc-title');
+            const elSubDoc = document.getElementById('pdf-doc-subtitle');
+            const containerIframe = document.getElementById('container-leitor-pdf-iframe');
+            const containerHtml = document.getElementById('container-leitor-pdf-html');
+            const iframe = document.getElementById('iframe-pdf-viewer');
+
+            const nomeTorneio = camp ? camp.nome : 'REGULAMENTO OFICIAL - AVV 2026';
+            if (elTituloModal) elTituloModal.textContent = `REGULAMENTO - ${nomeTorneio}`;
+            if (elTituloDoc) elTituloDoc.textContent = 'REGULAMENTO ESPECÍFICO DE COMPETIÇÃO';
+            if (elSubDoc) elSubDoc.textContent = nomeTorneio;
+
+            // Se o campeonato possui PDF oficial anexado (base64 ou URL de arquivo)
+            if (camp && camp.regulamentoPdf) {
+                if (containerIframe) containerIframe.style.display = 'block';
+                if (containerHtml) containerHtml.style.display = 'none';
+                if (iframe) iframe.src = camp.regulamentoPdf;
+            } else {
+                // Modo fallback para folha timbrada estruturada
+                if (containerIframe) containerIframe.style.display = 'none';
+                if (containerHtml) containerHtml.style.display = 'flex';
+                if (iframe) iframe.src = 'about:blank';
+
+                const elContent = document.getElementById('pdf-doc-content');
+                if (elContent) {
+                    if (camp && camp.regulamento && camp.regulamento !== 'REGULAMENTO_PDF') {
+                        elContent.innerHTML = camp.regulamento;
+                    } else {
+                        elContent.innerHTML = `
+                            <h4>CAPÍTULO I - DA FINALIDADE</h4>
+                            <p>Art. 1º - Torneio oficial homologado pela Associação Vilhenense de Voleibol (AVV) para a temporada esportiva de 2026.</p>
+                            <h4>CAPÍTULO II - REQUISITOS E PARTICIPAÇÃO</h4>
+                            <p>Art. 2º - Atletas federados ou filiados com documentação regularizada perante o departamento técnico.</p>
+                            <p>Art. 3º - Cada equipe poderá inscrever até ${camp ? (camp.limiteAtletas || 12) : 12} atletas em súmula.</p>
+                        `;
+                    }
+                }
+            }
+
+            modal.style.display = 'flex';
+        }
+
+        function fecharModalPdfRegulamento() {
+            const modal = document.getElementById('modal-pdf-regulamento');
+            if (modal) modal.style.display = 'none';
+            const iframe = document.getElementById('iframe-pdf-viewer');
+            if (iframe) iframe.src = 'about:blank';
         }
 
         // =========================================================================
