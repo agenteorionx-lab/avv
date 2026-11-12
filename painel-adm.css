@@ -973,6 +973,16 @@
 }
 
 @media (max-width: 640px) {
+  html, body, .main-wrapper-fed, .content-body-fed {
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+  }
+
+  /* Garante botões com escrita e ícone na mesma linha */
+  button, .btn-action-text-green, .btn-champ-secondary, .btn-clean-action, .btn-acao-tabela-view {
+    white-space: nowrap !important;
+  }
+
   .stats-grid-adm {
     grid-template-columns: 1fr;
     gap: 10px;
@@ -994,9 +1004,13 @@
     align-items: stretch;
   }
 
-  .card-champ-adm-footer .btn-clean-action {
-    width: 100%;
-    justify-content: center;
+  /* Ajusta modais e gavetas para caber na tela do celular sem rolar horizontalmente */
+  .modal-dialog-responsive,
+  div[id^="modal-"] > div {
+    max-width: 95vw !important;
+    width: 95vw !important;
+    margin: 10px auto;
+    overflow-x: hidden !important;
   }
 }
 

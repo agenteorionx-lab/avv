@@ -7,11 +7,13 @@ services:
       - "host.docker.internal:host-gateway"
     ports:
       - "3006:3006"
+    volumes:
+      - /root/avv/data:/app/data
     env_file:
       - .env
     environment:
       - PORT=3006
-      - DB_HOST=host.docker.internal
+      - DB_HOST=147.93.179.208
       - DB_PORT=3306
       - DB_USER=orionx_db
       - DB_PASSWORD=@_sist.orion2904

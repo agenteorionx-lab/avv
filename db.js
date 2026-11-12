@@ -50,6 +50,7 @@ async function criarTabelasMySQL() {
             descricao           TEXT                    DEFAULT NULL,
             categorias_aceitas  JSON                    DEFAULT NULL,
             regulamento         LONGTEXT                DEFAULT NULL,
+            dados_extras        LONGTEXT                DEFAULT NULL,
             created_at          TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
             updated_at          TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             INDEX idx_status (status)
@@ -67,7 +68,7 @@ async function criarTabelasMySQL() {
             cidade              VARCHAR(100)   NOT NULL DEFAULT 'Vilhena',
             nome_time           VARCHAR(200)   NOT NULL,
             responsavel_nome    VARCHAR(150)   NOT NULL DEFAULT '',
-            email               VARCHAR(150)   NOT NULL UNIQUE,
+            email               VARCHAR(150)   NOT NULL,
             whatsapp            VARCHAR(40)    NOT NULL DEFAULT '',
             instagram           VARCHAR(100)   NOT NULL DEFAULT '',
             senha_hash          VARCHAR(255)   NOT NULL,
@@ -77,7 +78,7 @@ async function criarTabelasMySQL() {
             categorias          JSON                    DEFAULT NULL,
             campeonato_id       VARCHAR(80)    NOT NULL DEFAULT '',
             campeonato_nome     VARCHAR(255)   NOT NULL DEFAULT 'Aguardando Seleção no Painel',
-            dados_extras        JSON                    DEFAULT NULL,
+            dados_extras        LONGTEXT                DEFAULT NULL,
             created_at          TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
             updated_at          TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             INDEX idx_email (email),
@@ -128,6 +129,10 @@ async function criarTabelasMySQL() {
     for (const q of queries) {
         await pool.query(q);
     }
+    // Remove índice UNIQUE antigo em equipes.email (pois um mesmo e-mail de clube pode ter conta + múltiplas equipes)
+    try { await pool.query('ALTER TABLE equipes DROP INDEX email'); } catch (e) {}
+    try { await pool.query('ALTER TABLE campeonatos ADD COLUMN dados_extras LONGTEXT DEFAULT NULL'); } catch (e) {}
+    try { await pool.query('ALTER TABLE equipes MODIFY COLUMN dados_extras LONGTEXT DEFAULT NULL'); } catch (e) {}
     console.log('✅ Tabelas MySQL verificadas/criadas com sucesso: [usuarios_adm, campeonatos, equipes, atletas, comissao_tecnica]');
 }
 
@@ -201,8 +206,8 @@ async function sincronizarEstadoParaMySQL(dbState) {
             for (const cId of campIds) {
                 const c = campsObj[cId];
                 await pool.query(
-                    `INSERT INTO campeonatos (id, nome, modalidade, fase, taxa, limite_atletas, status, descricao, categorias_aceitas, regulamento)
-                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    `INSERT INTO campeonatos (id, nome, modalidade, fase, taxa, limite_atletas, status, descricao, categorias_aceitas, regulamento, dados_extras)
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                      ON DUPLICATE KEY UPDATE
                         nome = VALUES(nome),
                         modalidade = VALUES(modalidade),
@@ -212,7 +217,8 @@ async function sincronizarEstadoParaMySQL(dbState) {
                         status = VALUES(status),
                         descricao = VALUES(descricao),
                         categorias_aceitas = VALUES(categorias_aceitas),
-                        regulamento = VALUES(regulamento)`,
+                        regulamento = VALUES(regulamento),
+                        dados_extras = VALUES(dados_extras)`,
                     [
                         String(c.id || cId),
                         c.nome || '',
@@ -223,7 +229,8 @@ async function sincronizarEstadoParaMySQL(dbState) {
                         c.status || 'Ativo',
                         c.descricao || '',
                         JSON.stringify(Array.isArray(c.categoriasAceitas) ? c.categoriasAceitas : []),
-                        c.regulamento || ''
+                        c.regulamento || '',
+                        JSON.stringify(c)
                     ]
                 );
             }
@@ -241,12 +248,15 @@ async function sincronizarEstadoParaMySQL(dbState) {
 
         for (const eq of equipesArr) {
             const eqId = String(eq.id);
+            const copiaExtras = { ...eq };
+            delete copiaExtras.atletas;
+            delete copiaExtras.comissao;
             await pool.query(
                 `INSERT INTO equipes (
                     id, numero_inscricao, protocolo, data_inscricao, hora_inscricao, data_hora_completa,
                     estado, cidade, nome_time, responsavel_nome, email, whatsapp, instagram,
-                    senha_hash, status, logo, categoria, categorias, campeonato_id, campeonato_nome
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    senha_hash, status, logo, categoria, categorias, campeonato_id, campeonato_nome, dados_extras
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ON DUPLICATE KEY UPDATE
                     numero_inscricao = VALUES(numero_inscricao),
                     protocolo = VALUES(protocolo),
@@ -263,7 +273,8 @@ async function sincronizarEstadoParaMySQL(dbState) {
                     categoria = VALUES(categoria),
                     categorias = VALUES(categorias),
                     campeonato_id = VALUES(campeonato_id),
-                    campeonato_nome = VALUES(campeonato_nome)`,
+                    campeonato_nome = VALUES(campeonato_nome),
+                    dados_extras = VALUES(dados_extras)`,
                 [
                     eqId,
                     String(eq.numeroInscricao || ''),
@@ -284,7 +295,8 @@ async function sincronizarEstadoParaMySQL(dbState) {
                     String(eq.categoria || 'Adulto Masculino'),
                     JSON.stringify(Array.isArray(eq.categorias) ? eq.categorias : [eq.categoria || 'Adulto Masculino']),
                     String(eq.campeonatoId || ''),
-                    String(eq.campeonatoNome || 'Aguardando Seleção no Painel')
+                    String(eq.campeonatoNome || 'Aguardando Seleção no Painel'),
+                    JSON.stringify(copiaExtras)
                 ]
             );
 
@@ -353,7 +365,14 @@ async function carregarEstadoDoMySQL() {
             try {
                 cats = typeof c.categorias_aceitas === 'string' ? JSON.parse(c.categorias_aceitas) : (c.categorias_aceitas || cats);
             } catch (e) {}
+            let extras = {};
+            if (c.dados_extras) {
+                try {
+                    extras = typeof c.dados_extras === 'string' ? JSON.parse(c.dados_extras) : c.dados_extras;
+                } catch (e) {}
+            }
             campeonatos[c.id] = {
+                ...extras,
                 id: c.id,
                 nome: c.nome,
                 modalidade: c.modalidade,
@@ -410,7 +429,15 @@ async function carregarEstadoDoMySQL() {
                     };
                 });
 
+            let extrasEq = {};
+            if (e.dados_extras) {
+                try {
+                    extrasEq = typeof e.dados_extras === 'string' ? JSON.parse(e.dados_extras) : e.dados_extras;
+                } catch (err) {}
+            }
+
             return {
+                ...extrasEq,
                 id: e.id,
                 numeroInscricao: e.numero_inscricao,
                 protocolo: e.protocolo,

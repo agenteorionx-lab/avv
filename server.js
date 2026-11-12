@@ -141,15 +141,18 @@ function carregarBancoDados() {
             if (!camps['camp-1794335645971']) {
                 camps['camp-1794335645971'] = CAMPEONATO_OFICIAL_COPA_XXI['camp-1794335645971'];
             }
+            const admData = parsed.adm || {};
+            if (!admData.senhaHash) {
+                admData.senhaHash = hashSenhaSegura(process.env.ADM_DEFAULT_PASS || '@Avv_23#');
+            }
+            if (!admData.usuario) admData.usuario = 'Administrador Geral';
+            if (!admData.email) admData.email = process.env.ADM_DEFAULT_EMAIL || 'avvvoleibol@gmail.com';
+            if (!admData.setor) admData.setor = 'Diretoria Técnica AVV';
+
             return {
                 equipes: Array.isArray(parsed.equipes) ? parsed.equipes : [],
                 campeonatos: camps,
-                adm: parsed.adm || {
-                    usuario: 'Administrador Geral',
-                    email: process.env.ADM_DEFAULT_EMAIL || 'avvvoleibol@gmail.com',
-                    setor: 'Diretoria Técnica AVV',
-                    senhaHash: hashSenhaSegura(process.env.ADM_DEFAULT_PASS || '@Avv_23#')
-                }
+                adm: admData
             };
         }
     } catch (err) {
@@ -166,7 +169,7 @@ function carregarBancoDados() {
             senhaHash: hashSenhaSegura(process.env.ADM_DEFAULT_PASS || '@Avv_23#')
         }
     };
-    salvarBancoDados(dbInicial);
+    salvarBancoDados(dbInicial, false);
     return dbInicial;
 }
 
@@ -452,10 +455,12 @@ app.post(['/api/equipes/sincronizar', '/avv/api/equipes/sincronizar'], (req, res
             } else {
                 equipesLista.forEach(eqCliente => {
                     if (!eqCliente || (!eqCliente.id && !eqCliente.email)) return;
-                    const idx = db.equipes.findIndex(
-                        e => String(e.id) === String(eqCliente.id) ||
-                             (eqCliente.email && (e.email || '').toLowerCase() === eqCliente.email.toLowerCase())
-                    );
+                    const idx = db.equipes.findIndex(e => {
+                        if (eqCliente.id && e.id) {
+                            return String(e.id) === String(eqCliente.id);
+                        }
+                        return eqCliente.email && (e.email || '').toLowerCase() === eqCliente.email.toLowerCase();
+                    });
                     if (idx !== -1) {
                         const senhaHashPreservada = db.equipes[idx].senhaHash || (eqCliente.senha ? hashSenhaSegura(eqCliente.senha) : undefined);
                         db.equipes[idx] = {
@@ -480,10 +485,13 @@ app.post(['/api/equipes/sincronizar', '/avv/api/equipes/sincronizar'], (req, res
 
         // Se enviou uma única equipe atualizada
         if (equipe && (equipe.id || equipe.email)) {
-            const idx = db.equipes.findIndex(
-                e => String(e.id) === String(equipe.id) ||
-                     (equipe.email && (e.email || '').toLowerCase() === equipe.email.toLowerCase())
-            );
+            // Busca estritamente por ID único quando fornecido para não sobrescrever equipes diferentes do mesmo clube
+            const idx = db.equipes.findIndex(e => {
+                if (equipe.id && e.id) {
+                    return String(e.id) === String(equipe.id);
+                }
+                return equipe.email && (e.email || '').toLowerCase() === equipe.email.toLowerCase();
+            });
             if (idx !== -1) {
                 const senhaHashPreservada = equipe.novaSenha
                     ? hashSenhaSegura(equipe.novaSenha)
@@ -841,20 +849,29 @@ app.listen(PORT, async () => {
     console.log(`  Painel ADM:           http://localhost:${PORT}/painel-adm.html`);
     console.log(`====================================================`);
 
+    const jaExistiaJsonLocal = fs.existsSync(DB_FILE);
     const conectado = await initDb();
     if (conectado) {
-        const estadoLocal = carregarBancoDados();
         const estadoMySQL = await carregarEstadoDoMySQL();
-        if (estadoMySQL) {
-            salvarBancoDados({
-                equipes: estadoMySQL.equipes || estadoLocal.equipes,
-                campeonatos: estadoMySQL.campeonatos || estadoLocal.campeonatos,
-                adm: estadoMySQL.adm || estadoLocal.adm
-            }, false);
-            console.log(`✅ Dados sincronizados do MySQL (avv_db) para o cache local.`);
+        const estadoLocal = carregarBancoDados();
+        const temEquipesMySQL = estadoMySQL && Array.isArray(estadoMySQL.equipes) && estadoMySQL.equipes.length > 0;
+        const temEquipesLocal = Array.isArray(estadoLocal.equipes) && estadoLocal.equipes.length > 0;
+
+        if (!jaExistiaJsonLocal || (!temEquipesLocal && temEquipesMySQL)) {
+            if (estadoMySQL && (temEquipesMySQL || (estadoMySQL.campeonatos && Object.keys(estadoMySQL.campeonatos).length > 0))) {
+                salvarBancoDados({
+                    equipes: temEquipesMySQL ? estadoMySQL.equipes : estadoLocal.equipes,
+                    campeonatos: (estadoMySQL.campeonatos && Object.keys(estadoMySQL.campeonatos).length > 0) ? estadoMySQL.campeonatos : estadoLocal.campeonatos,
+                    adm: estadoMySQL.adm || estadoLocal.adm
+                }, false);
+                console.log(`✅ Dados restaurados do MySQL (avv_db) para o banco local (${(estadoMySQL.equipes || []).length} registros).`);
+            } else {
+                await sincronizarEstadoParaMySQL(estadoLocal);
+                console.log(`✅ Estrutura inicial sincronizada no MySQL (avv_db).`);
+            }
         } else {
             await sincronizarEstadoParaMySQL(estadoLocal);
-            console.log(`✅ Estrutura inicial sincronizada no MySQL (avv_db).`);
+            console.log(`✅ Banco local oficial (avv_database.json) sincronizado para o MySQL (avv_db).`);
         }
     }
 });

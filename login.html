@@ -456,10 +456,15 @@
                 if (resp.ok && dadosApi.ok) {
                     localStorage.setItem('avv_sessao_ativa', JSON.stringify(dadosApi.sessao));
 
-                    // Sincroniza equipe retornada no cache local para acesso rápido
+                    // Limpa caches residuais antigos para evitar conflitos de versões
+                    try {
+                        localStorage.removeItem('avv_inscricoes_teste');
+                    } catch (e) {}
+
+                    // Sincroniza equipe retornada no cache local com dados 100% frescos do servidor
                     if (dadosApi.equipe) {
                         const equipesDb = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
-                        const idx = equipesDb.findIndex(item => (item.email || '').toLowerCase() === email);
+                        const idx = equipesDb.findIndex(item => String(item.id) === String(dadosApi.equipe.id) || (item.email || '').toLowerCase() === email);
                         if (idx !== -1) {
                             equipesDb[idx] = { ...equipesDb[idx], ...dadosApi.equipe };
                         } else {
@@ -469,7 +474,7 @@
                     }
 
                     exibirAlertaLogin('Acesso autorizado! Redirecionando para o painel do clube...', 'success');
-                    setTimeout(() => { window.location.replace('painel-time.html'); }, 400);
+                    setTimeout(() => { window.location.replace('painel-time.html'); }, 300);
                     return;
                 }
 

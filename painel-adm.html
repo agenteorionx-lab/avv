@@ -12,8 +12,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="painel.css?v=5">
-    <link rel="stylesheet" href="painel-adm.css?v=5">
+    <link rel="stylesheet" href="painel.css?v=7">
+    <link rel="stylesheet" href="painel-adm.css?v=7">
     <script src="avv-dialogs.js"></script>
 </head>
 <body>
@@ -188,7 +188,7 @@
 
                     <div class="stat-card-adm" onclick="switchAdmTab('campeonatos', document.getElementById('nav-adm-campeonatos'))">
                         <div class="stat-info">
-                            <h3 id="stat-adm-champs-total">4</h3>
+                            <h3 id="stat-adm-champs-total">0</h3>
                             <p>Campeonatos Ativos</p>
                         </div>
                         <div class="stat-icon" style="background: #eff6ff; color: #1d72f2;">
@@ -548,9 +548,23 @@
                         </div>
                     </div>
 
-                    <div style="overflow-x: auto;">
+                    <!-- SUB-ABAS: CONTAS ATIVAS E CONTAS BLOQUEADAS -->
+                    <div style="background: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 10px 16px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                        <button id="btn-subaba-clubes-ativas" onclick="alternarSubAbaClubesAdm('ativas')" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; font-size: 12px; font-weight: 700; border-radius: 6px; border: 1px solid #0f1c3f; background: #0f1c3f; color: #ffffff; cursor: pointer; transition: all 0.2s;">
+                            <span>Contas Ativas</span>
+                            <span id="badge-subaba-clubes-ativas" style="background: rgba(255,255,255,0.2); padding: 1px 7px; border-radius: 10px; font-size: 11px;">0</span>
+                        </button>
+                        <button id="btn-subaba-clubes-bloqueadas" onclick="alternarSubAbaClubesAdm('bloqueadas')" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; font-size: 12px; font-weight: 700; border-radius: 6px; border: 1px solid #cbd5e1; background: #ffffff; color: #475569; cursor: pointer; transition: all 0.2s;">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                            <span>Contas Bloqueadas</span>
+                            <span id="badge-subaba-clubes-bloqueadas" style="background: #fee2e2; color: #991b1b; padding: 1px 7px; border-radius: 10px; font-size: 11px;">0</span>
+                        </button>
+                    </div>
+
+                    <!-- CONTAINER COM SCROLL AUTOMÁTICO A PARTIR DE 12 CADASTROS -->
+                    <div style="overflow-x: auto; max-height: 640px; overflow-y: auto;">
                         <table class="table-avv-roster" style="width: 100%; border-collapse: collapse;">
-                            <thead>
+                            <thead style="position: sticky; top: 0; z-index: 2;">
                                 <tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0; font-size: 11px; text-transform: uppercase; color: #475569;">
                                     <th style="padding: 12px 14px; text-align: left;">Clube / Razão Social</th>
                                     <th style="padding: 12px 14px; text-align: left;">Dirigente Responsável</th>
@@ -639,19 +653,42 @@
                 </div>
 
             </section>
-            <!-- RODAPÉ CORPORATIVO AVV + ORIONX -->
-            <footer style="margin-top: 36px; padding: 22px 10px; border-top: 1px solid #e2e8f0; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;">
-                <div style="font-size: 11.5px; color: #64748b; font-weight: 600;">
-                    &copy; 2026 Associação Vilhenense de Voleibol. Todos os direitos reservados.
-                </div>
-                <div style="display: inline-flex; align-items: center; justify-content: center; gap: 7px; font-size: 11px; color: #94a3b8;">
+            <!-- RODAPÉ CORPORATIVO AVV + ORIONX (EM LINHA ÚNICA) -->
+            <footer style="margin-top: 36px; padding: 20px 10px; border-top: 1px solid #e2e8f0; text-align: center; display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 8px 12px; font-size: 11.5px; color: #64748b;">
+                <span style="font-weight: 600;">&copy; 2026 Associação Vilhenense de Voleibol. Todos os direitos reservados.</span>
+                <span style="color: #cbd5e1; display: inline-block;">&bull;</span>
+                <div style="display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-size: 11px; color: #94a3b8;">
                     <span>Desenvolvido por</span>
                     <a href="https://orionxbrasil.com/" target="_blank" rel="noopener noreferrer" title="OrionX Brasil" style="display: inline-flex; align-items: center; text-decoration: none;">
-                        <img src="logos/orionx.png" alt="OrionX" style="height: 16px; width: auto; object-fit: contain;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+                        <img src="logos/orionx.png" alt="OrionX" style="height: 15px; width: auto; object-fit: contain;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
                     </a>
                 </div>
             </footer>
         </main>
+
+        <!-- BARRA FIXA DE NAVEGAÇÃO INFERIOR PARA CELULARES NO ADM (ACESSO PERMANENTE ÀS ABAS) -->
+        <nav class="bottom-nav-mobile" aria-label="Navegação rápida mobile ADM">
+            <button class="btn-bottom-nav active" id="bnav-adm-dashboard" onclick="switchAdmTab('dashboard', document.getElementById('nav-adm-dashboard'))">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                <span>Início</span>
+            </button>
+            <button class="btn-bottom-nav" id="bnav-adm-equipes" onclick="switchAdmTab('equipes', document.getElementById('nav-adm-equipes'))">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                <span>Equipes</span>
+            </button>
+            <button class="btn-bottom-nav" id="bnav-adm-campeonatos" onclick="switchAdmTab('campeonatos', document.getElementById('nav-adm-campeonatos'))">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+                <span>Torneios</span>
+            </button>
+            <button class="btn-bottom-nav" id="bnav-adm-clubes" onclick="switchAdmTab('clubes', document.getElementById('nav-adm-clubes'))">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                <span>Clubes</span>
+            </button>
+            <button class="btn-bottom-nav" id="bnav-adm-impressao" onclick="switchAdmTab('impressao', document.getElementById('nav-adm-impressao'))">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                <span>Fichas</span>
+            </button>
+        </nav>
     </div>
 
     <!-- ====================================================================== -->
@@ -1297,6 +1334,20 @@
                 localStorage.setItem(chave, valorString);
                 return true;
             } catch (err) {
+                if (chave === 'avv_banco_campeonatos') {
+                    try {
+                        const obj = JSON.parse(valorString);
+                        const leve = {};
+                        Object.keys(obj).forEach(k => {
+                            leve[k] = { ...obj[k] };
+                            if (leve[k].regulamentoPdf && leve[k].regulamentoPdf.length > 200000) {
+                                delete leve[k].regulamentoPdf;
+                            }
+                        });
+                        localStorage.setItem(chave, JSON.stringify(leve));
+                        return true;
+                    } catch (e2) {}
+                }
                 console.warn('Limite de armazenamento atingido ao salvar:', chave, err);
                 return false;
             }
@@ -1448,17 +1499,16 @@
                 return;
             }
             renovarAtividadeSessaoAdm();
-            // Remove dados fictícios de demonstração caso tenham ficado salvos no navegador
-            if (!localStorage.getItem('avv_sistema_limpo_v4')) {
-                try {
-                    localStorage.removeItem('avv_banco_campeonatos');
-                    localStorage.setItem('avv_banco_campeonatos', JSON.stringify({}));
-                } catch(e) {}
-                localStorage.setItem('avv_sistema_limpo_v4', 'true');
-            }
+            // Garante que o campeonato oficial padrão esteja presente se a lista estiver vazia
+            carregarCampeonatos();
+            carregarBancoEquipesIntegrado();
+            atualizarTudoPainelAdm();
 
             // Sincroniza dados do Banco de Dados Oficial do Servidor (Fonte Única da Verdade)
             await sincronizarDadosComServidorAdm();
+            carregarCampeonatos();
+            carregarBancoEquipesIntegrado();
+            atualizarTudoPainelAdm();
 
             // Atualiza perfil visual do ADM
             if (sessaoAdm.usuario && document.getElementById('adm-user-display-name')) {
@@ -1510,15 +1560,11 @@
                 });
             }
 
-            carregarCampeonatos();
-            carregarBancoEquipesIntegrado();
-            atualizarTudoPainelAdm();
-
-            // Atualização contínua do Timer a cada 1 segundo quando estiver visualizando campeonatos
+            // Atualização leve do Timer a cada 1 segundo (sem reconstruir o DOM inteiro para não travar cliques)
             setInterval(() => {
                 const tabCamp = document.getElementById('tab-adm-campeonatos');
                 if (tabCamp && tabCamp.classList.contains('active')) {
-                    renderizarGridCampeonatos();
+                    atualizarTimersCardsCampeonatosAdm();
                 }
             }, 1000);
 
@@ -1635,7 +1681,7 @@
             const totalEquipes = equipesInscritas.length;
             const pendentes = equipesInscritas.filter(e => e.status !== 'Homologado').length;
             const totalAtletas = equipesInscritas.reduce((acc, eq) => acc + (eq.atletas ? eq.atletas.length : 0), 0);
-            const totalChamps = Object.keys(campeonatosAdm).length;
+            const totalChamps = Object.values(campeonatosAdm).filter(c => c && c.ativo !== false && c.statusTorneio !== 'inativo').length;
 
             document.getElementById('stat-adm-equipes-total').textContent = totalEquipes;
             document.getElementById('stat-adm-equipes-pendentes').textContent = pendentes;
@@ -2942,6 +2988,9 @@
             if (salvos) {
                 try {
                     campeonatosAdm = JSON.parse(salvos);
+                    if (!campeonatosAdm || typeof campeonatosAdm !== 'object' || Object.keys(campeonatosAdm).length === 0) {
+                        campeonatosAdm = { ...bancoPadraoCampeonatos };
+                    }
                     // Garante que campeonatos padrão tenham os banners atualizados
                     Object.keys(bancoPadraoCampeonatos).forEach(k => {
                         if (campeonatosAdm[k] && !campeonatosAdm[k].banner) {
@@ -3015,12 +3064,37 @@
 
             let texto = "";
             if (dias > 0) {
-                texto = dias + "d " + hh + ":" + mm + ":" + ss;
+                texto = dias + "d " + hh + "h " + mm + "m " + ss + "s";
+            } else if (horas > 0) {
+                texto = hh + "h " + mm + "m " + ss + "s";
             } else {
-                texto = hh + ":" + mm + ":" + ss;
+                texto = mm + "m " + ss + "s";
             }
 
             return { encerrado: false, dias, horas, minutos, segundos, texto };
+        }
+
+        function atualizarTimersCardsCampeonatosAdm() {
+            let mudouStatus = false;
+            Object.keys(campeonatosAdm).forEach(id => {
+                const c = campeonatosAdm[id];
+                if (!c) return;
+                const timerInfo = calcularTempoRestanteTorneio(c);
+                if (!timerInfo) return;
+                if (timerInfo.encerrado && c.statusTorneio === 'ativo') {
+                    c.statusTorneio = 'encerrado';
+                    mudouStatus = true;
+                } else {
+                    const elSpan = document.querySelector(`[data-adm-timer-camp="${c.id}"]`);
+                    if (elSpan && elSpan.textContent !== timerInfo.texto) {
+                        elSpan.textContent = timerInfo.texto;
+                    }
+                }
+            });
+            if (mudouStatus) {
+                salvarCampeonatosNoStorage();
+                renderizarGridCampeonatos();
+            }
         }
 
         function renderizarGridCampeonatos() {
@@ -3069,9 +3143,9 @@
                             <div style="background: #0f1c3f; border: 1px solid #1e293b; border-radius: 6px; padding: 6px 12px; margin-top: 8px; display: flex; align-items: center; justify-content: space-between; font-size: 11px; font-weight: 700; color: #f8fafc;">
                                 <span style="display: flex; align-items: center; gap: 6px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; font-size: 10px;">
                                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                                    Encerramento das Inscrições
+                                    Tempo Restante para Inscrição
                                 </span>
-                                <span style="background: #1e293b; color: #38bdf8; border: 1px solid #334155; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-family: monospace; font-weight: 800; letter-spacing: 0.6px;">${timerInfo.texto}</span>
+                                <span data-adm-timer-camp="${c.id}" style="background: #1e293b; color: #38bdf8; border: 1px solid #334155; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-family: monospace; font-weight: 800; letter-spacing: 0.6px;">${timerInfo.texto}</span>
                             </div>
                         `;
                     }
@@ -3678,6 +3752,11 @@
             if (target) target.classList.add('active');
             if (btn) btn.classList.add('active');
 
+            // Atualiza botões da barra inferior mobile do ADM
+            document.querySelectorAll('.btn-bottom-nav').forEach(b => b.classList.remove('active'));
+            const bNav = document.getElementById('bnav-adm-' + tabName);
+            if (bNav) bNav.classList.add('active');
+
             if (tabName === 'equipes' && !equipeAbertaId) {
                 document.getElementById('adm-subview-detalhe-equipe').style.display = 'none';
                 document.getElementById('adm-subview-lista-equipes').style.display = 'block';
@@ -3944,6 +4023,41 @@
             return Array.from(contasMap.values());
         }
 
+        let subAbaClubesAdmAtual = 'ativas'; // 'ativas' ou 'bloqueadas'
+
+        function alternarSubAbaClubesAdm(aba) {
+            subAbaClubesAdmAtual = aba;
+            const btnAtivas = document.getElementById('btn-subaba-clubes-ativas');
+            const btnBloq = document.getElementById('btn-subaba-clubes-bloqueadas');
+
+            if (aba === 'bloqueadas') {
+                if (btnBloq) {
+                    btnBloq.style.background = '#991b1b';
+                    btnBloq.style.color = '#ffffff';
+                    btnBloq.style.borderColor = '#991b1b';
+                }
+                if (btnAtivas) {
+                    btnAtivas.style.background = '#ffffff';
+                    btnAtivas.style.color = '#475569';
+                    btnAtivas.style.borderColor = '#cbd5e1';
+                }
+            } else {
+                if (btnAtivas) {
+                    btnAtivas.style.background = '#0f1c3f';
+                    btnAtivas.style.color = '#ffffff';
+                    btnAtivas.style.borderColor = '#0f1c3f';
+                }
+                if (btnBloq) {
+                    btnBloq.style.background = '#ffffff';
+                    btnBloq.style.color = '#475569';
+                    btnBloq.style.borderColor = '#cbd5e1';
+                }
+            }
+
+            const inputFiltro = document.getElementById('filtro-busca-clubes-adm');
+            renderizarListaContasClubesAdm(inputFiltro ? inputFiltro.value : '');
+        }
+
         function renderizarListaContasClubesAdm(termoFiltro = '') {
             const tbody = document.getElementById('adm-tbody-clubes-contas');
             if (!tbody) return;
@@ -3951,27 +4065,46 @@
             const contas = extrairContasClubesCadastradas();
             listaContasClubesCache = contas;
 
+            const totalAtivas = contas.filter(c => !c.bloqueado).length;
+            const totalBloqueadas = contas.filter(c => !!c.bloqueado).length;
+
             const elBadge = document.getElementById('badge-adm-total-clubes');
             if (elBadge) elBadge.textContent = contas.length;
 
+            const elBadgeSubAtivas = document.getElementById('badge-subaba-clubes-ativas');
+            if (elBadgeSubAtivas) elBadgeSubAtivas.textContent = totalAtivas;
+
+            const elBadgeSubBloq = document.getElementById('badge-subaba-clubes-bloqueadas');
+            if (elBadgeSubBloq) elBadgeSubBloq.textContent = totalBloqueadas;
+
             const termo = String(termoFiltro || '').toLowerCase().trim();
-            const contasFiltradas = termo
-                ? contas.filter(c =>
-                    c.nomeClube.toLowerCase().includes(termo) ||
-                    c.responsavelNome.toLowerCase().includes(termo) ||
-                    c.email.toLowerCase().includes(termo) ||
-                    c.cidade.toLowerCase().includes(termo)
-                  )
-                : contas;
+            const contasFiltradas = contas.filter(c => {
+                // Filtro por sub-aba
+                if (subAbaClubesAdmAtual === 'bloqueadas' && !c.bloqueado) return false;
+                if (subAbaClubesAdmAtual === 'ativas' && c.bloqueado) return false;
+
+                // Filtro por busca
+                if (!termo) return true;
+                return (
+                    (c.nomeClube || '').toLowerCase().includes(termo) ||
+                    (c.responsavelNome || '').toLowerCase().includes(termo) ||
+                    (c.email || '').toLowerCase().includes(termo) ||
+                    (c.cidade || '').toLowerCase().includes(termo)
+                );
+            });
 
             tbody.innerHTML = '';
 
             if (contasFiltradas.length === 0) {
+                const msgVazia = subAbaClubesAdmAtual === 'bloqueadas'
+                    ? (termo ? 'Nenhuma conta bloqueada encontrada com esse termo.' : 'Nenhuma conta bloqueada no sistema.')
+                    : (termo ? 'Nenhuma conta ativa encontrada com esse termo.' : 'Nenhuma conta ativa cadastrada no portal até o momento.');
+
                 tbody.innerHTML = `
                     <tr>
                         <td colspan="7" style="text-align: center; padding: 36px 16px; color: #64748b; font-size: 13px;">
-                            <strong style="display: block; color: #334155; margin-bottom: 4px;">Nenhuma conta de clube encontrada</strong>
-                            ${termo ? 'Tente buscar por outro termo ou nome de dirigente.' : 'Nenhuma conta cadastrada no portal até o momento.'}
+                            <strong style="display: block; color: #334155; margin-bottom: 4px;">Nenhuma conta encontrada</strong>
+                            ${msgVazia}
                         </td>
                     </tr>
                 `;
@@ -4008,7 +4141,7 @@
                         ${conta.cidade} - ${conta.estado}
                     </td>
                     <td style="padding: 14px; text-align: center;">
-                        <span class="count-pill" style="font-size: 12px; font-weight: 800; background: #0f1c3f; color: #ffffff;" title="Equipes criadas: ${totalTimes}">
+                        <span style="font-size: 13px; font-weight: 800; color: #0f172a;" title="Equipes criadas: ${totalTimes}">
                             ${totalTimes}
                         </span>
                     </td>
@@ -4100,10 +4233,21 @@
                     localStorage.removeItem('avv_inscricoes_teste');
                 } catch(e) {}
 
-                // Remove banco de atletas local deste clube se existir
+                // Remove banco de atletas, comissão técnica, fotos e dados residuais deste clube no storage
                 try {
                     const idClubeChave = emailNorm.replace(/[^a-z0-9_-]/g, '_');
                     localStorage.removeItem(`avv_atletas_clube_${idClubeChave}`);
+                    localStorage.removeItem(`avv_comissao_clube_${idClubeChave}`);
+                    localStorage.removeItem(`avv_foto_clube_${emailNorm}`);
+                } catch(e) {}
+
+                // Se houver uma sessão ativa local com este e-mail, encerra imediatamente
+                try {
+                    const sessaoAtiva = JSON.parse(localStorage.getItem('avv_sessao_ativa') || 'null');
+                    if (sessaoAtiva && (sessaoAtiva.email || '').toLowerCase().trim() === emailNorm) {
+                        localStorage.removeItem('avv_sessao_ativa');
+                        localStorage.removeItem('avv_dirigente_foto_teste');
+                    }
                 } catch(e) {}
 
                 // Sincroniza exclusão definitiva no servidor oficial (JSON + MySQL) aguardando confirmação
@@ -4124,7 +4268,7 @@
 
                 atualizarTudoPainelAdm();
 
-                avvAlert(`Conta do clube "${nomeClube}" e suas equipes foram excluídas com sucesso.`, 'Conta Excluída', 'success');
+                avvAlert(`Conta do clube "${nomeClube}" e todas as suas equipes, atletas e dados foram excluídos com sucesso. Caso o dirigente deseje, poderá realizar um novo cadastro a partir do zero.`, 'Conta Excluída com Sucesso', 'success');
             }
         }
 

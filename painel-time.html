@@ -12,7 +12,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="painel.css?v=3">
+    <link rel="stylesheet" href="painel.css?v=13">
     <script src="avv-dialogs.js"></script>
     <style>
         /* Estilos do Accordion de Inscrições por Campeonato */
@@ -177,7 +177,7 @@
                                 Regulamento Geral dos Campeonatos e Superligas - 2026
                             </div>
                             <button class="btn-action-text-green" title="Visualizar Regulamento em PDF" onclick="abrirModalPdfRegulamento('superliga-masc')" style="padding: 6px 14px; font-size: 11px; height: 32px; gap: 6px; background: #ffffff; color: #0f1c3f; border: 1px solid #cbd5e1;">
-                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
                                 Ver em PDF
                             </button>
                         </div>
@@ -390,37 +390,44 @@
                             <h3 style="font-size: 15px; font-weight: 800; color: #1e293b; text-transform: uppercase;">Agremiações e Equipes Ativas</h3>
                             <p style="font-size: 12px; color: #64748b;">Consulte as equipes cadastradas sob responsabilidade do seu clube na AVV.</p>
                         </div>
-                        <button type="button" onclick="limparEquipesDuplicadas()" style="background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; padding: 6px 14px; border-radius: 4px; font-size: 11px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: background 0.2s;" onmouseover="this.style.background='#fee2e2'" onmouseout="this.style.background='#fef2f2'" title="Remover repetições geradas por cliques múltiplos">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                            Limpar Equipes Duplicadas
-                        </button>
                     </div>
 
-                    <!-- GUIA PASSO A PASSO PARA INSCRIÇÃO DIRETA -->
-                    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-left: 4px solid #10b981; border-radius: 6px; padding: 14px 18px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
-                        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 10px;">
-                            <div style="display: flex; align-items: center; gap: 8px;">
-                                <div style="width: 24px; height: 24px; border-radius: 50%; background: #dcfce7; color: #15803d; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800;">
+                    <!-- GUIA COMPACTO / ACCORDION PARA INSCRIÇÃO DIRETA -->
+                    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-left: 4px solid #10b981; border-radius: 6px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); overflow: hidden;">
+                        <button type="button" onclick="toggleGuiaInscricao(this)" style="width: 100%; background: none; border: none; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; text-align: left; gap: 10px;">
+                            <div style="display: flex; align-items: center; gap: 10px; min-width: 0;">
+                                <div style="width: 24px; height: 24px; border-radius: 50%; background: #dcfce7; color: #15803d; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; flex-shrink: 0;">
                                     ✓
                                 </div>
-                                <h4 style="margin: 0; font-size: 13px; font-weight: 800; color: #0f1c3f; text-transform: uppercase; letter-spacing: 0.3px;">
-                                    Como funciona a inscrição e habilitação da sua equipe
-                                </h4>
+                                <div>
+                                    <h4 style="margin: 0; font-size: 12.5px; font-weight: 800; color: #0f1c3f; text-transform: uppercase; letter-spacing: 0.3px;">
+                                        Como funciona a inscrição e habilitação da equipe
+                                    </h4>
+                                    <span style="font-size: 11px; color: #64748b;">Clique para ver o passo a passo (3 passos simples)</span>
+                                </div>
                             </div>
-                            <span style="font-size: 11px; color: #15803d; font-weight: 700; background: #f0fdf4; padding: 2px 8px; border-radius: 3px;">Inscrição Direta Habilitada</span>
-                        </div>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; font-size: 12px; color: #475569;">
-                            <div style="background: #f8fafc; padding: 10px 12px; border-radius: 4px; border: 1px solid #e2e8f0;">
-                                <strong style="color: #0f1c3f; display: block; margin-bottom: 2px;">Passo 1: Criar a Equipe</strong>
-                                Cadastre a equipe na categoria desejada (Sub-13, Sub-15, Sub-18 ou Adulto).
+                            <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
+                                <span style="font-size: 10.5px; color: #15803d; font-weight: 700; background: #f0fdf4; padding: 2px 8px; border-radius: 3px;" class="hide-mobile-badge">Habilitada</span>
+                                <svg class="guia-arrow-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2.2" style="transition: transform 0.25s ease;">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
                             </div>
-                            <div style="background: #f8fafc; padding: 10px 12px; border-radius: 4px; border: 1px solid #e2e8f0;">
-                                <strong style="color: #0f1c3f; display: block; margin-bottom: 2px;">Passo 2: Vincular no Mínimo 6 Atletas</strong>
-                                Clique em <strong>Visualizar</strong> na equipe e adicione pelo menos 6 atletas elegíveis ao elenco.
-                            </div>
-                            <div style="background: #f0fdf4; padding: 10px 12px; border-radius: 4px; border: 1px solid #bbf7d0;">
-                                <strong style="color: #15803d; display: block; margin-bottom: 2px;">Passo 3: Equipe Pronta para Jogar</strong>
-                                Ao completar 6 atletas, a equipe torna-se <strong>APTA</strong> imediatamente, com ficha oficial pronta para impressão.
+                        </button>
+                        
+                        <div id="corpo-guia-passo-a-passo" style="display: none; padding: 0 16px 14px 16px; border-top: 1px solid #f1f5f9;">
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; font-size: 12px; color: #475569; margin-top: 10px;">
+                                <div style="background: #f8fafc; padding: 10px 12px; border-radius: 4px; border: 1px solid #e2e8f0;">
+                                    <strong style="color: #0f1c3f; display: block; margin-bottom: 2px;">Passo 1: Criar a Equipe</strong>
+                                    Cadastre a equipe na categoria desejada (Sub-13, Sub-15, Sub-18 ou Adulto).
+                                </div>
+                                <div style="background: #f8fafc; padding: 10px 12px; border-radius: 4px; border: 1px solid #e2e8f0;">
+                                    <strong style="color: #0f1c3f; display: block; margin-bottom: 2px;">Passo 2: Vincular no Mínimo 6 Atletas</strong>
+                                    Clique em <strong>Visualizar</strong> na equipe e adicione pelo menos 6 atletas elegíveis ao elenco.
+                                </div>
+                                <div style="background: #f0fdf4; padding: 10px 12px; border-radius: 4px; border: 1px solid #bbf7d0;">
+                                    <strong style="color: #15803d; display: block; margin-bottom: 2px;">Passo 3: Equipe Pronta para Jogar</strong>
+                                    Ao completar 6 atletas, a equipe torna-se <strong>APTA</strong> imediatamente, com ficha oficial pronta para impressão.
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -510,7 +517,7 @@
             <!-- 4. ABA: MEUS DADOS / PERFIL (LADO ESQUERDO: DADOS + FOTO | LADO DIREITO: MUDAR SENHA) -->
             <section id="tab-perfil" class="tab-pane">
                 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start;">
+                <div class="grid-perfil-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; align-items: start;">
                     
                     <!-- COLUNA ESQUERDA: EDITAR MEUS DADOS + LOGO/FOTO -->
                     <div class="fed-card-container" style="margin-bottom: 0;">
@@ -518,7 +525,7 @@
                             EDITAR MEUS DADOS
                         </div>
                         
-                        <div style="padding: 24px;">
+                        <div class="perfil-card-body" style="padding: 24px;">
                             <!-- SELETOR DE IMAGEM / LOGO DO DIRIGENTE -->
                             <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 24px;">
                                 <div style="position: relative;">
@@ -540,7 +547,7 @@
                                     <input type="text" id="prof-clube-nome" style="width: 100%; height: 38px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 13px;" placeholder="Ex: Vilhena Vôlei Clube">
                                 </div>
 
-                                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 10px;">
+                                <div class="grid-form-2col" style="display: grid; grid-template-columns: 2fr 1fr; gap: 10px;">
                                     <div>
                                         <label style="display: block; font-size: 11px; font-weight: 700; color: #334155; margin-bottom: 4px;">CIDADE SEDE *</label>
                                         <input type="text" id="prof-cidade" style="width: 100%; height: 38px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 13px;" placeholder="Ex: Vilhena">
@@ -561,7 +568,7 @@
                                     <input type="email" id="prof-email" style="width: 100%; height: 38px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 13px;" value="contato@avv.com.br">
                                 </div>
 
-                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                <div class="grid-form-2col" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                                     <div>
                                         <label style="display: block; font-size: 11px; font-weight: 700; color: #334155; margin-bottom: 4px;">TELEFONE / WHATSAPP *</label>
                                         <input type="text" id="prof-whats" style="width: 100%; height: 38px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 13px;" placeholder="(69) 99999-9999">
@@ -572,7 +579,7 @@
                                     </div>
                                 </div>
 
-                                <button class="btn-action-text-green" style="align-self: flex-start; margin-top: 8px;" onclick="salvarDadosDirigente()">
+                                <button class="btn-action-text-green btn-perfil-submit" style="align-self: flex-start; margin-top: 8px;" onclick="salvarDadosDirigente()">
                                     ✓ SALVAR DADOS
                                 </button>
                             </div>
@@ -584,7 +591,7 @@
                         <div style="background: #272848; color: #ffffff; padding: 12px 18px; font-size: 11px; font-weight: 800; text-transform: uppercase;">
                             MUDAR MINHA SENHA
                         </div>
-                        <div style="padding: 24px;">
+                        <div class="perfil-card-body" style="padding: 24px;">
                             <p style="font-size: 12px; color: #64748b; margin-bottom: 20px; line-height: 1.5;">
                                 Certifique-se de que sua conta esteja usando uma senha longa e aleatória para permanecer segura no sistema.
                             </p>
@@ -601,7 +608,7 @@
                                     <label style="display: block; font-size: 11px; font-weight: 700; color: #334155; margin-bottom: 4px;">CONFIRMAR NOVA SENHA *</label>
                                     <input type="password" id="pass-confirma" style="width: 100%; height: 38px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 13px;" placeholder="Repita a nova senha">
                                 </div>
-                                <button class="btn-action-text-green" style="align-self: flex-start; margin-top: 8px;" onclick="alterarSenhaDirigente()">
+                                <button class="btn-action-text-green btn-perfil-submit" style="align-self: flex-start; margin-top: 8px;" onclick="alterarSenhaDirigente()">
                                     ✓ SALVAR NOVA SENHA
                                 </button>
                             </div>
@@ -611,19 +618,38 @@
                 </div>
 
             </section>
-            <!-- RODAPÉ CORPORATIVO AVV + ORIONX -->
-            <footer style="margin-top: 36px; padding: 22px 10px; border-top: 1px solid #e2e8f0; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;">
-                <div style="font-size: 11.5px; color: #64748b; font-weight: 600;">
-                    &copy; 2026 Associação Vilhenense de Voleibol. Todos os direitos reservados.
-                </div>
-                <div style="display: inline-flex; align-items: center; justify-content: center; gap: 7px; font-size: 11px; color: #94a3b8;">
+            <!-- RODAPÉ CORPORATIVO AVV + ORIONX (EM LINHA ÚNICA) -->
+            <footer style="margin-top: 36px; padding: 20px 10px; border-top: 1px solid #e2e8f0; text-align: center; display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 8px 12px; font-size: 11.5px; color: #64748b;">
+                <span style="font-weight: 600;">&copy; 2026 Associação Vilhenense de Voleibol. Todos os direitos reservados.</span>
+                <span style="color: #cbd5e1; display: inline-block;">&bull;</span>
+                <div style="display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-size: 11px; color: #94a3b8;">
                     <span>Desenvolvido por</span>
                     <a href="https://orionxbrasil.com/" target="_blank" rel="noopener noreferrer" title="OrionX Brasil" style="display: inline-flex; align-items: center; text-decoration: none;">
-                        <img src="logos/orionx.png" alt="OrionX" style="height: 16px; width: auto; object-fit: contain;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+                        <img src="logos/orionx.png" alt="OrionX" style="height: 15px; width: auto; object-fit: contain;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
                     </a>
                 </div>
             </footer>
         </main>
+
+        <!-- BARRA FIXA DE NAVEGAÇÃO INFERIOR PARA CELULARES (ACESSO DIRETO E PERMANENTE ÀS ABAS) -->
+        <nav class="bottom-nav-mobile" aria-label="Navegação rápida mobile">
+            <button class="btn-bottom-nav active" id="bnav-campeonatos" onclick="switchFedTab('campeonatos')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                <span>Torneios</span>
+            </button>
+            <button class="btn-bottom-nav" id="bnav-inscricoes" onclick="switchFedTab('inscricoes')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                <span>Inscrições</span>
+            </button>
+            <button class="btn-bottom-nav" id="bnav-meustimes" onclick="switchFedTab('meustimes')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                <span>Times</span>
+            </button>
+            <button class="btn-bottom-nav" id="bnav-perfil" onclick="switchFedTab('perfil')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                <span>Perfil</span>
+            </button>
+        </nav>
     </div>
 
     <!-- MODAL DE CADASTRAR / EDITAR ATLETA (EXATAMENTE COMO A REFERÊNCIA DA FEDERAÇÃO) -->
@@ -826,6 +852,14 @@
                                 <input type="text" id="modal-tec-cpf" required style="width: 100%; height: 36px; padding: 0 10px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12.5px; background: #eef2f6;" placeholder="000.000.000-00" maxlength="14">
                             </div>
 
+                            <!-- CREF (REGISTRO PROFISSIONAL) -->
+                            <div>
+                                <label style="display: block; font-size: 10.5px; font-weight: 800; color: #334155; text-transform: uppercase; margin-bottom: 4px;">
+                                    CREF
+                                </label>
+                                <input type="text" id="modal-tec-cref" style="width: 100%; height: 36px; padding: 0 10px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12.5px; background: #eef2f6;" placeholder="Ex: 000000-G/RO" maxlength="30">
+                            </div>
+
                             <!-- NOME * -->
                             <div>
                                 <label style="display: block; font-size: 10.5px; font-weight: 800; color: #334155; text-transform: uppercase; margin-bottom: 4px;">
@@ -978,7 +1012,7 @@
                     </div>
                 </div>
                 <div style="display: flex; align-items: center; gap: 12px;">
-                    <button class="btn-action-text-green" onclick="abrirModalTime('editar')" title="Editar Informações Cadastrais da Equipe" style="padding: 6px 14px; font-size: 11px; height: 32px; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px;">
+                    <button class="btn-action-text-green" onclick="abrirEdicaoEquipeDoModal()" title="Editar Informações Cadastrais da Equipe" style="padding: 6px 14px; font-size: 11px; height: 32px; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px;">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
                         Editar Equipe
                     </button>
@@ -1019,19 +1053,23 @@
                 <div class="fed-card-container" style="margin-bottom: 0;">
                     <div class="fed-header-gold" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
                         <div style="display: flex; align-items: center; gap: 8px;">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                             <span>ELENCO DE ATLETAS VINCULADOS (<span id="vis-total-atletas-roster">2/12</span> - MÁX. 12 ATLETAS)</span>
                         </div>
-                        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                            <button onclick="imprimirFichasSelecionadas()" class="btn-action-text-green" style="background: #0f1c3f; border: 1px solid #0f1c3f; color: #ffffff; font-size: 11px; padding: 6px 14px; height: 32px; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px;">
+                        <div class="actions-header-roster" style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                            <button onclick="imprimirFichasSelecionadas()" class="btn-action-text-green btn-roster-action" style="background: #0f1c3f; border: 1px solid #0f1c3f; color: #ffffff; font-size: 11px; padding: 6px 14px; height: 32px; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px;">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
-                                Imprimir Fichas Selecionadas
+                                <span class="btn-text-desktop">Imprimir Fichas Selecionadas</span>
+                                <span class="btn-text-mobile" style="display: none;">Fichas</span>
                             </button>
-                            <button onclick="imprimirSumulaEquipeVisualizada()" class="btn-action-text-green" style="background: #091224; border: 1px solid #1e3a8a; color: #38bdf8; font-size: 11px; padding: 6px 14px; height: 32px; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.2);" title="Baixar / Imprimir Súmula Oficial e Relação Nominal da Equipe">
+                            <button onclick="imprimirSumulaEquipeVisualizada()" class="btn-action-text-green btn-roster-action" style="background: #091224; border: 1px solid #1e3a8a; color: #38bdf8; font-size: 11px; padding: 6px 14px; height: 32px; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.2);" title="Baixar / Imprimir Súmula Oficial e Relação Nominal da Equipe">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-                                Súmula (Relação Nominal)
+                                <span class="btn-text-desktop">Súmula (Relação Nominal)</span>
+                                <span class="btn-text-mobile" style="display: none;">Súmula</span>
                             </button>
-                            <button id="btn-modal-incluir-atleta" onclick="abrirModalAdicionarAtletaEquipe()" class="btn-action-text-green" style="font-size: 11px; padding: 6px 14px; height: 32px; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px;">
-                                + Incluir Atleta na Equipe
+                            <button id="btn-modal-incluir-atleta" onclick="abrirModalAdicionarAtletaEquipe()" class="btn-action-text-green btn-roster-action" style="font-size: 11px; padding: 6px 14px; height: 32px; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px;">
+                                <span class="btn-text-desktop">+ Incluir Atleta na Equipe</span>
+                                <span class="btn-text-mobile" style="display: none;">+ Atleta</span>
                             </button>
                         </div>
                     </div>
@@ -1073,13 +1111,15 @@
 
                 <!-- SEÇÃO DA COMISSÃO TÉCNICA DA EQUIPE (MÁX. 2 MEMBROS) -->
                 <div class="fed-card-container" style="margin-bottom: 0;">
-                    <div class="fed-header-gold" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                    <div class="fed-header-gold fed-header-comissao" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
                         <div style="display: flex; align-items: center; gap: 8px;">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                             <span>COMISSÃO TÉCNICA DA EQUIPE (<span id="vis-total-comissao-roster">0/2</span> - MÁX. 2 TÉCNICOS)</span>
                         </div>
-                        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                            <button id="btn-modal-incluir-tecnico" onclick="abrirModalAdicionarTecnicoEquipe()" class="btn-action-text-green" style="font-size: 11px; padding: 6px 14px; height: 32px; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px;">
-                                + Incluir Técnico na Equipe
+                        <div class="actions-header-roster" style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                            <button id="btn-modal-incluir-tecnico" onclick="abrirModalAdicionarTecnicoEquipe()" class="btn-action-text-green btn-roster-action" style="font-size: 11px; padding: 6px 14px; height: 32px; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px;">
+                                <span class="btn-text-desktop">+ Incluir Técnico na Equipe</span>
+                                <span class="btn-text-mobile" style="display: none;">+ Técnico</span>
                             </button>
                         </div>
                     </div>
@@ -1564,6 +1604,20 @@
                 localStorage.setItem(chave, valorString);
                 return true;
             } catch (err) {
+                if (chave === 'avv_banco_campeonatos') {
+                    try {
+                        const obj = JSON.parse(valorString);
+                        const leve = {};
+                        Object.keys(obj).forEach(k => {
+                            leve[k] = { ...obj[k] };
+                            if (leve[k].regulamentoPdf && leve[k].regulamentoPdf.length > 200000) {
+                                delete leve[k].regulamentoPdf;
+                            }
+                        });
+                        localStorage.setItem(chave, JSON.stringify(leve));
+                        return true;
+                    } catch (e2) {}
+                }
                 console.warn('Limite de armazenamento atingido ao salvar:', chave, err);
                 return false;
             }
@@ -1572,14 +1626,19 @@
         // Acessibilidade: Fechar qualquer modal aberto ao pressionar a tecla ESC
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
+                const modalPdf = document.getElementById('modal-pdf-regulamento');
+                if (modalPdf && modalPdf.style.display && modalPdf.style.display !== 'none') {
+                    fecharModalPdfRegulamento();
+                }
                 const modaisIds = [
                     'modal-atleta',
                     'modal-ficha-atleta',
+                    'modal-sumula-equipe',
                     'modal-tecnico',
                     'modal-equipe',
                     'modal-visualizar-equipe',
                     'modal-adicionar-atleta-time',
-                    'modal-pdf-regulamento'
+                    'modal-adicionar-tecnico-equipe'
                 ];
                 modaisIds.forEach(id => {
                     const el = document.getElementById(id);
@@ -1651,19 +1710,19 @@
                             ${avisoMinimoAtletas}
                         </div>
                     </div>
-                    <div style="display: flex; gap: 8px;">
-                        <button type="button" class="btn-action-text-green" onclick="selecionarEquipeAtivaParaVisualizar('${equipeIdStr}')" title="Visualizar Dados da Equipe e Atletas Vinculados">
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                            Visualizar
+                    <div class="team-card-actions-bar" style="display: flex; align-items: center; gap: 8px;">
+                        <button type="button" class="btn-action-text-green btn-team-visualizar" onclick="selecionarEquipeAtivaParaVisualizar('${equipeIdStr}')" title="Visualizar Dados da Equipe e Atletas Vinculados">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                            <span>Visualizar</span>
                         </button>
-                        <button type="button" class="btn-action-text-green" onclick="imprimirSumulaPorEquipeId('${equipeIdStr}')" title="Baixar / Imprimir Súmula Oficial e Relação Nominal da Equipe" style="background: #0f1c3f; border: 1px solid #1e3a8a; color: #38bdf8; font-size: 11px; padding: 6px 12px; height: 32px; display: inline-flex; align-items: center; gap: 5px;">
+                        <button type="button" class="btn-action-text-green btn-team-sumula" onclick="imprimirSumulaPorEquipeId('${equipeIdStr}')" title="Baixar / Imprimir Súmula Oficial e Relação Nominal da Equipe">
                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-                            Súmula
+                            <span>Súmula</span>
                         </button>
-                        <button type="button" class="btn-action-green" title="Editar Dados da Equipe" onclick="abrirModalTime('editar', '${equipeIdStr}')">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                        <button type="button" class="btn-action-green btn-team-icon" title="Editar Dados da Equipe" onclick="abrirModalTime('editar', '${equipeIdStr}')">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
                         </button>
-                        <button type="button" class="btn-action-green" style="background: #dc2626; border-color: #dc2626; cursor: pointer;" title="Excluir Equipe" onclick="excluirEquipeDoClube('${equipeIdStr}', '${equipeNomeSanitizado}')">
+                        <button type="button" class="btn-action-green btn-team-icon btn-team-delete" title="Excluir Equipe" onclick="excluirEquipeDoClube('${equipeIdStr}', '${equipeNomeSanitizado}')">
                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                         </button>
                     </div>
@@ -1687,6 +1746,11 @@
                 let db = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
                 db = db.filter(e => String(e.id) !== String(equipeId));
                 salvarStorageSeguro('avv_equipes_completo_db', JSON.stringify(db));
+                fetch('api/equipes/sincronizar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ equipesLista: db })
+                }).catch(() => {});
 
                 try {
                     fetch('api/equipes/excluir', {
@@ -1862,6 +1926,18 @@
             }
         }
 
+        // Alternância do Guia Passo a Passo de Inscrição (Accordion compacto)
+        function toggleGuiaInscricao(btn) {
+            const corpo = document.getElementById('corpo-guia-passo-a-passo');
+            const seta = btn ? btn.querySelector('.guia-arrow-icon') : null;
+            if (!corpo) return;
+            const aberto = corpo.style.display !== 'none';
+            corpo.style.display = aberto ? 'none' : 'block';
+            if (seta) {
+                seta.style.transform = aberto ? 'rotate(0deg)' : 'rotate(180deg)';
+            }
+        }
+
         // Dropdown do Perfil no rodapé da Sidebar
         function toggleProfileDropdown() {
             const popup = document.getElementById('user-dropdown-popup');
@@ -1923,7 +1999,7 @@
                 const modalAtleta = document.getElementById('modal-atleta');
                 const modalTecnico = document.getElementById('modal-tecnico');
                 const modalEquipe = document.getElementById('modal-equipe');
-                const modalRegulamento = document.getElementById('modal-regulamento-pdf');
+                const modalRegulamento = document.getElementById('modal-pdf-regulamento');
 
                 if (modalAtleta && modalAtleta.style.display !== 'none' && modalAtleta.style.display !== '') {
                     fecharModalAtleta();
@@ -1936,7 +2012,7 @@
                     return;
                 }
                 if (modalEquipe && modalEquipe.style.display !== 'none' && modalEquipe.style.display !== '') {
-                    fecharModalEquipe();
+                    fecharModalTime();
                     history.pushState({ painel: 'time' }, document.title, window.location.href);
                     return;
                 }
@@ -2185,20 +2261,6 @@
                 return limparNomeEquipePuro(sessao.nomeTime);
             }
             return 'Sua Agremiação';
-        }
-
-        function extrairCategoriasAtleta(atleta) {
-            if (!atleta) return ['Adulto'];
-            if (Array.isArray(atleta.categorias) && atleta.categorias.length > 0) {
-                return atleta.categorias.map(c => extrairCategoriaBase(c));
-            }
-            if (atleta.categoria) {
-                // Pode ser string com vírgula ou uma única categoria
-                const partes = String(atleta.categoria).split(/[,;/]/);
-                const lista = partes.map(p => extrairCategoriaBase(p.trim())).filter(Boolean);
-                if (lista.length > 0) return [...new Set(lista)];
-            }
-            return ['Adulto'];
         }
 
         function extrairCategoriasAtleta(atleta) {
@@ -2497,6 +2559,7 @@
                 const nome = (tec.nome || 'TÉCNICO').toUpperCase();
                 const funcao = tec.funcao || 'Técnico';
                 const cpf = tec.cpf || '---';
+                const cref = (tec.cref && tec.cref !== '---') ? tec.cref : '';
                 const foto = tec.foto || 'logos/mascote_coelho.png';
 
                 const tr = document.createElement('tr');
@@ -2505,7 +2568,10 @@
                     <td><strong style="color: #1e293b; font-size: 13px;">${nome}</strong></td>
                     <td><strong style="color: #0f1c3f; font-size: 13px;">${num}</strong></td>
                     <td><span style="color: #0f766e; font-weight: 700;">${funcao}</span></td>
-                    <td>${cpf}</td>
+                    <td>
+                        <div>${cpf}</div>
+                        ${cref ? `<div style="font-size: 10.5px; color: #0f766e; font-weight: 700;">CREF: ${cref}</div>` : ''}
+                    </td>
                     <td><span class="badge-status-concluido">✓ Homologado</span></td>
                     <td style="text-align: center;">
                         ${prazoEncerrado ? `
@@ -2558,6 +2624,7 @@
                     const nome = (tec.nome || 'TÉCNICO').toUpperCase();
                     const funcao = tec.funcao || 'Técnico';
                     const cpf = tec.cpf || '---';
+                    const cref = (tec.cref && tec.cref !== '---') ? tec.cref : '';
                     const foto = tec.foto || 'logos/mascote_coelho.png';
 
                     const jaNestaEquipe = Array.isArray(equipe.comissao) && equipe.comissao.some(t => String(t.id) === String(num));
@@ -2568,7 +2635,10 @@
                         <td><strong style="color: #1e293b; font-size: 13px;">${nome}</strong></td>
                         <td><strong style="color: #0f1c3f; font-size: 13px;">${num}</strong></td>
                         <td><span style="color: #0f766e; font-weight: 700;">${funcao}</span></td>
-                        <td>${cpf}</td>
+                        <td>
+                            <div>${cpf}</div>
+                            ${cref ? `<div style="font-size: 10.5px; color: #0f766e; font-weight: 700;">CREF: ${cref}</div>` : ''}
+                        </td>
                         <td>
                             ${jaNestaEquipe 
                                 ? '<span style="font-size: 10px; font-weight: 800; color: #15803d; background: #dcfce7; padding: 3px 8px; border-radius: 3px;">✓ NESTA EQUIPE</span>'
@@ -2660,6 +2730,11 @@
                     db[idxEq] = equipe;
                 }
                 salvarStorageSeguro('avv_equipes_completo_db', JSON.stringify(db));
+                fetch('api/equipes/sincronizar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ equipesLista: db })
+                }).catch(() => {});
                 persistirEquipeNoBancoEServidor(equipe, db);
 
                 renderizarComissaoEquipeModal(equipe);
@@ -2697,6 +2772,7 @@
                 const nome = (tec.nome || 'TÉCNICO').toUpperCase();
                 const funcao = tec.funcao || 'Técnico';
                 const cpf = tec.cpf || '---';
+                const cref = tec.cref || '---';
                 const dataHora = tec.dataHora || '---';
                 const foto = tec.foto || 'logos/mascote_coelho.png';
 
@@ -2720,12 +2796,13 @@
                                 <div class="atleta-meta-row"><span class="atleta-meta-label">Inscrição Técnica:</span><span class="atleta-meta-val">${num}</span></div>
                                 <div class="atleta-meta-row"><span class="atleta-meta-label">Função / Cargo:</span><span class="atleta-meta-val" style="color: #0f766e;">${funcao}</span></div>
                                 <div class="atleta-meta-row"><span class="atleta-meta-label">CPF:</span><span class="atleta-meta-val">${cpf}</span></div>
+                                <div class="atleta-meta-row"><span class="atleta-meta-label">CREF:</span><span class="atleta-meta-val">${cref}</span></div>
                                 <div class="atleta-meta-row"><span class="atleta-meta-label">Data/Hora:</span><span class="atleta-meta-val">${dataHora}</span></div>
                             </div>
                         </div>
                     </div>
                     <div class="atleta-card-actions">
-                        <button class="btn-card-action btn-blue-action" onclick="abrirEdicaoTecnico('${num}', '${nome}', '${cpf}', '---', '---', '${funcao}', '---')" title="Editar Dados do Técnico">
+                        <button class="btn-card-action btn-blue-action" onclick="abrirEdicaoTecnico('${num}', '${nome.replace(/'/g, "\\'")}', '${cpf}', '---', '---', '${funcao}', '${cref.replace(/'/g, "\\'")}')" title="Editar Dados do Técnico">
                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg> Editar
                         </button>
                         <button class="btn-card-action btn-red-action" onclick="excluirTecnico('tecnico-card-${num}', '${nome}')" title="Excluir Técnico">
@@ -2790,6 +2867,7 @@
                     if (resp.ok && serverData.ok) {
                         if (serverData.campeonatos && typeof serverData.campeonatos === 'object') {
                             localStorage.setItem('avv_banco_campeonatos', JSON.stringify(serverData.campeonatos));
+                            carregarCampeonatosPainelTime();
                         }
                         if (Array.isArray(serverData.equipes)) {
                             localStorage.setItem('avv_equipes_completo_db', JSON.stringify(serverData.equipes));
@@ -2928,33 +3006,35 @@
             carregarCampeonatosPainelTime();
             renderizarListaInscricoesConfirmadas();
 
-            // Atualização do Timer do Torneio em tempo real a cada segundo nas duas visões
+            // Atualização leve do Timer do Torneio a cada segundo (sem reconstruir o DOM inteiro)
             setInterval(() => {
                 const tabCamp = document.getElementById('tab-campeonatos');
                 const viewLista = document.getElementById('subpane-lista-campeonatos');
                 if (tabCamp && tabCamp.classList.contains('active') && viewLista && viewLista.style.display !== 'none') {
-                    renderizarListaCampeonatosTime();
+                    atualizarTimersListaCampeonatosTime();
                 }
 
                 const viewDetalhes = document.getElementById('subpane-detalhes-campeonato');
                 if (viewDetalhes && viewDetalhes.style.display !== 'none' && campeonatoSelecionadoSubpagina) {
-                    const timerInfo = calcularTempoRestanteTorneio(campeonatoSelecionadoSubpagina.dataLimiteEncerramento);
+                    const timerInfo = calcularTempoRestanteTorneio(campeonatoSelecionadoSubpagina);
                     const elTimerBadge = document.getElementById('champ-modal-timer-badge');
                     const elTimerText = document.getElementById('champ-modal-timer-text');
                     const elStatusBadge = document.getElementById('champ-modal-status-badge');
 
                     if (timerInfo && timerInfo.encerrado) {
-                        campeonatoSelecionadoSubpagina.statusTorneio = 'encerrado';
-                        if (elTimerBadge) elTimerBadge.style.display = 'none';
-                        if (elStatusBadge) {
-                            elStatusBadge.className = 'badge-status-rejected';
-                            elStatusBadge.style.background = '#fef3c7';
-                            elStatusBadge.style.color = '#b45309';
-                            elStatusBadge.style.borderColor = '#fde68a';
-                            elStatusBadge.textContent = 'Inscrições Encerradas';
+                        if (campeonatoSelecionadoSubpagina.statusTorneio !== 'encerrado') {
+                            campeonatoSelecionadoSubpagina.statusTorneio = 'encerrado';
+                            if (elTimerBadge) elTimerBadge.style.display = 'none';
+                            if (elStatusBadge) {
+                                elStatusBadge.className = 'badge-status-rejected';
+                                elStatusBadge.style.background = '#fef3c7';
+                                elStatusBadge.style.color = '#b45309';
+                                elStatusBadge.style.borderColor = '#fde68a';
+                                elStatusBadge.textContent = 'Inscrições Encerradas';
+                            }
+                            renderizarCardsInscricaoPorCategoria(campeonatoSelecionadoSubpagina);
                         }
-                        renderizarCardsInscricaoPorCategoria(campeonatoSelecionadoSubpagina);
-                    } else if (timerInfo && elTimerText) {
+                    } else if (timerInfo && elTimerText && elTimerText.textContent !== timerInfo.texto) {
                         elTimerText.textContent = timerInfo.texto;
                     }
                 }
@@ -3065,9 +3145,11 @@
 
             let texto = '';
             if (dias > 0) {
-                texto = `${dias}d ${hh}:${mm}:${ss}`;
+                texto = `${dias}d ${hh}h ${mm}m ${ss}s`;
+            } else if (horas > 0) {
+                texto = `${hh}h ${mm}m ${ss}s`;
             } else {
-                texto = `${hh}:${mm}:${ss}`;
+                texto = `${mm}m ${ss}s`;
             }
 
             return { encerrado: false, dias, horas, minutos, segundos, texto };
@@ -3142,7 +3224,7 @@
                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
                                 Encerra em:
                             </span>
-                            <span style="color: #38bdf8; font-size: 12px; font-weight: 900; font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace; letter-spacing: 0.8px;">${timerInfo ? timerInfo.texto : '--:--:--'}</span>
+                            <span data-time-timer-camp="${c.id}" style="color: #38bdf8; font-size: 12px; font-weight: 900; font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace; letter-spacing: 0.8px;">${timerInfo ? timerInfo.texto : '--:--:--'}</span>
                         </div>
                         <button class="btn-action-text-green" onclick="event.stopPropagation(); abrirSubpaginaCampeonato('${c.id}')" style="white-space: nowrap;">
                             Saiba Mais
@@ -3158,6 +3240,29 @@
                         Nenhum campeonato disponível para inscrição no momento.
                     </div>
                 `;
+            }
+        }
+
+        function atualizarTimersListaCampeonatosTime() {
+            if (!bancoCampeonatos) return;
+            let mudouStatus = false;
+            Object.keys(bancoCampeonatos).forEach(id => {
+                const c = bancoCampeonatos[id];
+                if (!c || c.ativo === false || c.statusTorneio === 'inativo') return;
+                const timerInfo = calcularTempoRestanteTorneio(c);
+                if (!timerInfo) return;
+                if (timerInfo.encerrado && c.statusTorneio === 'ativo') {
+                    c.statusTorneio = 'encerrado';
+                    mudouStatus = true;
+                } else {
+                    const elSpan = document.querySelector(`[data-time-timer-camp="${c.id}"]`);
+                    if (elSpan && elSpan.textContent !== timerInfo.texto) {
+                        elSpan.textContent = timerInfo.texto;
+                    }
+                }
+            });
+            if (mudouStatus) {
+                renderizarListaCampeonatosTime();
             }
         }
 
@@ -3338,7 +3443,7 @@
                                 </span>
                             </div>
                             <div style="font-size: 11.5px; color: #15803d; line-height: 1.4;">
-                                Equipe: <strong>${(equipeAlvo && equipeAlvo.nomeTime) || (equipeLogada && equipeLogada.nomeTime) || 'Sua Agremiação'}</strong><br>
+                                Equipe: <strong>${(equipeAlvo && equipeAlvo.nomeTime) || (typeof equipeLogada !== 'undefined' && equipeLogada && equipeLogada.nomeTime) || 'Sua Agremiação'}</strong><br>
                                 Elenco: <strong>${totalAtletas} atleta(s)</strong> registrado(s)
                             </div>
                         </div>
@@ -4050,6 +4155,16 @@
                 });
                 if (mudouEquipes) {
                     salvarStorageSeguro('avv_equipes_completo_db', JSON.stringify(db));
+                fetch('api/equipes/sincronizar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ equipesLista: db })
+                }).catch(() => {});
+                    fetch('api/equipes/sincronizar', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ equipesLista: db })
+                    }).catch(() => {});
                 }
 
                 renderizarCardsAtletasDoClube();
@@ -4119,6 +4234,11 @@
                     }
                 });
                 salvarStorageSeguro('avv_equipes_completo_db', JSON.stringify(db));
+                fetch('api/equipes/sincronizar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ equipesLista: db })
+                }).catch(() => {});
 
                 renderizarCardsAtletasDoClube();
                 if (equipeSelecionadaVisualizacao) {
@@ -4285,6 +4405,7 @@
                 if (campoDataHora) campoDataHora.value = `${dataStr} às ${horaStr}`;
                 
                 if (document.getElementById('modal-tec-cpf')) document.getElementById('modal-tec-cpf').value = '';
+                if (document.getElementById('modal-tec-cref')) document.getElementById('modal-tec-cref').value = '';
                 if (document.getElementById('modal-tec-nome')) document.getElementById('modal-tec-nome').value = '';
                 if (document.getElementById('modal-tec-funcao')) document.getElementById('modal-tec-funcao').value = 'Técnico';
                 
@@ -4321,6 +4442,9 @@
             document.getElementById('modal-tec-num').value = numInscricao;
             document.getElementById('modal-tec-nome').value = nome;
             document.getElementById('modal-tec-cpf').value = cpf;
+            if (document.getElementById('modal-tec-cref')) {
+                document.getElementById('modal-tec-cref').value = (cref && cref !== '---') ? cref : '';
+            }
             if (document.getElementById('modal-tec-funcao')) {
                 document.getElementById('modal-tec-funcao').value = funcao && funcao.includes('Técnico') ? 'Técnico' : (funcao || 'Técnico');
             }
@@ -4340,6 +4464,7 @@
             const dataHora = document.getElementById('modal-tec-datahora').value;
             const nome = document.getElementById('modal-tec-nome').value.trim();
             const cpf = document.getElementById('modal-tec-cpf').value.trim();
+            const cref = (document.getElementById('modal-tec-cref')?.value || '').trim();
             const funcao = document.getElementById('modal-tec-funcao').value;
 
             const bancoComissao = obterBancoComissaoClube();
@@ -4351,6 +4476,7 @@
                         ...bancoComissao[iTec],
                         nome: nome.toUpperCase(),
                         cpf: cpf || '---',
+                        cref: cref || '---',
                         funcao,
                         dataHora,
                         foto: tecnicoFotoDataUrl
@@ -4371,6 +4497,7 @@
                                     ...eq.comissao[idx],
                                     nome: nome.toUpperCase(),
                                     cpf: cpf || '---',
+                                    cref: cref || '---',
                                     funcao,
                                     foto: tecnicoFotoDataUrl
                                 };
@@ -4381,7 +4508,7 @@
                     fetch('api/equipes/sincronizar', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(db)
+                        body: JSON.stringify({ equipesLista: db })
                     }).catch(() => {});
                 } catch(e) {}
 
@@ -4392,6 +4519,7 @@
                     id: String(num),
                     nome: nome.toUpperCase(),
                     cpf: cpf || '---',
+                    cref: cref || '---',
                     funcao,
                     dataHora,
                     foto: tecnicoFotoDataUrl
@@ -4435,7 +4563,7 @@
                     fetch('api/equipes/sincronizar', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(db)
+                        body: JSON.stringify({ equipesLista: db })
                     }).catch(() => {});
                     renderizarEquipesClubeView(equipes);
                 } catch (e) {}
@@ -4780,7 +4908,19 @@
                         const { db, equipe } = obterEquipeAtualDoBanco();
                         if (equipe) {
                             equipe.fotoDirigente = compressedUrl;
+                            equipe.logo = compressedUrl;
                             persistirEquipeNoBancoEServidor(equipe, db);
+                        }
+                        if (Array.isArray(db)) {
+                            const emailAtivo = (sessao && sessao.email ? sessao.email : '').toLowerCase();
+                            db.forEach(e => {
+                                if ((e.email || '').toLowerCase() === emailAtivo) {
+                                    e.fotoDirigente = compressedUrl;
+                                    e.logo = compressedUrl;
+                                }
+                            });
+                            salvarStorageSeguro('avv_equipes_completo_db', JSON.stringify(db));
+                            renderizarEquipesClubeView(obterEquipesDesteClube(db, sessao));
                         }
                     } catch (e) {}
 
@@ -4839,7 +4979,10 @@
                         if (cidade) eq.cidade = cidade;
                         if (estado) eq.estado = estado;
                         if (insta) eq.instagram = insta;
-                        if (fotoSalva) eq.fotoDirigente = fotoSalva;
+                        if (fotoSalva) {
+                            eq.fotoDirigente = fotoSalva;
+                            eq.logo = fotoSalva;
+                        }
                     }
                 });
 
@@ -4852,14 +4995,17 @@
                     if (cidade) equipe.cidade = cidade;
                     if (estado) equipe.estado = estado;
                     if (insta) equipe.instagram = insta;
-                    if (fotoSalva) equipe.fotoDirigente = fotoSalva;
+                    if (fotoSalva) {
+                        equipe.fotoDirigente = fotoSalva;
+                        equipe.logo = fotoSalva;
+                    }
                     persistirEquipeNoBancoEServidor(equipe, db);
                 } else {
-                    localStorage.setItem('avv_equipes_completo_db', JSON.stringify(db));
+                    salvarStorageSeguro('avv_equipes_completo_db', JSON.stringify(db));
                     fetch('api/equipes/sincronizar', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(db)
+                        body: JSON.stringify({ equipesLista: db })
                     }).catch(e => console.warn('Erro ao sincronizar:', e));
                 }
             } catch (e) {
@@ -4971,6 +5117,13 @@
 
         function fecharModalVisualizarEquipe() {
             document.getElementById('modal-visualizar-equipe').style.display = 'none';
+        }
+
+        function abrirEdicaoEquipeDoModal() {
+            const eq = equipeSelecionadaVisualizacao;
+            const eqId = eq ? (eq.id || eq.numeroInscricao) : null;
+            fecharModalVisualizarEquipe();
+            abrirModalTime('editar', eqId);
         }
 
         let cacheAtletasElegiveisModal = [];
@@ -5303,6 +5456,11 @@
                         db[idxEq] = equipe;
                     }
                     salvarStorageSeguro('avv_equipes_completo_db', JSON.stringify(db));
+                fetch('api/equipes/sincronizar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ equipesLista: db })
+                }).catch(() => {});
                     persistirEquipeNoBancoEServidor(equipe, db);
 
                     renderizarRosterEquipeModal(equipe);
@@ -5831,13 +5989,17 @@
             document.body.style.overflow = '';
         }
 
-        // Fecha a sidebar mobile automaticamente ao trocar de aba
+        // Fecha a sidebar mobile automaticamente ao trocar de aba e sincroniza bottom nav
         const switchFedTabOriginal = window.switchFedTab;
         window.switchFedTab = function(tabName, btn) {
             fecharSidebarMobile();
             if (typeof switchFedTabOriginal === 'function') {
                 switchFedTabOriginal(tabName, btn);
             }
+            // Atualiza botões da barra inferior mobile
+            document.querySelectorAll('.btn-bottom-nav').forEach(b => b.classList.remove('active'));
+            const bNav = document.getElementById('bnav-' + tabName);
+            if (bNav) bNav.classList.add('active');
         };
     </script>
 </body>
