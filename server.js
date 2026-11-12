@@ -419,36 +419,63 @@ app.post(['/api/auth/login', '/avv/api/auth/login'], (req, res) => {
 // 4.4. Sincronizar / Atualizar Equipe (Dados da equipe, Atletas, Comissão, Status, Perfil do Dirigente)
 app.post(['/api/equipes/sincronizar', '/avv/api/equipes/sincronizar'], (req, res) => {
     try {
-        const { equipe, equipesLista } = req.body || {};
+        const { equipe, equipesLista, substituirTudo } = req.body || {};
         const db = carregarBancoDados();
 
-        // Se enviou uma lista inteira (ex: sincronização do painel)
+        // Se enviou uma lista inteira (ex: sincronização do painel ADM)
         if (Array.isArray(equipesLista)) {
-            equipesLista.forEach(eqCliente => {
-                if (!eqCliente || (!eqCliente.id && !eqCliente.email)) return;
-                const idx = db.equipes.findIndex(
-                    e => String(e.id) === String(eqCliente.id) ||
-                         (eqCliente.email && (e.email || '').toLowerCase() === eqCliente.email.toLowerCase())
-                );
-                if (idx !== -1) {
-                    const senhaHashPreservada = db.equipes[idx].senhaHash || (eqCliente.senha ? hashSenhaSegura(eqCliente.senha) : undefined);
-                    db.equipes[idx] = {
-                        ...db.equipes[idx],
-                        ...eqCliente,
-                        senhaHash: senhaHashPreservada
-                    };
-                    delete db.equipes[idx].senha;
-                } else {
-                    const nova = {
-                        ...eqCliente,
-                        senhaHash: hashSenhaSegura(eqCliente.senha || '123456')
-                    };
-                    delete nova.senha;
-                    db.equipes.push(nova);
-                }
-            });
+            if (substituirTudo === true) {
+                const mapaAntigoPorId = new Map();
+                const mapaAntigoPorEmail = new Map();
+                db.equipes.forEach(e => {
+                    if (e && e.id) mapaAntigoPorId.set(String(e.id), e);
+                    if (e && e.email) mapaAntigoPorEmail.set(String(e.email).toLowerCase().trim(), e);
+                });
+
+                db.equipes = equipesLista
+                    .filter(eqCliente => eqCliente && (eqCliente.id || eqCliente.email))
+                    .map(eqCliente => {
+                        const antigo = (eqCliente.id && mapaAntigoPorId.get(String(eqCliente.id))) ||
+                                       (eqCliente.email && mapaAntigoPorEmail.get(String(eqCliente.email).toLowerCase().trim()));
+                        const senhaHashPreservada = (antigo && antigo.senhaHash)
+                            ? antigo.senhaHash
+                            : hashSenhaSegura(eqCliente.senha || '123456');
+                        const item = {
+                            ...(antigo || {}),
+                            ...eqCliente,
+                            senhaHash: senhaHashPreservada
+                        };
+                        delete item.senha;
+                        delete item.novaSenha;
+                        return item;
+                    });
+            } else {
+                equipesLista.forEach(eqCliente => {
+                    if (!eqCliente || (!eqCliente.id && !eqCliente.email)) return;
+                    const idx = db.equipes.findIndex(
+                        e => String(e.id) === String(eqCliente.id) ||
+                             (eqCliente.email && (e.email || '').toLowerCase() === eqCliente.email.toLowerCase())
+                    );
+                    if (idx !== -1) {
+                        const senhaHashPreservada = db.equipes[idx].senhaHash || (eqCliente.senha ? hashSenhaSegura(eqCliente.senha) : undefined);
+                        db.equipes[idx] = {
+                            ...db.equipes[idx],
+                            ...eqCliente,
+                            senhaHash: senhaHashPreservada
+                        };
+                        delete db.equipes[idx].senha;
+                    } else {
+                        const nova = {
+                            ...eqCliente,
+                            senhaHash: hashSenhaSegura(eqCliente.senha || '123456')
+                        };
+                        delete nova.senha;
+                        db.equipes.push(nova);
+                    }
+                });
+            }
             salvarBancoDados(db);
-            return res.json({ ok: true, total: db.equipes.length });
+            return res.json({ ok: true, total: db.equipes.length, equipes: db.equipes.map(limparEquipeParaCliente) });
         }
 
         // Se enviou uma única equipe atualizada
@@ -497,7 +524,7 @@ app.post(['/api/equipes/excluir', '/avv/api/equipes/excluir'], (req, res) => {
         const db = carregarBancoDados();
         db.equipes = db.equipes.filter(e => String(e.id) !== String(id));
         salvarBancoDados(db);
-        res.json({ ok: true });
+        res.json({ ok: true, equipes: db.equipes.map(limparEquipeParaCliente) });
     } catch (err) {
         res.status(500).json({ ok: false, mensagem: 'Erro ao excluir equipe.' });
     }
@@ -512,7 +539,11 @@ app.post(['/api/equipes/excluir-conta', '/avv/api/equipes/excluir-conta'], (req,
         const db = carregarBancoDados();
         db.equipes = db.equipes.filter(e => (e.email || '').toLowerCase().trim() !== emailNorm);
         salvarBancoDados(db);
-        res.json({ ok: true, mensagem: `Conta ${emailNorm} e suas equipes foram removidas do servidor.` });
+        res.json({
+            ok: true,
+            mensagem: `Conta ${emailNorm} e suas equipes foram removidas do servidor.`,
+            equipes: db.equipes.map(limparEquipeParaCliente)
+        });
     } catch (err) {
         console.error('Erro ao excluir conta de clube:', err);
         res.status(500).json({ ok: false, mensagem: 'Erro ao excluir conta de clube.' });

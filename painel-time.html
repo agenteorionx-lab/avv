@@ -2783,28 +2783,19 @@
                 }
                 renovarAtividadeSessaoTime();
 
-                // Sincroniza dados mais recentes do servidor se disponível
+                // Sincroniza dados mais recentes do servidor (Fonte Única da Verdade)
                 try {
-                    const resp = await fetch('api/dados-sistema');
+                    const resp = await fetch('api/dados-sistema', { cache: 'no-store' });
                     const serverData = await resp.json();
                     if (resp.ok && serverData.ok) {
-                        if (serverData.campeonatos && Object.keys(serverData.campeonatos).length > 0) {
+                        if (serverData.campeonatos && typeof serverData.campeonatos === 'object') {
                             localStorage.setItem('avv_banco_campeonatos', JSON.stringify(serverData.campeonatos));
                         }
                         if (Array.isArray(serverData.equipes)) {
-                            // Se o servidor retornou a lista oficial de equipes, atualiza a base local
-                            if (serverData.equipes.length > 0) {
-                                const localDb = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
-                                serverData.equipes.forEach(eqSrv => {
-                                    const idx = localDb.findIndex(l => String(l.id) === String(eqSrv.id) || (l.email && eqSrv.email && l.email.toLowerCase() === eqSrv.email.toLowerCase()));
-                                    if (idx !== -1) {
-                                        localDb[idx] = { ...localDb[idx], ...eqSrv };
-                                    } else {
-                                        localDb.push(eqSrv);
-                                    }
-                                });
-                                localStorage.setItem('avv_equipes_completo_db', JSON.stringify(localDb));
-                            }
+                            localStorage.setItem('avv_equipes_completo_db', JSON.stringify(serverData.equipes));
+                            try {
+                                localStorage.removeItem('avv_inscricoes_teste');
+                            } catch (e) {}
                         }
                     }
                 } catch (err) {}

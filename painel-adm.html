@@ -1457,31 +1457,8 @@
                 localStorage.setItem('avv_sistema_limpo_v4', 'true');
             }
 
-            // Sincroniza dados do Banco de Dados Oficial do Servidor
-            try {
-                const resp = await fetch('api/dados-sistema');
-                const serverData = await resp.json();
-                if (resp.ok && serverData.ok) {
-                    if (serverData.campeonatos && Object.keys(serverData.campeonatos).length > 0) {
-                        localStorage.setItem('avv_banco_campeonatos', JSON.stringify(serverData.campeonatos));
-                    }
-                    if (Array.isArray(serverData.equipes) && serverData.equipes.length > 0) {
-                        const localDb = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
-                        serverData.equipes.forEach(eqSrv => {
-                            const idx = localDb.findIndex(
-                                l => String(l.id) === String(eqSrv.id) ||
-                                     (l.email && eqSrv.email && l.email.toLowerCase() === eqSrv.email.toLowerCase())
-                            );
-                            if (idx !== -1) {
-                                localDb[idx] = { ...localDb[idx], ...eqSrv };
-                            } else {
-                                localDb.push(eqSrv);
-                            }
-                        });
-                        localStorage.setItem('avv_equipes_completo_db', JSON.stringify(localDb));
-                    }
-                }
-            } catch (err) {}
+            // Sincroniza dados do Banco de Dados Oficial do Servidor (Fonte Única da Verdade)
+            await sincronizarDadosComServidorAdm();
 
             // Atualiza perfil visual do ADM
             if (sessaoAdm.usuario && document.getElementById('adm-user-display-name')) {
@@ -1598,64 +1575,37 @@
             return equipesSistema.filter(eq => equipeSolicitouInscricaoCampeonato(eq));
         }
 
+        async function sincronizarDadosComServidorAdm() {
+            try {
+                const resp = await fetch('api/dados-sistema', { cache: 'no-store' });
+                const serverData = await resp.json();
+                if (resp.ok && serverData && serverData.ok) {
+                    if (serverData.campeonatos && typeof serverData.campeonatos === 'object') {
+                        salvarStorageSeguroAdm('avv_banco_campeonatos', JSON.stringify(serverData.campeonatos));
+                        campeonatosAdm = serverData.campeonatos;
+                    }
+                    if (Array.isArray(serverData.equipes)) {
+                        equipesSistema = serverData.equipes;
+                        salvarStorageSeguroAdm('avv_equipes_completo_db', JSON.stringify(serverData.equipes));
+                        try {
+                            localStorage.removeItem('avv_inscricoes_teste');
+                        } catch (e) {}
+                    }
+                }
+            } catch (err) {}
+        }
+
         function carregarBancoEquipesIntegrado() {
             const salvoDb = localStorage.getItem('avv_equipes_completo_db');
             if (salvoDb) {
                 try {
-                    equipesSistema = JSON.parse(salvoDb);
+                    const parsed = JSON.parse(salvoDb);
+                    equipesSistema = Array.isArray(parsed) ? parsed : [...equipesIniciaisPadrao];
                 } catch (e) {
                     equipesSistema = [...equipesIniciaisPadrao];
                 }
             } else {
                 equipesSistema = [...equipesIniciaisPadrao];
-            }
-
-            const preCadastrosFormulario = JSON.parse(localStorage.getItem('avv_inscricoes_teste') || '[]');
-            let houveAdicao = false;
-
-            preCadastrosFormulario.forEach(pre => {
-                // Se for cadastro apenas de conta de clube, não converte em equipe esportiva
-                if (pre.isContaClube || pre.categoria === '__CONTA_CLUBE__') return;
-
-                const jaExiste = equipesSistema.some(eq => 
-                    String(eq.protocolo) === String(pre.protocolo) || 
-                    String(eq.numeroInscricao) === String(pre.numeroInscricao) ||
-                    eq.nomeTime.toLowerCase().trim() === (pre.nomeTime || '').toLowerCase().trim()
-                );
-
-                if (!jaExiste && pre.nomeTime) {
-                    const cats = Array.isArray(pre.categorias) && pre.categorias.length > 0 
-                        ? pre.categorias 
-                        : ['Adulto Masculino'];
-                    equipesSistema.unshift({
-                        id: pre.id ? String(pre.id) : ('eq-' + Date.now()),
-                        numeroInscricao: pre.numeroInscricao || Math.floor(100000 + Math.random() * 900000),
-                        protocolo: pre.protocolo || ('AVV-' + (pre.numeroInscricao || '999999')),
-                        nomeTime: pre.nomeTime.toUpperCase(),
-                        cidade: pre.cidade || 'Vilhena',
-                        estado: pre.estado || 'RO',
-                        responsavelNome: pre.responsavelNome || 'Dirigente Responsável',
-                        email: pre.email || 'contato@equipe.com.br',
-                        whatsapp: pre.whatsapp || '(69) 99999-9999',
-                        instagram: pre.instagram || '',
-                        senha: pre.senha,
-                        dataInscricao: pre.dataInscricao || new Date().toLocaleDateString('pt-BR'),
-                        horaInscricao: pre.horaInscricao || '10:00',
-                        dataHoraCompleta: pre.dataHoraCompleta || `${new Date().toLocaleDateString('pt-BR')} às 10:00`,
-                        status: pre.status === 'Homologado' ? 'Homologado' : 'Pendente',
-                        logo: pre.logo || 'logos/logo_avv.png',
-                        campeonatoId: pre.campeonatoId || '',
-                        campeonatoNome: pre.campeonato && pre.campeonato !== 'Aguardando Seleção no Painel' ? pre.campeonato : 'Aguardando Seleção no Painel',
-                        categorias: cats,
-                        atletas: Array.isArray(pre.atletas) ? pre.atletas : [],
-                        comissao: Array.isArray(pre.comissao) ? pre.comissao : []
-                    });
-                    houveAdicao = true;
-                }
-            });
-
-            if (!salvoDb || houveAdicao) {
-                salvarBancoEquipesIntegrado();
             }
         }
 
@@ -1664,7 +1614,7 @@
             fetch('api/equipes/sincronizar', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ equipesLista: equipesSistema })
+                body: JSON.stringify({ equipesLista: equipesSistema, substituirTudo: true })
             }).catch(() => {});
         }
 
@@ -1672,6 +1622,7 @@
             atualizarIndicadoresTopo();
             renderizarBlocosEquipes();
             renderizarGridCampeonatos();
+            renderizarListaContasClubesAdm();
             popularFiltrosCentralImpressao();
             atualizarPreviaCentralImpressao();
         }
@@ -2211,16 +2162,26 @@
                 tipo: 'danger',
                 textoBotao: 'Recusar e Excluir',
                 corBotao: '#dc2626',
-                onConfirm: () => {
+                onConfirm: async () => {
                     const idRemovido = equipeAbertaId;
-                    equipesSistema = equipesSistema.filter(e => String(e.id) !== String(equipeAbertaId));
-                    salvarBancoEquipesIntegrado();
-                    fetch('api/equipes/excluir', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ id: idRemovido })
-                    }).catch(() => {});
+                    equipesSistema = equipesSistema.filter(e => String(e.id) !== String(idRemovido));
+                    salvarStorageSeguroAdm('avv_equipes_completo_db', JSON.stringify(equipesSistema));
+                    try {
+                        const resp = await fetch('api/equipes/excluir', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ id: idRemovido })
+                        });
+                        const data = await resp.json();
+                        if (resp.ok && data && Array.isArray(data.equipes)) {
+                            equipesSistema = data.equipes;
+                            salvarStorageSeguroAdm('avv_equipes_completo_db', JSON.stringify(equipesSistema));
+                        }
+                    } catch (e) {
+                        salvarBancoEquipesIntegrado();
+                    }
                     fecharPaginaEquipeAdm();
+                    atualizarTudoPainelAdm();
                 }
             });
         }
@@ -3734,6 +3695,11 @@
             if (tabName === 'clubes') {
                 renderizarListaContasClubesAdm();
             }
+
+            // Garante sincronização em tempo real com o servidor ao alternar entre abas
+            sincronizarDadosComServidorAdm().then(() => {
+                atualizarTudoPainelAdm();
+            });
         }
 
         // ======================================================================
@@ -3975,28 +3941,6 @@
                 }
             });
 
-            // 2. Vasculha registros de pré-inscrições locais se houver
-            try {
-                const preInsc = JSON.parse(localStorage.getItem('avv_inscricoes_teste') || '[]');
-                preInsc.forEach(item => {
-                    const email = (item.email || '').toLowerCase().trim();
-                    if (!email) return;
-                    if (!contasMap.has(email)) {
-                        contasMap.set(email, {
-                            id: item.id || ('clube-' + Date.now()),
-                            email: email,
-                            nomeClube: item.nomeClube || item.nomeTime || 'Agremiação',
-                            responsavelNome: item.responsavelNome || 'Dirigente',
-                            whatsapp: item.whatsapp || '---',
-                            cidade: item.cidade || 'Vilhena',
-                            estado: item.estado || 'RO',
-                            bloqueado: item.bloqueado === true,
-                            equipes: []
-                        });
-                    }
-                });
-            } catch(e) {}
-
             return Array.from(contasMap.values());
         }
 
@@ -4039,9 +3983,6 @@
                 tr.style.borderBottom = '1px solid #e2e8f0';
 
                 const totalTimes = conta.equipes.length;
-                const nomesTimes = totalTimes > 0
-                    ? conta.equipes.map(e => `${e.nomeTime} (${e.categoria || 'Geral'})`).join('<br>&bull; ')
-                    : 'Nenhuma equipe criada ainda';
 
                 const statusBadge = conta.bloqueado
                     ? `<span style="background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; font-size: 10.5px; font-weight: 800; padding: 3px 8px; border-radius: 4px; display: inline-flex; align-items: center; gap: 4px;">
@@ -4067,12 +4008,9 @@
                         ${conta.cidade} - ${conta.estado}
                     </td>
                     <td style="padding: 14px; text-align: center;">
-                        <span class="count-pill" style="font-size: 12px; font-weight: 800; background: #0f1c3f; color: #ffffff;" title="Equipes: ${totalTimes}">
+                        <span class="count-pill" style="font-size: 12px; font-weight: 800; background: #0f1c3f; color: #ffffff;" title="Equipes criadas: ${totalTimes}">
                             ${totalTimes}
                         </span>
-                        <div style="font-size: 10.5px; color: #64748b; margin-top: 4px; max-width: 220px; line-height: 1.3;">
-                            ${totalTimes > 0 ? '&bull; ' + nomesTimes : ''}
-                        </div>
                     </td>
                     <td style="padding: 14px; text-align: center;">
                         ${statusBadge}
@@ -4124,14 +4062,16 @@
                         eq.bloqueado = bloquear;
                     }
                 });
-                salvarBancoEquipesIntegrado();
+                salvarStorageSeguroAdm('avv_equipes_completo_db', JSON.stringify(equipesSistema));
 
                 // Persiste também no servidor oficial
-                fetch('api/equipes/sincronizar', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ equipesLista: equipesSistema })
-                }).catch(() => {});
+                try {
+                    await fetch('api/equipes/sincronizar', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ equipesLista: equipesSistema, substituirTudo: true })
+                    });
+                } catch (e) {}
 
                 renderizarListaContasClubesAdm();
                 avvAlert(`Conta "${emailNorm}" ${bloquear ? 'bloqueada' : 'desbloqueada'} com sucesso!`, 'Gestão de Contas', 'success');
@@ -4151,15 +4091,13 @@
             );
 
             if (conf) {
-                // Remove equipes do banco unificado
+                // Remove equipes do banco unificado em memória e no storage local
                 equipesSistema = equipesSistema.filter(eq => (eq.email || '').toLowerCase().trim() !== emailNorm);
-                salvarBancoEquipesIntegrado();
+                salvarStorageSeguroAdm('avv_equipes_completo_db', JSON.stringify(equipesSistema));
 
                 // Remove do cache de inscrições de teste se existir
                 try {
-                    const preInsc = JSON.parse(localStorage.getItem('avv_inscricoes_teste') || '[]');
-                    const limpos = preInsc.filter(item => (item.email || '').toLowerCase().trim() !== emailNorm);
-                    localStorage.setItem('avv_inscricoes_teste', JSON.stringify(limpos));
+                    localStorage.removeItem('avv_inscricoes_teste');
                 } catch(e) {}
 
                 // Remove banco de atletas local deste clube se existir
@@ -4168,23 +4106,23 @@
                     localStorage.removeItem(`avv_atletas_clube_${idClubeChave}`);
                 } catch(e) {}
 
-                // Sincroniza exclusão no servidor
-                fetch('api/equipes/excluir-conta', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email: emailNorm })
-                }).catch(() => {});
+                // Sincroniza exclusão definitiva no servidor oficial (JSON + MySQL) aguardando confirmação
+                try {
+                    const resp = await fetch('api/equipes/excluir-conta', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email: emailNorm })
+                    });
+                    const resData = await resp.json();
+                    if (resp.ok && resData && Array.isArray(resData.equipes)) {
+                        equipesSistema = resData.equipes;
+                        salvarStorageSeguroAdm('avv_equipes_completo_db', JSON.stringify(equipesSistema));
+                    }
+                } catch (err) {
+                    salvarBancoEquipesIntegrado();
+                }
 
-                // Também atualiza o snapshot completo no servidor
-                fetch('api/equipes/sincronizar', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ equipesLista: equipesSistema })
-                }).catch(() => {});
-
-                renderizarListaContasClubesAdm();
-                renderizarBlocosEquipes();
-                atualizarIndicadoresTopo();
+                atualizarTudoPainelAdm();
 
                 avvAlert(`Conta do clube "${nomeClube}" e suas equipes foram excluídas com sucesso.`, 'Conta Excluída', 'success');
             }
