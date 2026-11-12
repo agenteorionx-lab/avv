@@ -66,6 +66,39 @@ const staticOpts = {
     }
 };
 
+// Roteamento amigável e moderno (Clean URLs) sem extensão .html
+// Permite acessar: /administrador, /clube, /login, /inscricao
+const rotasAmigaveis = {
+    '/administrador': 'painel-adm.html',
+    '/admin': 'painel-adm.html',
+    '/painel-adm': 'painel-adm.html',
+    '/clube': 'painel-time.html',
+    '/time': 'painel-time.html',
+    '/painel-time': 'painel-time.html',
+    '/login': 'login.html',
+    '/entrar': 'login.html',
+    '/inscricao': 'inscricao.html',
+    '/inscrever': 'inscricao.html'
+};
+
+// Redirecionamento automático caso alguém acesse diretamente com .html para a URL limpa
+app.use((req, res, next) => {
+    const p = req.path.toLowerCase();
+    if (p === '/painel-adm.html') return res.redirect(301, '/administrador');
+    if (p === '/painel-time.html') return res.redirect(301, '/clube');
+    if (p === '/login.html') return res.redirect(301, '/login');
+    if (p === '/inscricao.html') return res.redirect(301, '/inscricao');
+    next();
+});
+
+// Entrega as páginas limpas
+Object.keys(rotasAmigaveis).forEach(rota => {
+    const arquivo = rotasAmigaveis[rota];
+    app.get([rota, `/avv${rota}`], (req, res) => {
+        res.sendFile(path.join(__dirname, arquivo));
+    });
+});
+
 // Serve os arquivos estáticos da AVV tanto na raiz (/) quanto em (/avv) sem retenção de cache
 app.use(express.static(__dirname, staticOpts));
 app.use('/avv', express.static(__dirname, staticOpts));

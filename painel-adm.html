@@ -71,7 +71,7 @@
         <div class="sidebar-section-label">ATALHOS EXTERNOS</div>
         <ul class="sidebar-menu-fed">
             <li>
-                <a href="painel-time.html" target="_blank" style="text-decoration: none;">
+                <a href="/clube" target="_blank" style="text-decoration: none;">
                     <button type="button">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
                         Painel da Equipe
@@ -79,7 +79,7 @@
                 </a>
             </li>
             <li>
-                <a href="inscricao.html" target="_blank" style="text-decoration: none;">
+                <a href="/inscricao" target="_blank" style="text-decoration: none;">
                     <button type="button">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                         Formulário de Cadastro
@@ -1484,7 +1484,7 @@
         document.addEventListener('DOMContentLoaded', async () => {
             const sessaoAdm = JSON.parse(localStorage.getItem('avv_sessao_adm') || 'null');
             if (!sessaoAdm || sessaoAdm.tipo !== 'adm') {
-                window.location.replace('login.html');
+                window.location.replace('/login');
                 return;
             }
 
@@ -1495,7 +1495,7 @@
             if (ultimoAcesso && (agora - ultimoAcesso > limiteInatividade)) {
                 localStorage.removeItem('avv_sessao_adm');
                 alert('Sua sessão de Administrador expirou por inatividade. Faça login novamente.');
-                window.location.replace('login.html');
+                window.location.replace('/login');
                 return;
             }
             renovarAtividadeSessaoAdm();
@@ -3805,7 +3805,7 @@
         async function desconectarPorInatividadeAdm() {
             localStorage.removeItem('avv_sessao_adm');
             await avvAlert('Sua sessão de Administrador expirou por inatividade.\nPor favor, faça login novamente para continuar.', 'Sessão Expirada', 'warning');
-            window.location.replace('login.html');
+            window.location.replace('/login');
         }
 
         ['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll', 'click'].forEach(evt => {
@@ -3868,7 +3868,7 @@
             if (confirmou) {
                 clearTimeout(timerInatividadeAdm);
                 localStorage.removeItem('avv_sessao_adm');
-                window.location.replace('login.html');
+                window.location.replace('/login');
             }
         }
     
@@ -3973,7 +3973,7 @@
 
         function executarLogoutAdm() {
             localStorage.removeItem('avv_sessao_adm');
-            window.location.href = 'login.html';
+            window.location.href = '/login';
         }
 
         // ======================================================================

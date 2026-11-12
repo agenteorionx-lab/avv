@@ -1971,7 +1971,7 @@
         async function desconectarPorInatividadeTime() {
             localStorage.removeItem('avv_sessao_ativa');
             await avvAlert('Sua sessão expirou por inatividade por motivos de segurança.\nPor favor, faça login novamente para continuar.', 'Sessão Expirada', 'warning');
-            window.location.replace('login.html');
+            window.location.replace('/login');
         }
 
         // Monitora interações do usuário para manter a sessão viva enquanto estiver navegando
@@ -2066,7 +2066,7 @@
             if (confirmou) {
                 clearTimeout(timerInatividadeTime);
                 localStorage.removeItem('avv_sessao_ativa');
-                window.location.replace('login.html');
+                window.location.replace('/login');
             }
         }
 
@@ -2844,7 +2844,7 @@
                 // Prioriza a sessão ativa logada e verifica prazo de inatividade
                 const sessao = JSON.parse(localStorage.getItem('avv_sessao_ativa') || 'null');
                 if (!sessao || sessao.tipo !== 'time') {
-                    window.location.replace('login.html');
+                    window.location.replace('/login');
                     return;
                 }
 
@@ -2855,7 +2855,7 @@
                 if (ultimoAcesso && (agora - ultimoAcesso > limiteInatividade)) {
                     localStorage.removeItem('avv_sessao_ativa');
                     alert('Sua sessão expirou por inatividade. Faça login novamente.');
-                    window.location.replace('login.html');
+                    window.location.replace('/login');
                     return;
                 }
                 renovarAtividadeSessaoTime();
@@ -2888,7 +2888,7 @@
                 if (estaBloqueada) {
                     localStorage.removeItem('avv_sessao_ativa');
                     alert('Esta conta de agremiação foi temporariamente bloqueada pela Diretoria da AVV. Entre em contato com a organização.');
-                    window.location.replace('login.html');
+                    window.location.replace('/login');
                     return;
                 }
 
@@ -2900,7 +2900,7 @@
                     if (!temPreInsc) {
                         localStorage.removeItem('avv_sessao_ativa');
                         alert('Esta conta de agremiação não foi encontrada ou foi excluída pela administração. Faça login novamente ou realize um novo cadastro.');
-                        window.location.replace('login.html');
+                        window.location.replace('/login');
                         return;
                     }
                 }

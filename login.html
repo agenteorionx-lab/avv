@@ -176,7 +176,7 @@
             </a>
             <nav class="site-nav">
                 <a href="index.html">Portal AVV</a>
-                <a href="inscricao.html" class="btn-nav-action" style="background: transparent; color: var(--c-navy); border: 1.5px solid var(--c-navy);">+ Pré-Inscrição</a>
+                <a href="/inscricao" class="btn-nav-action" style="background: transparent; color: var(--c-navy); border: 1.5px solid var(--c-navy);">+ Pré-Inscrição</a>
             </nav>
         </div>
     </header>
@@ -231,7 +231,7 @@
 
                     <div style="margin-top: 18px; text-align: center; border-top: 1px solid #e2e8f0; padding-top: 14px; font-size: 11.5px; color: #64748b;">
                         Ainda não cadastrou sua agremiação?<br>
-                        <a href="inscricao.html" style="color: var(--c-navy); font-weight: 800; text-decoration: none; display: inline-block; margin-top: 4px;">
+                        <a href="/inscricao" style="color: var(--c-navy); font-weight: 800; text-decoration: none; display: inline-block; margin-top: 4px;">
                             + Fazer Pré-Inscrição da Equipe
                         </a>
                     </div>
@@ -474,7 +474,7 @@
                     }
 
                     exibirAlertaLogin('Acesso autorizado! Redirecionando para o painel do clube...', 'success');
-                    setTimeout(() => { window.location.replace('painel-time.html'); }, 300);
+                    setTimeout(() => { window.location.replace('/clube'); }, 300);
                     return;
                 }
 
@@ -511,7 +511,7 @@
                         };
                         localStorage.setItem('avv_sessao_ativa', JSON.stringify(sessao));
                         exibirAlertaLogin('Acesso autorizado! Redirecionando para o painel do clube...', 'success');
-                        setTimeout(() => { window.location.replace('painel-time.html'); }, 400);
+                        setTimeout(() => { window.location.replace('/clube'); }, 400);
                         return;
                     }
                 }
@@ -550,7 +550,7 @@
                 };
                 localStorage.setItem('avv_sessao_ativa', JSON.stringify(sessao));
                 exibirAlertaLogin('Acesso autorizado! Redirecionando para o painel do clube...', 'success');
-                setTimeout(() => { window.location.replace('painel-time.html'); }, 400);
+                setTimeout(() => { window.location.replace('/clube'); }, 400);
             } finally {
                 loginTimeEmAndamento = false;
                 if (btn) {
@@ -592,7 +592,7 @@
                     }
                     localStorage.setItem('avv_sessao_adm', JSON.stringify(dadosApi.sessao));
                     exibirAlertaLogin('Acesso de Administrador confirmado. Entrando no painel...', 'success');
-                    setTimeout(() => { window.location.replace('painel-adm.html'); }, 400);
+                    setTimeout(() => { window.location.replace('/administrador'); }, 400);
                     return;
                 }
 
@@ -842,7 +842,7 @@
                     const limite = 24 * 60 * 60 * 1000; // 24 horas
                     const ultimoAcesso = Number(sessaoTime.ultimoAcesso || sessaoTime.timestamp || 0);
                     if (ultimoAcesso && (agora - ultimoAcesso < limite)) {
-                        window.location.replace('painel-time.html');
+                        window.location.replace('/clube');
                         return;
                     }
                 }
@@ -853,7 +853,7 @@
                     const limite = 24 * 60 * 60 * 1000;
                     const ultimoAcesso = Number(sessaoAdm.ultimoAcesso || sessaoAdm.timestamp || 0);
                     if (ultimoAcesso && (agora - ultimoAcesso < limite)) {
-                        window.location.replace('painel-adm.html');
+                        window.location.replace('/administrador');
                         return;
                     }
                 }

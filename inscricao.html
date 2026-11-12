@@ -35,7 +35,7 @@
                 <a href="index.html">Portal AVV</a>
                 <a href="index.html#historia">História</a>
                 <a href="index.html#tecnicos">Diretoria & Técnicos</a>
-                <a href="login.html" class="btn-nav-action">Área do Time</a>
+                <a href="/login" class="btn-nav-action">Área do Time</a>
             </nav>
         </div>
     </header>
@@ -154,7 +154,7 @@
                 </div>
 
                 <div>
-                    <a href="painel-time.html" class="btn-submit-main" style="display: inline-block; text-decoration: none; line-height: 44px; max-width: 280px;">
+                    <a href="/clube" class="btn-submit-main" style="display: inline-block; text-decoration: none; line-height: 44px; max-width: 280px;">
                         Acessar Área do Time →
                     </a>
                 </div>
@@ -278,7 +278,7 @@
                 const jaCadastradoEmail = todasContas.find(eq => (eq.email || '').toLowerCase().trim() === emailDigitado);
                 if (jaCadastradoEmail) {
                     alert(`O e-mail "${emailDigitado}" já possui cadastro vinculado à equipe "${jaCadastradoEmail.nomeTime || jaCadastradoEmail.nomeClube}".\n\nVocê será direcionado para a tela de Login.`);
-                    window.location.href = 'login.html';
+                    window.location.href = '/login';
                     return;
                 }
 
@@ -339,7 +339,7 @@
                 const resJson = await resp.json();
                 if (!resp.ok && resJson.duplicado) {
                     alert(`${resJson.mensagem}\n\nVocê será direcionado para a tela de Login.`);
-                    window.location.href = 'login.html';
+                    window.location.href = '/login';
                     return;
                 }
             } catch (err) {
