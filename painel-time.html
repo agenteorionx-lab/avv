@@ -3115,28 +3115,29 @@
                 }
 
                 item.innerHTML = `
-                    <div class="item-left-block">
-                        <img src="${c.banner || 'avv_superliga_athlete.png'}" alt="${c.nome}" class="item-shield-img" style="object-fit: cover; border-radius: 4px; width: 44px; height: 44px;">
-                        <div class="item-text-info">
-                            <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;">
-                                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                                    <h4 style="margin: 0; font-size: 13.5px; font-weight: 800; color: #0f1c3f;">${c.nome}</h4>
-                                    ${badgeStatus}
-                                </div>
-                                <div style="display: inline-flex; align-items: center; gap: 6px; background: #0f1c3f; border: 1px solid #1e3a8a; padding: 4px 10px; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.15);">
-                                    <span style="font-size: 9.5px; text-transform: uppercase; color: #94a3b8; font-weight: 700; letter-spacing: 0.5px;">Encerra em:</span>
-                                    <span style="color: #38bdf8; font-size: 12px; font-weight: 900; font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace; letter-spacing: 0.8px;">${timerInfo ? timerInfo.texto : '--:--:--'}</span>
-                                </div>
+                    <div class="item-left-block" style="flex: 1; min-width: 0;">
+                        <img src="${c.logo || 'logos/logo_avv.png'}" alt="${c.nome}" class="item-shield-img" style="object-fit: contain; width: 44px; height: 44px; border-radius: 4px; flex-shrink: 0; background: #fff; padding: 2px;">
+                        <div class="item-text-info" style="flex: 1; min-width: 0;">
+                            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                                <h4 style="margin: 0; font-size: 13.5px; font-weight: 800; color: #0f1c3f;">${c.nome}</h4>
+                                ${badgeStatus}
                             </div>
-                            <div class="item-meta-sub">
+                            <div class="item-meta-sub" style="margin-top: 4px;">
                                 <span><strong>Modalidade:</strong> ${c.modalidade || 'Quadra'}</span>
                                 <span><strong>Fase:</strong> ${faseTexto}</span>
                                 <span><strong>Categorias Homologadas:</strong> ${catsTexto}</span>
                             </div>
                         </div>
                     </div>
-                    <div style="display: flex; gap: 8px;">
-                        <button class="btn-action-text-green" onclick="event.stopPropagation(); abrirSubpaginaCampeonato('${c.id}')">
+                    <div style="display: flex; align-items: center; gap: 12px; flex-shrink: 0;">
+                        <div style="display: inline-flex; align-items: center; gap: 6px; background: #0f1c3f; border: 1px solid #1e3a8a; padding: 6px 12px; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.15);">
+                            <span style="font-size: 10px; text-transform: uppercase; color: #94a3b8; font-weight: 700; letter-spacing: 0.5px; display: inline-flex; align-items: center; gap: 4px;">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                Encerra em:
+                            </span>
+                            <span style="color: #38bdf8; font-size: 12px; font-weight: 900; font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace; letter-spacing: 0.8px;">${timerInfo ? timerInfo.texto : '--:--:--'}</span>
+                        </div>
+                        <button class="btn-action-text-green" onclick="event.stopPropagation(); abrirSubpaginaCampeonato('${c.id}')" style="white-space: nowrap;">
                             Saiba Mais
                         </button>
                     </div>
