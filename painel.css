@@ -2084,3 +2084,33 @@ body {
 #modal-visualizar-equipe .corpo-modal-scroll-custom {
   max-height: calc(94vh - 120px) !important;
 }
+
+/* ==========================================================================
+   VISIBILIDADE COMPLETA DA COMISSÃO TÉCNICA E ELENCO
+   ========================================================================== */
+#modal-visualizar-equipe .tabela-comissao-wrapper {
+  max-height: none !important;
+  height: auto !important;
+  overflow-y: visible !important;
+  overflow-x: auto !important;
+}
+
+#modal-visualizar-equipe .tabela-comissao-wrapper table {
+  margin-bottom: 0 !important;
+}
+
+#modal-visualizar-equipe .corpo-modal-scroll-custom {
+  padding-bottom: 80px !important;
+  overflow-y: scroll !important;
+}
+
+/* No mobile ou telas menores */
+@media (max-width: 768px) {
+  #modal-visualizar-equipe .tabela-comissao-wrapper {
+    max-height: none !important;
+    overflow-y: visible !important;
+  }
+  #modal-visualizar-equipe .corpo-modal-scroll-custom {
+    padding-bottom: 90px !important;
+  }
+}
