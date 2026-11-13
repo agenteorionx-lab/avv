@@ -1655,6 +1655,15 @@
                         localStorage.setItem(chave, JSON.stringify(leve));
                         return true;
                     } catch (e2) {}
+                } else if (chave === 'avv_equipes_completo_db') {
+                    try {
+                        const sessao = JSON.parse(localStorage.getItem('avv_sessao_ativa') || 'null');
+                        const emailSessao = (sessao && sessao.email ? sessao.email.toLowerCase().trim() : '');
+                        const lista = JSON.parse(valorString);
+                        const minhas = (Array.isArray(lista) ? lista : []).filter(e => (e.email || '').toLowerCase().trim() === emailSessao);
+                        localStorage.setItem(chave, JSON.stringify(minhas));
+                        return true;
+                    } catch(e3) {}
                 }
                 console.warn('Limite de armazenamento atingido ao salvar:', chave, err);
                 return false;

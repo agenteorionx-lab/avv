@@ -1347,6 +1347,35 @@
                         localStorage.setItem(chave, JSON.stringify(leve));
                         return true;
                     } catch (e2) {}
+                } else if (chave === 'avv_equipes_completo_db') {
+                    try {
+                        // Limpa strings base64 pesadas para salvar instantaneamente sem estourar o limite de 5MB
+                        const lista = JSON.parse(valorString);
+                        const listaLeve = (Array.isArray(lista) ? lista : []).map(eq => {
+                            const c = { ...eq };
+                            delete c.bancoAtletasGeral;
+                            delete c.bancoComissaoGeral;
+                            if (Array.isArray(c.atletas)) {
+                                c.atletas = c.atletas.map(a => {
+                                    const ca = { ...a };
+                                    if (ca.foto && ca.foto.length > 500) ca.foto = 'logos/logo_avv.png';
+                                    if (ca.documentoFrente) delete ca.documentoFrente;
+                                    if (ca.documentoVerso) delete ca.documentoVerso;
+                                    return ca;
+                                });
+                            }
+                            if (Array.isArray(c.comissao)) {
+                                c.comissao = c.comissao.map(cm => {
+                                    const ccm = { ...cm };
+                                    if (ccm.foto && ccm.foto.length > 500) ccm.foto = 'logos/logo_avv.png';
+                                    return ccm;
+                                });
+                            }
+                            return c;
+                        });
+                        localStorage.setItem(chave, JSON.stringify(listaLeve));
+                        return true;
+                    } catch (e3) {}
                 }
                 console.warn('Limite de armazenamento atingido ao salvar:', chave, err);
                 return false;
@@ -1507,7 +1536,6 @@
             // Sincroniza dados do Banco de Dados Oficial do Servidor (Fonte Única da Verdade)
             await sincronizarDadosComServidorAdm();
             carregarCampeonatos();
-            carregarBancoEquipesIntegrado();
             atualizarTudoPainelAdm();
 
             // Atualiza perfil visual do ADM
@@ -1604,7 +1632,7 @@
 
         async function sincronizarDadosComServidorAdm() {
             try {
-                const resp = await fetch('api/dados-sistema', { cache: 'no-store' });
+                const resp = await fetch('/api/dados-sistema', { cache: 'no-store' });
                 const serverData = await resp.json();
                 if (resp.ok && serverData && serverData.ok) {
                     if (serverData.campeonatos && typeof serverData.campeonatos === 'object') {

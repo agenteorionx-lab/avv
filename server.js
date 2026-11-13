@@ -165,7 +165,19 @@ const CAMPEONATO_OFICIAL_COPA_XXI = {
     }
 };
 
-function carregarBancoDados() {
+// Cache em memória de alta performance para resposta instantânea (sub-milissegundos)
+let cacheDbEmMemoria = null;
+let cacheDadosSistemaPublico = null;
+
+function invalidarCacheDadosPublicos() {
+    cacheDadosSistemaPublico = null;
+}
+
+function carregarBancoDados(forcarLeituraDisco = false) {
+    if (!forcarLeituraDisco && cacheDbEmMemoria) {
+        return cacheDbEmMemoria;
+    }
+
     const arquivosTentativa = [DB_FILE, DB_FILE + '.backup'];
     for (const arq of arquivosTentativa) {
         try {
@@ -186,11 +198,14 @@ function carregarBancoDados() {
                 if (!admData.email) admData.email = process.env.ADM_DEFAULT_EMAIL || 'avvvoleibol@gmail.com';
                 if (!admData.setor) admData.setor = 'Diretoria Técnica AVV';
 
-                return {
+                const carregado = {
                     equipes: Array.isArray(parsed.equipes) ? parsed.equipes : [],
                     campeonatos: camps,
                     adm: admData
                 };
+                cacheDbEmMemoria = carregado;
+                invalidarCacheDadosPublicos();
+                return carregado;
             }
         } catch (err) {
             console.error(`Aviso ao ler ${path.basename(arq)}:`, err.message);
@@ -207,12 +222,16 @@ function carregarBancoDados() {
             senhaHash: hashSenhaSegura(process.env.ADM_DEFAULT_PASS || '@Avv_23#')
         }
     };
+    cacheDbEmMemoria = dbInicial;
+    invalidarCacheDadosPublicos();
     salvarBancoDados(dbInicial, false);
     return dbInicial;
 }
 
 function salvarBancoDados(dados, sincronizarMySQL = true) {
     try {
+        cacheDbEmMemoria = dados;
+        invalidarCacheDadosPublicos();
         const jsonPayload = JSON.stringify(dados, null, 2);
         const tempFile = `${DB_FILE}.${process.pid}.${Date.now()}.${Math.random().toString(36).slice(2, 8)}.tmp`;
         fs.writeFileSync(tempFile, jsonPayload, 'utf-8');
@@ -232,11 +251,16 @@ function salvarBancoDados(dados, sincronizarMySQL = true) {
     }
 }
 
-// Remove hashes de senha ao enviar dados públicos para o front-end
+// Remove hashes de senha e duplicatas redundantes de dados ao enviar para o front-end
 function limparEquipeParaCliente(eq) {
     if (!eq) return null;
     const copia = { ...eq };
     delete copia.senhaHash;
+    // Remove duplicatas redundantes de bancoAtletasGeral nas equipes de competição (reduz payload em ~50%)
+    if (!copia.isContaClube && copia.categoria !== '__CONTA_CLUBE__') {
+        delete copia.bancoAtletasGeral;
+        delete copia.bancoComissaoGeral;
+    }
     return copia;
 }
 
@@ -277,8 +301,11 @@ setInterval(() => {
 
 // 4.1. Sincronização completa (usada pelos painéis ao carregar)
 app.get(['/api/dados-sistema', '/avv/api/dados-sistema'], (req, res) => {
+    if (cacheDadosSistemaPublico) {
+        return res.json(cacheDadosSistemaPublico);
+    }
     const db = carregarBancoDados();
-    res.json({
+    cacheDadosSistemaPublico = {
         ok: true,
         equipes: db.equipes.map(limparEquipeParaCliente),
         campeonatos: db.campeonatos,
@@ -287,7 +314,8 @@ app.get(['/api/dados-sistema', '/avv/api/dados-sistema'], (req, res) => {
             email: db.adm.email,
             setor: db.adm.setor
         }
-    });
+    };
+    res.json(cacheDadosSistemaPublico);
 });
 
 // 4.2. Cadastrar nova equipe (Formulário de Pré-Inscrição ou Painel)
