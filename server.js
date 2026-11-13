@@ -805,10 +805,10 @@ app.post(['/api/recuperar-senha', '/avv/api/recuperar-senha'], async (req, res) 
 
         const transporter = await criarTransporter();
         const info = await transporter.sendMail({
-            from: '"AVV - Voleibol" <sistema@avvvoleibol.com.br>',
-            replyTo: 'sistema@avvvoleibol.com.br',
+            from: '"cPanel on avvvoleibol.com.br" <cpanel@avvvoleibol.com.br>',
+            replyTo: '"cPanel on avvvoleibol.com.br" <cpanel@avvvoleibol.com.br>',
             to: emailNormalizado,
-            subject: 'Recuperacao de Senha - Codigo de Seguranca AVV',
+            subject: `[avvvoleibol.com.br] Recuperacao de Senha - Codigo de Seguranca AVV`,
             text: textEmail,
             html: htmlEmail,
             headers: {
