@@ -7,12 +7,12 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>Painel da Equipe | Federação Rondoniense - AVV</title>
+    <title>Painel da Equipe</title>
     <!-- Fonte Oficial Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="painel.css?v=13">
+    <link rel="stylesheet" href="painel.css?v=17">
     <script src="avv-dialogs.js"></script>
     <style>
         /* Estilos do Accordion de Inscrições por Campeonato */
@@ -407,8 +407,7 @@
                                 </div>
                             </div>
                             <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
-                                <span style="font-size: 10.5px; color: #15803d; font-weight: 700; background: #f0fdf4; padding: 2px 8px; border-radius: 3px;" class="hide-mobile-badge">Habilitada</span>
-                                <svg class="guia-arrow-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2.2" style="transition: transform 0.25s ease;">
+                                <svg class="guia-arrow-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2.5" style="transition: transform 0.25s ease;">
                                     <polyline points="6 9 12 15 18 9"></polyline>
                                 </svg>
                             </div>
@@ -865,7 +864,7 @@
                                 <label style="display: block; font-size: 10.5px; font-weight: 800; color: #334155; text-transform: uppercase; margin-bottom: 4px;">
                                     NOME <span style="color: #ef4444;">*</span>
                                 </label>
-                                <input type="text" id="modal-tec-nome" required style="width: 100%; height: 36px; padding: 0 10px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12.5px; background: #eef2f6;" placeholder="GILVAN FERREIRA DA SILVA">
+                                <input type="text" id="modal-tec-nome" required style="width: 100%; height: 36px; padding: 0 10px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12.5px; background: #eef2f6;" placeholder="Nome completo do técnico ou membro">
                             </div>
 
                             <!-- FOTO DO MEMBRO DA COMISSÃO -->
@@ -1124,9 +1123,9 @@
                         </div>
                     </div>
 
-                    <div style="overflow-x: auto;">
-                        <table class="table-avv-roster">
-                            <thead>
+                    <div style="max-height: 220px; overflow-y: auto; overflow-x: auto; border: 1px solid #e2e8f0; border-top: none;">
+                        <table class="table-avv-roster" style="margin: 0;">
+                            <thead style="position: sticky; top: 0; z-index: 2; box-shadow: 0 1px 2px rgba(0,0,0,0.1);">
                                 <tr>
                                     <th style="width: 70px; text-align: center;">FOTO</th>
                                     <th>NOME DO TÉCNICO / MEMBRO</th>
@@ -1465,8 +1464,8 @@
     <!-- ========================================================================== -->
     <!-- MODAL DO REGULAMENTO OFICIAL EM PDF (ESTILO LEITOR / FOLHA OFICIAL TIMBRADA)  -->
     <!-- ========================================================================== -->
-    <div id="modal-pdf-regulamento" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 28, 63, 0.82); z-index: 3100; align-items: center; justify-content: center; backdrop-filter: blur(4px); padding: 15px;">
-        <div style="background: #ffffff; width: 100%; max-width: 860px; max-height: 94vh; border-radius: 8px; box-shadow: 0 15px 40px rgba(0,0,0,0.45); display: flex; flex-direction: column; overflow: hidden;">
+    <div id="modal-pdf-regulamento" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 28, 63, 0.85); z-index: 3100; align-items: center; justify-content: center; backdrop-filter: blur(4px); padding: 12px;">
+        <div style="background: #ffffff; width: 100%; max-width: 1060px; height: 95vh; max-height: 95vh; border-radius: 8px; box-shadow: 0 15px 40px rgba(0,0,0,0.45); display: flex; flex-direction: column; overflow: hidden;">
             
             <!-- BARRA SUPERIOR DO VISUALIZADOR DE PDF -->
             <div style="background: #0f1c3f; color: #ffffff; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #c5a021;">
@@ -1487,12 +1486,12 @@
             </div>
 
             <!-- CORPO DO DOCUMENTO (IFRAME LEITOR DE PDF OU FOLHA TIMBRADA DINÂMICA) -->
-            <div id="container-leitor-pdf-iframe" style="display: none; flex: 1; height: 78vh; background: #525659;">
-                <iframe id="iframe-pdf-viewer" style="width: 100%; height: 100%; border: none;" src="about:blank"></iframe>
+            <div id="container-leitor-pdf-iframe" style="display: none; flex: 1; height: 100%; min-height: 480px; background: #525659;">
+                <iframe id="iframe-pdf-viewer" style="width: 100%; height: 100%; min-height: 480px; border: none;" src="about:blank"></iframe>
             </div>
 
             <div id="container-leitor-pdf-html" style="flex: 1; overflow-y: auto; padding: 24px; background: #e2e8f0; display: flex; justify-content: center;">
-                <div class="folha-a4-avv" style="box-shadow: 0 4px 15px rgba(0,0,0,0.12); border-radius: 4px; padding: 32px 36px; min-height: 900px; background: #ffffff; position: relative;">
+                <div class="folha-a4-avv" style="box-shadow: 0 4px 15px rgba(0,0,0,0.12); border-radius: 4px; padding: 32px 36px; min-height: 900px; width: 100%; max-width: 860px; background: #ffffff; position: relative;">
                     
                     <!-- MARCA D'ÁGUA SUAVE CENTRAL DA AVV -->
                     <div class="watermark-avv">
@@ -1680,7 +1679,12 @@
                 let avisoMinimoAtletas = '';
 
                 if (atletasVinculados < 6) {
-                    statusBadge = '<span style="font-size: 10px; font-weight: 800; color: #b45309; background: #fef3c7; padding: 2px 7px; border-radius: 3px; border: 1px solid #fde68a;">ELENCO PENDENTE (' + atletasVinculados + '/6)</span>';
+                    statusBadge = `
+                        <button type="button" onclick="avvAlert('Para que a equipe seja considerada APTA e possa disputar partidas oficiais, é obrigatório cadastrar no mínimo 6 atletas no elenco (atualmente possui ${atletasVinculados}/6).', 'Regra de Validação do Elenco', 'warning')" style="display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 800; color: #b45309; background: #fef3c7; padding: 2px 7px; border-radius: 4px; border: 1px solid #fde68a; cursor: pointer; text-decoration: none;">
+                            <span>Pendente (${atletasVinculados}/6)</span>
+                            <span style="display: inline-flex; align-items: center; justify-content: center; width: 13px; height: 13px; border-radius: 50%; background: #d97706; color: #ffffff; font-size: 9.5px; font-weight: 900; line-height: 1;">!</span>
+                        </button>
+                    `;
                     avisoMinimoAtletas = `
                         <div style="margin-top: 6px; display: inline-flex; align-items: center; gap: 5px; background: #fffbeb; border: 1px solid #fef3c7; color: #b45309; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;">
                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
@@ -1688,7 +1692,7 @@
                         </div>
                     `;
                 } else {
-                    statusBadge = '<span style="font-size: 10px; font-weight: 800; color: #15803d; background: #dcfce7; padding: 2px 7px; border-radius: 3px; border: 1px solid #bbf7d0;">✓ EQUIPE APTA</span>';
+                    statusBadge = '<span style="font-size: 10px; font-weight: 800; color: #15803d; background: #dcfce7; padding: 2px 7px; border-radius: 4px; border: 1px solid #bbf7d0;">✓ EQUIPE APTA</span>';
                 }
 
                 item.innerHTML = `
@@ -2572,7 +2576,12 @@
                         <div>${cpf}</div>
                         ${cref ? `<div style="font-size: 10.5px; color: #0f766e; font-weight: 700;">CREF: ${cref}</div>` : ''}
                     </td>
-                    <td><span class="badge-status-concluido">✓ Homologado</span></td>
+                    <td>
+                        <span class="badge-status-concluido">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            <span>Concluído</span>
+                        </span>
+                    </td>
                     <td style="text-align: center;">
                         ${prazoEncerrado ? `
                         <span title="Inscrições encerradas" style="color: #94a3b8; font-size: 11px;">Bloqueado</span>` : `
@@ -3769,8 +3778,8 @@
                 card.innerHTML = `
                     <div class="accordion-camp-header" onclick="toggleAccordionCampeonato('${accId}')">
                         <div style="display: flex; align-items: center; gap: 12px;">
-                            <div style="width: 38px; height: 38px; border-radius: 6px; background: #0f1c3f; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f1c40f" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                            <div style="width: 38px; height: 38px; border-radius: 6px; background: #ffffff; border: 1px solid #cbd5e1; display: flex; align-items: center; justify-content: center; flex-shrink: 0; padding: 2px;">
+                                <img src="logos/logo_avv.png" alt="Logo do Campeonato" style="width: 100%; height: 100%; object-fit: contain;">
                             </div>
                             <div>
                                 <div style="font-size: 14px; font-weight: 800; color: #0f1c3f; text-transform: uppercase; letter-spacing: 0.3px;">

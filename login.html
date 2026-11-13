@@ -2,13 +2,13 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Acesso ao Sistema | Associação Vilhenense de Voleibol - AVV</title>
     <!-- Tipografia Corporativa Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="inscricao.css">
+    <link rel="stylesheet" href="inscricao.css?v=2">
     <script src="avv-dialogs.js"></script>
     <style>
         .login-card {
@@ -80,11 +80,11 @@
         }
         .login-input-field {
             width: 100%;
-            height: 42px;
+            height: 44px;
             padding: 0 40px 0 12px;
             border: 1.5px solid #cbd5e1;
             border-radius: 4px;
-            font-size: 13px;
+            font-size: 16px; /* 16px obrigatório no mobile para prevenir o auto-zoom do Safari/iOS */
             color: #1e293b;
             transition: border-color 0.2s;
             font-family: 'Inter', sans-serif;
