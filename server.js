@@ -805,15 +805,16 @@ app.post(['/api/recuperar-senha', '/avv/api/recuperar-senha'], async (req, res) 
 
         const transporter = await criarTransporter();
         const info = await transporter.sendMail({
-            from: process.env.SMTP_FROM || '"Associação Vilhenense de Voleibol" <sistema@avvvoleibol.com.br>',
+            from: '"AVV - Voleibol" <sistema@avvvoleibol.com.br>',
+            replyTo: 'sistema@avvvoleibol.com.br',
             to: emailNormalizado,
-            subject: 'Recuperação de Senha - Código de Acesso AVV',
+            subject: 'Recuperacao de Senha - Codigo de Seguranca AVV',
             text: textEmail,
             html: htmlEmail,
             headers: {
+                'X-Mailer': 'cPanel on avvvoleibol.com.br',
                 'X-Priority': '1',
-                'X-MSMail-Priority': 'High',
-                'Importance': 'high'
+                'Importance': 'High'
             }
         });
 
