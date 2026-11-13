@@ -857,7 +857,7 @@ app.post(['/api/recuperar-senha', '/avv/api/recuperar-senha'], async (req, res) 
         try {
             const bridgeRes = await enviarEmailViaHostgator(
                 emailNormalizado,
-                '[avvvoleibol.com.br] Recuperacao de Senha - Codigo de Seguranca AVV',
+                'AVV - Recuperação de Senha',
                 htmlEmail
             );
             console.log(`[RECUPERACAO SENHA] E-mail enviado via cPanel PHP nativo para ${emailNormalizado}:`, bridgeRes);
@@ -870,10 +870,10 @@ app.post(['/api/recuperar-senha', '/avv/api/recuperar-senha'], async (req, res) 
         if (!enviadoComSucesso) {
             const transporter = await criarTransporter();
             const info = await transporter.sendMail({
-                from: '"cPanel on avvvoleibol.com.br" <cpanel@avvvoleibol.com.br>',
-                replyTo: '"cPanel on avvvoleibol.com.br" <cpanel@avvvoleibol.com.br>',
+                from: '"AVV - Voleibol" <sistema@avvvoleibol.com.br>',
+                replyTo: 'sistema@avvvoleibol.com.br',
                 to: emailNormalizado,
-                subject: `[avvvoleibol.com.br] Recuperacao de Senha - Codigo de Seguranca AVV`,
+                subject: 'AVV - Recuperação de Senha',
                 text: textEmail,
                 html: htmlEmail,
                 headers: {

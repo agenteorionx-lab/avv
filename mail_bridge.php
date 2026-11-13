@@ -26,22 +26,24 @@ if (!$to) {
     exit;
 }
 
-$subject = $data['subject'] ?? 'Recuperacao de Senha AVV';
+$subject = $data['subject'] ?? 'AVV - Recuperação de Senha';
+$encodedSubject = '=?UTF-8?B?' . base64_encode($subject) . '?=';
 $html = $data['html'] ?? '';
 
 // Remetente cPanel oficial
-$fromName = 'AVV - Associacao Vilhenense de Voleibol';
+$fromName = 'AVV - Associação Vilhenense de Voleibol';
+$encodedFromName = '=?UTF-8?B?' . base64_encode($fromName) . '?=';
 $fromEmail = 'cpanel@avvvoleibol.com.br';
 
 $headers = [];
 $headers[] = 'MIME-Version: 1.0';
 $headers[] = 'Content-type: text/html; charset=UTF-8';
-$headers[] = 'From: ' . $fromName . ' <' . $fromEmail . '>';
+$headers[] = 'From: ' . $encodedFromName . ' <' . $fromEmail . '>';
 $headers[] = 'Reply-To: sistema@avvvoleibol.com.br';
 $headers[] = 'X-Mailer: cPanel on avvvoleibol.com.br';
 
 // O parametro -fcpanel@avvvoleibol.com.br forca o envelope com assinatura DKIM do servidor
-$sent = mail($to, $subject, $html, implode("\r\n", $headers), "-f" . $fromEmail);
+$sent = mail($to, $encodedSubject, $html, implode("\r\n", $headers), "-f" . $fromEmail);
 
 if ($sent) {
     echo json_encode(['ok' => true, 'mensagem' => 'E-mail despachado via sendmail cPanel']);
@@ -49,3 +51,4 @@ if ($sent) {
     http_response_code(500);
     echo json_encode(['ok' => false, 'error' => 'Falha ao disparar funcao mail no servidor']);
 }
+
