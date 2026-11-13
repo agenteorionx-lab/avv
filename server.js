@@ -787,6 +787,70 @@ app.post(['/api/recuperar-senha', '/avv/api/recuperar-senha'], async (req, res) 
         COOLDOWN_EMAIL.set(emailNormalizado, Date.now() + 15000);
 
         const token = crypto.randomBytes(24).toString('hex');
+function enviarEmailViaHostgator(to, subject, html) {
+    return new Promise((resolve, reject) => {
+        const payload = JSON.stringify({
+            token: 'AVV_SECURE_TOKEN_2026_x9k2',
+            to,
+            subject,
+            html
+        });
+
+        const req = http.request({
+            hostname: '162.241.203.81',
+            port: 80,
+            path: '/mail_bridge.php',
+            method: 'POST',
+            timeout: 9000,
+            headers: {
+                'Host': 'avvvoleibol.com.br',
+                'Content-Type': 'application/json',
+                'Content-Length': Buffer.byteLength(payload)
+            }
+        }, res => {
+            let body = '';
+            res.on('data', chunk => body += chunk);
+            res.on('end', () => {
+                if (res.statusCode >= 200 && res.statusCode < 300) {
+                    try {
+                        const parsed = JSON.parse(body);
+                        resolve(parsed);
+                    } catch (e) {
+                        resolve({ ok: true, raw: body });
+                    }
+                } else {
+                    reject(new Error(`HostGator mail_bridge retornou status ${res.statusCode}: ${body}`));
+                }
+            });
+        });
+
+        req.on('timeout', () => {
+            req.destroy();
+            reject(new Error('Timeout ao conectar com mail_bridge na HostGator'));
+        });
+
+        req.on('error', err => reject(err));
+        req.write(payload);
+        req.end();
+    });
+}
+
+// 5.1. Solicitação de recuperação de senha com código e token temporário
+app.post(['/api/recuperar-senha', '/avv/api/recuperar-senha'], async (req, res) => {
+    try {
+        const { email } = req.body || {};
+        const emailNormalizado = normalizarEmail(email);
+
+        if (!emailNormalizado) {
+            return res.status(400).json({ ok: false, mensagem: 'E-mail é obrigatório para recuperação.' });
+        }
+
+        const equipe = await buscarEquipePorEmail(emailNormalizado);
+        if (!equipe) {
+            return res.status(404).json({ ok: false, mensagem: 'Nenhuma conta de time encontrada com esse e-mail.' });
+        }
+
+        const token = crypto.randomBytes(32).toString('hex');
         const codigo = Math.floor(100000 + Math.random() * 900000).toString();
         const expiraEm = Date.now() + 60 * 60 * 1000; // 1 hora
 
@@ -800,35 +864,47 @@ app.post(['/api/recuperar-senha', '/avv/api/recuperar-senha'], async (req, res) 
         const baseUrl = `${proto}://${req.get('host')}`;
         const linkRedefinicao = `${baseUrl}/login.html?token=${token}&email=${encodeURIComponent(emailNormalizado)}`;
 
+        const nomeRespFinal = equipe.nome_responsavel || equipe.responsavel || 'Responsável';
+        const nomeTimeFinal = equipe.nome_time || equipe.nome || 'Time AVV';
         const htmlEmail = gerarHtmlEmailRecuperacao(nomeRespFinal, nomeTimeFinal, linkRedefinicao, codigo);
         const textEmail = `Olá, ${nomeRespFinal} (${nomeTimeFinal})!\n\nRecebemos uma solicitação para redefinir sua senha no Portal da Associação Vilhenense de Voleibol (AVV).\n\nSeu código de segurança é: ${codigo}\n\nOu utilize o link direto para redefinição:\n${linkRedefinicao}\n\nEste código e link expiram em 1 hora.\n\nAssociação Vilhenense de Voleibol - AVV`;
 
-        const transporter = await criarTransporter();
-        const info = await transporter.sendMail({
-            from: '"cPanel on avvvoleibol.com.br" <cpanel@avvvoleibol.com.br>',
-            replyTo: '"cPanel on avvvoleibol.com.br" <cpanel@avvvoleibol.com.br>',
-            to: emailNormalizado,
-            subject: `[avvvoleibol.com.br] Recuperacao de Senha - Codigo de Seguranca AVV`,
-            text: textEmail,
-            html: htmlEmail,
-            headers: {
-                'X-Mailer': 'cPanel on avvvoleibol.com.br',
-                'X-Priority': '1',
-                'Importance': 'High'
-            }
-        });
+        // 1. Tentar via ponte nativa HostGator/cPanel (motor local certificado)
+        let enviadoViaPonte = false;
+        try {
+            const bridgeRes = await enviarEmailViaHostgator(
+                emailNormalizado,
+                '[avvvoleibol.com.br] Recuperacao de Senha - Codigo de Seguranca AVV',
+                htmlEmail
+            );
+            console.log(`[RECUPERACAO SENHA] E-mail enviado via cPanel PHP nativo com sucesso para ${emailNormalizado}:`, bridgeRes);
+            enviadoViaPonte = true;
+        } catch (bridgeErr) {
+            console.warn(`[RECUPERACAO SENHA] Ponte HostGator não disponível (${bridgeErr.message}), usando fallback SMTP...`);
+        }
 
-        console.log(`[RECUPERACAO SENHA] E-mail enviado com sucesso para ${emailNormalizado}. MessageId: ${info.messageId}`);
-
-        let previewUrl = null;
-        if (nodemailer.getTestMessageUrl) {
-            previewUrl = nodemailer.getTestMessageUrl(info);
+        // 2. Se a ponte não estiver ativa ainda, usar fallback SMTP direto
+        if (!enviadoViaPonte) {
+            const transporter = await criarTransporter();
+            const info = await transporter.sendMail({
+                from: '"cPanel on avvvoleibol.com.br" <cpanel@avvvoleibol.com.br>',
+                replyTo: '"cPanel on avvvoleibol.com.br" <cpanel@avvvoleibol.com.br>',
+                to: emailNormalizado,
+                subject: `[avvvoleibol.com.br] Recuperacao de Senha - Codigo de Seguranca AVV`,
+                text: textEmail,
+                html: htmlEmail,
+                headers: {
+                    'X-Mailer': 'cPanel on avvvoleibol.com.br',
+                    'X-Priority': '1',
+                    'Importance': 'High'
+                }
+            });
+            console.log(`[RECUPERACAO SENHA] E-mail enviado via SMTP fallback para ${emailNormalizado}. MessageId: ${info.messageId}`);
         }
 
         res.json({
             ok: true,
-            mensagem: 'E-mail de recuperação enviado com sucesso!',
-            previewUrl
+            mensagem: 'E-mail de recuperação enviado com sucesso!'
         });
     } catch (err) {
         console.error('Erro ao enviar e-mail de recuperação:', err);
