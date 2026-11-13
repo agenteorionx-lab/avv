@@ -2085,15 +2085,7 @@ body {
   max-height: calc(94vh - 120px) !important;
 }
 
-/* ==========================================================================
-   VISIBILIDADE COMPLETA DA COMISSÃO TÉCNICA E ELENCO
-   ========================================================================== */
-#modal-visualizar-equipe .tabela-comissao-wrapper {
-  max-height: none !important;
-  height: auto !important;
-  overflow-y: visible !important;
-  overflow-x: auto !important;
-}
+
 
 #modal-visualizar-equipe .tabela-comissao-wrapper table {
   margin-bottom: 0 !important;
@@ -2112,5 +2104,70 @@ body {
   }
   #modal-visualizar-equipe .corpo-modal-scroll-custom {
     padding-bottom: 90px !important;
+  }
+}
+
+/* ==========================================================================
+   SCROLLBARS INDIVIDUAIS OBRIGATÓRIAS: ELENCO DE ATLETAS E COMISSÃO TÉCNICA
+   ========================================================================== */
+#modal-visualizar-equipe .tabela-atletas-scroll-box,
+.tabela-atletas-scroll-box {
+  height: 250px !important;
+  max-height: 250px !important;
+  overflow-y: scroll !important;
+  overflow-x: auto !important;
+  display: block !important;
+}
+
+#modal-visualizar-equipe .tabela-comissao-scroll-box,
+.tabela-comissao-scroll-box {
+  height: 180px !important;
+  max-height: 180px !important;
+  overflow-y: scroll !important;
+  overflow-x: auto !important;
+  display: block !important;
+}
+
+/* Força scrollbar visível, estilizada e com contraste */
+.tabela-atletas-scroll-box::-webkit-scrollbar,
+.tabela-comissao-scroll-box::-webkit-scrollbar {
+  width: 9px !important;
+  height: 9px !important;
+  display: block !important;
+}
+
+.tabela-atletas-scroll-box::-webkit-scrollbar-track,
+.tabela-comissao-scroll-box::-webkit-scrollbar-track {
+  background: #e2e8f0 !important;
+  border-radius: 4px !important;
+}
+
+.tabela-atletas-scroll-box::-webkit-scrollbar-thumb,
+.tabela-comissao-scroll-box::-webkit-scrollbar-thumb {
+  background: #64748b !important;
+  border-radius: 4px !important;
+  border: 2px solid #e2e8f0 !important;
+}
+
+.tabela-atletas-scroll-box::-webkit-scrollbar-thumb:hover,
+.tabela-comissao-scroll-box::-webkit-scrollbar-thumb:hover {
+  background: #0f1c3f !important;
+}
+
+.tabela-atletas-scroll-box,
+.tabela-comissao-scroll-box {
+  scrollbar-width: thin !important;
+  scrollbar-color: #64748b #e2e8f0 !important;
+}
+
+/* Responsividade Mobile mantendo scroll individual */
+@media (max-width: 768px) {
+  #modal-visualizar-equipe .tabela-atletas-scroll-box {
+    height: 220px !important;
+    max-height: 220px !important;
+  }
+  #modal-visualizar-equipe .tabela-comissao-scroll-box {
+    height: 160px !important;
+    max-height: 160px !important;
   }
 }
