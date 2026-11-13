@@ -449,9 +449,15 @@ app.post(['/api/auth/login', '/avv/api/auth/login'], (req, res) => {
             salvarBancoDados(db);
         }
 
+        const todasEquipesClube = registrosClube
+            .filter(item => !item.isContaClube && item.categoria !== '__CONTA_CLUBE__')
+            .map(limparEquipeParaCliente);
+
         res.json({
             ok: true,
             equipe: limparEquipeParaCliente(eq),
+            equipes: todasEquipesClube,
+            registrosCompletos: registrosClube.map(limparEquipeParaCliente),
             sessao: {
                 tipo: 'time',
                 equipeId: eq.id,

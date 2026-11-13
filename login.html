@@ -502,27 +502,39 @@
                         localStorage.removeItem('avv_inscricoes_teste');
                     } catch (e) {}
 
-                    // Sincroniza equipe retornada no cache local com dados 100% frescos do servidor
-                    if (dadosApi.equipe) {
-                        const equipesDb = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
-                        const idx = equipesDb.findIndex(item => String(item.id) === String(dadosApi.equipe.id) || (item.email || '').toLowerCase() === email);
-                        if (idx !== -1) {
-                            equipesDb[idx] = { ...equipesDb[idx], ...dadosApi.equipe };
-                        } else {
-                            equipesDb.unshift(dadosApi.equipe);
-                        }
-                        localStorage.setItem('avv_equipes_completo_db', JSON.stringify(equipesDb));
+                    // Sincroniza todas as equipes desta agremiação retornadas pela API no cache local
+                    const equipesDb = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
+                    const listaRecebida = Array.isArray(dadosApi.equipes) && dadosApi.equipes.length > 0
+                        ? dadosApi.equipes
+                        : (dadosApi.equipe ? [dadosApi.equipe] : []);
 
-                        // Prepara o cache local de atletas, comissão e inscrições direto da nuvem
-                        const idClubeChave = email.replace(/[^a-z0-9_-]/g, '_');
-                        if (Array.isArray(dadosApi.equipe.bancoAtletasGeral)) {
-                            localStorage.setItem(`avv_atletas_clube_${idClubeChave}`, JSON.stringify(dadosApi.equipe.bancoAtletasGeral));
+                    listaRecebida.forEach(eqRecebida => {
+                        const idx = equipesDb.findIndex(item => String(item.id) === String(eqRecebida.id));
+                        if (idx !== -1) {
+                            equipesDb[idx] = { ...equipesDb[idx], ...eqRecebida };
+                        } else {
+                            equipesDb.unshift(eqRecebida);
                         }
-                        if (Array.isArray(dadosApi.equipe.bancoComissaoGeral)) {
-                            localStorage.setItem(`avv_comissao_clube_${idClubeChave}`, JSON.stringify(dadosApi.equipe.bancoComissaoGeral));
+                    });
+                    try {
+                        localStorage.setItem('avv_equipes_completo_db', JSON.stringify(equipesDb));
+                    } catch(e) {}
+
+                    // Prepara o cache local de atletas, comissão e inscrições unificados direto da nuvem
+                    const idClubeChave = email.replace(/[^a-z0-9_-]/g, '_');
+                    const listaParaExtrair = Array.isArray(dadosApi.registrosCompletos) && dadosApi.registrosCompletos.length > 0
+                        ? dadosApi.registrosCompletos
+                        : listaRecebida;
+
+                    for (const eqItem of listaParaExtrair) {
+                        if (Array.isArray(eqItem.bancoAtletasGeral) && eqItem.bancoAtletasGeral.length > 0) {
+                            try { localStorage.setItem(`avv_atletas_clube_${idClubeChave}`, JSON.stringify(eqItem.bancoAtletasGeral)); } catch(e){}
                         }
-                        if (Array.isArray(dadosApi.equipe.inscricoesConfirmadas)) {
-                            localStorage.setItem(`avv_inscricoes_confirmadas_${idClubeChave}`, JSON.stringify(dadosApi.equipe.inscricoesConfirmadas));
+                        if (Array.isArray(eqItem.bancoComissaoGeral) && eqItem.bancoComissaoGeral.length > 0) {
+                            try { localStorage.setItem(`avv_comissao_clube_${idClubeChave}`, JSON.stringify(eqItem.bancoComissaoGeral)); } catch(e){}
+                        }
+                        if (Array.isArray(eqItem.inscricoesConfirmadas) && eqItem.inscricoesConfirmadas.length > 0) {
+                            try { localStorage.setItem(`avv_inscricoes_confirmadas_${idClubeChave}`, JSON.stringify(eqItem.inscricoesConfirmadas)); } catch(e){}
                         }
                     }
 

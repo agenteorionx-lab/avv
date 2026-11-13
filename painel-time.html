@@ -15,6 +15,45 @@
     <link rel="stylesheet" href="painel.css?v=17">
     <script src="avv-dialogs.js"></script>
     <style>
+        /* ROLAGEM INDIVIDUAL DEDICADA E SEM CORTES PARA TABELAS DO MODAL */
+        .tabela-atletas-scroll-box {
+            min-height: 280px !important;
+            height: 380px !important;
+            max-height: 420px !important;
+            overflow-y: auto !important;
+            overflow-x: auto !important;
+            scrollbar-width: thin !important;
+            scrollbar-color: #0f1c3f #e2e8f0 !important;
+        }
+        .tabela-comissao-scroll-box {
+            min-height: 155px !important;
+            height: auto !important;
+            max-height: 280px !important;
+            overflow-y: auto !important;
+            overflow-x: auto !important;
+            scrollbar-width: thin !important;
+            scrollbar-color: #0f1c3f #e2e8f0 !important;
+        }
+        .tabela-atletas-scroll-box::-webkit-scrollbar,
+        .tabela-comissao-scroll-box::-webkit-scrollbar {
+            width: 8px !important;
+            height: 8px !important;
+        }
+        .tabela-atletas-scroll-box::-webkit-scrollbar-track,
+        .tabela-comissao-scroll-box::-webkit-scrollbar-track {
+            background: #f1f5f9 !important;
+            border-radius: 4px;
+        }
+        .tabela-atletas-scroll-box::-webkit-scrollbar-thumb,
+        .tabela-comissao-scroll-box::-webkit-scrollbar-thumb {
+            background: #0f1c3f !important;
+            border-radius: 4px;
+        }
+        .tabela-atletas-scroll-box::-webkit-scrollbar-thumb:hover,
+        .tabela-comissao-scroll-box::-webkit-scrollbar-thumb:hover {
+            background: #1e3a8a !important;
+        }
+
         /* Estilos do Accordion de Inscrições por Campeonato */
         .accordion-camp-card {
             border: 1px solid #e2e8f0;
@@ -1085,7 +1124,7 @@
                         <span><strong>Edição Extraordinária Liberada:</strong> A Diretoria da AVV concedeu autorização especial para que você realize alterações ou substituições no elenco desta equipe.</span>
                     </div>
 
-                    <div class="tabela-roster-scroll-container tabela-atletas-scroll-box" style="height: 250px; max-height: 250px; overflow-y: scroll; overflow-x: auto; border: 1px solid #e2e8f0; border-top: none; -webkit-overflow-scrolling: touch;">
+                    <div class="tabela-roster-scroll-container tabela-atletas-scroll-box" style="min-height: 280px; height: 380px; max-height: 420px; overflow-y: auto; overflow-x: auto; border: 1px solid #e2e8f0; border-top: none; -webkit-overflow-scrolling: touch;">
                         <table class="table-avv-roster" style="margin: 0;">
                             <thead style="position: sticky; top: 0; z-index: 2; box-shadow: 0 1px 2px rgba(0,0,0,0.1);">
                                 <tr>
@@ -1123,7 +1162,7 @@
                         </div>
                     </div>
 
-                    <div class="tabela-roster-scroll-container tabela-comissao-scroll-box" style="height: 180px; max-height: 180px; overflow-y: scroll; overflow-x: auto; border: 1px solid #e2e8f0; border-top: none; -webkit-overflow-scrolling: touch;">
+                    <div class="tabela-roster-scroll-container tabela-comissao-scroll-box" style="min-height: 155px; height: auto; max-height: 280px; overflow-y: auto; overflow-x: auto; border: 1px solid #e2e8f0; border-top: none; -webkit-overflow-scrolling: touch;">
                         <table class="table-avv-roster" style="margin: 0;">
                             <thead style="position: sticky; top: 0; z-index: 2; box-shadow: 0 1px 2px rgba(0,0,0,0.1);">
                                 <tr>
@@ -1830,7 +1869,18 @@
 
         // Obtém todas as equipes vinculadas ao clube logado
         function obterEquipesDesteClube(dbArray, sessaoObj) {
-            const db = Array.isArray(dbArray) ? dbArray : JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
+            let db = [];
+            if (Array.isArray(dbArray) && dbArray.length > 0) {
+                db = dbArray;
+            } else if (Array.isArray(window.bancoEquipesServidor) && window.bancoEquipesServidor.length > 0) {
+                db = window.bancoEquipesServidor;
+            } else {
+                try {
+                    db = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
+                } catch(e) {
+                    db = [];
+                }
+            }
             const sessao = sessaoObj || JSON.parse(localStorage.getItem('avv_sessao_ativa') || 'null');
             if (!sessao) return [];
 
@@ -2938,18 +2988,24 @@
 
                 // Sincroniza dados mais recentes do servidor (Fonte Única da Verdade)
                 try {
-                    const resp = await fetch('api/dados-sistema', { cache: 'no-store' });
+                    const resp = await fetch('/api/dados-sistema', { cache: 'no-store' });
                     const serverData = await resp.json();
                     if (resp.ok && serverData.ok) {
                         if (serverData.campeonatos && typeof serverData.campeonatos === 'object') {
-                            localStorage.setItem('avv_banco_campeonatos', JSON.stringify(serverData.campeonatos));
+                            try { localStorage.setItem('avv_banco_campeonatos', JSON.stringify(serverData.campeonatos)); } catch(e){}
                             carregarCampeonatosPainelTime();
                         }
                         if (Array.isArray(serverData.equipes)) {
-                            localStorage.setItem('avv_equipes_completo_db', JSON.stringify(serverData.equipes));
+                            window.bancoEquipesServidor = serverData.equipes;
                             try {
-                                localStorage.removeItem('avv_inscricoes_teste');
-                            } catch (e) {}
+                                localStorage.setItem('avv_equipes_completo_db', JSON.stringify(serverData.equipes));
+                            } catch (eStorage) {
+                                // Caso exceda cota de 5MB por fotos de outras equipes, salva apenas as equipes do próprio clube
+                                const emailSessaoAtiva = (sessao.email || '').toLowerCase().trim();
+                                const minhasEquipes = serverData.equipes.filter(e => (e.email || '').toLowerCase().trim() === emailSessaoAtiva);
+                                try { localStorage.setItem('avv_equipes_completo_db', JSON.stringify(minhasEquipes)); } catch(e2){}
+                            }
+                            try { localStorage.removeItem('avv_inscricoes_teste'); } catch (e) {}
 
                             // Atualiza os caches locais de atletas, comissão e inscrições com o que veio do servidor
                             const emailSessaoAtiva = (sessao.email || '').toLowerCase().trim();
@@ -2961,22 +3017,29 @@
                                 const equipesDestaConta = serverData.equipes.filter(e => (e.email || '').toLowerCase().trim() === emailSessaoAtiva);
                                 for (const eq of equipesDestaConta) {
                                     if (Array.isArray(eq.bancoAtletasGeral) && eq.bancoAtletasGeral.length > 0) {
-                                        localStorage.setItem(chaveAtletas, JSON.stringify(eq.bancoAtletasGeral));
+                                        try { localStorage.setItem(chaveAtletas, JSON.stringify(eq.bancoAtletasGeral)); } catch(e){}
                                     }
                                     if (Array.isArray(eq.bancoComissaoGeral) && eq.bancoComissaoGeral.length > 0) {
-                                        localStorage.setItem(chaveComissao, JSON.stringify(eq.bancoComissaoGeral));
+                                        try { localStorage.setItem(chaveComissao, JSON.stringify(eq.bancoComissaoGeral)); } catch(e){}
                                     }
                                     if (Array.isArray(eq.inscricoesConfirmadas) && eq.inscricoesConfirmadas.length > 0) {
-                                        localStorage.setItem(chaveInsc, JSON.stringify(eq.inscricoesConfirmadas));
+                                        try { localStorage.setItem(chaveInsc, JSON.stringify(eq.inscricoesConfirmadas)); } catch(e){}
                                     }
                                     if (eq.fotoDirigente || eq.logo) {
                                         const f = eq.fotoDirigente || eq.logo;
                                         sessao.foto = f;
-                                        localStorage.setItem('avv_sessao_ativa', JSON.stringify(sessao));
-                                        localStorage.setItem('avv_foto_clube_' + emailSessaoAtiva, f);
+                                        try {
+                                            localStorage.setItem('avv_sessao_ativa', JSON.stringify(sessao));
+                                            localStorage.setItem('avv_foto_clube_' + emailSessaoAtiva, f);
+                                        } catch(e){}
                                     }
                                 }
                             }
+
+                            // Renderiza imediatamente com as equipes frescas vindas da nuvem
+                            const equipesFrescas = obterEquipesDesteClube(serverData.equipes, sessao);
+                            renderizarEquipesClubeView(equipesFrescas);
+                            atualizarContadoresTime();
                         }
                     }
                 } catch (err) {}
