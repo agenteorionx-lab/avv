@@ -745,7 +745,7 @@
                                     <span>Adulto</span>
                                 </label>
                             </div>
-                            <small style="display: block; font-size: 10.5px; color: #64748b; margin-top: 4px;">Atletas das categorias de base podem atuar nas suas categorias de origem e também nas superiores.</small>
+                            <small style="display: block; font-size: 10.5px; color: #0f766e; font-weight: 600; margin-top: 4px;">Regulamento: O atleta só poderá atuar nas categorias marcadas acima. Marque mais de uma caso o atleta dispute duas categorias simultaneamente.</small>
                         </div>
 
                         <!-- POSIÇÃO -->
@@ -1020,7 +1020,7 @@
             </div>
 
             <!-- CORPO DO MODAL COM ROLAGEM -->
-            <div style="padding: 24px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 20px;">
+            <div class="corpo-modal-scroll-custom" style="padding: 20px 24px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 20px; -webkit-overflow-scrolling: touch;">
                 
                 <!-- BOX DE DADOS CADASTRAIS DA EQUIPE -->
                 <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 16px 20px;">
@@ -1085,7 +1085,7 @@
                         <span><strong>Edição Extraordinária Liberada:</strong> A Diretoria da AVV concedeu autorização especial para que você realize alterações ou substituições no elenco desta equipe.</span>
                     </div>
 
-                    <div style="max-height: 295px; overflow-y: auto; overflow-x: auto; border: 1px solid #e2e8f0; border-top: none;">
+                    <div class="tabela-roster-scroll-container" style="max-height: 360px; overflow-y: auto; overflow-x: auto; border: 1px solid #e2e8f0; border-top: none; -webkit-overflow-scrolling: touch;">
                         <table class="table-avv-roster" style="margin: 0;">
                             <thead style="position: sticky; top: 0; z-index: 2; box-shadow: 0 1px 2px rgba(0,0,0,0.1);">
                                 <tr>
@@ -1123,7 +1123,7 @@
                         </div>
                     </div>
 
-                    <div style="max-height: 220px; overflow-y: auto; overflow-x: auto; border: 1px solid #e2e8f0; border-top: none;">
+                    <div class="tabela-roster-scroll-container" style="max-height: 260px; overflow-y: auto; overflow-x: auto; border: 1px solid #e2e8f0; border-top: none; -webkit-overflow-scrolling: touch;">
                         <table class="table-avv-roster" style="margin: 0;">
                             <thead style="position: sticky; top: 0; z-index: 2; box-shadow: 0 1px 2px rgba(0,0,0,0.1);">
                                 <tr>
@@ -2371,7 +2371,7 @@
         function atletaCompativelComEquipe(atleta, equipe) {
             if (!atleta || !equipe) return false;
             
-            // Naipe/Gênero rigorosamente idêntico (sem misturar)
+            // Naipe/Gênero rigorosamente idêntico (sem misturar Masculino com Feminino)
             const naipeAtleta = atleta.genero 
                 ? normalizarNaipe(atleta.genero) 
                 : normalizarNaipe(atleta.categoria);
@@ -2382,28 +2382,14 @@
 
             if (naipeAtleta !== naipeEquipe) return false;
 
-            // Categoria de disputa compatível:
-            // O atleta pode estar explicitamente na categoria da equipe,
-            // ou se for atleta de categoria de base, pode atuar em categorias superiores.
+            // Categoria de disputa estrita:
+            // Cada atleta SÓ PODE atuar na categoria correspondente ao seu cadastro.
+            // Só pode participar de mais de uma categoria se no cadastro dele constar explicitamente mais de uma categoria!
             const catEquipe = extrairCategoriaBase(equipe.categoria || (equipe.categorias && equipe.categorias[0]));
             const categoriasAtleta = extrairCategoriasAtleta(atleta);
 
-            // 1. Verifica se a categoria da equipe está na lista de categorias do atleta
-            const temCategoriaExata = categoriasAtleta.some(c => c.toLowerCase() === catEquipe.toLowerCase());
-            if (temCategoriaExata) return true;
-
-            // 2. Regra de ascensão: atletas menores podem jogar em categorias superiores
-            // Hierarquia: Sub-13 (13) < Sub-15 (15) < Sub-18 (18) < Adulto (99)
-            const nivelPorCategoria = { 'sub-13': 13, 'sub-15': 15, 'sub-18': 18, 'adulto': 99 };
-            const nivelEquipe = nivelPorCategoria[catEquipe.toLowerCase()] || 99;
-
-            // Se o atleta tiver alguma categoria de base menor ou igual à equipe, ele é elegível
-            const elegivelPorIdade = categoriasAtleta.some(cat => {
-                const nivelAtleta = nivelPorCategoria[cat.toLowerCase()];
-                return nivelAtleta !== undefined && nivelAtleta <= nivelEquipe;
-            });
-
-            return elegivelPorIdade;
+            // Verifica se a categoria da equipe está presente na lista de categorias cadastradas do atleta
+            return categoriasAtleta.some(c => c.toLowerCase() === catEquipe.toLowerCase());
         }
 
         // Renderiza todos os atletas cadastrados pelo clube na aba "Atletas"

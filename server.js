@@ -219,7 +219,7 @@ function salvarBancoDados(dados, sincronizarMySQL = true) {
         if (fs.existsSync(DB_FILE)) {
             try {
                 fs.copyFileSync(DB_FILE, DB_FILE + '.backup');
-            } catch (bkpErr) {}
+            } catch (bkpErr) { }
         }
         fs.renameSync(tempFile, DB_FILE);
         if (sincronizarMySQL) {
@@ -489,7 +489,7 @@ app.post(['/api/equipes/sincronizar', '/avv/api/equipes/sincronizar'], (req, res
                     .filter(eqCliente => eqCliente && (eqCliente.id || eqCliente.email))
                     .map(eqCliente => {
                         const antigo = (eqCliente.id && mapaAntigoPorId.get(String(eqCliente.id))) ||
-                                       (eqCliente.email && mapaAntigoPorEmail.get(String(eqCliente.email).toLowerCase().trim()));
+                            (eqCliente.email && mapaAntigoPorEmail.get(String(eqCliente.email).toLowerCase().trim()));
                         const senhaHashPreservada = (antigo && antigo.senhaHash)
                             ? antigo.senhaHash
                             : hashSenhaSegura(eqCliente.senha || '123456');
@@ -646,7 +646,7 @@ app.post(['/api/auth/alterar-senha', '/avv/api/auth/alterar-senha'], (req, res) 
         // Dirigente / Equipe
         const idx = db.equipes.findIndex(
             e => (equipeId && String(e.id) === String(equipeId)) ||
-                 (email && (e.email || '').toLowerCase() === String(email).toLowerCase())
+                (email && (e.email || '').toLowerCase() === String(email).toLowerCase())
         );
 
         if (idx === -1) {

@@ -2031,3 +2031,56 @@ body {
 
 
 
+
+/* ==========================================================================
+   MELHORIAS DE ROLAGEM (SCROLLBARS SUAVES E VISÍVEIS) PARA TABELAS E MODAIS
+   ========================================================================== */
+.corpo-modal-scroll-custom::-webkit-scrollbar,
+.tabela-roster-scroll-container::-webkit-scrollbar,
+#modal-visualizar-equipe div[style*="overflow-y: auto"]::-webkit-scrollbar,
+#modal-adicionar-atleta-time div[style*="overflow-y: auto"]::-webkit-scrollbar,
+#modal-adicionar-tecnico-equipe div[style*="overflow-y: auto"]::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.corpo-modal-scroll-custom::-webkit-scrollbar-track,
+.tabela-roster-scroll-container::-webkit-scrollbar-track,
+#modal-visualizar-equipe div[style*="overflow-y: auto"]::-webkit-scrollbar-track,
+#modal-adicionar-atleta-time div[style*="overflow-y: auto"]::-webkit-scrollbar-track,
+#modal-adicionar-tecnico-equipe div[style*="overflow-y: auto"]::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+.corpo-modal-scroll-custom::-webkit-scrollbar-thumb,
+.tabela-roster-scroll-container::-webkit-scrollbar-thumb,
+#modal-visualizar-equipe div[style*="overflow-y: auto"]::-webkit-scrollbar-thumb,
+#modal-adicionar-atleta-time div[style*="overflow-y: auto"]::-webkit-scrollbar-thumb,
+#modal-adicionar-tecnico-equipe div[style*="overflow-y: auto"]::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+  border-radius: 4px;
+  border: 2px solid #f1f5f9;
+}
+
+.corpo-modal-scroll-custom::-webkit-scrollbar-thumb:hover,
+.tabela-roster-scroll-container::-webkit-scrollbar-thumb:hover,
+#modal-visualizar-equipe div[style*="overflow-y: auto"]::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* Firefox scrollbars */
+.corpo-modal-scroll-custom,
+.tabela-roster-scroll-container {
+  scrollbar-width: thin;
+  scrollbar-color: #94a3b8 #f1f5f9;
+}
+
+/* Garante que o modal de visualização de elenco seja scrollável sem travar */
+#modal-visualizar-equipe > div {
+  max-height: 94vh !important;
+}
+
+#modal-visualizar-equipe .corpo-modal-scroll-custom {
+  max-height: calc(94vh - 120px) !important;
+}
