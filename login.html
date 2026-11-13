@@ -471,6 +471,18 @@
                             equipesDb.unshift(dadosApi.equipe);
                         }
                         localStorage.setItem('avv_equipes_completo_db', JSON.stringify(equipesDb));
+
+                        // Prepara o cache local de atletas, comissão e inscrições direto da nuvem
+                        const idClubeChave = email.replace(/[^a-z0-9_-]/g, '_');
+                        if (Array.isArray(dadosApi.equipe.bancoAtletasGeral)) {
+                            localStorage.setItem(`avv_atletas_clube_${idClubeChave}`, JSON.stringify(dadosApi.equipe.bancoAtletasGeral));
+                        }
+                        if (Array.isArray(dadosApi.equipe.bancoComissaoGeral)) {
+                            localStorage.setItem(`avv_comissao_clube_${idClubeChave}`, JSON.stringify(dadosApi.equipe.bancoComissaoGeral));
+                        }
+                        if (Array.isArray(dadosApi.equipe.inscricoesConfirmadas)) {
+                            localStorage.setItem(`avv_inscricoes_confirmadas_${idClubeChave}`, JSON.stringify(dadosApi.equipe.inscricoesConfirmadas));
+                        }
                     }
 
                     exibirAlertaLogin('Acesso autorizado! Redirecionando para o painel do clube...', 'success');

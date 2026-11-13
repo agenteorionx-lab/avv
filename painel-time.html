@@ -2069,7 +2069,14 @@
             });
             if (confirmou) {
                 clearTimeout(timerInatividadeTime);
+                const sessao = JSON.parse(localStorage.getItem('avv_sessao_ativa') || '{}');
+                const emailNorm = (sessao.email || '').toLowerCase().trim();
+                const idClubeChave = (emailNorm || 'default').replace(/[^a-z0-9_-]/g, '_');
                 localStorage.removeItem('avv_sessao_ativa');
+                localStorage.removeItem(`avv_atletas_clube_${idClubeChave}`);
+                localStorage.removeItem(`avv_comissao_clube_${idClubeChave}`);
+                localStorage.removeItem(`avv_inscricoes_confirmadas_${idClubeChave}`);
+                localStorage.removeItem('avv_dirigente_foto_teste');
                 window.location.replace('/login');
             }
         }
@@ -2128,6 +2135,8 @@
         // =========================================================================
         // BANCO GERAL DE ATLETAS DA AGREMIAÇÃO / CLUBE (ISOLADO RIGOROSAMENTE POR CONTA DE CLUBE)
         // =========================================================================
+        // BANCO GERAL DE ATLETAS DA AGREMIAÇÃO / CLUBE (ISOLADO RIGOROSAMENTE POR CONTA DE CLUBE)
+        // =========================================================================
         function obterChaveStorageAtletasClube() {
             try {
                 const sessao = JSON.parse(localStorage.getItem('avv_sessao_ativa') || '{}');
@@ -2135,6 +2144,51 @@
                 return `avv_atletas_clube_${idClube}`;
             } catch (e) {
                 return 'avv_atletas_clube_default';
+            }
+        }
+
+        // Função de envio imediato ao servidor das informações do clube (Atletas, Comissão, Inscrições e Foto)
+        function sincronizarClubeCentralizadoComServidor() {
+            try {
+                const sessao = JSON.parse(localStorage.getItem('avv_sessao_ativa') || '{}');
+                const emailSessao = (sessao.email || '').toLowerCase().trim();
+                if (!emailSessao) return;
+
+                const db = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
+                const chaveAtletas = obterChaveStorageAtletasClube();
+                const chaveComissao = obterChaveStorageComissaoClube();
+                const chaveInsc = obterChaveInscricoesConfirmadasClube();
+
+                const atletasAtuais = JSON.parse(localStorage.getItem(chaveAtletas) || '[]');
+                const comissaoAtual = JSON.parse(localStorage.getItem(chaveComissao) || '[]');
+                const inscricoesAtuais = JSON.parse(localStorage.getItem(chaveInsc) || '[]');
+                const fotoSalva = sessao.foto || localStorage.getItem('avv_dirigente_foto_teste') || localStorage.getItem('avv_foto_clube_' + emailSessao) || null;
+
+                let houveAlteracao = false;
+                db.forEach(eq => {
+                    const eqEmail = (eq.email || '').toLowerCase().trim();
+                    if (eqEmail === emailSessao) {
+                        eq.bancoAtletasGeral = atletasAtuais;
+                        eq.bancoComissaoGeral = comissaoAtual;
+                        eq.inscricoesConfirmadas = inscricoesAtuais;
+                        if (fotoSalva) {
+                            eq.fotoDirigente = fotoSalva;
+                            eq.logo = fotoSalva;
+                        }
+                        houveAlteracao = true;
+                    }
+                });
+
+                if (houveAlteracao) {
+                    salvarStorageSeguro('avv_equipes_completo_db', JSON.stringify(db));
+                    fetch('api/equipes/sincronizar', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ equipesLista: db })
+                    }).catch(() => {});
+                }
+            } catch (e) {
+                console.warn('Erro ao sincronizar clube com servidor:', e);
             }
         }
 
@@ -2150,15 +2204,31 @@
                     const db = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
                     const sessao = JSON.parse(localStorage.getItem('avv_sessao_ativa') || '{}');
                     const equipes = obterEquipesDesteClube(db, sessao);
-                    equipes.forEach(eq => {
-                        if (Array.isArray(eq.atletas)) {
-                            eq.atletas.forEach(at => {
+
+                    // 1. Tenta recuperar do campo central bancoAtletasGeral da equipe
+                    for (const eq of equipes) {
+                        if (Array.isArray(eq.bancoAtletasGeral) && eq.bancoAtletasGeral.length > 0) {
+                            eq.bancoAtletasGeral.forEach(at => {
                                 if (!atletas.some(a => String(a.id) === String(at.id))) {
                                     atletas.push({ ...at });
                                 }
                             });
                         }
-                    });
+                    }
+
+                    // 2. Se ainda não achou, resgata dos elencos específicos
+                    if (atletas.length === 0) {
+                        equipes.forEach(eq => {
+                            if (Array.isArray(eq.atletas)) {
+                                eq.atletas.forEach(at => {
+                                    if (!atletas.some(a => String(a.id) === String(at.id))) {
+                                        atletas.push({ ...at });
+                                    }
+                                });
+                            }
+                        });
+                    }
+
                     if (atletas.length > 0) {
                         salvarStorageSeguro(chave, JSON.stringify(atletas));
                     }
@@ -2173,6 +2243,7 @@
             try {
                 const chave = obterChaveStorageAtletasClube();
                 salvarStorageSeguro(chave, JSON.stringify(atletas));
+                sincronizarClubeCentralizadoComServidor();
             } catch (e) {}
         }
 
@@ -2201,15 +2272,31 @@
                     const db = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
                     const sessao = JSON.parse(localStorage.getItem('avv_sessao_ativa') || '{}');
                     const equipes = obterEquipesDesteClube(db, sessao);
-                    equipes.forEach(eq => {
-                        if (Array.isArray(eq.comissao)) {
-                            eq.comissao.forEach(tc => {
+
+                    // 1. Tenta recuperar do campo central bancoComissaoGeral da equipe
+                    for (const eq of equipes) {
+                        if (Array.isArray(eq.bancoComissaoGeral) && eq.bancoComissaoGeral.length > 0) {
+                            eq.bancoComissaoGeral.forEach(tc => {
                                 if (!lista.some(t => String(t.id) === String(tc.id))) {
                                     lista.push({ ...tc });
                                 }
                             });
                         }
-                    });
+                    }
+
+                    // 2. Se ainda não achou, resgata dos elencos específicos
+                    if (lista.length === 0) {
+                        equipes.forEach(eq => {
+                            if (Array.isArray(eq.comissao)) {
+                                eq.comissao.forEach(tc => {
+                                    if (!lista.some(t => String(t.id) === String(tc.id))) {
+                                        lista.push({ ...tc });
+                                    }
+                                });
+                            }
+                        });
+                    }
+
                     if (lista.length > 0) {
                         salvarStorageSeguro(chave, JSON.stringify(lista));
                     }
@@ -2224,6 +2311,7 @@
             try {
                 const chave = obterChaveStorageComissaoClube();
                 salvarStorageSeguro(chave, JSON.stringify(lista));
+                sincronizarClubeCentralizadoComServidor();
             } catch (e) {}
         }
 
@@ -2883,6 +2971,33 @@
                             try {
                                 localStorage.removeItem('avv_inscricoes_teste');
                             } catch (e) {}
+
+                            // Atualiza os caches locais de atletas, comissão e inscrições com o que veio do servidor
+                            const emailSessaoAtiva = (sessao.email || '').toLowerCase().trim();
+                            if (emailSessaoAtiva) {
+                                const chaveAtletas = obterChaveStorageAtletasClube();
+                                const chaveComissao = obterChaveStorageComissaoClube();
+                                const chaveInsc = obterChaveInscricoesConfirmadasClube();
+
+                                const equipesDestaConta = serverData.equipes.filter(e => (e.email || '').toLowerCase().trim() === emailSessaoAtiva);
+                                for (const eq of equipesDestaConta) {
+                                    if (Array.isArray(eq.bancoAtletasGeral) && eq.bancoAtletasGeral.length > 0) {
+                                        localStorage.setItem(chaveAtletas, JSON.stringify(eq.bancoAtletasGeral));
+                                    }
+                                    if (Array.isArray(eq.bancoComissaoGeral) && eq.bancoComissaoGeral.length > 0) {
+                                        localStorage.setItem(chaveComissao, JSON.stringify(eq.bancoComissaoGeral));
+                                    }
+                                    if (Array.isArray(eq.inscricoesConfirmadas) && eq.inscricoesConfirmadas.length > 0) {
+                                        localStorage.setItem(chaveInsc, JSON.stringify(eq.inscricoesConfirmadas));
+                                    }
+                                    if (eq.fotoDirigente || eq.logo) {
+                                        const f = eq.fotoDirigente || eq.logo;
+                                        sessao.foto = f;
+                                        localStorage.setItem('avv_sessao_ativa', JSON.stringify(sessao));
+                                        localStorage.setItem('avv_foto_clube_' + emailSessaoAtiva, f);
+                                    }
+                                }
+                            }
                         }
                     }
                 } catch (err) {}
@@ -3057,6 +3172,70 @@
                     atualizarContadoresTime();
                 }
             });
+
+            // Sincronização em tempo real ao focar na janela ou voltar de outro dispositivo/aba
+            async function rechecarSincronizacaoFundo() {
+                try {
+                    const sessao = JSON.parse(localStorage.getItem('avv_sessao_ativa') || '{}');
+                    const emailSessao = (sessao.email || '').toLowerCase().trim();
+                    if (!emailSessao) return;
+
+                    const resp = await fetch('api/dados-sistema', { cache: 'no-store' });
+                    const serverData = await resp.json();
+                    if (resp.ok && serverData.ok && Array.isArray(serverData.equipes)) {
+                        localStorage.setItem('avv_equipes_completo_db', JSON.stringify(serverData.equipes));
+                        if (serverData.campeonatos) {
+                            localStorage.setItem('avv_banco_campeonatos', JSON.stringify(serverData.campeonatos));
+                        }
+
+                        const equipesDestaConta = serverData.equipes.filter(e => (e.email || '').toLowerCase().trim() === emailSessao);
+                        let atualizouAlgo = false;
+                        const chaveAtletas = obterChaveStorageAtletasClube();
+                        const chaveComissao = obterChaveStorageComissaoClube();
+                        const chaveInsc = obterChaveInscricoesConfirmadasClube();
+
+                        for (const eq of equipesDestaConta) {
+                            if (Array.isArray(eq.bancoAtletasGeral) && eq.bancoAtletasGeral.length > 0) {
+                                localStorage.setItem(chaveAtletas, JSON.stringify(eq.bancoAtletasGeral));
+                                atualizouAlgo = true;
+                            }
+                            if (Array.isArray(eq.bancoComissaoGeral) && eq.bancoComissaoGeral.length > 0) {
+                                localStorage.setItem(chaveComissao, JSON.stringify(eq.bancoComissaoGeral));
+                                atualizouAlgo = true;
+                            }
+                            if (Array.isArray(eq.inscricoesConfirmadas) && eq.inscricoesConfirmadas.length > 0) {
+                                localStorage.setItem(chaveInsc, JSON.stringify(eq.inscricoesConfirmadas));
+                                atualizouAlgo = true;
+                            }
+                        }
+
+                        if (atualizouAlgo) {
+                            renderizarCardsAtletasDoClube();
+                            renderizarComissaoTecnica();
+                            renderizarListaInscricoesConfirmadas();
+                            renderizarEquipesClubeView(obterEquipesDesteClube(serverData.equipes, sessao));
+                            atualizarContadoresTime();
+                        }
+                    }
+                } catch(e) {}
+            }
+
+            window.addEventListener('focus', () => {
+                rechecarSincronizacaoFundo();
+            });
+
+            document.addEventListener('visibilitychange', () => {
+                if (document.visibilityState === 'visible') {
+                    rechecarSincronizacaoFundo();
+                }
+            });
+
+            // Polling leve a cada 30 segundos para manter Celular e Computador 100% alinhados
+            setInterval(() => {
+                if (document.visibilityState === 'visible') {
+                    rechecarSincronizacaoFundo();
+                }
+            }, 30000);
         });
 
         // BANCO CENTRAL DE CAMPEONATOS (SINCRONIZADO COM O PAINEL DE ADMINISTRAÇÃO)
@@ -3554,7 +3733,47 @@
             try {
                 const chave = obterChaveInscricoesConfirmadasClube();
                 const salvas = localStorage.getItem(chave);
-                if (salvas) return JSON.parse(salvas);
+                let lista = salvas ? JSON.parse(salvas) : [];
+
+                if (!Array.isArray(lista) || lista.length === 0) {
+                    lista = [];
+                    const db = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
+                    const sessao = JSON.parse(localStorage.getItem('avv_sessao_ativa') || '{}');
+                    const equipes = obterEquipesDesteClube(db, sessao);
+
+                    // 1. Tenta recuperar do campo central inscricoesConfirmadas
+                    for (const eq of equipes) {
+                        if (Array.isArray(eq.inscricoesConfirmadas) && eq.inscricoesConfirmadas.length > 0) {
+                            eq.inscricoesConfirmadas.forEach(ins => {
+                                if (!lista.some(i => String(i.numeroInscricao) === String(ins.numeroInscricao))) {
+                                    lista.push({ ...ins });
+                                }
+                            });
+                        }
+                    }
+
+                    // 2. Se a equipe tem campeonato associado diretamente
+                    equipes.forEach(eq => {
+                        if (eq.inscritoCampeonato || (eq.campeonatoNome && eq.campeonatoNome !== 'Aguardando Seleção no Painel')) {
+                            const numIns = eq.numeroInscricaoTorneio || eq.numeroInscricao;
+                            if (numIns && !lista.some(i => String(i.numeroInscricao) === String(numIns))) {
+                                lista.push({
+                                    campeonatoNome: eq.campeonatoNome,
+                                    campeonatoId: eq.campeonatoId || 'camp-1794335645971',
+                                    equipeNome: eq.nomeTime,
+                                    categoria: eq.categoria || 'Adulto Masculino',
+                                    numeroInscricao: String(numIns),
+                                    dataHora: eq.dataInscricaoTorneio || eq.dataHoraCompleta || 'Confirmada'
+                                });
+                            }
+                        }
+                    });
+
+                    if (lista.length > 0) {
+                        localStorage.setItem(chave, JSON.stringify(lista));
+                    }
+                }
+                return Array.isArray(lista) ? lista : [];
             } catch(e) {}
             return [];
         }
@@ -3563,6 +3782,7 @@
             try {
                 const chave = obterChaveInscricoesConfirmadasClube();
                 localStorage.setItem(chave, JSON.stringify(lista));
+                sincronizarClubeCentralizadoComServidor();
             } catch(e) {}
         }
 
