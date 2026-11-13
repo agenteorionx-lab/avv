@@ -1813,5 +1813,96 @@ body {
   }
 }
 
+/* ==========================================================================
+   OTIMIZAÇÃO PARA CELULAR DEITADO / LANDSCAPE (ROTAÇÃO HORIZONTAL)
+   Facilita o preenchimento de formulários, tabelas e visualização de modais
+   ========================================================================== */
+@media screen and (orientation: landscape) and (max-height: 520px) {
+  /* Modais ocupam praticamente a tela inteira em modo deitado */
+  #modal-atleta,
+  #modal-tecnico,
+  #modal-equipe,
+  #modal-visualizar-equipe,
+  #modal-adicionar-atleta-time,
+  #modal-adicionar-tecnico-equipe,
+  #modal-ficha-atleta,
+  #modal-pdf-regulamento {
+    padding: 4px 8px !important;
+    align-items: center !important;
+  }
+
+  #modal-atleta > div,
+  #modal-tecnico > div,
+  #modal-equipe > div,
+  #modal-visualizar-equipe > div,
+  #modal-adicionar-atleta-time > div,
+  #modal-adicionar-tecnico-equipe > div,
+  #modal-ficha-atleta > div,
+  #modal-pdf-regulamento > div {
+    max-height: 96vh !important;
+    height: 96vh !important;
+    width: 96vw !important;
+    max-width: 96vw !important;
+    border-radius: 6px !important;
+  }
+
+  /* Cabeçalho do modal mais compacto no landscape para sobrar espaço para o formulário */
+  #modal-atleta > div > div:first-child,
+  #modal-tecnico > div > div:first-child,
+  #modal-equipe > div > div:first-child,
+  #modal-visualizar-equipe > div > div:first-child,
+  #modal-adicionar-atleta-time > div > div:first-child,
+  #modal-adicionar-tecnico-equipe > div > div:first-child,
+  #modal-ficha-atleta > div > div:first-child {
+    padding: 8px 16px !important;
+  }
+
+  /* Área de preenchimento com rolagem suave no landscape */
+  #modal-atleta > div > div:nth-child(2),
+  #modal-tecnico > div > div:nth-child(2),
+  #modal-equipe > div > div:nth-child(2),
+  #modal-visualizar-equipe > div > div:nth-child(2),
+  #modal-adicionar-atleta-time > div > div:nth-child(2),
+  #modal-adicionar-tecnico-equipe > div > div:nth-child(2) {
+    padding: 10px 16px !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  /* Rodapé do modal compacto */
+  #modal-atleta > div > div:last-child,
+  #modal-tecnico > div > div:last-child,
+  #modal-equipe > div > div:last-child,
+  #modal-visualizar-equipe > div > div:last-child,
+  #modal-adicionar-atleta-time > div > div:last-child,
+  #modal-adicionar-tecnico-equipe > div > div:last-child {
+    padding: 8px 16px !important;
+  }
+
+  /* Formulários em grid de duas colunas ao deitar o celular para preencher muito mais rápido */
+  #form-novo-atleta > div,
+  #form-novo-tecnico > div,
+  #form-equipe-clube > div {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px 14px !important;
+  }
+
+  /* Campos de texto inteiros ocupam as 2 colunas */
+  #form-novo-atleta > div > div:has(#modal-ath-nome),
+  #form-novo-atleta > div > div:has(#modal-ath-cat-container),
+  #form-novo-atleta > div > div:has(#modal-ath-foto-preview),
+  #form-novo-tecnico > div > div:has(#modal-tec-nome),
+  #form-novo-tecnico > div > div:has(#modal-tec-foto-preview),
+  #form-equipe-clube > div > div:has(#team-modal-nome) {
+    grid-column: 1 / -1 !important;
+  }
+
+  /* Tabelas de seleção no landscape aproveitam a largura total */
+  .table-responsive-container {
+    max-height: calc(96vh - 120px) !important;
+  }
+}
+
+
 
 
