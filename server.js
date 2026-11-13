@@ -1,4 +1,5 @@
 const express = require('express');
+const http = require('http');
 const compression = require('compression');
 const path = require('path');
 const fs = require('fs');
@@ -758,35 +759,6 @@ function gerarHtmlEmailRecuperacao(nomeDestinatario, nomeTime, linkRedefinicao, 
     `;
 }
 
-// 5.1. Solicitação de recuperação de senha
-app.post(['/api/recuperar-senha', '/avv/api/recuperar-senha'], async (req, res) => {
-    try {
-        const { email, nomeResponsavel, nomeTime } = req.body || {};
-        if (!email) {
-            return res.status(400).json({ ok: false, mensagem: 'E-mail obrigatório.' });
-        }
-
-        const emailNormalizado = sanitizarTexto(email, 120).toLowerCase();
-
-        // Cooldown de 15 segundos por e-mail contra múltiplos cliques
-        const ultimoEnvio = COOLDOWN_EMAIL.get(emailNormalizado);
-        if (ultimoEnvio && Date.now() < ultimoEnvio) {
-            return res.status(429).json({
-                ok: false,
-                mensagem: 'Um e-mail de recuperação já foi enviado há poucos segundos. Aguarde um instante e verifique sua caixa de entrada.'
-            });
-        }
-
-        // Busca dados reais no banco do servidor caso existam
-        const db = carregarBancoDados();
-        const eqBanco = db.equipes.find(e => (e.email || '').toLowerCase() === emailNormalizado);
-
-        const nomeRespFinal = (eqBanco && eqBanco.responsavelNome) || nomeResponsavel || 'Dirigente Responsável';
-        const nomeTimeFinal = (eqBanco && eqBanco.nomeTime) || nomeTime || 'Sua Agremiação';
-
-        COOLDOWN_EMAIL.set(emailNormalizado, Date.now() + 15000);
-
-        const token = crypto.randomBytes(24).toString('hex');
 function enviarEmailViaHostgator(to, subject, html) {
     return new Promise((resolve, reject) => {
         const payload = JSON.stringify({
@@ -835,22 +807,35 @@ function enviarEmailViaHostgator(to, subject, html) {
     });
 }
 
-// 5.1. Solicitação de recuperação de senha com código e token temporário
+// 5.1. Solicitação de recuperação de senha
 app.post(['/api/recuperar-senha', '/avv/api/recuperar-senha'], async (req, res) => {
     try {
-        const { email } = req.body || {};
-        const emailNormalizado = normalizarEmail(email);
-
-        if (!emailNormalizado) {
-            return res.status(400).json({ ok: false, mensagem: 'E-mail é obrigatório para recuperação.' });
+        const { email, nomeResponsavel, nomeTime } = req.body || {};
+        if (!email) {
+            return res.status(400).json({ ok: false, mensagem: 'E-mail obrigatório.' });
         }
 
-        const equipe = await buscarEquipePorEmail(emailNormalizado);
-        if (!equipe) {
-            return res.status(404).json({ ok: false, mensagem: 'Nenhuma conta de time encontrada com esse e-mail.' });
+        const emailNormalizado = sanitizarTexto(email, 120).toLowerCase();
+
+        // Cooldown de 15 segundos por e-mail contra múltiplos cliques
+        const ultimoEnvio = COOLDOWN_EMAIL.get(emailNormalizado);
+        if (ultimoEnvio && Date.now() < ultimoEnvio) {
+            return res.status(429).json({
+                ok: false,
+                mensagem: 'Um e-mail de recuperação já foi enviado há poucos segundos. Aguarde um instante e verifique sua caixa de entrada.'
+            });
         }
 
-        const token = crypto.randomBytes(32).toString('hex');
+        // Busca dados reais no banco do servidor caso existam
+        const db = carregarBancoDados();
+        const eqBanco = db.equipes.find(e => (e.email || '').toLowerCase() === emailNormalizado);
+
+        const nomeRespFinal = (eqBanco && eqBanco.responsavelNome) || nomeResponsavel || 'Dirigente Responsável';
+        const nomeTimeFinal = (eqBanco && eqBanco.nomeTime) || nomeTime || 'Sua Agremiação';
+
+        COOLDOWN_EMAIL.set(emailNormalizado, Date.now() + 15000);
+
+        const token = crypto.randomBytes(24).toString('hex');
         const codigo = Math.floor(100000 + Math.random() * 900000).toString();
         const expiraEm = Date.now() + 60 * 60 * 1000; // 1 hora
 
@@ -864,27 +849,25 @@ app.post(['/api/recuperar-senha', '/avv/api/recuperar-senha'], async (req, res) 
         const baseUrl = `${proto}://${req.get('host')}`;
         const linkRedefinicao = `${baseUrl}/login.html?token=${token}&email=${encodeURIComponent(emailNormalizado)}`;
 
-        const nomeRespFinal = equipe.nome_responsavel || equipe.responsavel || 'Responsável';
-        const nomeTimeFinal = equipe.nome_time || equipe.nome || 'Time AVV';
         const htmlEmail = gerarHtmlEmailRecuperacao(nomeRespFinal, nomeTimeFinal, linkRedefinicao, codigo);
         const textEmail = `Olá, ${nomeRespFinal} (${nomeTimeFinal})!\n\nRecebemos uma solicitação para redefinir sua senha no Portal da Associação Vilhenense de Voleibol (AVV).\n\nSeu código de segurança é: ${codigo}\n\nOu utilize o link direto para redefinição:\n${linkRedefinicao}\n\nEste código e link expiram em 1 hora.\n\nAssociação Vilhenense de Voleibol - AVV`;
 
-        // 1. Tentar via ponte nativa HostGator/cPanel (motor local certificado)
-        let enviadoViaPonte = false;
+        // 1. Disparo prioritário via ponte nativa PHP do cPanel/HostGator
+        let enviadoComSucesso = false;
         try {
             const bridgeRes = await enviarEmailViaHostgator(
                 emailNormalizado,
                 '[avvvoleibol.com.br] Recuperacao de Senha - Codigo de Seguranca AVV',
                 htmlEmail
             );
-            console.log(`[RECUPERACAO SENHA] E-mail enviado via cPanel PHP nativo com sucesso para ${emailNormalizado}:`, bridgeRes);
-            enviadoViaPonte = true;
+            console.log(`[RECUPERACAO SENHA] E-mail enviado via cPanel PHP nativo para ${emailNormalizado}:`, bridgeRes);
+            enviadoComSucesso = true;
         } catch (bridgeErr) {
-            console.warn(`[RECUPERACAO SENHA] Ponte HostGator não disponível (${bridgeErr.message}), usando fallback SMTP...`);
+            console.warn(`[RECUPERACAO SENHA] Ponte HostGator indisponível (${bridgeErr.message}), usando fallback SMTP...`);
         }
 
-        // 2. Se a ponte não estiver ativa ainda, usar fallback SMTP direto
-        if (!enviadoViaPonte) {
+        // 2. Fallback via SMTP caso a ponte não esteja ativa
+        if (!enviadoComSucesso) {
             const transporter = await criarTransporter();
             const info = await transporter.sendMail({
                 from: '"cPanel on avvvoleibol.com.br" <cpanel@avvvoleibol.com.br>',
