@@ -801,14 +801,23 @@ app.post(['/api/recuperar-senha', '/avv/api/recuperar-senha'], async (req, res) 
         const linkRedefinicao = `${baseUrl}/login.html?token=${token}&email=${encodeURIComponent(emailNormalizado)}`;
 
         const htmlEmail = gerarHtmlEmailRecuperacao(nomeRespFinal, nomeTimeFinal, linkRedefinicao, codigo);
+        const textEmail = `Olá, ${nomeRespFinal} (${nomeTimeFinal})!\n\nRecebemos uma solicitação para redefinir sua senha no Portal da Associação Vilhenense de Voleibol (AVV).\n\nSeu código de segurança é: ${codigo}\n\nOu utilize o link direto para redefinição:\n${linkRedefinicao}\n\nEste código e link expiram em 1 hora.\n\nAssociação Vilhenense de Voleibol - AVV`;
 
         const transporter = await criarTransporter();
         const info = await transporter.sendMail({
             from: process.env.SMTP_FROM || '"Associação Vilhenense de Voleibol" <sistema@avvvoleibol.com.br>',
             to: emailNormalizado,
-            subject: 'Recuperação de Senha - Associação Vilhenense de Voleibol (AVV)',
-            html: htmlEmail
+            subject: 'Recuperação de Senha - Código de Acesso AVV',
+            text: textEmail,
+            html: htmlEmail,
+            headers: {
+                'X-Priority': '1',
+                'X-MSMail-Priority': 'High',
+                'Importance': 'high'
+            }
         });
+
+        console.log(`[RECUPERACAO SENHA] E-mail enviado com sucesso para ${emailNormalizado}. MessageId: ${info.messageId}`);
 
         let previewUrl = null;
         if (nodemailer.getTestMessageUrl) {
