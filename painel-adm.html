@@ -1589,31 +1589,12 @@
             if (!eq) return false;
             if (eq.isContaClube || eq.categoria === '__CONTA_CLUBE__') return false;
 
-            // Só entra na fila do ADM se tiver no mínimo 6 atletas cadastrados no time
+            // Só entra na esteira do ADM se tiver no mínimo 6 atletas cadastrados no time
             const totalAtletas = Array.isArray(eq.atletas) ? eq.atletas.length : 0;
             if (totalAtletas < 6) return false;
 
-            // Se possui flag de inscrição confirmada/solicitada
-            if (eq.inscritoCampeonato === true) return true;
-            // Se possui ID ou Nome de campeonato válido associado
-            if (eq.campeonatoId && eq.campeonatoId !== 'superliga-masc' && eq.campeonatoId !== '') return true;
-            if (eq.campeonatoNome && eq.campeonatoNome !== 'Aguardando Seleção no Painel' && eq.campeonatoNome !== 'Superliga Interiorana' && eq.campeonatoNome !== '') return true;
-
-            // Verifica se consta em alguma das chaves de inscrições confirmadas salvas
-            try {
-                for (let i = 0; i < localStorage.length; i++) {
-                    const key = localStorage.key(i);
-                    if (key && (key === 'avv_inscricoes_confirmadas_clube' || key.startsWith('avv_inscricoes_confirmadas_'))) {
-                        const lista = JSON.parse(localStorage.getItem(key) || '[]');
-                        const encontrou = Array.isArray(lista) && lista.some(ins =>
-                            (ins.equipeNome && eq.nomeTime && ins.equipeNome.trim().toLowerCase() === eq.nomeTime.trim().toLowerCase()) ||
-                            (ins.numeroInscricao && (String(ins.numeroInscricao) === String(eq.numeroInscricao) || String(ins.numeroInscricao) === String(eq.numeroInscricaoTorneio)))
-                        );
-                        if (encontrou) return true;
-                    }
-                }
-            } catch(e) {}
-            return false;
+            // Com 6 ou mais atletas, a equipe está oficialmente apta e entra automaticamente na visão do ADM
+            return true;
         }
 
         // Retorna a lista de equipes que solicitaram inscrição em campeonatos
