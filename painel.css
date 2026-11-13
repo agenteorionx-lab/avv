@@ -1199,7 +1199,14 @@ body {
   }
 
   .btn-mobile-menu {
-    display: none !important;
+    display: inline-flex !important;
+  }
+
+  /* Previne zoom automático no iOS/Android ao tocar em campos de texto ou select */
+  input:not([type="checkbox"]):not([type="radio"]):not([readonly]),
+  select,
+  textarea {
+    font-size: 16px !important;
   }
 
   .grid-champs-fed {
@@ -1753,6 +1760,124 @@ body {
     height: 38px !important;
     font-size: 12px !important;
     justify-content: center !important;
+  }
+
+  /* ========================================================================
+     CARDS DE ATLETAS E COMISSÃO TÉCNICA NAS ABAS PRINCIPAIS (MOBILE)
+     ======================================================================== */
+  #lista-cards-atletas,
+  #lista-cards-tecnicos {
+    grid-template-columns: 1fr !important;
+    padding: 12px !important;
+    gap: 12px !important;
+  }
+
+  /* ========================================================================
+     ENQUADRAMENTO DOS MODAIS DE CADASTRO (EQUIPE, ATLETA, TÉCNICO, FICHA, PDF)
+     ======================================================================== */
+  #modal-equipe > div {
+    max-height: 92vh !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding: 16px !important;
+  }
+
+  #modal-equipe #form-nova-equipe div[style*="repeat(4, 1fr)"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+  }
+
+  #modal-equipe #form-nova-equipe > div:last-child {
+    display: flex !important;
+    gap: 8px !important;
+  }
+
+  #modal-equipe #form-nova-equipe > div:last-child button {
+    flex: 1 1 auto !important;
+    justify-content: center !important;
+    height: 40px !important;
+  }
+
+  #modal-atleta > div,
+  #modal-tecnico > div {
+    max-height: 93vh !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  #modal-atleta > div > div:nth-child(2),
+  #modal-tecnico > div > div:nth-child(2) {
+    padding: 16px 14px !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  #modal-adicionar-atleta-time > div > div:last-child {
+    padding: 10px 12px !important;
+    gap: 8px !important;
+    flex-wrap: wrap !important;
+  }
+
+  #modal-adicionar-atleta-time > div > div:last-child button {
+    flex: 1 1 auto !important;
+    justify-content: center !important;
+    height: 38px !important;
+  }
+
+  /* Modal de Ficha Oficial do Atleta no Celular (Somente Tela, Não Afeta Impressão) */
+  #modal-ficha-atleta > div > div.no-print {
+    padding: 10px 14px !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+
+  #modal-ficha-atleta #ficha-select-campeonato {
+    width: 100% !important;
+    min-width: 0 !important;
+    flex: 1 1 100% !important;
+    font-size: 13px !important;
+  }
+
+  #modal-ficha-atleta > div > div:last-child {
+    padding: 10px !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  /* Modal de Regulamento PDF no Celular */
+  #modal-pdf-regulamento > div > div:first-child {
+    padding: 10px 14px !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+
+  #modal-pdf-regulamento #pdf-modal-title {
+    font-size: 11.5px !important;
+    line-height: 1.25 !important;
+  }
+
+  #container-leitor-pdf-html {
+    padding: 10px !important;
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .folha-a4-avv {
+    padding: 16px 12px !important;
+    min-height: auto !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .folha-a4-avv .tabela-ficha-dados tr {
+    display: flex !important;
+    flex-wrap: wrap !important;
+  }
+
+  .folha-a4-avv .tabela-ficha-dados td {
+    width: 100% !important;
+    box-sizing: border-box !important;
   }
 }
 

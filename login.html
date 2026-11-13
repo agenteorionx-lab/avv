@@ -33,6 +33,47 @@
                 font-size: 11px;
                 padding: 11px 6px;
             }
+            #modal-recuperar-senha {
+                padding: 10px !important;
+            }
+            #modal-recuperar-senha > div {
+                max-width: 96vw !important;
+                max-height: 92vh !important;
+                display: flex !important;
+                flex-direction: column !important;
+            }
+            #recup-passo-1,
+            #recup-passo-2 {
+                padding: 18px 16px !important;
+                overflow-y: auto !important;
+                -webkit-overflow-scrolling: touch !important;
+                flex: 1 1 auto !important;
+            }
+            #form-recup-envio > div:last-child {
+                flex-direction: column-reverse !important;
+                gap: 8px !important;
+            }
+            #form-recup-envio > div:last-child button {
+                width: 100% !important;
+                height: 42px !important;
+                justify-content: center !important;
+            }
+        }
+        @media screen and (orientation: landscape) and (max-height: 520px) {
+            #modal-recuperar-senha {
+                padding: 6px !important;
+            }
+            #modal-recuperar-senha > div {
+                max-height: 95vh !important;
+                display: flex !important;
+                flex-direction: column !important;
+            }
+            #recup-passo-1,
+            #recup-passo-2 {
+                padding: 14px 18px !important;
+                overflow-y: auto !important;
+                -webkit-overflow-scrolling: touch !important;
+            }
         }
         .login-tabs {
             display: flex;
@@ -284,9 +325,9 @@
 
     <!-- MODAL DE RECUPERAÇÃO DE SENHA COM DISPARO DE E-MAIL -->
     <div id="modal-recuperar-senha" role="dialog" aria-modal="true" aria-labelledby="modal-recup-titulo" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 28, 63, 0.75); z-index: 3000; align-items: center; justify-content: center; backdrop-filter: blur(4px); padding: 15px;">
-        <div style="background: #ffffff; width: 100%; max-width: 480px; border-radius: 8px; box-shadow: 0 15px 40px rgba(0,0,0,0.35); overflow: hidden; border: 1px solid #cbd5e1;">
+        <div style="background: #ffffff; width: 100%; max-width: 480px; max-height: 92vh; display: flex; flex-direction: column; border-radius: 8px; box-shadow: 0 15px 40px rgba(0,0,0,0.35); overflow: hidden; border: 1px solid #cbd5e1;">
             
-            <div style="background: var(--c-navy); color: #ffffff; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #c5a021;">
+            <div style="background: var(--c-navy); color: #ffffff; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #c5a021; flex-shrink: 0;">
                 <div>
                     <h4 id="modal-recup-titulo" style="font-size: 13px; font-weight: 800; text-transform: uppercase; margin: 0; letter-spacing: 0.5px;">Recuperar Senha de Acesso</h4>
                     <span style="font-size: 10.5px; color: #cbd5e1;">Associação Vilhenense de Voleibol</span>
@@ -295,7 +336,7 @@
             </div>
 
             <!-- PASSO 1: DIGITAR E-MAIL -->
-            <div id="recup-passo-1" style="padding: 24px;">
+            <div id="recup-passo-1" style="padding: 24px; overflow-y: auto; flex: 1 1 auto;">
                 <p style="font-size: 12.5px; color: #475569; line-height: 1.5; margin-top: 0;">
                     Informe o e-mail cadastrado da sua agremiação. Enviaremos um e-mail institucional oficial com o link de redefinição e código de segurança.
                 </p>
@@ -321,7 +362,7 @@
             </div>
 
             <!-- PASSO 2: SUCESSO DO ENVIO & REDEFINIÇÃO COM CÓDIGO -->
-            <div id="recup-passo-2" style="display: none; padding: 24px;">
+            <div id="recup-passo-2" style="display: none; padding: 24px; overflow-y: auto; flex: 1 1 auto;">
                 <div style="text-align: center; margin-bottom: 18px;">
                     <div style="width: 48px; height: 48px; background: #dcfce7; color: #166534; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 8px;">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>

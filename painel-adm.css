@@ -954,6 +954,27 @@
     font-size: 10px;
   }
 
+  /* Grids de equipes, campeonatos e comissão técnica adaptados para telas menores */
+  .grid-equipes-adm,
+  .grid-champs-adm,
+  .grid-comissao-tecnica {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+
+  /* Grids de 2 colunas no Dashboard e Perfil viram 1 coluna em tablets/celulares */
+  #tab-adm-dashboard > div[style*="grid-template-columns"],
+  #tab-adm-perfil > div[style*="grid-template-columns"] {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  /* Grid de 4 colunas do Modal de Configurar Campeonato vira 2 colunas em tablets */
+  #form-criar-campeonato div[style*="1fr 1fr 1.2fr 1fr"] {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 12px !important;
+  }
+
   /* Gaveta lateral de dossiê do clube */
   #gaveta-detalhes-equipe {
     width: 100% !important;
@@ -995,7 +1016,15 @@
   }
 
   .filter-bar-adm input, .filter-bar-adm select {
-    width: 100%;
+    width: 100% !important;
+  }
+
+  #filtro-busca-clubes-adm {
+    width: 100% !important;
+  }
+
+  #tab-adm-clubes .fed-card-container > div:first-child > div:last-child {
+    width: 100% !important;
   }
 
   .card-champ-adm-footer {
@@ -1004,13 +1033,122 @@
     align-items: stretch;
   }
 
-  /* Ajusta modais e gavetas para caber na tela do celular sem rolar horizontalmente */
+  .card-equipe-adm {
+    padding: 14px !important;
+  }
+
+  .card-comissao-membro {
+    flex-wrap: wrap !important;
+    padding: 12px 14px !important;
+  }
+
+  /* Ajusta modais e popups do ADM para 100% de visibilidade e enquadramento no celular */
+  div[id^="modal-"] {
+    padding: 8px !important;
+    align-items: center !important;
+  }
+
   .modal-dialog-responsive,
   div[id^="modal-"] > div {
-    max-width: 95vw !important;
-    width: 95vw !important;
-    margin: 10px auto;
-    overflow-x: hidden !important;
+    max-width: 97vw !important;
+    width: 97vw !important;
+    max-height: 93vh !important;
+    margin: 0 auto !important;
+    border-radius: 8px !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Modal Configurar Campeonato no Celular */
+  #modal-criar-campeonato #form-criar-campeonato {
+    padding: 14px !important;
+    gap: 14px !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  #form-criar-campeonato div[style*="1fr 1fr 1.2fr 1fr"] {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+  #form-criar-campeonato > div:last-child {
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+
+  #form-criar-campeonato > div:last-child button {
+    width: 100% !important;
+    min-height: 42px !important;
+    justify-content: center !important;
+  }
+
+  /* Modal Carteirinha de Atleta e Técnico no Celular */
+  #modal-adm-carteirinha-atleta > div > div:nth-child(2),
+  #modal-adm-carteirinha-tecnico > div > div:nth-child(2),
+  #modal-adm-ver-clube > div > div:nth-child(2) {
+    padding: 16px 14px !important;
+  }
+
+  #modal-adm-carteirinha-atleta > div > div:last-child {
+    padding: 10px 14px !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+
+  #modal-adm-carteirinha-atleta > div > div:last-child > button,
+  #modal-adm-carteirinha-atleta > div > div:last-child > div {
+    flex: 1 1 auto !important;
+    justify-content: center !important;
+  }
+
+  /* Modal Editar Atleta pelo ADM no Celular */
+  #modal-adm-editar-atleta #form-adm-editar-atleta {
+    padding: 16px 14px !important;
+  }
+
+  #modal-adm-editar-atleta #form-adm-editar-atleta div[style*="grid-template-columns: 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+  /* Modal Ficha Oficial do Atleta no ADM (Celular) */
+  #modal-adm-ficha-atleta > div > div.no-print {
+    padding: 10px 14px !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+
+  #modal-adm-ficha-atleta > div > div:nth-child(2) {
+    padding: 10px !important;
+  }
+
+  /* Modal Confirmação Customizada ADM */
+  #modal-confirmacao-custom > div > div:last-child {
+    padding: 12px 16px !important;
+  }
+
+  #modal-confirmacao-custom > div > div:last-child button {
+    flex: 1 1 auto !important;
+    justify-content: center !important;
+    min-height: 40px !important;
   }
 }
+
+@media screen and (orientation: landscape) and (max-height: 520px) {
+  div[id^="modal-"] {
+    padding: 4px 8px !important;
+  }
+
+  div[id^="modal-"] > div {
+    max-height: 96vh !important;
+    width: 96vw !important;
+    max-width: 96vw !important;
+  }
+
+  #modal-criar-campeonato #form-criar-campeonato,
+  #modal-adm-editar-atleta #form-adm-editar-atleta {
+    padding: 12px 16px !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+}
+
 

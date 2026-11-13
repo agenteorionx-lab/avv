@@ -30,12 +30,16 @@
                 background: #ffffff;
                 width: 100%;
                 max-width: 460px;
+                max-height: 92vh;
+                display: flex;
+                flex-direction: column;
                 border-radius: 8px;
                 box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
                 overflow: hidden;
                 border-top: 4px solid #0f1c3f;
                 animation: avvPopIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
                 font-family: inherit;
+                box-sizing: border-box;
             }
             @keyframes avvFadeIn {
                 from { opacity: 0; }
@@ -50,6 +54,9 @@
                 display: flex;
                 gap: 16px;
                 align-items: flex-start;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+                flex: 1 1 auto;
             }
             .avv-dialog-icon {
                 width: 46px;
@@ -75,6 +82,7 @@
                 margin: 0;
                 line-height: 1.55;
                 white-space: pre-line;
+                word-break: break-word;
             }
             .avv-dialog-footer {
                 background: #f8fafc;
@@ -83,6 +91,7 @@
                 justify-content: flex-end;
                 gap: 10px;
                 border-top: 1px solid #e2e8f0;
+                flex-shrink: 0;
             }
             .avv-dialog-btn {
                 padding: 8px 18px;
@@ -92,10 +101,12 @@
                 cursor: pointer;
                 display: inline-flex;
                 align-items: center;
+                justify-content: center;
                 gap: 6px;
                 transition: all 0.15s ease;
                 border: none;
                 font-family: inherit;
+                min-height: 38px;
             }
             .avv-dialog-btn-cancel {
                 background: #ffffff;
@@ -111,6 +122,52 @@
             }
             .avv-dialog-btn-confirm:hover {
                 filter: brightness(0.92);
+            }
+            @media (max-width: 520px) {
+                #avv-dialog-backdrop {
+                    padding: 12px;
+                }
+                #avv-dialog-card {
+                    max-width: 96vw;
+                    max-height: 90vh;
+                }
+                .avv-dialog-body {
+                    padding: 18px 16px 14px 16px;
+                    gap: 12px;
+                }
+                .avv-dialog-icon {
+                    width: 40px;
+                    height: 40px;
+                }
+                .avv-dialog-title {
+                    font-size: 13.5px;
+                }
+                .avv-dialog-text {
+                    font-size: 12.5px;
+                }
+                .avv-dialog-footer {
+                    padding: 12px 16px;
+                    gap: 8px;
+                }
+                .avv-dialog-btn {
+                    flex: 1 1 auto;
+                    min-height: 42px;
+                    font-size: 12.5px;
+                }
+            }
+            @media screen and (orientation: landscape) and (max-height: 520px) {
+                #avv-dialog-backdrop {
+                    padding: 8px;
+                }
+                #avv-dialog-card {
+                    max-height: 94vh;
+                }
+                .avv-dialog-body {
+                    padding: 14px 18px 10px 18px;
+                }
+                .avv-dialog-footer {
+                    padding: 8px 18px;
+                }
             }
         `;
         document.head.appendChild(style);
