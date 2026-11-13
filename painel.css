@@ -1686,26 +1686,52 @@ body {
     border-radius: 4px !important;
   }
 
-  #modal-visualizar-equipe .table-avv-roster {
+  #modal-visualizar-equipe .table-avv-roster,
+  #modal-adicionar-tecnico-equipe .table-avv-roster,
+  #modal-adicionar-atleta-time .table-avv-roster {
     min-width: 490px !important;
   }
 
-  #modal-visualizar-equipe .table-avv-roster th {
+  #modal-visualizar-equipe .table-avv-roster th,
+  #modal-adicionar-tecnico-equipe .table-avv-roster th,
+  #modal-adicionar-atleta-time .table-avv-roster th {
     padding: 7px 8px !important;
     font-size: 10px !important;
     white-space: nowrap !important;
     background: #0f1c3f !important;
   }
 
-  #modal-visualizar-equipe .table-avv-roster td {
+  #modal-visualizar-equipe .table-avv-roster td,
+  #modal-adicionar-tecnico-equipe .table-avv-roster td,
+  #modal-adicionar-atleta-time .table-avv-roster td {
     padding: 8px 8px !important;
     font-size: 11px !important;
     white-space: nowrap !important;
   }
 
-  #modal-visualizar-equipe .atleta-roster-thumb {
+  #modal-visualizar-equipe .atleta-roster-thumb,
+  #modal-adicionar-tecnico-equipe .atleta-roster-thumb,
+  #modal-adicionar-atleta-time .atleta-roster-thumb {
     width: 38px !important;
     height: 38px !important;
+  }
+
+  /* Ajustes gerais de modais no mobile para não cortar ou desenquadrar */
+  #modal-adicionar-tecnico-equipe,
+  #modal-adicionar-atleta-time {
+    padding: 8px !important;
+  }
+
+  #modal-adicionar-tecnico-equipe > div,
+  #modal-adicionar-atleta-time > div {
+    max-height: 94vh !important;
+    width: 100% !important;
+    border-radius: 8px !important;
+  }
+
+  #modal-adicionar-tecnico-equipe > div > div:nth-child(2),
+  #modal-adicionar-atleta-time > div > div:nth-child(2) {
+    padding: 12px 10px !important;
   }
 
   /* Espaço de respiro no final do corpo com rolagem para não cortar no rodapé */
