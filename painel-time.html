@@ -1750,18 +1750,13 @@
                 let db = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
                 db = db.filter(e => String(e.id) !== String(equipeId));
                 salvarStorageSeguro('avv_equipes_completo_db', JSON.stringify(db));
-                fetch('api/equipes/sincronizar', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ equipesLista: db })
-                }).catch(() => {});
 
                 try {
-                    fetch('api/equipes/excluir', {
+                    await fetch('api/equipes/excluir', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ id: equipeId })
-                    }).catch(() => {});
+                    });
                 } catch (e) {}
 
                 const sessao = JSON.parse(localStorage.getItem('avv_sessao_ativa') || '{}');
@@ -2148,6 +2143,7 @@
         }
 
         // Função de envio imediato ao servidor das informações do clube (Atletas, Comissão, Inscrições e Foto)
+        let _timerSincronizarClube = null;
         function sincronizarClubeCentralizadoComServidor() {
             try {
                 const sessao = JSON.parse(localStorage.getItem('avv_sessao_ativa') || '{}');
@@ -2164,7 +2160,7 @@
                 const inscricoesAtuais = JSON.parse(localStorage.getItem(chaveInsc) || '[]');
                 const fotoSalva = sessao.foto || localStorage.getItem('avv_dirigente_foto_teste') || localStorage.getItem('avv_foto_clube_' + emailSessao) || null;
 
-                let houveAlteracao = false;
+                const equipesDoClube = [];
                 db.forEach(eq => {
                     const eqEmail = (eq.email || '').toLowerCase().trim();
                     if (eqEmail === emailSessao) {
@@ -2175,17 +2171,20 @@
                             eq.fotoDirigente = fotoSalva;
                             eq.logo = fotoSalva;
                         }
-                        houveAlteracao = true;
+                        equipesDoClube.push(eq);
                     }
                 });
 
-                if (houveAlteracao) {
+                if (equipesDoClube.length > 0) {
                     salvarStorageSeguro('avv_equipes_completo_db', JSON.stringify(db));
-                    fetch('api/equipes/sincronizar', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ equipesLista: db })
-                    }).catch(() => {});
+                    clearTimeout(_timerSincronizarClube);
+                    _timerSincronizarClube = setTimeout(() => {
+                        fetch('api/equipes/sincronizar', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ equipesLista: equipesDoClube })
+                        }).catch(() => {});
+                    }, 200);
                 }
             } catch (e) {
                 console.warn('Erro ao sincronizar clube com servidor:', e);
@@ -2826,12 +2825,6 @@
                 if (idxEq !== -1) {
                     db[idxEq] = equipe;
                 }
-                salvarStorageSeguro('avv_equipes_completo_db', JSON.stringify(db));
-                fetch('api/equipes/sincronizar', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ equipesLista: db })
-                }).catch(() => {});
                 persistirEquipeNoBancoEServidor(equipe, db);
 
                 renderizarComissaoEquipeModal(equipe);
@@ -4384,17 +4377,9 @@
                 });
                 if (mudouEquipes) {
                     salvarStorageSeguro('avv_equipes_completo_db', JSON.stringify(db));
-                fetch('api/equipes/sincronizar', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ equipesLista: db })
-                }).catch(() => {});
-                    fetch('api/equipes/sincronizar', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ equipesLista: db })
-                    }).catch(() => {});
                 }
+                // Reenvia o estado consolidado do clube (bancoAtletasGeral + elencos atualizados)
+                sincronizarClubeCentralizadoComServidor();
 
                 renderizarCardsAtletasDoClube();
                 if (equipeSelecionadaVisualizacao) {
@@ -4453,9 +4438,8 @@
             if (confirmou) {
                 let atletasClube = obterBancoAtletasClube();
                 atletasClube = atletasClube.filter(a => String(a.id) !== String(idAtleta));
-                salvarBancoAtletasClube(atletasClube);
 
-                // Remove das equipes também
+                // Remove das equipes também antes de sincronizar
                 const db = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
                 db.forEach(eq => {
                     if (Array.isArray(eq.atletas)) {
@@ -4463,11 +4447,7 @@
                     }
                 });
                 salvarStorageSeguro('avv_equipes_completo_db', JSON.stringify(db));
-                fetch('api/equipes/sincronizar', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ equipesLista: db })
-                }).catch(() => {});
+                salvarBancoAtletasClube(atletasClube);
 
                 renderizarCardsAtletasDoClube();
                 if (equipeSelecionadaVisualizacao) {
@@ -4734,11 +4714,7 @@
                         }
                     });
                     salvarStorageSeguro('avv_equipes_completo_db', JSON.stringify(db));
-                    fetch('api/equipes/sincronizar', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ equipesLista: db })
-                    }).catch(() => {});
+                    sincronizarClubeCentralizadoComServidor();
                 } catch(e) {}
 
                 renderizarComissaoTecnica();
@@ -4789,11 +4765,7 @@
                         }
                     });
                     salvarStorageSeguro('avv_equipes_completo_db', JSON.stringify(db));
-                    fetch('api/equipes/sincronizar', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ equipesLista: db })
-                    }).catch(() => {});
+                    sincronizarClubeCentralizadoComServidor();
                     renderizarEquipesClubeView(equipes);
                 } catch (e) {}
 
@@ -5684,12 +5656,6 @@
                     if (idxEq !== -1) {
                         db[idxEq] = equipe;
                     }
-                    salvarStorageSeguro('avv_equipes_completo_db', JSON.stringify(db));
-                fetch('api/equipes/sincronizar', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ equipesLista: db })
-                }).catch(() => {});
                     persistirEquipeNoBancoEServidor(equipe, db);
 
                     renderizarRosterEquipeModal(equipe);

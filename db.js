@@ -12,12 +12,19 @@ const dbConfig = {
     database: process.env.DB_NAME || 'avv_db',
     waitForConnections: true,
     connectionLimit: 10,
+    maxIdle: 5,
+    idleTimeout: 60000,
     queueLimit: 0,
+    enableKeepAlive: true,
+    keepAliveInitialDelay: 10000,
+    connectTimeout: 10000,
     charset: 'utf8mb4'
 };
 
 let pool = null;
 let isConnected = false;
+let syncEmAndamento = false;
+let proximoEstadoPendente = null;
 
 async function iniciarTunelSshSeNecessario() {
     // Conexão direta ativa na porta 3306 (VPS 147.93.179.208 ou host.docker.internal)
@@ -174,6 +181,27 @@ async function initDb() {
 }
 
 async function sincronizarEstadoParaMySQL(dbState) {
+    if (!isConnected || !pool || !dbState) return;
+
+    // Fila serializada para evitar race conditions e colisões de DELETE/INSERT simultâneos no MySQL
+    if (syncEmAndamento) {
+        proximoEstadoPendente = dbState;
+        return;
+    }
+
+    syncEmAndamento = true;
+    let estadoAtual = dbState;
+
+    while (estadoAtual) {
+        proximoEstadoPendente = null;
+        await executarSincronizacaoMySQLInterna(estadoAtual);
+        estadoAtual = proximoEstadoPendente;
+    }
+
+    syncEmAndamento = false;
+}
+
+async function executarSincronizacaoMySQLInterna(dbState) {
     if (!isConnected || !pool || !dbState) return;
     try {
         // 1. Sincroniza Administrador
@@ -347,6 +375,13 @@ async function sincronizarEstadoParaMySQL(dbState) {
         }
     } catch (err) {
         console.error('Erro ao sincronizar estado com MySQL:', err.message);
+        // Se foi queda temporária de socket (ECONNRESET / PROTOCOL_CONNECTION_LOST), tenta mais uma vez com nova conexão do pool
+        if (err && (err.code === 'ECONNRESET' || err.code === 'PROTOCOL_CONNECTION_LOST' || err.code === 'EPIPE')) {
+            try {
+                await new Promise(r => setTimeout(r, 400));
+                await pool.query('SELECT 1');
+            } catch (retryErr) {}
+        }
     }
 }
 

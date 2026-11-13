@@ -166,31 +166,35 @@ const CAMPEONATO_OFICIAL_COPA_XXI = {
 };
 
 function carregarBancoDados() {
-    try {
-        if (fs.existsSync(DB_FILE)) {
-            const raw = fs.readFileSync(DB_FILE, 'utf-8');
-            const parsed = JSON.parse(raw);
-            const camps = parsed.campeonatos && typeof parsed.campeonatos === 'object' ? parsed.campeonatos : {};
-            // Garante que o campeonato oficial XXI COPA AVV permaneça sempre ativo e presente
-            if (!camps['camp-1794335645971']) {
-                camps['camp-1794335645971'] = CAMPEONATO_OFICIAL_COPA_XXI['camp-1794335645971'];
-            }
-            const admData = parsed.adm || {};
-            if (!admData.senhaHash) {
-                admData.senhaHash = hashSenhaSegura(process.env.ADM_DEFAULT_PASS || '@Avv_23#');
-            }
-            if (!admData.usuario) admData.usuario = 'Administrador Geral';
-            if (!admData.email) admData.email = process.env.ADM_DEFAULT_EMAIL || 'avvvoleibol@gmail.com';
-            if (!admData.setor) admData.setor = 'Diretoria Técnica AVV';
+    const arquivosTentativa = [DB_FILE, DB_FILE + '.backup'];
+    for (const arq of arquivosTentativa) {
+        try {
+            if (fs.existsSync(arq)) {
+                const raw = fs.readFileSync(arq, 'utf-8');
+                if (!raw || !raw.trim()) continue;
+                const parsed = JSON.parse(raw);
+                const camps = parsed.campeonatos && typeof parsed.campeonatos === 'object' ? parsed.campeonatos : {};
+                // Garante que o campeonato oficial XXI COPA AVV permaneça sempre ativo e presente
+                if (!camps['camp-1794335645971']) {
+                    camps['camp-1794335645971'] = CAMPEONATO_OFICIAL_COPA_XXI['camp-1794335645971'];
+                }
+                const admData = parsed.adm || {};
+                if (!admData.senhaHash) {
+                    admData.senhaHash = hashSenhaSegura(process.env.ADM_DEFAULT_PASS || '@Avv_23#');
+                }
+                if (!admData.usuario) admData.usuario = 'Administrador Geral';
+                if (!admData.email) admData.email = process.env.ADM_DEFAULT_EMAIL || 'avvvoleibol@gmail.com';
+                if (!admData.setor) admData.setor = 'Diretoria Técnica AVV';
 
-            return {
-                equipes: Array.isArray(parsed.equipes) ? parsed.equipes : [],
-                campeonatos: camps,
-                adm: admData
-            };
+                return {
+                    equipes: Array.isArray(parsed.equipes) ? parsed.equipes : [],
+                    campeonatos: camps,
+                    adm: admData
+                };
+            }
+        } catch (err) {
+            console.error(`Aviso ao ler ${path.basename(arq)}:`, err.message);
         }
-    } catch (err) {
-        console.error('Aviso ao ler banco de dados local, iniciando estrutura limpa:', err.message);
     }
 
     const dbInicial = {
@@ -207,11 +211,16 @@ function carregarBancoDados() {
     return dbInicial;
 }
 
-let escritaEmAndamento = false;
 function salvarBancoDados(dados, sincronizarMySQL = true) {
     try {
-        const tempFile = DB_FILE + '.tmp';
-        fs.writeFileSync(tempFile, JSON.stringify(dados, null, 2), 'utf-8');
+        const jsonPayload = JSON.stringify(dados, null, 2);
+        const tempFile = `${DB_FILE}.${process.pid}.${Date.now()}.${Math.random().toString(36).slice(2, 8)}.tmp`;
+        fs.writeFileSync(tempFile, jsonPayload, 'utf-8');
+        if (fs.existsSync(DB_FILE)) {
+            try {
+                fs.copyFileSync(DB_FILE, DB_FILE + '.backup');
+            } catch (bkpErr) {}
+        }
         fs.renameSync(tempFile, DB_FILE);
         if (sincronizarMySQL) {
             sincronizarEstadoParaMySQL(dados).catch(err => console.error('Aviso sync MySQL:', err.message));
@@ -396,9 +405,9 @@ app.post(['/api/auth/login', '/avv/api/auth/login'], (req, res) => {
             });
         }
 
-        // Login de Equipe / Clube
-        const eq = db.equipes.find(item => (item.email || '').toLowerCase() === loginLimpo);
-        if (!eq) {
+        // Login de Equipe / Clube (busca todos os registros deste e-mail para garantir consistência de senha)
+        const registrosClube = db.equipes.filter(item => (item.email || '').toLowerCase().trim() === loginLimpo);
+        if (registrosClube.length === 0) {
             return res.status(404).json({
                 ok: false,
                 naoEncontrado: true,
@@ -407,7 +416,7 @@ app.post(['/api/auth/login', '/avv/api/auth/login'], (req, res) => {
         }
 
         // Verifica se a conta do clube está bloqueada pelo administrador
-        if (eq.bloqueado === true) {
+        if (registrosClube.some(item => item.bloqueado === true)) {
             return res.status(403).json({
                 ok: false,
                 bloqueado: true,
@@ -415,21 +424,28 @@ app.post(['/api/auth/login', '/avv/api/auth/login'], (req, res) => {
             });
         }
 
-        const senhaValida = eq.senhaHash
-            ? verificarSenhaSegura(senha, eq.senhaHash)
-            : (!eq.senha || eq.senha === senha);
+        const eq = registrosClube.find(item =>
+            item.senhaHash ? verificarSenhaSegura(senha, item.senhaHash) : (!item.senha || item.senha === senha)
+        );
 
-        if (!senhaValida) {
+        if (!eq) {
             return res.status(401).json({
                 ok: false,
                 mensagem: 'Senha incorreta para esta agremiação. Verifique e tente novamente.'
             });
         }
 
-        // Se a equipe ainda tinha senha sem hash, converte automaticamente
-        if (!eq.senhaHash && senha) {
-            eq.senhaHash = hashSenhaSegura(senha);
-            delete eq.senha;
+        // Unifica o hash de senha em todos os registros deste clube para evitar divergência entre equipes do mesmo clube
+        const hashOficial = eq.senhaHash || hashSenhaSegura(senha);
+        let precisouUnificar = false;
+        registrosClube.forEach(item => {
+            if (item.senhaHash !== hashOficial || item.senha) {
+                item.senhaHash = hashOficial;
+                delete item.senha;
+                precisouUnificar = true;
+            }
+        });
+        if (precisouUnificar) {
             salvarBancoDados(db);
         }
 
@@ -489,14 +505,16 @@ app.post(['/api/equipes/sincronizar', '/avv/api/equipes/sincronizar'], (req, res
             } else {
                 equipesLista.forEach(eqCliente => {
                     if (!eqCliente || (!eqCliente.id && !eqCliente.email)) return;
+                    const emailEq = (eqCliente.email || '').toLowerCase().trim();
+                    const contaClube = emailEq ? db.equipes.find(e => (e.email || '').toLowerCase().trim() === emailEq && e.senhaHash) : null;
                     const idx = db.equipes.findIndex(e => {
                         if (eqCliente.id && e.id) {
                             return String(e.id) === String(eqCliente.id);
                         }
-                        return eqCliente.email && (e.email || '').toLowerCase() === eqCliente.email.toLowerCase();
+                        return emailEq && (e.email || '').toLowerCase().trim() === emailEq;
                     });
                     if (idx !== -1) {
-                        const senhaHashPreservada = db.equipes[idx].senhaHash || (eqCliente.senha ? hashSenhaSegura(eqCliente.senha) : undefined);
+                        const senhaHashPreservada = db.equipes[idx].senhaHash || (contaClube && contaClube.senhaHash) || (eqCliente.senha ? hashSenhaSegura(eqCliente.senha) : undefined);
                         db.equipes[idx] = {
                             ...db.equipes[idx],
                             ...eqCliente,
@@ -506,7 +524,7 @@ app.post(['/api/equipes/sincronizar', '/avv/api/equipes/sincronizar'], (req, res
                     } else {
                         const nova = {
                             ...eqCliente,
-                            senhaHash: hashSenhaSegura(eqCliente.senha || '123456')
+                            senhaHash: (contaClube && contaClube.senhaHash) || hashSenhaSegura(eqCliente.senha || '123456')
                         };
                         delete nova.senha;
                         db.equipes.push(nova);
@@ -519,17 +537,19 @@ app.post(['/api/equipes/sincronizar', '/avv/api/equipes/sincronizar'], (req, res
 
         // Se enviou uma única equipe atualizada
         if (equipe && (equipe.id || equipe.email)) {
+            const emailEq = (equipe.email || '').toLowerCase().trim();
+            const contaClube = emailEq ? db.equipes.find(e => (e.email || '').toLowerCase().trim() === emailEq && e.senhaHash) : null;
             // Busca estritamente por ID único quando fornecido para não sobrescrever equipes diferentes do mesmo clube
             const idx = db.equipes.findIndex(e => {
                 if (equipe.id && e.id) {
                     return String(e.id) === String(equipe.id);
                 }
-                return equipe.email && (e.email || '').toLowerCase() === equipe.email.toLowerCase();
+                return emailEq && (e.email || '').toLowerCase().trim() === emailEq;
             });
             if (idx !== -1) {
                 const senhaHashPreservada = equipe.novaSenha
                     ? hashSenhaSegura(equipe.novaSenha)
-                    : (db.equipes[idx].senhaHash || (equipe.senha ? hashSenhaSegura(equipe.senha) : undefined));
+                    : (db.equipes[idx].senhaHash || (contaClube && contaClube.senhaHash) || (equipe.senha ? hashSenhaSegura(equipe.senha) : undefined));
 
                 db.equipes[idx] = {
                     ...db.equipes[idx],
@@ -538,10 +558,22 @@ app.post(['/api/equipes/sincronizar', '/avv/api/equipes/sincronizar'], (req, res
                 };
                 delete db.equipes[idx].senha;
                 delete db.equipes[idx].novaSenha;
+
+                // Se houve alteração de senha, propaga para todos os registros do mesmo clube
+                if (equipe.novaSenha && emailEq) {
+                    db.equipes.forEach(item => {
+                        if ((item.email || '').toLowerCase().trim() === emailEq) {
+                            item.senhaHash = senhaHashPreservada;
+                            delete item.senha;
+                        }
+                    });
+                }
             } else {
                 const nova = {
                     ...equipe,
-                    senhaHash: hashSenhaSegura(equipe.novaSenha || equipe.senha || '123456')
+                    senhaHash: equipe.novaSenha
+                        ? hashSenhaSegura(equipe.novaSenha)
+                        : ((contaClube && contaClube.senhaHash) || hashSenhaSegura(equipe.senha || '123456'))
                 };
                 delete nova.senha;
                 delete nova.novaSenha;
@@ -626,8 +658,14 @@ app.post(['/api/auth/alterar-senha', '/avv/api/auth/alterar-senha'], (req, res) 
             return res.status(401).json({ ok: false, mensagem: 'A senha atual informada está incorreta.' });
         }
 
-        eq.senhaHash = hashSenhaSegura(novaSenha);
-        delete eq.senha;
+        const novoHash = hashSenhaSegura(novaSenha);
+        const emailAlvo = (eq.email || email || '').toLowerCase().trim();
+        db.equipes.forEach(item => {
+            if ((equipeId && String(item.id) === String(equipeId)) || (emailAlvo && (item.email || '').toLowerCase().trim() === emailAlvo)) {
+                item.senhaHash = novoHash;
+                delete item.senha;
+            }
+        });
         salvarBancoDados(db);
 
         res.json({ ok: true, mensagem: 'Senha do clube alterada com sucesso!' });
@@ -925,12 +963,19 @@ app.post(['/api/redefinir-senha', '/avv/api/redefinir-senha'], (req, res) => {
         return res.status(400).json({ ok: false, mensagem: 'O token de recuperação expirou. Solicite um novo link.' });
     }
 
-    // Atualiza também no banco de dados persistente do servidor
+    // Atualiza em TODOS os registros do clube no banco de dados persistente do servidor
     const db = carregarBancoDados();
-    const idx = db.equipes.findIndex(e => (e.email || '').toLowerCase() === tokenValido.email.toLowerCase());
-    if (idx !== -1) {
-        db.equipes[idx].senhaHash = hashSenhaSegura(novaSenha);
-        delete db.equipes[idx].senha;
+    const emailAlvo = tokenValido.email.toLowerCase().trim();
+    const novoHash = hashSenhaSegura(novaSenha);
+    let atualizouAlgum = false;
+    db.equipes.forEach(item => {
+        if ((item.email || '').toLowerCase().trim() === emailAlvo) {
+            item.senhaHash = novoHash;
+            delete item.senha;
+            atualizouAlgum = true;
+        }
+    });
+    if (atualizouAlgum) {
         salvarBancoDados(db);
     }
 
@@ -951,29 +996,47 @@ app.listen(PORT, async () => {
     console.log(`  Painel ADM:           http://localhost:${PORT}/painel-adm.html`);
     console.log(`====================================================`);
 
-    const jaExistiaJsonLocal = fs.existsSync(DB_FILE);
     const conectado = await initDb();
     if (conectado) {
         const estadoMySQL = await carregarEstadoDoMySQL();
         const estadoLocal = carregarBancoDados();
-        const temEquipesMySQL = estadoMySQL && Array.isArray(estadoMySQL.equipes) && estadoMySQL.equipes.length > 0;
-        const temEquipesLocal = Array.isArray(estadoLocal.equipes) && estadoLocal.equipes.length > 0;
 
-        if (!jaExistiaJsonLocal || (!temEquipesLocal && temEquipesMySQL)) {
-            if (estadoMySQL && (temEquipesMySQL || (estadoMySQL.campeonatos && Object.keys(estadoMySQL.campeonatos).length > 0))) {
-                salvarBancoDados({
-                    equipes: temEquipesMySQL ? estadoMySQL.equipes : estadoLocal.equipes,
-                    campeonatos: (estadoMySQL.campeonatos && Object.keys(estadoMySQL.campeonatos).length > 0) ? estadoMySQL.campeonatos : estadoLocal.campeonatos,
-                    adm: estadoMySQL.adm || estadoLocal.adm
-                }, false);
-                console.log(`✅ Dados restaurados do MySQL (avv_db) para o banco local (${(estadoMySQL.equipes || []).length} registros).`);
-            } else {
-                await sincronizarEstadoParaMySQL(estadoLocal);
-                console.log(`✅ Estrutura inicial sincronizada no MySQL (avv_db).`);
-            }
-        } else {
-            await sincronizarEstadoParaMySQL(estadoLocal);
-            console.log(`✅ Banco local oficial (avv_database.json) sincronizado para o MySQL (avv_db).`);
+        // Merge não-destrutivo entre Banco Local (avv_database.json) e MySQL (avv_db)
+        // Garante que NENHUM usuário, clube, equipe ou campeonato seja perdido em atualizações ou reinicializações
+        const mapaEquipes = new Map();
+        if (estadoMySQL && Array.isArray(estadoMySQL.equipes)) {
+            estadoMySQL.equipes.forEach(eq => {
+                if (eq && eq.id) mapaEquipes.set(String(eq.id), eq);
+            });
         }
+        if (Array.isArray(estadoLocal.equipes)) {
+            estadoLocal.equipes.forEach(eq => {
+                if (eq && eq.id) {
+                    const existenteMysql = mapaEquipes.get(String(eq.id));
+                    mapaEquipes.set(String(eq.id), {
+                        ...(existenteMysql || {}),
+                        ...eq,
+                        senhaHash: eq.senhaHash || (existenteMysql && existenteMysql.senhaHash)
+                    });
+                }
+            });
+        }
+
+        const equipesUnificadas = Array.from(mapaEquipes.values());
+        const campeonatosUnificados = {
+            ...CAMPEONATO_OFICIAL_COPA_XXI,
+            ...((estadoMySQL && estadoMySQL.campeonatos) || {}),
+            ...(estadoLocal.campeonatos || {})
+        };
+        const admUnificado = estadoLocal.adm || (estadoMySQL && estadoMySQL.adm);
+
+        const estadoFinal = {
+            equipes: equipesUnificadas,
+            campeonatos: campeonatosUnificados,
+            adm: admUnificado
+        };
+
+        salvarBancoDados(estadoFinal, true);
+        console.log(`✅ Banco de dados verificado e sincronizado com segurança (${equipesUnificadas.length} registros preservados).`);
     }
 });

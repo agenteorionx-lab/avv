@@ -2616,8 +2616,26 @@
                 foto: atletaFotoDataUrlAdm || eq.atletas[idxAt].foto || 'logos/mascote_coelho.png'
             };
 
-            // Sincroniza também no banco geral de atletas do clube caso exista
+            // Sincroniza também no banco geral de atletas do clube (localStorage e bancoAtletasGeral das equipes da agremiação)
             try {
+                const emailClube = (eq.email || '').toLowerCase().trim();
+                equipesSistema.forEach(item => {
+                    const itemEmail = (item.email || '').toLowerCase().trim();
+                    if ((emailClube && itemEmail === emailClube) || String(item.id) === String(eq.id)) {
+                        if (Array.isArray(item.bancoAtletasGeral)) {
+                            const idxGeral = item.bancoAtletasGeral.findIndex(a => String(a.id) === String(atletaId));
+                            if (idxGeral !== -1) {
+                                item.bancoAtletasGeral[idxGeral] = { ...item.bancoAtletasGeral[idxGeral], ...eq.atletas[idxAt] };
+                            }
+                        }
+                        if (Array.isArray(item.atletas)) {
+                            const idxAtItem = item.atletas.findIndex(a => String(a.id) === String(atletaId));
+                            if (idxAtItem !== -1) {
+                                item.atletas[idxAtItem] = { ...item.atletas[idxAtItem], ...eq.atletas[idxAt] };
+                            }
+                        }
+                    }
+                });
                 const atletasClubeDb = JSON.parse(localStorage.getItem('avv_atletas_clube_db') || '[]');
                 const idxClube = atletasClubeDb.findIndex(a => String(a.id) === String(atletaId));
                 if (idxClube !== -1) {
