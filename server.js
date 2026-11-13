@@ -679,7 +679,7 @@ async function criarTransporter() {
 
     const user = process.env.SMTP_USER || 'sistema@avvvoleibol.com.br';
     const pass = process.env.SMTP_PASS || 'PlTKigQQz4Awe6^k';
-    const host = process.env.SMTP_HOST || '162.241.203.81';
+    const host = process.env.SMTP_HOST || 'mail.avvvoleibol.com.br';
     const port = Number(process.env.SMTP_PORT) || 465;
     const secure = process.env.SMTP_SECURE ? process.env.SMTP_SECURE === 'true' : true;
 
