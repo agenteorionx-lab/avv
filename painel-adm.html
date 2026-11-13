@@ -1878,15 +1878,32 @@
         // ======================================================================
         // 4. PÁGINA INTERNA DEDICADA DA EQUIPE (ATLETAS + IMPRESSÃO POR CATEGORIA)
         // ======================================================================
-        function abrirPaginaEquipeAdm(equipeId, categoriaPreSelecionada = 'todas') {
-            const salvoDb = localStorage.getItem('avv_equipes_completo_db');
-            if (salvoDb) {
-                try {
-                    const parsed = JSON.parse(salvoDb);
-                    if (Array.isArray(parsed) && parsed.length > 0) equipesSistema = parsed;
-                } catch(e) {}
-            }
+        // Cache local de equipes com fotos em alta resolução carregadas sob demanda
+        const equipesComFotosCarregadas = new Set();
 
+        async function carregarFotosEquipeSobDemanda(equipeId) {
+            if (!equipeId || equipesComFotosCarregadas.has(String(equipeId))) {
+                return;
+            }
+            try {
+                const resp = await fetch(`/api/equipes/${equipeId}/completo`, { cache: 'no-store' });
+                const dados = await resp.json();
+                if (dados.ok && dados.equipe) {
+                    equipesComFotosCarregadas.add(String(equipeId));
+                    const idx = equipesSistema.findIndex(e => String(e.id) === String(equipeId));
+                    if (idx !== -1) {
+                        equipesSistema[idx] = { ...equipesSistema[idx], ...dados.equipe };
+                    }
+                    if (equipeAbertaId && String(equipeAbertaId) === String(equipeId)) {
+                        renderizarConteudoPaginaEquipe(dados.equipe);
+                    }
+                }
+            } catch (err) {
+                console.warn('Aviso lazy loading equipe:', err);
+            }
+        }
+
+        function abrirPaginaEquipeAdm(equipeId, categoriaPreSelecionada = 'todas') {
             const eq = equipesSistema.find(e => String(e.id) === String(equipeId));
             if (!eq) return;
 
@@ -1898,8 +1915,12 @@
             document.getElementById('adm-subview-lista-equipes').style.display = 'none';
             document.getElementById('adm-subview-detalhe-equipe').style.display = 'block';
 
+            // Renderização instantânea imediata com os dados já presentes em memória
             renderizarConteudoPaginaEquipe(eq);
             window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Carregamento sob demanda (Lazy Loading) das fotos em alta resolução exclusivamente desta equipe
+            carregarFotosEquipeSobDemanda(equipeId);
         }
 
         function fecharPaginaEquipeAdm() {
@@ -2672,7 +2693,10 @@
             });
         }
 
-        function imprimirTodasFichasDaEquipeCategoriaAtual() {
+        async function imprimirTodasFichasDaEquipeCategoriaAtual() {
+            if (equipeAbertaId && !equipesComFotosCarregadas.has(String(equipeAbertaId))) {
+                await carregarFotosEquipeSobDemanda(equipeAbertaId);
+            }
             const eq = equipesSistema.find(e => String(e.id) === String(equipeAbertaId));
             if (!eq) return;
 
@@ -2688,7 +2712,10 @@
             executarImpressaoLoteFichas(atletasParaImprimir.map(a => ({ atleta: a, equipe: eq })));
         }
 
-        function imprimirFichasSelecionadasAdm() {
+        async function imprimirFichasSelecionadasAdm() {
+            if (equipeAbertaId && !equipesComFotosCarregadas.has(String(equipeAbertaId))) {
+                await carregarFotosEquipeSobDemanda(equipeAbertaId);
+            }
             const eq = equipesSistema.find(e => String(e.id) === String(equipeAbertaId));
             if (!eq) return;
 

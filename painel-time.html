@@ -1852,6 +1852,24 @@
         // Seleciona e carrega a equipe escolhida na lista para visualização de atletas e edição
         let equipeSelecionadaVisualizacao = null;
 
+        const equipesTimeFotosCarregadas = new Set();
+
+        async function carregarFotosEquipeTimeSobDemanda(equipeId) {
+            if (!equipeId || equipesTimeFotosCarregadas.has(String(equipeId))) return;
+            try {
+                const resp = await fetch(`/api/equipes/${equipeId}/completo`, { cache: 'no-store' });
+                const dados = await resp.json();
+                if (dados.ok && dados.equipe) {
+                    equipesTimeFotosCarregadas.add(String(equipeId));
+                    equipeSelecionadaVisualizacao = dados.equipe;
+                    const modalVis = document.getElementById('modal-visualizar-equipe');
+                    if (modalVis && modalVis.style.display !== 'none') {
+                        renderizarRosterEquipeModal(dados.equipe);
+                    }
+                }
+            } catch(e) {}
+        }
+
         function selecionarEquipeAtivaParaVisualizar(equipeId) {
             const db = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
             const eq = db.find(e => String(e.id) === String(equipeId));
@@ -1874,6 +1892,7 @@
                 renderizarRosterEquipeModal(eq);
             }
             abrirModalVisualizarEquipe();
+            carregarFotosEquipeTimeSobDemanda(equipeId);
         }
 
         // Obtém todas as equipes vinculadas ao clube logado

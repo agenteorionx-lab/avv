@@ -251,17 +251,68 @@ function salvarBancoDados(dados, sincronizarMySQL = true) {
     }
 }
 
-// Remove hashes de senha e duplicatas redundantes de dados ao enviar para o front-end
-function limparEquipeParaCliente(eq) {
+// Retorna os dados completos da equipe (incluindo fotos em alta resolução), removendo apenas senhas
+function limparEquipeCompleta(eq) {
     if (!eq) return null;
     const copia = { ...eq };
     delete copia.senhaHash;
-    // Remove duplicatas redundantes de bancoAtletasGeral nas equipes de competição (reduz payload em ~50%)
-    if (!copia.isContaClube && copia.categoria !== '__CONTA_CLUBE__') {
-        delete copia.bancoAtletasGeral;
-        delete copia.bancoComissaoGeral;
+    return copia;
+}
+
+// Remove hashes de senha e duplicatas redundantes de dados
+function limparEquipeParaCliente(eq) {
+    return limparEquipeCompleta(eq);
+}
+
+// Versão ultra-leve para a tela principal (Visão Geral e Listagens) - Lazy Loading
+function limparEquipeLeveParaListagem(eq) {
+    if (!eq) return null;
+    const copia = { ...eq };
+    delete copia.senhaHash;
+    delete copia.bancoAtletasGeral;
+    delete copia.bancoComissaoGeral;
+    if (copia.logo && copia.logo.length > 30000) copia.logo = 'logos/logo_avv.png';
+    if (copia.fotoDirigente && copia.fotoDirigente.length > 30000) copia.fotoDirigente = 'logos/logo_avv.png';
+
+    if (Array.isArray(copia.atletas)) {
+        copia.atletas = copia.atletas.map(a => {
+            const ca = { ...a };
+            if (ca.foto && ca.foto.length > 500) {
+                ca.temFoto = true;
+                ca.foto = 'logos/logo_avv.png';
+            }
+            delete ca.documentoFrente;
+            delete ca.documentoVerso;
+            delete ca.autorizacaoPdf;
+            return ca;
+        });
+    }
+    if (Array.isArray(copia.comissao)) {
+        copia.comissao = copia.comissao.map(cm => {
+            const ccm = { ...cm };
+            if (ccm.foto && ccm.foto.length > 500) {
+                ccm.temFoto = true;
+                ccm.foto = 'logos/logo_avv.png';
+            }
+            return ccm;
+        });
     }
     return copia;
+}
+
+// Remove PDFs pesados da carga inicial de campeonatos
+function limparCampeonatosLeve(campeonatos) {
+    if (!campeonatos || typeof campeonatos !== 'object') return {};
+    const campsLeves = {};
+    Object.keys(campeonatos).forEach(id => {
+        const c = { ...campeonatos[id] };
+        if (c.regulamentoPdf && c.regulamentoPdf.length > 500) {
+            c.temRegulamentoPdf = true;
+            delete c.regulamentoPdf;
+        }
+        campsLeves[id] = c;
+    });
+    return campsLeves;
 }
 
 // ============================================================================
@@ -300,6 +351,7 @@ setInterval(() => {
 // ============================================================================
 
 // 4.1. Sincronização completa (usada pelos painéis ao carregar)
+// 4.1. Dados do Sistema com Carga Inicial Leve (Ultra-rápida, sub-50ms)
 app.get(['/api/dados-sistema', '/avv/api/dados-sistema'], (req, res) => {
     if (cacheDadosSistemaPublico) {
         return res.json(cacheDadosSistemaPublico);
@@ -307,8 +359,8 @@ app.get(['/api/dados-sistema', '/avv/api/dados-sistema'], (req, res) => {
     const db = carregarBancoDados();
     cacheDadosSistemaPublico = {
         ok: true,
-        equipes: db.equipes.map(limparEquipeParaCliente),
-        campeonatos: db.campeonatos,
+        equipes: db.equipes.map(limparEquipeLeveParaListagem),
+        campeonatos: limparCampeonatosLeve(db.campeonatos),
         adm: {
             usuario: db.adm.usuario,
             email: db.adm.email,
@@ -316,6 +368,36 @@ app.get(['/api/dados-sistema', '/avv/api/dados-sistema'], (req, res) => {
         }
     };
     res.json(cacheDadosSistemaPublico);
+});
+
+// 4.1.1. Detalhes completos sob demanda de uma equipe específica (Lazy Loading de Fotos e Mídias)
+app.get(['/api/equipes/:id/completo', '/avv/api/equipes/:id/completo'], (req, res) => {
+    try {
+        const id = req.params.id;
+        const db = carregarBancoDados();
+        const eq = (db.equipes || []).find(e => String(e.id) === String(id));
+        if (!eq) {
+            return res.status(404).json({ ok: false, mensagem: 'Equipe não encontrada.' });
+        }
+        res.json({ ok: true, equipe: limparEquipeCompleta(eq) });
+    } catch (err) {
+        res.status(500).json({ ok: false, mensagem: 'Erro interno ao carregar detalhes da equipe.' });
+    }
+});
+
+// 4.1.2. Download sob demanda do Regulamento Oficial em PDF
+app.get(['/api/campeonatos/:id/regulamento', '/avv/api/campeonatos/:id/regulamento'], (req, res) => {
+    try {
+        const id = req.params.id;
+        const db = carregarBancoDados();
+        const camp = (db.campeonatos || {})[id];
+        if (!camp || !camp.regulamentoPdf) {
+            return res.status(404).json({ ok: false, mensagem: 'Regulamento em PDF não cadastrado.' });
+        }
+        res.json({ ok: true, regulamentoPdf: camp.regulamentoPdf });
+    } catch (err) {
+        res.status(500).json({ ok: false, mensagem: 'Erro interno ao carregar regulamento.' });
+    }
 });
 
 // 4.2. Cadastrar nova equipe (Formulário de Pré-Inscrição ou Painel)
