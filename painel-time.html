@@ -13,7 +13,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="painel.css?v=17">
+    <script src="html2pdf.bundle.min.js"></script>
     <script src="avv-dialogs.js"></script>
+    <script src="avv-emissao-docs.js"></script>
     <style>
         /* ROLAGEM INDIVIDUAL DEDICADA E SEM CORTES PARA TABELAS DO MODAL */
         .tabela-atletas-scroll-box {
@@ -4659,7 +4661,14 @@
         }
 
         function imprimirFichaOficial() {
-            window.print();
+            const el = document.getElementById('folha-ficha-impressao');
+            const nomeAtleta = document.getElementById('ficha-atleta-nome-topo')?.textContent || 'Atleta';
+            solicitarEmissaoDocumentoAvv({
+                titulo: 'Ficha de Inscrição Oficial',
+                subtitulo: nomeAtleta,
+                nomeArquivo: `Ficha_${nomeAtleta}`,
+                elementoAlvo: el
+            });
         }
 
         // ==========================================================================
@@ -5960,15 +5969,14 @@
                 areaMultiplas.appendChild(folha);
             });
 
-            // Torna o container visível para impressão e dispara o diálogo de impressão
+            // Torna o container visível e abre o modal oficial de opções (Baixar PDF, Imprimir ou Ambos)
             areaMultiplas.style.display = 'block';
-
-            // Pequeno timeout para renderização no DOM
-            setTimeout(() => {
-                window.print();
-                // Oculta novamente após disparar
-                areaMultiplas.style.display = 'none';
-            }, 250);
+            solicitarEmissaoDocumentoAvv({
+                titulo: 'Emissão de Fichas de Inscrição',
+                subtitulo: `${timeNome} • ${selecionados.length} Ficha(s) Selecionada(s)`,
+                nomeArquivo: `Fichas_${timeNome}_${selecionados.length}_atletas`,
+                elementoAlvo: areaMultiplas
+            });
         }
 
         // =========================================================================
@@ -6180,10 +6188,12 @@
             areaMultiplas.appendChild(folha);
             areaMultiplas.style.display = 'block';
 
-            setTimeout(() => {
-                window.print();
-                areaMultiplas.style.display = 'none';
-            }, 250);
+            solicitarEmissaoDocumentoAvv({
+                titulo: 'Súmula Oficial • Relação Nominal',
+                subtitulo: `${equipe.nomeTime} • ${catTexto}`,
+                nomeArquivo: `Sumula_${equipe.nomeTime}_${catTexto}`,
+                elementoAlvo: areaMultiplas
+            });
         }
 
         function imprimirSumulaEquipeVisualizada() {

@@ -14,7 +14,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="painel.css?v=7">
     <link rel="stylesheet" href="painel-adm.css?v=7">
+    <script src="html2pdf.bundle.min.js"></script>
     <script src="avv-dialogs.js"></script>
+    <script src="avv-emissao-docs.js"></script>
 </head>
 <body>
 
@@ -902,9 +904,9 @@
                     <span style="font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">FICHA OFICIAL DO ATLETA &bull; VISTORIA ADMINISTRATIVA</span>
                 </div>
                 <div style="display: flex; align-items: center; gap: 10px;">
-                    <button onclick="window.print()" class="btn-action-text-green" style="background: #16a34a; font-size: 11px; padding: 6px 14px; height: 32px; gap: 6px;">
+                    <button onclick="solicitarEmissaoFichaIndividualAdm()" class="btn-action-text-green" style="background: #16a34a; font-size: 11px; padding: 6px 14px; height: 32px; gap: 6px;">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
-                        Imprimir Ficha
+                        Imprimir / Baixar Ficha
                     </button>
                     <button onclick="fecharFichaAtletaAdm()" style="background: transparent; border: none; color: #ffffff; font-size: 24px; cursor: pointer; line-height: 1;" title="Fechar">&times;</button>
                 </div>
@@ -2426,6 +2428,17 @@
             document.getElementById('modal-adm-ficha-atleta').style.display = 'none';
         }
 
+        function solicitarEmissaoFichaIndividualAdm() {
+            const el = document.getElementById('adm-folha-individual-container');
+            const nomeAtleta = el.querySelector('strong')?.textContent?.trim() || 'Atleta';
+            solicitarEmissaoDocumentoAvv({
+                titulo: 'Ficha Oficial do Atleta',
+                subtitulo: 'Documento Oficial de Registro AVV',
+                nomeArquivo: `Ficha_${nomeAtleta}`,
+                elementoAlvo: el
+            });
+        }
+
         // ======================================================================
         // CARTEIRINHA DIGITAL DO ATLETA (VISTORIA VISUAL COMPLETA)
         // ======================================================================
@@ -2758,10 +2771,13 @@
             });
 
             areaMultiplas.style.display = 'block';
-            setTimeout(() => {
-                window.print();
-                areaMultiplas.style.display = 'none';
-            }, 250);
+            const eqNome = listaParesAtletaEquipe[0]?.equipe?.nomeTime || 'AVV';
+            solicitarEmissaoDocumentoAvv({
+                titulo: 'Emissão de Fichas Oficiais de Atletas',
+                subtitulo: `${eqNome} • ${total} Ficha(s) Selecionada(s)`,
+                nomeArquivo: `Fichas_${eqNome}_${total}_atletas`,
+                elementoAlvo: areaMultiplas
+            });
         }
 
         function executarImpressaoSumulaNominal(equipe, categoriaLabel, atletasLista) {
@@ -2885,10 +2901,12 @@
 
             areaMultiplas.appendChild(folha);
             areaMultiplas.style.display = 'block';
-            setTimeout(() => {
-                window.print();
-                areaMultiplas.style.display = 'none';
-            }, 250);
+            solicitarEmissaoDocumentoAvv({
+                titulo: 'Súmula Oficial • Relação Nominal',
+                subtitulo: `${equipe.nomeTime} • ${catTexto}`,
+                nomeArquivo: `Sumula_${equipe.nomeTime}_${catTexto}`,
+                elementoAlvo: areaMultiplas
+            });
         }
 
         // ======================================================================
