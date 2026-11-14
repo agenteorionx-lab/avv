@@ -1,12 +1,11 @@
 /**
- * AVV - Módulo Oficial de Emissão de Documentos (Download PDF e Impressão)
- * Permite ao usuário Baixar em PDF (.pdf), Imprimir ou Baixar e Imprimir com 1 clique.
- * Desenvolvido para a Associação Vilhenense de Voleibol (AVV).
+ * AVV - Visualizador e Emissor Oficial de Documentos (Preview + Baixar PDF + Imprimir)
+ * Exibe a pré-visualização completa da folha A4 e disponibiliza apenas os botões "Baixar PDF" e "Imprimir".
+ * Associação Vilhenense de Voleibol (AVV)
  */
 
 (function () {
-    // Injeta o HTML do modal de opções de emissão uma única vez na página
-    function garantirModalEmissaoNaPagina() {
+    function garantirModalVisualizadorNaPagina() {
         if (document.getElementById('modal-opcoes-emissao-avv')) return;
 
         const modalDiv = document.createElement('div');
@@ -18,94 +17,68 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(15, 28, 63, 0.78);
+            background: rgba(15, 28, 63, 0.88);
             z-index: 99999;
             align-items: center;
             justify-content: center;
             backdrop-filter: blur(5px);
             -webkit-backdrop-filter: blur(5px);
-            padding: 16px;
+            padding: 12px;
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            box-sizing: border-box;
         `;
 
         modalDiv.innerHTML = `
-            <div style="background: #ffffff; width: 100%; max-width: 490px; border-radius: 10px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.45); overflow: hidden; animation: avvModalFadeIn 0.22s ease-out; border: 1px solid rgba(255, 255, 255, 0.2);">
-                <!-- TOPO COM CABEÇALHO AVV -->
-                <div style="background: #0f1c3f; color: #ffffff; padding: 18px 22px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3.5px solid #c5a021;">
-                    <div style="display: flex; align-items: center; gap: 12px;">
-                        <div style="width: 38px; height: 38px; border-radius: 8px; background: rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.15);">
-                            <img src="logos/logo_avv.png" style="width: 24px; height: 24px; object-fit: contain;" alt="AVV" onerror="this.style.display='none'">
-                        </div>
+            <div id="emissao-modal-card" style="background: #ffffff; width: 100%; max-width: 900px; height: 95vh; max-height: 95vh; border-radius: 10px; box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5); display: flex; flex-direction: column; overflow: hidden; animation: avvModalFadeIn 0.2s ease-out; border: 1px solid rgba(255, 255, 255, 0.25);">
+                
+                <!-- BARRA SUPERIOR DE AÇÕES (NO PRINT) -->
+                <div id="emissao-modal-header" class="no-print" style="background: #0f1c3f; color: #ffffff; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3.5px solid #c5a021; gap: 12px; flex-wrap: wrap;">
+                    <!-- TÍTULO E SUBTÍTULO -->
+                    <div style="display: flex; align-items: center; gap: 12px; min-width: 220px;">
+                        <img src="logos/logo_avv.png" style="width: 32px; height: 32px; object-fit: contain;" alt="AVV" onerror="this.style.display='none'">
                         <div>
-                            <h3 id="emissao-modal-titulo" style="font-size: 14.5px; font-weight: 800; margin: 0; text-transform: uppercase; letter-spacing: 0.5px; color: #ffffff;">Emissão de Documento Oficial</h3>
-                            <span id="emissao-modal-subtitulo" style="font-size: 11.5px; color: #cbd5e1; display: block; margin-top: 2px;">Selecione como deseja emitir o arquivo</span>
+                            <h3 id="emissao-modal-titulo" style="font-size: 13.5px; font-weight: 800; margin: 0; text-transform: uppercase; letter-spacing: 0.5px; color: #ffffff;">Súmula Oficial • Relação Nominal</h3>
+                            <span id="emissao-modal-subtitulo" style="font-size: 11px; color: #cbd5e1; display: block; margin-top: 1px;">Pré-visualização do Documento</span>
                         </div>
                     </div>
-                    <button type="button" onclick="fecharModalOpcoesEmissao()" style="background: none; border: none; color: #94a3b8; font-size: 26px; cursor: pointer; line-height: 1; padding: 0 4px; transition: color 0.2s;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='#94a3b8'" title="Fechar">&times;</button>
-                </div>
 
-                <!-- CORPO COM OPÇÕES -->
-                <div style="padding: 22px 22px 18px 22px;">
-                    <p style="margin: 0 0 16px 0; font-size: 13px; color: #334155; line-height: 1.45;">
-                        Selecione como deseja obter o documento oficial timbrado:
-                    </p>
-
-                    <div style="display: flex; flex-direction: column; gap: 11px;">
-                        <!-- OPÇÃO 1: BAIXAR PDF (.pdf) -->
-                        <button type="button" id="btn-emissao-baixar" class="btn-opcao-emissao" onclick="executarAcaoEmissao('baixar')" style="display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-radius: 8px; border: 1.5px solid #0284c7; background: #f0f9ff; color: #0369a1; cursor: pointer; transition: all 0.2s; text-align: left; width: 100%; box-sizing: border-box;">
-                            <div style="display: flex; align-items: center; gap: 14px;">
-                                <div style="width: 38px; height: 38px; border-radius: 8px; background: #e0f2fe; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid #bae6fd;">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                                </div>
-                                <div>
-                                    <strong style="font-size: 13.5px; display: block; color: #0369a1; font-weight: 800;">Baixar Arquivo PDF (.pdf)</strong>
-                                    <span style="font-size: 11.5px; color: #64748b; font-weight: 500;">Salva o documento .pdf diretamente no seu aparelho</span>
-                                </div>
-                            </div>
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    <!-- BOTÕES DE AÇÃO: SOMENTE BAIXAR PDF E IMPRIMIR -->
+                    <div style="display: flex; align-items: center; gap: 10px; margin-left: auto;">
+                        <!-- BOTÃO 1: BAIXAR PDF (.pdf) -->
+                        <button type="button" id="btn-emissao-baixar" onclick="executarAcaoEmissao('baixar')" style="background: #0284c7; color: #ffffff; border: 1px solid #0369a1; padding: 8px 16px; border-radius: 6px; font-size: 12.5px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 7px; transition: all 0.15s; box-shadow: 0 2px 6px rgba(2, 132, 199, 0.35);">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                            Baixar PDF (.pdf)
                         </button>
 
-                        <!-- OPÇÃO 2: IMPRIMIR -->
-                        <button type="button" id="btn-emissao-imprimir" class="btn-opcao-emissao" onclick="executarAcaoEmissao('imprimir')" style="display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-radius: 8px; border: 1.5px solid #0f1c3f; background: #f8fafc; color: #0f1c3f; cursor: pointer; transition: all 0.2s; text-align: left; width: 100%; box-sizing: border-box;">
-                            <div style="display: flex; align-items: center; gap: 14px;">
-                                <div style="width: 38px; height: 38px; border-radius: 8px; background: #e2e8f0; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid #cbd5e1;">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0f1c3f" stroke-width="2.2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
-                                </div>
-                                <div>
-                                    <strong style="font-size: 13.5px; display: block; color: #0f1c3f; font-weight: 800;">Imprimir Documento</strong>
-                                    <span style="font-size: 11.5px; color: #64748b; font-weight: 500;">Abre o diálogo de impressão da impressora</span>
-                                </div>
-                            </div>
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0f1c3f" stroke-width="2.2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        <!-- BOTÃO 2: IMPRIMIR -->
+                        <button type="button" id="btn-emissao-imprimir" onclick="executarAcaoEmissao('imprimir')" style="background: #16a34a; color: #ffffff; border: 1px solid #15803d; padding: 8px 16px; border-radius: 6px; font-size: 12.5px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 7px; transition: all 0.15s; box-shadow: 0 2px 6px rgba(22, 163, 74, 0.35);">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                            Imprimir Documento
                         </button>
 
-                        <!-- OPÇÃO 3: BAIXAR PDF E IMPRIMIR JUNTOS -->
-                        <button type="button" id="btn-emissao-ambos" class="btn-opcao-emissao" onclick="executarAcaoEmissao('ambos')" style="display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-radius: 8px; border: 1.5px solid #16a34a; background: #f0fdf4; color: #15803d; cursor: pointer; transition: all 0.2s; text-align: left; width: 100%; box-sizing: border-box;">
-                            <div style="display: flex; align-items: center; gap: 14px;">
-                                <div style="width: 38px; height: 38px; border-radius: 8px; background: #dcfce7; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid #bbf7d0;">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
-                                </div>
-                                <div>
-                                    <strong style="font-size: 13.5px; display: block; color: #15803d; font-weight: 800;">Baixar PDF e Imprimir Juntos</strong>
-                                    <span style="font-size: 11.5px; color: #166534; font-weight: 500;">Gera o arquivo .pdf no dispositivo e aciona a impressão</span>
-                                </div>
-                            </div>
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.2"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                        </button>
-                    </div>
-
-                    <!-- FEEDBACK DE PROCESSAMENTO -->
-                    <div id="emissao-loading-feedback" style="display: none; margin-top: 16px; padding: 12px 14px; background: #fffbeb; border: 1px solid #fef3c7; border-radius: 8px; text-align: center; color: #92400e; font-size: 12px; font-weight: 700;">
-                        <span style="display: inline-block; animation: avvSpin 1s linear infinite; margin-right: 8px;">⏳</span>
-                        Processando documento oficial em alta resolução... Aguarde um instante.
+                        <!-- BOTÃO FECHAR -->
+                        <button type="button" onclick="fecharModalOpcoesEmissao()" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #ffffff; width: 34px; height: 34px; border-radius: 6px; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1; transition: background 0.15s;" onmouseover="this.style.background='rgba(239, 68, 68, 0.8)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'" title="Fechar Visualização">&times;</button>
                     </div>
                 </div>
 
-                <!-- RODAPÉ -->
-                <div style="background: #f8fafc; padding: 12px 22px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
-                    <span style="font-size: 11px; color: #94a3b8; font-weight: 600;">AVV &bull; Sistema Oficial de Voleibol</span>
-                    <button type="button" onclick="fecharModalOpcoesEmissao()" style="background: #ffffff; border: 1px solid #cbd5e1; color: #475569; padding: 7px 16px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: background 0.15s;" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#ffffff'">
-                        Cancelar
+                <!-- FEEDBACK DE DOWNLOAD -->
+                <div id="emissao-loading-feedback" class="no-print" style="display: none; padding: 8px 16px; background: #fffbeb; border-bottom: 1px solid #fef3c7; text-align: center; color: #92400e; font-size: 12px; font-weight: 700;">
+                    <span style="display: inline-block; animation: avvSpin 1s linear infinite; margin-right: 6px;">⏳</span>
+                    Gerando arquivo PDF oficial em alta resolução... Aguarde o download iniciar.
+                </div>
+
+                <!-- ÁREA CENTRAL DE VISUALIZAÇÃO PRÉVIA DA FOLHA A4 -->
+                <div id="emissao-preview-container" style="flex: 1; overflow-y: auto; overflow-x: auto; padding: 24px 16px; background: #cbd5e1; display: flex; justify-content: center; align-items: flex-start;">
+                    <div id="emissao-preview-folhas" style="width: 100%; max-width: 780px; display: flex; flex-direction: column; gap: 24px; align-items: center;">
+                        <!-- O conteúdo das folhas (.folha-a4-avv) é inserido dinamicamente aqui -->
+                    </div>
+                </div>
+
+                <!-- RODAPÉ INFORMATIVO (NO PRINT) -->
+                <div id="emissao-modal-footer" class="no-print" style="background: #f8fafc; padding: 10px 20px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-size: 11.5px; color: #64748b; font-weight: 600;">AVV • Sistema Oficial de Gestão Esportiva</span>
+                    <button type="button" onclick="fecharModalOpcoesEmissao()" style="background: #ffffff; border: 1px solid #cbd5e1; color: #475569; padding: 6px 16px; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer;">
+                        Fechar Visualização
                     </button>
                 </div>
             </div>
@@ -113,30 +86,85 @@
 
         document.body.appendChild(modalDiv);
 
-        // Estilos CSS auxiliares
         if (!document.getElementById('avv-emissao-styles')) {
             const st = document.createElement('style');
             st.id = 'avv-emissao-styles';
             st.textContent = `
                 @keyframes avvModalFadeIn {
-                    from { opacity: 0; transform: scale(0.96) translateY(-4px); }
+                    from { opacity: 0; transform: scale(0.97) translateY(-6px); }
                     to { opacity: 1; transform: scale(1) translateY(0); }
                 }
                 @keyframes avvSpin {
                     from { transform: rotate(0deg); }
                     to { transform: rotate(360deg); }
                 }
-                .btn-opcao-emissao:hover {
-                    transform: translateY(-1.5px);
-                    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+                #btn-emissao-baixar:hover {
+                    background: #0369a1 !important;
+                    transform: translateY(-1px);
                 }
-                .btn-opcao-emissao:active {
-                    transform: translateY(0);
+                #btn-emissao-imprimir:hover {
+                    background: #15803d !important;
+                    transform: translateY(-1px);
                 }
+                #emissao-preview-folhas .folha-a4-avv {
+                    background: #ffffff !important;
+                    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
+                    border-radius: 4px !important;
+                    margin: 0 auto;
+                }
+
                 @media print {
+                    body * {
+                        visibility: hidden !important;
+                    }
+                    #modal-opcoes-emissao-avv,
+                    #modal-opcoes-emissao-avv #emissao-preview-folhas,
+                    #modal-opcoes-emissao-avv #emissao-preview-folhas * {
+                        visibility: visible !important;
+                    }
                     #modal-opcoes-emissao-avv {
+                        position: absolute !important;
+                        left: 0 !important;
+                        top: 0 !important;
+                        width: 100% !important;
+                        height: auto !important;
+                        background: #ffffff !important;
+                        padding: 0 !important;
+                        margin: 0 !important;
+                        display: block !important;
+                        z-index: 9999999 !important;
+                    }
+                    #emissao-modal-card {
+                        max-width: 100% !important;
+                        height: auto !important;
+                        max-height: none !important;
+                        box-shadow: none !important;
+                        border: none !important;
+                        border-radius: 0 !important;
+                    }
+                    #emissao-modal-header,
+                    #emissao-modal-footer,
+                    #emissao-loading-feedback,
+                    .no-print {
                         display: none !important;
                         visibility: hidden !important;
+                    }
+                    #emissao-preview-container {
+                        padding: 0 !important;
+                        margin: 0 !important;
+                        background: #ffffff !important;
+                        overflow: visible !important;
+                    }
+                    #emissao-preview-folhas {
+                        max-width: 100% !important;
+                        gap: 0 !important;
+                    }
+                    #emissao-preview-folhas .folha-a4-avv {
+                        box-shadow: none !important;
+                        border-radius: 0 !important;
+                        margin: 0 auto !important;
+                        page-break-after: always;
+                        break-after: page;
                     }
                 }
             `;
@@ -147,30 +175,56 @@
     let emissaoConfigAtual = null;
 
     /**
-     * Abre o modal com as opções de emissão (Baixar PDF, Imprimir ou Ambos)
+     * Abre o modal com a pré-visualização completa e botões "Baixar PDF" e "Imprimir"
      * @param {Object} config { titulo, subtitulo, nomeArquivo, elementoAlvo }
      */
     window.solicitarEmissaoDocumentoAvv = function (config) {
-        garantirModalEmissaoNaPagina();
+        garantirModalVisualizadorNaPagina();
         emissaoConfigAtual = config || {};
 
         const modal = document.getElementById('modal-opcoes-emissao-avv');
         const elTitulo = document.getElementById('emissao-modal-titulo');
         const elSubtitulo = document.getElementById('emissao-modal-subtitulo');
         const feedback = document.getElementById('emissao-loading-feedback');
+        const previewFolhas = document.getElementById('emissao-preview-folhas');
 
         if (elTitulo && emissaoConfigAtual.titulo) elTitulo.textContent = emissaoConfigAtual.titulo;
         if (elSubtitulo && emissaoConfigAtual.subtitulo) elSubtitulo.textContent = emissaoConfigAtual.subtitulo;
         if (feedback) feedback.style.display = 'none';
 
+        // Preenche o preview com o conteúdo do elementoAlvo ou area-fichas-multiplas
+        if (previewFolhas) {
+            previewFolhas.innerHTML = '';
+            let elAlvo = emissaoConfigAtual.elementoAlvo;
+            if (!elAlvo) {
+                elAlvo = document.getElementById('area-fichas-multiplas');
+            }
+
+            if (elAlvo) {
+                // Se for um container com filhas (ex: area-fichas-multiplas), clona cada folha
+                if (elAlvo.querySelectorAll('.folha-a4-avv').length > 0) {
+                    const folhas = elAlvo.querySelectorAll('.folha-a4-avv');
+                    folhas.forEach(f => {
+                        previewFolhas.appendChild(f.cloneNode(true));
+                    });
+                } else if (elAlvo.classList.contains('folha-a4-avv')) {
+                    previewFolhas.appendChild(elAlvo.cloneNode(true));
+                } else {
+                    previewFolhas.innerHTML = elAlvo.innerHTML;
+                }
+            }
+        }
+
         modal.style.display = 'flex';
+        // Posiciona a rolagem no topo da folha
+        const container = document.getElementById('emissao-preview-container');
+        if (container) container.scrollTop = 0;
     };
 
     window.fecharModalOpcoesEmissao = function () {
         const modal = document.getElementById('modal-opcoes-emissao-avv');
         if (modal) modal.style.display = 'none';
 
-        // Oculta área de fichas múltiplas se não estiver em visualização ativa
         const areaMultiplas = document.getElementById('area-fichas-multiplas');
         if (areaMultiplas) areaMultiplas.style.display = 'none';
     };
@@ -181,33 +235,22 @@
         const feedback = document.getElementById('emissao-loading-feedback');
         const btnBaixar = document.getElementById('btn-emissao-baixar');
         const btnImprimir = document.getElementById('btn-emissao-imprimir');
-        const btnAmbos = document.getElementById('btn-emissao-ambos');
 
         if (feedback) feedback.style.display = 'block';
         if (btnBaixar) btnBaixar.style.pointerEvents = 'none';
         if (btnImprimir) btnImprimir.style.pointerEvents = 'none';
-        if (btnAmbos) btnAmbos.style.pointerEvents = 'none';
 
         try {
-            // Localiza o elemento alvo a ser impresso/baixado
-            let elAlvo = emissaoConfigAtual.elementoAlvo;
-            if (!elAlvo) {
-                elAlvo = document.getElementById('area-fichas-multiplas');
-            }
-
-            if (elAlvo) {
-                elAlvo.style.display = 'block';
-            }
-
+            const previewFolhas = document.getElementById('emissao-preview-folhas');
             const nomeArquivo = (emissaoConfigAtual.nomeArquivo || 'Documento_Oficial_AVV')
                 .replace(/[^a-zA-Z0-9_-]/g, '_')
                 .replace(/_+/g, '_');
 
-            // 1. Ação: Baixar PDF
-            if (tipoAcao === 'baixar' || tipoAcao === 'ambos') {
-                if (typeof html2pdf !== 'undefined' && elAlvo) {
+            // 1. Ação: BAIXAR PDF (.pdf)
+            if (tipoAcao === 'baixar') {
+                if (typeof html2pdf !== 'undefined' && previewFolhas) {
                     const opt = {
-                        margin: [8, 8, 8, 8],
+                        margin: [6, 6, 6, 6],
                         filename: `${nomeArquivo}.pdf`,
                         image: { type: 'jpeg', quality: 0.98 },
                         html2canvas: {
@@ -219,44 +262,25 @@
                         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
                         pagebreak: { mode: ['css', 'legacy'], after: '.folha-a4-avv' }
                     };
-                    await html2pdf().set(opt).from(elAlvo).save();
+                    await html2pdf().set(opt).from(previewFolhas).save();
                 } else {
-                    // Fallback se biblioteca não estiver pronta
                     window.print();
                 }
             }
 
-            // 2. Ação: Imprimir
-            if (tipoAcao === 'imprimir' || tipoAcao === 'ambos') {
-                const tempoEspera = tipoAcao === 'ambos' ? 700 : 150;
+            // 2. Ação: IMPRIMIR DOCUMENTO
+            if (tipoAcao === 'imprimir') {
                 setTimeout(() => {
-                    // Garante que o diálogo feche após a impressão
-                    const onAfterPrint = () => {
-                        fecharModalOpcoesEmissao();
-                        window.removeEventListener('afterprint', onAfterPrint);
-                    };
-                    window.addEventListener('afterprint', onAfterPrint);
-
                     window.print();
-
-                    // Timeout de segurança caso afterprint não seja disparado
-                    setTimeout(() => {
-                        fecharModalOpcoesEmissao();
-                    }, 2000);
-                }, tempoEspera);
-            } else {
-                fecharModalOpcoesEmissao();
+                }, 100);
             }
         } catch (err) {
             console.error('Erro na emissão do documento:', err);
-            // Em caso de exceção, fallback seguro para impressão nativa
             window.print();
-            fecharModalOpcoesEmissao();
         } finally {
             if (feedback) feedback.style.display = 'none';
             if (btnBaixar) btnBaixar.style.pointerEvents = 'auto';
             if (btnImprimir) btnImprimir.style.pointerEvents = 'auto';
-            if (btnAmbos) btnAmbos.style.pointerEvents = 'auto';
         }
     };
 })();
