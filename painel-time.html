@@ -3690,7 +3690,6 @@
                 if (equipeAlvo && Array.isArray(equipeAlvo.atletas) && equipeAlvo.atletas.length > 0) {
                     totalAtletas = equipeAlvo.atletas.length;
                 } else if (temEquipe) {
-                    // Busca atletas no banco do clube que tenham compatibilidade com esta categoria
                     totalAtletas = atletasGeraisClube.filter(at => {
                         const catAt = String(at.categoria || '').trim().toLowerCase();
                         return catAt.includes(catNorm) || catAt.includes(extrairCategoriaBase(categoria).toLowerCase());
@@ -3698,14 +3697,14 @@
                 }
 
                 const card = document.createElement('div');
-                card.style.cssText = 'border-radius: 6px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between; gap: 12px; transition: all 0.2s ease; position: relative;';
+                card.style.cssText = 'border-radius: 6px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between; gap: 12px; transition: all 0.2s ease; position: relative; min-height: 250px; background: #ffffff;';
 
                 if (isTorneioEncerrado) {
                     // Estado: Torneio com inscrições encerradas
                     card.style.background = '#fefce8';
                     card.style.border = '1.5px solid #fde047';
                     card.innerHTML = `
-                        <div>
+                        <div style="flex: 1;">
                             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
                                 <span style="font-size: 13px; font-weight: 800; color: #854d0e; text-transform: uppercase;">${categoria}</span>
                                 <span style="background: #fef08a; color: #854d0e; font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 4px; border: 1px solid #facc15;">
@@ -3716,56 +3715,35 @@
                                 O período de inscrições para esta competição foi encerrado pela organização.
                             </div>
                         </div>
-                        <button type="button" disabled style="width: 100%; height: 38px; background: #e2e8f0; color: #94a3b8; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 11.5px; font-weight: 700; cursor: not-allowed; display: flex; align-items: center; justify-content: center;">
+                        <button type="button" disabled style="width: 100%; height: 38px; background: #e2e8f0; color: #94a3b8; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 11.5px; font-weight: 700; cursor: not-allowed; display: flex; align-items: center; justify-content: center; margin-top: auto;">
                             Inscrições Encerradas
                         </button>
                     `;
-                } else if (totalInscritas > 0 && !temEquipeDisponivelParaInscrever) {
-                    // Estado: Já possui equipe(s) inscrita(s) nesta categoria e todas as cadastradas já estão inscritas
-                    card.style.background = '#f0fdf4';
-                    card.style.border = '1.5px solid #86efac';
-
-                    const nomesInscritos = inscricoesDestaCat.map(i => `<div style="display: flex; align-items: center; gap: 6px; padding: 2px 0;"><span>🏐</span> <strong>${i.equipeNome}</strong></div>`).join('');
-                    const badgeTxt = totalInscritas === 1 ? '✓ 1 TIME INSCRITO' : `✓ ${totalInscritas} TIMES INSCRITOS`;
-
-                    card.innerHTML = `
-                        <div style="flex: 1;">
-                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
-                                <span style="font-size: 13px; font-weight: 800; color: #166534; text-transform: uppercase;">${categoria}</span>
-                                <span style="background: #22c55e; color: #fff; font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 4px; display: inline-flex; align-items: center; gap: 4px;">
-                                    ${badgeTxt}
-                                </span>
-                            </div>
-                            <div style="font-size: 11.5px; color: #15803d; line-height: 1.5; margin-bottom: 12px; background: #ffffff; padding: 8px 10px; border-radius: 4px; border: 1px solid #bbf7d0;">
-                                ${nomesInscritos}
-                            </div>
-                        </div>
-                        <div style="display: flex; flex-direction: column; gap: 6px; margin-top: auto;">
-                            <button type="button" onclick="iniciarFluxoCadastroEInscricao('${categoria.replace(/'/g, "\\'")}')" style="width: 100%; height: 36px; background: #0f1c3f; color: #ffffff; border: none; border-radius: 4px; font-size: 11px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: background 0.2s;" onmouseover="this.style.background='#1d72f2'" onmouseout="this.style.background='#0f1c3f'">
-                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                                Inscrever Outro Time (Time B)
-                            </button>
-                            <button type="button" onclick="switchFedTab('inscricoes', document.querySelectorAll('.sidebar-menu-fed button')[1])" style="width: 100%; height: 34px; background: #ffffff; color: #166534; border: 1px solid #86efac; border-radius: 4px; font-size: 11px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px;">
-                                Ver Inscrições Confirmadas →
-                            </button>
-                        </div>
-                    `;
-                } else if (temEquipeDisponivelParaInscrever) {
-                    // Estado: Equipe cadastrada disponível para esta categoria pronta para inscrição
-                    card.style.background = '#ffffff';
+                } else if (temEquipe) {
+                    // Estado: O clube possui equipe(s) cadastrada(s) para esta categoria
                     card.style.border = totalAtletas >= 6 ? '1.5px solid #86efac' : '1.5px solid #bfdbfe';
                     card.style.boxShadow = '0 2px 8px rgba(15, 28, 63, 0.06)';
 
-                    const badgeHabilitada = totalAtletas >= 6
-                        ? '<span style="background: #dcfce7; color: #15803d; font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 4px; border: 1px solid #86efac;">✓ ELENCO COMPLETO</span>'
+                    const badgeHeader = totalAtletas >= 6
+                        ? '<span style="background: #dcfce7; color: #15803d; font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 4px; border: 1px solid #86efac;">EQUIPE HABILITADA</span>'
                         : '<span style="background: #eff6ff; color: #1d72f2; font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 4px; border: 1px solid #bfdbfe;">EQUIPE HABILITADA</span>';
 
                     const avisoMinimoCards = totalAtletas < 6
-                        ? `<div style="font-size: 10.5px; color: #b45309; background: #fffbeb; padding: 4px 6px; border-radius: 3px; border: 1px solid #fef3c7; margin-top: 4px;">
+                        ? `<div style="font-size: 10.5px; color: #b45309; background: #fffbeb; padding: 4px 6px; border-radius: 3px; border: 1px solid #fef3c7; margin-top: 6px;">
                                 ⚠ Requer mínimo de 6 atletas para homologação (atual: ${totalAtletas}/6).
                             </div>`
                         : '';
 
+                    // Inscrições já ativas
+                    let jaTemInscritoHtml = '';
+                    if (totalInscritas > 0) {
+                        const nomesTxt = inscricoesDestaCat.map(i => i.equipeNome).join(', ');
+                        jaTemInscritoHtml = `<div style="font-size: 11px; color: #16a34a; font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 4px;">
+                            ✓ Já possui ${totalInscritas} time(s) inscrito(s) (${nomesTxt})
+                        </div>`;
+                    }
+
+                    // Seletor de equipe (se houver mais de uma não inscrita)
                     let opcoesOutrosTimes = '';
                     if (equipesNaoInscritas.length > 1) {
                         opcoesOutrosTimes = `
@@ -3778,37 +3756,52 @@
                         `;
                     }
 
-                    const jaTemInscritoTxt = totalInscritas > 0 ? `<div style="font-size: 10.5px; color: #16a34a; font-weight: 700; margin-bottom: 4px;">✓ Já possui ${totalInscritas} time(s) inscrito(s) nesta categoria</div>` : '';
+                    let btnInscreverPrincipal = '';
+                    if (temEquipeDisponivelParaInscrever) {
+                        btnInscreverPrincipal = `
+                            <button type="button" onclick="const sel = document.getElementById('sel-eq-ins-${categoria.replace(/[^a-zA-Z0-9]/g, '_')}'); inscreverEquipeDiretaCategoria(sel ? sel.value : '${equipeAlvo.id}', '${categoria.replace(/'/g, "\\'")}')" class="btn-action-text-green" style="width: 100%; height: 36px; font-size: 12px; font-weight: 800; justify-content: center; border-radius: 4px; box-shadow: 0 2px 6px rgba(22, 163, 74, 0.25);">
+                                ✓ INSCREVER ESTA EQUIPE
+                            </button>
+                        `;
+                    }
+
+                    let btnVerInscricoes = '';
+                    if (totalInscritas > 0) {
+                        btnVerInscricoes = `
+                            <button type="button" onclick="switchFedTab('inscricoes', document.querySelectorAll('.sidebar-menu-fed button')[1])" style="width: 100%; height: 28px; background: #ffffff; color: #166534; border: 1px solid #86efac; border-radius: 4px; font-size: 10.5px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px;">
+                                Ver Inscrições Confirmadas →
+                            </button>
+                        `;
+                    }
 
                     card.innerHTML = `
-                        <div>
+                        <div style="flex: 1;">
                             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
                                 <span style="font-size: 13px; font-weight: 800; color: #0f1c3f; text-transform: uppercase;">${categoria}</span>
-                                ${badgeHabilitada}
+                                ${badgeHeader}
                             </div>
-                            ${jaTemInscritoTxt}
+                            ${jaTemInscritoHtml}
                             <div style="font-size: 11.5px; color: #475569; line-height: 1.4;">
-                                Time: <strong style="color: #0f1c3f;">${equipeAlvo.nomeTime}</strong><br>
+                                Time: <strong style="color: #0f1c3f;">${equipeAlvo ? equipeAlvo.nomeTime : (equipesDaCategoria[0] ? equipesDaCategoria[0].nomeTime : 'Sua Agremiação')}</strong><br>
                                 Atletas na Categoria: <strong style="color: ${totalAtletas >= 6 ? '#16a34a' : '#1d72f2'};">${totalAtletas} atleta(s)</strong>
                             </div>
                             ${opcoesOutrosTimes}
                             ${avisoMinimoCards}
                         </div>
-                        <div style="display: flex; flex-direction: column; gap: 6px;">
-                            <button type="button" onclick="const sel = document.getElementById('sel-eq-ins-${categoria.replace(/[^a-zA-Z0-9]/g, '_')}'); inscreverEquipeDiretaCategoria(sel ? sel.value : '${equipeAlvo.id}', '${categoria.replace(/'/g, "\\'")}')" class="btn-action-text-green" style="width: 100%; height: 36px; font-size: 12px; font-weight: 800; justify-content: center; border-radius: 4px; box-shadow: 0 2px 6px rgba(22, 163, 74, 0.25);">
-                                ✓ Inscrever Esta Equipe
-                            </button>
+                        <div style="display: flex; flex-direction: column; gap: 6px; margin-top: auto;">
+                            ${btnInscreverPrincipal}
                             <button type="button" onclick="iniciarFluxoCadastroEInscricao('${categoria.replace(/'/g, "\\'")}')" style="width: 100%; height: 30px; background: transparent; color: #0f1c3f; border: 1px dashed #cbd5e1; border-radius: 4px; font-size: 10.5px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px;">
                                 + Cadastrar Outro Time nesta Categoria
                             </button>
+                            ${btnVerInscricoes}
                         </div>
                     `;
                 } else {
-                    // Estado: Não possui equipe/elenco cadastrado nesta categoria
+                    // Estado: Não possui equipe cadastrada nesta categoria
                     card.style.background = '#f8fafc';
                     card.style.border = '1.5px dashed #cbd5e1';
                     card.innerHTML = `
-                        <div>
+                        <div style="flex: 1;">
                             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
                                 <span style="font-size: 13px; font-weight: 800; color: #475569; text-transform: uppercase;">${categoria}</span>
                                 <span style="background: #f1f5f9; color: #64748b; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 4px; border: 1px solid #e2e8f0;">
@@ -3819,14 +3812,12 @@
                                 Sua agremiação ainda não possui equipe cadastrada no <strong>${categoria}</strong>.
                             </div>
                         </div>
-                        <button type="button" onclick="iniciarFluxoCadastroEInscricao('${categoria.replace(/'/g, "\\'")}')" style="width: 100%; height: 38px; background: #0f1c3f; color: #ffffff; border: none; border-radius: 4px; font-size: 11.5px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: background 0.2s;" onmouseover="this.style.background='#1d72f2'" onmouseout="this.style.background='#0f1c3f'">
+                        <button type="button" onclick="iniciarFluxoCadastroEInscricao('${categoria.replace(/'/g, "\\'")}')" style="width: 100%; height: 38px; background: #0f1c3f; color: #ffffff; border: none; border-radius: 4px; font-size: 11.5px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: background 0.2s; margin-top: auto;" onmouseover="this.style.background='#1d72f2'" onmouseout="this.style.background='#0f1c3f'">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                             Cadastrar Elenco & Inscrever
                         </button>
                     `;
-                }
-
-                container.appendChild(card);
+                }                container.appendChild(card);
             });
         }
 
