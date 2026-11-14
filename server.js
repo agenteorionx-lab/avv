@@ -420,25 +420,19 @@ app.post(['/api/equipes/cadastrar', '/avv/api/equipes/cadastrar'], (req, res) =>
         // Normalização do WhatsApp/Telefone para comparação (apenas dígitos)
         const whatsLimpo = sanitizarTexto(body.whatsapp || '', 30).replace(/\D/g, '');
 
-        // Verifica duplicidade por e-mail ou telefone
+        // Verifica duplicidade APENAS se tiver exatamente o mesmo nome de equipe para o mesmo e-mail/responsável
         const existente = db.equipes.find(e => {
             const eEmail = (e.email || '').toLowerCase().trim();
-            const eWhats = (e.whatsapp || '').replace(/\D/g, '');
-            if (eEmail === email) return true;
-            if (whatsLimpo && whatsLimpo.length >= 8 && eWhats === whatsLimpo) return true;
-            return false;
+            const eNome = (e.nomeTime || '').toLowerCase().trim();
+            const bodyNome = nomeTime.toLowerCase().trim();
+            return (eEmail === email && eNome === bodyNome);
         });
 
         if (existente) {
-            const eEmail = (existente.email || '').toLowerCase().trim();
-            const motivo = (eEmail === email)
-                ? `O e-mail "${email}" já possui cadastro vinculado à equipe "${existente.nomeTime}".`
-                : `O telefone/WhatsApp "${body.whatsapp}" já possui cadastro vinculado à equipe "${existente.nomeTime}".`;
-
             return res.status(409).json({
                 ok: false,
                 duplicado: true,
-                mensagem: `${motivo} Utilize outro ou recupere o acesso na tela de login.`,
+                mensagem: `A agremiação já possui uma equipe cadastrada com o nome "${existente.nomeTime}". Caso queira inscrever um segundo time da mesma instituição, adicione um identificador (ex: "${existente.nomeTime} - B" ou "${existente.nomeTime} - Time 2").`,
                 equipe: limparEquipeParaCliente(existente)
             });
         }
