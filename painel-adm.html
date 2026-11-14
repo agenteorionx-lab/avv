@@ -2776,13 +2776,10 @@
             const linhasAtletas = atletasLista.map((a, i) => `
                 <tr>
                     <td style="text-align: center; font-weight: 800;">${i + 1}</td>
-                    <td><strong>${a.id}</strong></td>
-                    <td><strong>${a.nome.toUpperCase()}</strong></td>
-                    <td>${a.categoria || 'Adulto'}</td>
-                    <td>${a.posicao || '---'}</td>
                     <td>${a.cpf || '---'}</td>
-                    <td>${a.rg || '---'}</td>
-                    <td>${a.nasc || '---'}</td>
+                    <td><strong>${(a.nome || '').toUpperCase()}</strong></td>
+                    <td>${a.posicao || '---'}</td>
+                    <td style="text-align: center;">&nbsp;</td>
                 </tr>
             `).join('');
 
@@ -2841,14 +2838,11 @@
                     <table class="tabela-ficha-dados">
                         <thead>
                             <tr style="background: #f1f5f9; font-weight: 800; color: #0f1c3f;">
-                                <td style="width: 34px; text-align: center;">#</td>
-                                <td>INSCRIÇÃO</td>
-                                <td>NOME COMPLETO DO ATLETA</td>
-                                <td>CATEGORIA</td>
-                                <td>POSIÇÃO</td>
-                                <td>CPF</td>
-                                <td>RG</td>
-                                <td>NASCIMENTO</td>
+                                <td style="width: 36px; text-align: center;">#</td>
+                                <td style="width: 140px;">CPF</td>
+                                <td>Nome Completo</td>
+                                <td style="width: 120px;">Posição</td>
+                                <td style="width: 90px; text-align: center;">N° Camisa</td>
                             </tr>
                         </thead>
                         <tbody>
