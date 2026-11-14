@@ -903,12 +903,16 @@
                     <img src="logos/logo_avv.png" style="width: 26px; height: 26px; object-fit: contain;" alt="AVV">
                     <span style="font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">FICHA OFICIAL DO ATLETA &bull; VISTORIA ADMINISTRATIVA</span>
                 </div>
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <button onclick="solicitarEmissaoFichaIndividualAdm()" class="btn-action-text-green" style="background: #16a34a; font-size: 11px; padding: 6px 14px; height: 32px; gap: 6px;">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
-                        Imprimir / Baixar Ficha
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <button onclick="solicitarDownloadFichaIndividualAdm()" style="background: #0284c7; color: #ffffff; border: 1px solid #0369a1; font-size: 11.5px; padding: 6px 14px; height: 32px; gap: 6px; border-radius: 5px; font-weight: 700; cursor: pointer; display: flex; align-items: center;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                        Baixar PDF
                     </button>
-                    <button onclick="fecharFichaAtletaAdm()" style="background: transparent; border: none; color: #ffffff; font-size: 24px; cursor: pointer; line-height: 1;" title="Fechar">&times;</button>
+                    <button onclick="window.print()" style="background: #16a34a; color: #ffffff; border: 1px solid #15803d; font-size: 11.5px; padding: 6px 14px; height: 32px; gap: 6px; border-radius: 5px; font-weight: 700; cursor: pointer; display: flex; align-items: center;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                        Imprimir
+                    </button>
+                    <button onclick="fecharFichaAtletaAdm()" style="background: transparent; border: none; color: #ffffff; font-size: 24px; cursor: pointer; line-height: 1; padding: 0 4px;" title="Fechar">&times;</button>
                 </div>
             </div>
 
@@ -2366,47 +2370,43 @@
                     </table>
                 </div>
 
-                <div style="border: 1px solid #cbd5e1; border-radius: 4px; padding: 12px 16px; margin-bottom: 12px; background: rgba(255,255,255,0.9); position: relative; z-index: 2;">
-                    <h4 style="font-size: 10.5px; font-weight: 800; color: #0f1c3f; text-transform: uppercase; margin: 0 0 6px 0; text-align: center;">
+                <div style="border: 1px solid #000000; border-radius: 4px; padding: 14px 18px; margin-bottom: 14px; background: rgba(255,255,255,0.95); position: relative; z-index: 2; color: #000000;">
+                    <h4 style="font-size: 11px; font-weight: 800; color: #000000; text-transform: uppercase; margin: 0 0 8px 0; text-align: center; letter-spacing: 0.5px;">
                         AUTORIZAÇÃO DO RESPONSÁVEL LEGAL (PARA ATLETAS MENORES DE 18 ANOS)
                     </h4>
-                    <p style="font-size: 9.5px; color: #334155; line-height: 1.4; margin: 0 0 12px 0; text-align: justify;">
+                    <p style="font-size: 10px; color: #000000; line-height: 1.45; margin: 0 0 16px 0; text-align: justify;">
                         Autorizo o(a) atleta acima identificado(a) a participar dos jogos e competições oficiais da <strong>Associação Vilhenense de Voleibol (AVV)</strong> pela equipe <strong>${equipe.nomeTime}</strong> na categoria <strong>${catAtleta}</strong>, declarando que se encontra em plenas condições de saúde para a prática esportiva.
                     </p>
-                    <div style="display: flex; gap: 16px; font-size: 9.5px; color: #334155; margin-bottom: 18px;">
+                    <div style="display: flex; gap: 24px; font-size: 10px; color: #000000; margin-bottom: 24px;">
                         <div style="flex: 2;">
-                            <label style="display: block; font-size: 8.5px; font-weight: 700; color: #475569; margin-bottom: 16px;">Nome Legível do Responsável:</label>
-                            <div style="border-bottom: 1px solid #94a3b8;"></div>
+                            <label style="display: block; font-size: 9px; font-weight: 800; color: #000000; margin-bottom: 30px;">Nome Legível do Responsável:</label>
+                            <div style="border-bottom: 1.5px solid #000000;"></div>
                         </div>
                         <div style="flex: 1;">
-                            <label style="display: block; font-size: 8.5px; font-weight: 700; color: #475569; margin-bottom: 16px;">Documento (RG/CPF):</label>
-                            <div style="border-bottom: 1px solid #94a3b8;"></div>
+                            <label style="display: block; font-size: 9px; font-weight: 800; color: #000000; margin-bottom: 30px;">Documento (RG/CPF):</label>
+                            <div style="border-bottom: 1.5px solid #000000;"></div>
                         </div>
                     </div>
-                    <div style="margin-top: 24px; text-align: center;">
-                        <div style="width: 320px; border-top: 1px solid #0f1c3f; margin: 0 auto 4px auto;"></div>
-                        <span style="font-size: 9px; font-weight: 700; color: #0f1c3f; text-transform: uppercase;">Assinatura do Pai, Mãe ou Responsável Legal</span>
+                    <div style="margin-top: 50px; margin-bottom: 10px; text-align: center;">
+                        <div style="width: 380px; max-width: 90%; border-top: 1.5px solid #000000; margin: 0 auto 5px auto;"></div>
+                        <span style="font-size: 9.5px; font-weight: 800; color: #000000; text-transform: uppercase;">Assinatura do Pai, Mãe ou Responsável Legal</span>
                     </div>
                 </div>
 
-                <div style="font-size: 8.5px; color: #475569; line-height: 1.35; margin-bottom: 16px; text-align: justify; background: rgba(255,255,255,0.9); padding: 8px 12px; border: 1px dashed #cbd5e1; border-radius: 4px; position: relative; z-index: 2;">
+                <div style="font-size: 8.5px; color: #000000; line-height: 1.35; margin-bottom: 18px; text-align: justify; background: rgba(255,255,255,0.95); padding: 8px 12px; border: 1px dashed #000000; border-radius: 4px; position: relative; z-index: 2;">
                     <p style="margin: 0 0 3px 0;">&bull; Declaro estar física e clinicamente apto(a) a participar dos eventos promovidos pela Associação Vilhenense de Voleibol (AVV).</p>
                     <p style="margin: 0 0 3px 0;">&bull; Declaro estar ciente e de pleno acordo com o Regulamento Geral da competição e as diretrizes disciplinares estabelecidas.</p>
                     <p style="margin: 0;">&bull; Autorizo o uso gratuito de imagem e voz para fins de divulgação esportiva e arquivo institucional da AVV.</p>
                 </div>
 
-                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 40px; margin-bottom: 10px; position: relative; z-index: 2;">
-                    <div style="text-align: center; width: 44%;">
-                        <div style="border-top: 1px solid #0f1c3f; margin-bottom: 4px;"></div>
-                        <span style="font-size: 9px; font-weight: 700; color: #0f1c3f; text-transform: uppercase;">Assinatura do Atleta</span>
-                    </div>
-                    <div style="text-align: center; width: 44%;">
-                        <div style="border-top: 1px solid #0f1c3f; margin-bottom: 4px;"></div>
-                        <span style="font-size: 9px; font-weight: 700; color: #0f1c3f; text-transform: uppercase;">Diretoria Técnica AVV &bull; Homologação</span>
+                <div style="display: flex; justify-content: center; align-items: flex-end; margin-top: 48px; margin-bottom: 14px; position: relative; z-index: 2;">
+                    <div style="text-align: center; width: 60%; max-width: 380px;">
+                        <div style="border-top: 1.5px solid #000000; margin-bottom: 5px;"></div>
+                        <span style="font-size: 9.5px; font-weight: 800; color: #000000; text-transform: uppercase;">Assinatura do Atleta</span>
                     </div>
                 </div>
 
-                <div style="margin-top: 14px; border-top: 1px solid #cbd5e1; padding-top: 6px; display: flex; justify-content: space-between; font-size: 8px; color: #94a3b8; position: relative; z-index: 2;">
+                <div style="margin-top: 16px; border-top: 1px solid #000000; padding-top: 6px; display: flex; justify-content: space-between; font-size: 8px; color: #000000; position: relative; z-index: 2;">
                     <span>AVV - Sistema Oficial de Competições &bull; Ficha ${indexPagina} de ${totalPaginas}</span>
                     <span>Autenticação Eletrônica: ${authCode}</span>
                 </div>
@@ -2428,15 +2428,21 @@
             document.getElementById('modal-adm-ficha-atleta').style.display = 'none';
         }
 
-        function solicitarEmissaoFichaIndividualAdm() {
+        function solicitarDownloadFichaIndividualAdm() {
             const el = document.getElementById('adm-folha-individual-container');
-            const nomeAtleta = el.querySelector('strong')?.textContent?.trim() || 'Atleta';
-            solicitarEmissaoDocumentoAvv({
-                titulo: 'Ficha Oficial do Atleta',
-                subtitulo: 'Documento Oficial de Registro AVV',
-                nomeArquivo: `Ficha_${nomeAtleta}`,
-                elementoAlvo: el
-            });
+            const nomeAtleta = el?.querySelector('strong')?.textContent?.trim() || 'Atleta';
+            const opt = {
+                margin: [6, 6, 6, 6],
+                filename: `Ficha_${nomeAtleta.replace(/[^a-zA-Z0-9_-]/g, '_')}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true, allowTaint: true, logging: false },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            if (typeof html2pdf !== 'undefined' && el) {
+                html2pdf().set(opt).from(el).save();
+            } else {
+                window.print();
+            }
         }
 
         // ======================================================================

@@ -1324,12 +1324,16 @@
                     <img src="logos/logo_avv.png" style="width: 26px; height: 26px; object-fit: contain;" alt="AVV">
                     <span style="font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">Ficha Oficial de Inscrição &bull; AVV</span>
                 </div>
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <button onclick="imprimirFichaOficial()" style="background: #16a34a; color: #ffffff; border: none; padding: 6px 16px; border-radius: 4px; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px;">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
-                        Imprimir Ficha
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <button onclick="solicitarDownloadFichaIndividualTime()" style="background: #0284c7; color: #ffffff; border: 1px solid #0369a1; font-size: 11.5px; padding: 6px 14px; height: 32px; gap: 6px; border-radius: 5px; font-weight: 700; cursor: pointer; display: flex; align-items: center;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                        Baixar PDF
                     </button>
-                    <button onclick="fecharFichaAtleta()" style="background: transparent; border: none; color: #ffffff; font-size: 24px; cursor: pointer; line-height: 1;">&times;</button>
+                    <button onclick="window.print()" style="background: #16a34a; color: #ffffff; border: 1px solid #15803d; font-size: 11.5px; padding: 6px 14px; height: 32px; gap: 6px; border-radius: 5px; font-weight: 700; cursor: pointer; display: flex; align-items: center;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                        Imprimir
+                    </button>
+                    <button onclick="fecharFichaAtleta()" style="background: transparent; border: none; color: #ffffff; font-size: 24px; cursor: pointer; line-height: 1; padding: 0 4px;" title="Fechar">&times;</button>
                 </div>
             </div>
 
@@ -1441,52 +1445,48 @@
                     </div>
 
                     <!-- SEÇÃO: TERMO DE AUTORIZAÇÃO PARA ATLETA OU RESPONSÁVEL LEGAL (SE MENOR) -->
-                    <div style="border: 1px solid #cbd5e1; border-radius: 4px; padding: 12px 16px; margin-bottom: 12px; background: rgba(255,255,255,0.85);">
-                        <h4 style="font-size: 11px; font-weight: 800; color: #0f1c3f; text-transform: uppercase; margin: 0 0 6px 0; text-align: center; letter-spacing: 0.5px;">
+                    <div style="border: 1px solid #000000; border-radius: 4px; padding: 14px 18px; margin-bottom: 14px; background: rgba(255,255,255,0.95); color: #000000;">
+                        <h4 style="font-size: 11px; font-weight: 800; color: #000000; text-transform: uppercase; margin: 0 0 8px 0; text-align: center; letter-spacing: 0.5px;">
                             AUTORIZAÇÃO DO RESPONSÁVEL LEGAL (PARA MENORES DE 18 ANOS)
                         </h4>
-                        <p style="font-size: 10px; color: #334155; line-height: 1.4; margin: 0 0 10px 0; text-align: justify;">
+                        <p style="font-size: 10px; color: #000000; line-height: 1.45; margin: 0 0 16px 0; text-align: justify;">
                             Autorizo o(a) meu(minha) filho(a)/tutelado(a), qualificado(a) neste documento, a participar dos treinamentos, jogos e competições oficiais da <strong>Associação Vilhenense de Voleibol (AVV)</strong> e federações coirmãs, declarando que o atleta encontra-se em plenas condições de saúde para prática esportiva.
                         </p>
                         
-                        <div style="display: flex; gap: 20px; font-size: 10px; color: #334155; margin-bottom: 24px; flex-wrap: wrap;">
+                        <div style="display: flex; gap: 24px; font-size: 10px; color: #000000; margin-bottom: 24px; flex-wrap: wrap;">
                             <div style="flex: 2; min-width: 250px;">
-                                <label style="display: block; font-size: 9px; font-weight: 700; color: #475569; margin-bottom: 20px;">Nome do Responsável:</label>
-                                <div style="border-bottom: 1px solid #94a3b8; width: 100%;"></div>
+                                <label style="display: block; font-size: 9px; font-weight: 800; color: #000000; margin-bottom: 30px;">Nome do Responsável:</label>
+                                <div style="border-bottom: 1.5px solid #000000; width: 100%;"></div>
                             </div>
                             <div style="flex: 1; min-width: 110px;">
-                                <label style="display: block; font-size: 9px; font-weight: 700; color: #475569; margin-bottom: 20px;">RG:</label>
-                                <div style="border-bottom: 1px solid #94a3b8; width: 100%;"></div>
+                                <label style="display: block; font-size: 9px; font-weight: 800; color: #000000; margin-bottom: 30px;">RG:</label>
+                                <div style="border-bottom: 1.5px solid #000000; width: 100%;"></div>
                             </div>
                             <div style="flex: 1; min-width: 110px;">
-                                <label style="display: block; font-size: 9px; font-weight: 700; color: #475569; margin-bottom: 20px;">CPF:</label>
-                                <div style="border-bottom: 1px solid #94a3b8; width: 100%;"></div>
+                                <label style="display: block; font-size: 9px; font-weight: 800; color: #000000; margin-bottom: 30px;">CPF:</label>
+                                <div style="border-bottom: 1.5px solid #000000; width: 100%;"></div>
                             </div>
                         </div>
 
-                        <div style="margin-top: 36px; text-align: center;">
-                            <div style="width: 100%; max-width: 360px; border-top: 1px solid #0f1c3f; margin: 0 auto 5px auto;"></div>
-                            <span style="font-size: 9.5px; font-weight: 700; color: #0f1c3f; text-transform: uppercase; letter-spacing: 0.5px;">Assinatura do Pai, Mãe ou Responsável Legal</span>
+                        <div style="margin-top: 50px; margin-bottom: 10px; text-align: center;">
+                            <div style="width: 100%; max-width: 380px; border-top: 1.5px solid #000000; margin: 0 auto 5px auto;"></div>
+                            <span style="font-size: 9.5px; font-weight: 800; color: #000000; text-transform: uppercase; letter-spacing: 0.5px;">Assinatura do Pai, Mãe ou Responsável Legal</span>
                         </div>
                     </div>
 
                     <!-- DECLARAÇÕES E CIÊNCIA DO ATLETA -->
-                    <div style="font-size: 8.5px; color: #475569; line-height: 1.35; margin-bottom: 16px; text-align: justify; background: rgba(255,255,255,0.85); padding: 8px 12px; border: 1px dashed #cbd5e1; border-radius: 4px;">
+                    <div style="font-size: 8.5px; color: #000000; line-height: 1.35; margin-bottom: 18px; text-align: justify; background: rgba(255,255,255,0.95); padding: 8px 12px; border: 1px dashed #000000; border-radius: 4px;">
                         <p style="margin: 0 0 3px 0;">&bull; Declaro estar física e clinicamente apto(a) a participar dos eventos promovidos pela Associação Vilhenense de Voleibol (AVV).</p>
                         <p style="margin: 0 0 3px 0;">&bull; Declaro estar ciente e de pleno acordo com o Regulamento Geral da competição e as diretrizes disciplinares estabelecidas.</p>
                         <p style="margin: 0 0 3px 0;">&bull; Isento a organização do evento, diretores e patrocinadores de quaisquer responsabilidades por incidentes decorrentes da prática esportiva regular.</p>
                         <p style="margin: 0;">&bull; Autorizo o uso gratuito de minha imagem e voz para fins de divulgação esportiva, transmissão institucional e arquivo histórico da AVV.</p>
                     </div>
 
-                    <!-- ASSINATURA DO ATLETA E SECRETARIA TÉCNICA -->
-                    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 44px; margin-bottom: 12px;">
-                        <div style="text-align: center; width: 44%;">
-                            <div style="border-top: 1px solid #0f1c3f; margin-bottom: 5px;"></div>
-                            <span style="font-size: 9.5px; font-weight: 700; color: #0f1c3f; text-transform: uppercase; letter-spacing: 0.5px;">Assinatura do Atleta</span>
-                        </div>
-                        <div style="text-align: center; width: 44%;">
-                            <div style="border-top: 1px solid #0f1c3f; margin-bottom: 5px;"></div>
-                            <span style="font-size: 9.5px; font-weight: 700; color: #0f1c3f; text-transform: uppercase; letter-spacing: 0.5px;">Associação Vilhenense de Voleibol &bull; Visto Técnico</span>
+                    <!-- ASSINATURA DO ATLETA -->
+                    <div style="display: flex; justify-content: center; align-items: flex-end; margin-top: 48px; margin-bottom: 14px;">
+                        <div style="text-align: center; width: 60%; max-width: 380px;">
+                            <div style="border-top: 1.5px solid #000000; margin-bottom: 5px;"></div>
+                            <span style="font-size: 9.5px; font-weight: 800; color: #000000; text-transform: uppercase; letter-spacing: 0.5px;">Assinatura do Atleta</span>
                         </div>
                     </div>
 
@@ -4660,15 +4660,25 @@
             if (elCamp && nomeCamp) elCamp.textContent = nomeCamp.toUpperCase();
         }
 
-        function imprimirFichaOficial() {
+        function solicitarDownloadFichaIndividualTime() {
             const el = document.getElementById('folha-ficha-impressao');
             const nomeAtleta = document.getElementById('ficha-atleta-nome-topo')?.textContent || 'Atleta';
-            solicitarEmissaoDocumentoAvv({
-                titulo: 'Ficha de Inscrição Oficial',
-                subtitulo: nomeAtleta,
-                nomeArquivo: `Ficha_${nomeAtleta}`,
-                elementoAlvo: el
-            });
+            const opt = {
+                margin: [6, 6, 6, 6],
+                filename: `Ficha_${nomeAtleta.replace(/[^a-zA-Z0-9_-]/g, '_')}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true, allowTaint: true, logging: false },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            if (typeof html2pdf !== 'undefined' && el) {
+                html2pdf().set(opt).from(el).save();
+            } else {
+                window.print();
+            }
+        }
+
+        function imprimirFichaOficial() {
+            window.print();
         }
 
         // ==========================================================================
@@ -5910,52 +5920,48 @@
                     </div>
 
                     <!-- SEÇÃO: TERMO DE AUTORIZAÇÃO PARA RESPONSÁVEL LEGAL -->
-                    <div style="border: 1px solid #cbd5e1; border-radius: 4px; padding: 12px 16px; margin-bottom: 12px; background: rgba(255,255,255,0.85);">
-                        <h4 style="font-size: 11px; font-weight: 800; color: #0f1c3f; text-transform: uppercase; margin: 0 0 6px 0; text-align: center; letter-spacing: 0.5px;">
+                    <div style="border: 1px solid #000000; border-radius: 4px; padding: 14px 18px; margin-bottom: 14px; background: rgba(255,255,255,0.95); color: #000000;">
+                        <h4 style="font-size: 11px; font-weight: 800; color: #000000; text-transform: uppercase; margin: 0 0 8px 0; text-align: center; letter-spacing: 0.5px;">
                             AUTORIZAÇÃO DO RESPONSÁVEL LEGAL (PARA MENORES DE 18 ANOS)
                         </h4>
-                        <p style="font-size: 10px; color: #334155; line-height: 1.4; margin: 0 0 10px 0; text-align: justify;">
+                        <p style="font-size: 10px; color: #000000; line-height: 1.45; margin: 0 0 16px 0; text-align: justify;">
                             Autorizo o(a) meu(minha) filho(a)/tutelado(a), qualificado(a) neste documento, a participar dos treinamentos, jogos e competições oficiais da <strong>Associação Vilhenense de Voleibol (AVV)</strong> e federações coirmãs, declarando que o atleta encontra-se em plenas condições de saúde para prática esportiva.
                         </p>
                         
-                        <div style="display: flex; gap: 20px; font-size: 10px; color: #334155; margin-bottom: 24px; flex-wrap: wrap;">
+                        <div style="display: flex; gap: 24px; font-size: 10px; color: #000000; margin-bottom: 24px; flex-wrap: wrap;">
                             <div style="flex: 2; min-width: 250px;">
-                                <label style="display: block; font-size: 9px; font-weight: 700; color: #475569; margin-bottom: 20px;">Nome do Responsável:</label>
-                                <div style="border-bottom: 1px solid #94a3b8; width: 100%;"></div>
+                                <label style="display: block; font-size: 9px; font-weight: 800; color: #000000; margin-bottom: 30px;">Nome do Responsável:</label>
+                                <div style="border-bottom: 1.5px solid #000000; width: 100%;"></div>
                             </div>
                             <div style="flex: 1; min-width: 110px;">
-                                <label style="display: block; font-size: 9px; font-weight: 700; color: #475569; margin-bottom: 20px;">RG:</label>
-                                <div style="border-bottom: 1px solid #94a3b8; width: 100%;"></div>
+                                <label style="display: block; font-size: 9px; font-weight: 800; color: #000000; margin-bottom: 30px;">RG:</label>
+                                <div style="border-bottom: 1.5px solid #000000; width: 100%;"></div>
                             </div>
                             <div style="flex: 1; min-width: 110px;">
-                                <label style="display: block; font-size: 9px; font-weight: 700; color: #475569; margin-bottom: 20px;">CPF:</label>
-                                <div style="border-bottom: 1px solid #94a3b8; width: 100%;"></div>
+                                <label style="display: block; font-size: 9px; font-weight: 800; color: #000000; margin-bottom: 30px;">CPF:</label>
+                                <div style="border-bottom: 1.5px solid #000000; width: 100%;"></div>
                             </div>
                         </div>
 
-                        <div style="margin-top: 36px; text-align: center;">
-                            <div style="width: 100%; max-width: 360px; border-top: 1px solid #0f1c3f; margin: 0 auto 5px auto;"></div>
-                            <span style="font-size: 9.5px; font-weight: 700; color: #0f1c3f; text-transform: uppercase; letter-spacing: 0.5px;">Assinatura do Pai, Mãe ou Responsável Legal</span>
+                        <div style="margin-top: 50px; margin-bottom: 10px; text-align: center;">
+                            <div style="width: 100%; max-width: 380px; border-top: 1.5px solid #000000; margin: 0 auto 5px auto;"></div>
+                            <span style="font-size: 9.5px; font-weight: 800; color: #000000; text-transform: uppercase; letter-spacing: 0.5px;">Assinatura do Pai, Mãe ou Responsável Legal</span>
                         </div>
                     </div>
 
                     <!-- DECLARAÇÕES E CIÊNCIA DO ATLETA -->
-                    <div style="font-size: 8.5px; color: #475569; line-height: 1.35; margin-bottom: 16px; text-align: justify; background: rgba(255,255,255,0.85); padding: 8px 12px; border: 1px dashed #cbd5e1; border-radius: 4px;">
+                    <div style="font-size: 8.5px; color: #000000; line-height: 1.35; margin-bottom: 18px; text-align: justify; background: rgba(255,255,255,0.95); padding: 8px 12px; border: 1px dashed #000000; border-radius: 4px;">
                         <p style="margin: 0 0 3px 0;">&bull; Declaro estar física e clinicamente apto(a) a participar dos eventos promovidos pela Associação Vilhenense de Voleibol (AVV).</p>
                         <p style="margin: 0 0 3px 0;">&bull; Declaro estar ciente e de pleno acordo com o Regulamento Geral da competição e as diretrizes disciplinares estabelecidas.</p>
                         <p style="margin: 0 0 3px 0;">&bull; Isento a organização do evento, diretores e patrocinadores de quaisquer responsabilidades por incidentes decorrentes da prática esportiva regular.</p>
                         <p style="margin: 0;">&bull; Autorizo o uso gratuito de minha imagem e voz para fins de divulgação esportiva, transmissão institucional e arquivo histórico da AVV.</p>
                     </div>
 
-                    <!-- ASSINATURA DO ATLETA E SECRETARIA TÉCNICA -->
-                    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 44px; margin-bottom: 12px;">
-                        <div style="text-align: center; width: 44%;">
-                            <div style="border-top: 1px solid #0f1c3f; margin-bottom: 5px;"></div>
-                            <span style="font-size: 9.5px; font-weight: 700; color: #0f1c3f; text-transform: uppercase; letter-spacing: 0.5px;">Assinatura do Atleta</span>
-                        </div>
-                        <div style="text-align: center; width: 44%;">
-                            <div style="border-top: 1px solid #0f1c3f; margin-bottom: 5px;"></div>
-                            <span style="font-size: 9.5px; font-weight: 700; color: #0f1c3f; text-transform: uppercase; letter-spacing: 0.5px;">Associação Vilhenense de Voleibol &bull; Visto Técnico</span>
+                    <!-- ASSINATURA DO ATLETA -->
+                    <div style="display: flex; justify-content: center; align-items: flex-end; margin-top: 48px; margin-bottom: 14px;">
+                        <div style="text-align: center; width: 60%; max-width: 380px;">
+                            <div style="border-top: 1.5px solid #000000; margin-bottom: 5px;"></div>
+                            <span style="font-size: 9.5px; font-weight: 800; color: #000000; text-transform: uppercase; letter-spacing: 0.5px;">Assinatura do Atleta</span>
                         </div>
                     </div>
 
