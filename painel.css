@@ -831,7 +831,7 @@ body {
 /* REGRAS ESPECÍFICAS PARA IMPRESSÃO (@media print) */
 @page {
   size: A4 portrait;
-  margin: 8mm 10mm;
+  margin: 5mm 6mm !important;
 }
 
 @media print {
@@ -907,13 +907,18 @@ body {
 
   .folha-a4-avv {
     box-shadow: none !important;
-    padding: 6mm 10mm !important;
+    padding: 3mm 7mm !important;
     max-width: 100% !important;
     width: 100% !important;
     min-height: auto !important;
+    max-height: 284mm !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
     page-break-after: always !important;
     break-after: page !important;
-    margin: 0 !important;
+    margin: 0 auto !important;
     border: none !important;
     background: #ffffff !important;
   }

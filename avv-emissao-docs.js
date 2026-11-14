@@ -163,8 +163,14 @@
                         box-shadow: none !important;
                         border-radius: 0 !important;
                         margin: 0 auto !important;
-                        page-break-after: always;
-                        break-after: page;
+                        padding: 3mm 7mm !important;
+                        max-height: 284mm !important;
+                        box-sizing: border-box !important;
+                        overflow: hidden !important;
+                        page-break-inside: avoid !important;
+                        break-inside: avoid !important;
+                        page-break-after: always !important;
+                        break-after: page !important;
                     }
                 }
             `;
