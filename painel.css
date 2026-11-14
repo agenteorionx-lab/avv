@@ -2171,3 +2171,14 @@ body {
     max-height: 160px !important;
   }
 }
+
+/* ALTO CONTRASTE PRETO E BRANCO PARA SÚMULAS E FICHAS IMPRESSAS */
+.folha-a4-avv table.tabela-ficha-dados {
+  border: 1px solid #000000 !important;
+}
+.folha-a4-avv table.tabela-ficha-dados td,
+.folha-a4-avv table.tabela-ficha-dados th {
+  border: 1px solid #000000 !important;
+  color: #000000 !important;
+}
+

@@ -6069,117 +6069,128 @@
                 return;
             }
 
+            function formatarDataBr(dataStr) {
+                if (!dataStr || dataStr === '---') return '---';
+                if (dataStr.includes('/')) return dataStr;
+                if (dataStr.includes('-')) {
+                    const partes = dataStr.split('-');
+                    if (partes.length === 3) return `${partes[2].padStart(2, '0')}/${partes[1].padStart(2, '0')}/${partes[0]}`;
+                }
+                return dataStr;
+            }
+
             const linhasAtletas = listaAtletas.map((a, i) => `
-                <tr>
-                    <td style="text-align: center; font-weight: 800; padding: 6px 8px;">${i + 1}</td>
-                    <td style="padding: 6px 8px;">${a.cpf || '---'}</td>
-                    <td style="padding: 6px 8px;"><strong>${(a.nome || 'ATLETA').toUpperCase()}</strong></td>
-                    <td style="padding: 6px 8px;"><strong style="color: #1d4ed8;">${a.posicao || 'Ponteiro'}</strong></td>
-                    <td style="text-align: center; padding: 6px 8px;">&nbsp;</td>
+                <tr style="border-bottom: 1px solid #000000;">
+                    <td style="text-align: center; font-weight: 800; color: #000000; border: 1px solid #000000; padding: 6px 8px;">${i + 1}</td>
+                    <td style="color: #000000; font-weight: 700; border: 1px solid #000000; padding: 6px 8px;"><strong>${(a.nome || 'ATLETA').toUpperCase()}</strong></td>
+                    <td style="text-align: center; color: #000000; font-weight: 600; border: 1px solid #000000; padding: 6px 8px;">${formatarDataBr(a.nasc || a.dataNascimento)}</td>
+                    <td style="color: #000000; font-weight: 600; border: 1px solid #000000; padding: 6px 8px;">${a.cpf || '---'}</td>
+                    <td style="text-align: center; border: 1px solid #000000; padding: 6px 8px;">&nbsp;</td>
                 </tr>
             `).join('');
 
             const listaComissao = equipe.comissao || [];
             const linhasComissao = listaComissao.map(c => `
-                <tr>
-                    <td style="padding: 6px 8px;"><strong>${c.id || '---'}</strong></td>
-                    <td style="padding: 6px 8px;"><strong>${(c.nome || '').toUpperCase()}</strong></td>
-                    <td style="padding: 6px 8px;">${c.funcao || 'Técnico'}</td>
-                    <td style="padding: 6px 8px;">${c.cpf || '---'}</td>
-                    <td style="padding: 6px 8px;">${c.cref || '---'}</td>
+                <tr style="border-bottom: 1px solid #000000;">
+                    <td style="color: #000000; font-weight: 700; border: 1px solid #000000; padding: 6px 8px;"><strong>${c.id || '---'}</strong></td>
+                    <td style="color: #000000; font-weight: 700; border: 1px solid #000000; padding: 6px 8px;"><strong>${(c.nome || '').toUpperCase()}</strong></td>
+                    <td style="color: #000000; font-weight: 600; border: 1px solid #000000; padding: 6px 8px;">${c.funcao || 'Técnico'}</td>
+                    <td style="color: #000000; font-weight: 600; border: 1px solid #000000; padding: 6px 8px;">${c.cpf || '---'}</td>
+                    <td style="color: #000000; font-weight: 600; border: 1px solid #000000; padding: 6px 8px;">${c.cref || '---'}</td>
                 </tr>
             `).join('');
 
             const folha = document.createElement('div');
             folha.className = 'folha-a4-avv';
+            folha.style.cssText = 'color: #000000; background: #ffffff;';
             folha.innerHTML = `
-                <div class="watermark-avv">
+                <div class="watermark-avv" style="opacity: 0.035;">
                     <img src="logos/logo_avv.png" alt="AVV Marca d'Água">
                 </div>
 
-                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #0f1c3f; padding-bottom: 10px; margin-bottom: 16px; position: relative; z-index: 2;">
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #000000; padding-bottom: 10px; margin-bottom: 16px; position: relative; z-index: 2; color: #000000;">
                     <div style="display: flex; align-items: center; gap: 12px;">
                         <img src="${equipe.logo || 'logos/logo_avv.png'}" style="width: 48px; height: 48px; object-fit: contain; background: #fff; padding: 2px; border-radius: 4px;" alt="Logo">
                         <div>
-                            <h3 style="font-size: 13px; font-weight: 900; color: #0f1c3f; margin: 0; text-transform: uppercase;">${torneioTexto}</h3>
-                            <span style="font-size: 10.5px; color: #64748b; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">SÚMULA OFICIAL &bull; RELAÇÃO NOMINAL DE INSCRITOS</span>
+                            <h3 style="font-size: 13px; font-weight: 900; color: #000000; margin: 0; text-transform: uppercase;">${torneioTexto}</h3>
+                            <span style="font-size: 10.5px; color: #000000; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">SÚMULA OFICIAL &bull; RELAÇÃO NOMINAL DE INSCRITOS</span>
                         </div>
                     </div>
-                    <div style="text-align: right; font-size: 10px; color: #475569;">
+                    <div style="text-align: right; font-size: 10px; color: #000000;">
                         <strong>Protocolo: ${equipe.protocolo || 'AVV-' + (equipe.numeroInscricao || equipe.numeroInscricaoTorneio || 'OFICIAL')}</strong><br>
                         Emitido em: ${dataHoje} às ${horaHoje}
                     </div>
                 </div>
 
-                <div style="background: #f8fafc; border: 1px solid #0f1c3f; border-radius: 4px; padding: 12px 16px; margin-bottom: 16px; position: relative; z-index: 2;">
+                <div style="background: #ffffff; border: 1.5px solid #000000; border-radius: 4px; padding: 12px 16px; margin-bottom: 16px; position: relative; z-index: 2; color: #000000;">
                     <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; font-size: 11px;">
                         <div>
-                            <span style="font-size: 9px; color: #64748b; font-weight: 700; display: block;">EQUIPE / AGREMIAÇÃO:</span>
-                            <strong style="font-size: 13px; color: #0f1c3f;">${equipe.nomeTime} (${equipe.cidade || 'Vilhena'} - ${equipe.estado || 'RO'})</strong>
+                            <span style="font-size: 9px; color: #000000; font-weight: 800; display: block;">EQUIPE / AGREMIAÇÃO:</span>
+                            <strong style="font-size: 13px; color: #000000;">${equipe.nomeTime} (${equipe.cidade || 'Vilhena'} - ${equipe.estado || 'RO'})</strong>
                         </div>
                         <div>
-                            <span style="font-size: 9px; color: #64748b; font-weight: 700; display: block;">CATEGORIA:</span>
-                            <strong style="font-size: 12px; color: #1d4ed8;">${catTexto}</strong>
+                            <span style="font-size: 9px; color: #000000; font-weight: 800; display: block;">CATEGORIA:</span>
+                            <strong style="font-size: 12px; color: #000000;">${catTexto}</strong>
                         </div>
                         <div>
-                            <span style="font-size: 9px; color: #64748b; font-weight: 700; display: block;">RESPONSÁVEL:</span>
-                            <strong style="font-size: 11px; color: #0f1c3f;">${equipe.responsavelNome || 'Dirigente do Clube'}</strong>
+                            <span style="font-size: 9px; color: #000000; font-weight: 800; display: block;">RESPONSÁVEL:</span>
+                            <strong style="font-size: 11px; color: #000000;">${equipe.responsavelNome || 'Dirigente do Clube'}</strong>
                         </div>
                     </div>
                 </div>
 
                 <div style="margin-bottom: 18px; position: relative; z-index: 2;">
-                    <div style="background: #0f1c3f; color: #ffffff; padding: 6px 10px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">
+                    <div style="background: #000000; color: #ffffff; padding: 6px 10px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; border: 1px solid #000000;">
                         1. QUADRO NOMINAL DE ATLETAS INSCRITOS (${listaAtletas.length} ATLETAS)
                     </div>
-                    <table class="tabela-ficha-dados" style="width: 100%; border-collapse: collapse;">
+                    <table class="tabela-ficha-dados" style="width: 100%; border-collapse: collapse; border: 1px solid #000000; color: #000000;">
                         <thead>
-                            <tr style="background: #f1f5f9; font-weight: 800; color: #0f1c3f; font-size: 10px;">
-                                <td style="width: 36px; text-align: center; padding: 6px 8px;">#</td>
-                                <td style="width: 140px; padding: 6px 8px;">CPF</td>
-                                <td style="padding: 6px 8px;">Nome Completo</td>
-                                <td style="width: 120px; padding: 6px 8px;">Posição</td>
-                                <td style="width: 90px; text-align: center; padding: 6px 8px;">N° Camisa</td>
+                            <tr style="background: #f1f5f9; font-weight: 800; color: #000000; border: 1px solid #000000;">
+                                <td style="width: 36px; text-align: center; border: 1px solid #000000; padding: 6px 8px; font-weight: 800; color: #000000;">#</td>
+                                <td style="border: 1px solid #000000; padding: 6px 8px; font-weight: 800; color: #000000;">Nome Completo</td>
+                                <td style="width: 110px; text-align: center; border: 1px solid #000000; padding: 6px 8px; font-weight: 800; color: #000000;">Data de Nasc.</td>
+                                <td style="width: 135px; border: 1px solid #000000; padding: 6px 8px; font-weight: 800; color: #000000;">CPF</td>
+                                <td style="width: 85px; text-align: center; border: 1px solid #000000; padding: 6px 8px; font-weight: 800; color: #000000;">N° Camisa</td>
                             </tr>
                         </thead>
-                        <tbody style="font-size: 10.5px;">
+                        <tbody>
                             ${linhasAtletas}
                         </tbody>
                     </table>
                 </div>
 
                 <div style="margin-bottom: 24px; position: relative; z-index: 2;">
-                    <div style="background: #0f1c3f; color: #ffffff; padding: 6px 10px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">
+                    <div style="background: #000000; color: #ffffff; padding: 6px 10px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; border: 1px solid #000000;">
                         2. COMISSÃO TÉCNICA HOMOLOGADA (${listaComissao.length} MEMBROS)
                     </div>
-                    <table class="tabela-ficha-dados" style="width: 100%; border-collapse: collapse;">
+                    <table class="tabela-ficha-dados" style="width: 100%; border-collapse: collapse; border: 1px solid #000000; color: #000000;">
                         <thead>
-                            <tr style="background: #f1f5f9; font-weight: 800; color: #0f1c3f; font-size: 10px;">
-                                <td style="padding: 6px 8px;">INSCRIÇÃO</td>
-                                <td style="padding: 6px 8px;">NOME COMPLETO</td>
-                                <td style="padding: 6px 8px;">FUNÇÃO</td>
-                                <td style="padding: 6px 8px;">CPF</td>
-                                <td style="padding: 6px 8px;">CREF</td>
+                            <tr style="background: #f1f5f9; font-weight: 800; color: #000000; border: 1px solid #000000;">
+                                <td style="width: 85px; border: 1px solid #000000; padding: 6px 8px; font-weight: 800; color: #000000;">INSCRIÇÃO</td>
+                                <td style="border: 1px solid #000000; padding: 6px 8px; font-weight: 800; color: #000000;">NOME COMPLETO</td>
+                                <td style="width: 120px; border: 1px solid #000000; padding: 6px 8px; font-weight: 800; color: #000000;">FUNÇÃO</td>
+                                <td style="width: 125px; border: 1px solid #000000; padding: 6px 8px; font-weight: 800; color: #000000;">CPF</td>
+                                <td style="width: 85px; border: 1px solid #000000; padding: 6px 8px; font-weight: 800; color: #000000;">CREF</td>
                             </tr>
                         </thead>
-                        <tbody style="font-size: 10.5px;">
-                            ${linhasComissao || '<tr><td colspan="5" style="text-align:center; padding: 8px; color: #64748b;">Nenhum membro de comissão técnica vinculado.</td></tr>'}
+                        <tbody>
+                            ${linhasComissao || '<tr><td colspan="5" style="text-align:center; padding: 8px; color: #000000; border: 1px solid #000000;">Nenhum membro de comissão técnica vinculado.</td></tr>'}
                         </tbody>
                     </table>
                 </div>
 
-                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 44px; position: relative; z-index: 2;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 44px; position: relative; z-index: 2; color: #000000;">
                     <div style="text-align: center; width: 44%;">
-                        <div style="border-top: 1px solid #0f1c3f; margin-bottom: 4px;"></div>
-                        <span style="font-size: 9px; font-weight: 700; color: #0f1c3f; text-transform: uppercase;">Assinatura do Dirigente / Responsável</span>
+                        <div style="border-top: 1.5px solid #000000; margin-bottom: 4px;"></div>
+                        <span style="font-size: 9px; font-weight: 800; color: #000000; text-transform: uppercase;">Assinatura do Dirigente / Responsável</span>
                     </div>
                     <div style="text-align: center; width: 44%;">
-                        <div style="border-top: 1px solid #0f1c3f; margin-bottom: 4px;"></div>
-                        <span style="font-size: 9px; font-weight: 700; color: #0f1c3f; text-transform: uppercase;">Diretoria Técnica AVV &bull; Homologação</span>
+                        <div style="border-top: 1.5px solid #000000; margin-bottom: 4px;"></div>
+                        <span style="font-size: 9px; font-weight: 800; color: #000000; text-transform: uppercase;">Diretoria Técnica AVV &bull; Homologação</span>
                     </div>
                 </div>
 
-                <div style="margin-top: 24px; border-top: 1px solid #cbd5e1; padding-top: 6px; display: flex; justify-content: space-between; font-size: 8px; color: #94a3b8; position: relative; z-index: 2;">
+                <div style="margin-top: 24px; border-top: 1px solid #000000; padding-top: 6px; display: flex; justify-content: space-between; font-size: 8px; color: #000000; position: relative; z-index: 2;">
                     <span>AVV - Sistema Oficial de Competições &bull; Relação Nominal Emitida pelo Painel do Clube</span>
                     <span>Autenticação Oficial: AVV-SUMULA-${equipe.numeroInscricao || Math.floor(100000 + Math.random() * 900000)}</span>
                 </div>
