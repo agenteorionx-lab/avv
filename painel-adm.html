@@ -2041,6 +2041,22 @@
             return String(txt || '').trim().toLowerCase();
         }
 
+        // Regra de Ficha: se o atleta tiver APENAS categoria "Adulto", não requer ficha.
+        // Se tiver Adulto E outra categoria (ex: Sub-18) ou categoria de base, a ficha é exibida.
+        function atletaPossuiFichaMenorAdm(atleta, eq = null) {
+            let cats = [];
+            if (atleta && Array.isArray(atleta.categorias) && atleta.categorias.length > 0) {
+                cats = atleta.categorias.map(c => String(c).trim().toLowerCase());
+            } else if (atleta && atleta.categoria) {
+                cats = String(atleta.categoria).split(/[,;/]/).map(c => c.trim().toLowerCase()).filter(Boolean);
+            } else if (eq && eq.categoria) {
+                cats = [String(eq.categoria).trim().toLowerCase()];
+            }
+            if (cats.length === 0) return true;
+            const somenteAdulto = cats.every(c => c.includes('adulto') && !c.includes('sub'));
+            return !somenteAdulto;
+        }
+
         function renderizarTabelaAtletasPaginaEquipe(eq) {
             const tbody = document.getElementById('pag-eq-tbody-atletas');
             if (!tbody) return;
