@@ -2508,7 +2508,7 @@
                 const posicao = atleta.posicao || 'Ponteiro';
                 const foto = atleta.foto || 'logos/mascote_coelho.png';
 
-                const temFichaMenor = !String(categoria || '').toLowerCase().includes('adulto');
+                const temFichaMenor = atletaPossuiFichaMenor(categoria, atleta);
 
                 const card = document.createElement('div');
                 card.className = 'card-atleta-fed';
@@ -2628,7 +2628,7 @@
                 const foto = atleta.foto || 'logos/mascote_coelho.png';
 
                 const catAtleta = atleta.categoria || equipe.categoria || 'Adulto Masculino';
-                const temFichaMenor = !String(catAtleta).toLowerCase().includes('adulto');
+                const temFichaMenor = atletaPossuiFichaMenor(catAtleta, atleta);
 
                 const tr = document.createElement('tr');
                 tr.id = 'row-roster-' + num;

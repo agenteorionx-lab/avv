@@ -2125,9 +2125,9 @@
                             <button onclick="abrirModalEditarAtletaAdm('${eq.id}', '${atletaId}')" class="btn-clean-action" style="background: #fefce8; border: 1px solid #fef08a; color: #a16207; height: 30px; width: 32px; padding: 0; justify-content: center;" title="Editar Dados do Atleta">
                                 ${SVG_ICONS.edit}
                             </button>
-                            <button onclick="abrirFichaIndividualAtletaAdm('${eq.id}', '${atletaId}')" class="btn-clean-action btn-clean-neutral" style="height: 30px; width: 32px; padding: 0; justify-content: center;" title="Imprimir Ficha Oficial A4">
+                            ${atletaPossuiFichaMenorAdm(atleta, eq) ? `<button onclick="abrirFichaIndividualAtletaAdm('${eq.id}', '${atletaId}')" class="btn-clean-action btn-clean-neutral" style="height: 30px; width: 32px; padding: 0; justify-content: center;" title="Imprimir Ficha Oficial A4">
                                 ${SVG_ICONS.fileText}
-                            </button>
+                            </button>` : ''}
                             <button onclick="excluirAtletaDaEquipeAdm('${eq.id}', '${atletaId}', '${atletaNome.replace(/'/g, "\\'")}')" class="btn-clean-action" style="background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c; height: 30px; width: 32px; padding: 0; justify-content: center;" title="Remover Atleta da Equipe">
                                 ${SVG_ICONS.trash}
                             </button>
@@ -2719,9 +2719,10 @@
             const eq = equipesSistema.find(e => String(e.id) === String(equipeAbertaId));
             if (!eq) return;
 
-            const atletasParaImprimir = categoriaAtivaEquipe === 'todas'
+            let atletasParaImprimir = categoriaAtivaEquipe === 'todas'
                 ? (eq.atletas || [])
                 : (eq.atletas || []).filter(a => a.categoria === categoriaAtivaEquipe);
+            atletasParaImprimir = atletasParaImprimir.filter(a => atletaPossuiFichaMenorAdm(a, eq));
 
             if (atletasParaImprimir.length === 0) {
                 alert('Não há atletas cadastrados nesta categoria para imprimir.');
@@ -3020,9 +3021,9 @@
                             <button onclick="abrirModalEditarAtletaAdm('${equipe.id}', '${atleta.id}')" class="btn-clean-action" style="background: #fefce8; border: 1px solid #fef08a; color: #a16207; height: 28px; width: 30px; padding: 0; justify-content: center;" title="Editar Dados do Atleta">
                                 ${SVG_ICONS.edit}
                             </button>
-                            <button onclick="abrirFichaIndividualAtletaAdm('${equipe.id}', '${atleta.id}')" class="btn-action-text-green" style="font-size: 11px; padding: 4px 8px; height: 28px;" title="Imprimir Ficha Oficial A4">
+                            ${atletaPossuiFichaMenorAdm(atleta, equipe) ? `<button onclick="abrirFichaIndividualAtletaAdm('${equipe.id}', '${atleta.id}')" class="btn-action-text-green" style="font-size: 11px; padding: 4px 8px; height: 28px;" title="Imprimir Ficha Oficial A4">
                                 ${SVG_ICONS.fileText}
-                            </button>
+                            </button>` : ''}
                         </div>
                     </td>
                 `;
@@ -3031,7 +3032,7 @@
         }
 
         function dispararImpressaoCentralFichas() {
-            const pares = obterParesFiltradosCentralImpressao();
+            const pares = obterParesFiltradosCentralImpressao().filter(p => atletaPossuiFichaMenorAdm(p.atleta, p.equipe));
             if (pares.length === 0) {
                 alert('Nenhum atleta encontrado no filtro atual para imprimir.');
                 return;
