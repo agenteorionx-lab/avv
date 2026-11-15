@@ -2474,6 +2474,20 @@
             return categoriasAtleta.some(c => c.toLowerCase() === catEquipe.toLowerCase());
         }
 
+        // Regra de Ficha: se o atleta tiver APENAS a categoria "Adulto", não tem ficha de autorização de menor.
+        // Se tiver Adulto E outra categoria (ex: Sub-18 ou Sub-15) ou qualquer categoria de base, a ficha DEVE aparecer.
+        function atletaPossuiFichaMenor(catTexto, atletaObj = null) {
+            let cats = [];
+            if (atletaObj && Array.isArray(atletaObj.categorias) && atletaObj.categorias.length > 0) {
+                cats = atletaObj.categorias.map(c => String(c).trim().toLowerCase());
+            } else if (catTexto) {
+                cats = String(catTexto).split(/[,;/]/).map(c => c.trim().toLowerCase()).filter(Boolean);
+            }
+            if (cats.length === 0) return true;
+            const somenteAdulto = cats.every(c => c.includes('adulto') && !c.includes('sub'));
+            return !somenteAdulto;
+        }
+
         // Renderiza todos os atletas cadastrados pelo clube na aba "Atletas"
         function renderizarCardsAtletasDoClube() {
             const listaCardsAtletas = document.getElementById('lista-cards-atletas');
