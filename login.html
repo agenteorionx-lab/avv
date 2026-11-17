@@ -487,7 +487,7 @@
 
             try {
                 // 1. Tenta autenticar no Banco de Dados Oficial do Servidor
-                const resp = await fetch('api/auth/login', {
+                const resp = await fetch('/api/auth/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ tipo: 'time', login: email, senha })
@@ -545,6 +545,15 @@
 
                 // Se não encontrou no servidor, verifica se estava apenas no localStorage deste navegador e migra para o servidor
                 if (resp.status === 404) {
+                    if (email.endsWith('@gmai.com')) {
+                        exibirAlertaLogin(`E-mail não encontrado. Você digitou "${email}" (faltou a letra "l" em @gmail.com). Verifique e tente novamente.`, 'error');
+                        return;
+                    }
+                    if (email.includes('@hotmial.com') || email.includes('@hotmai.com')) {
+                        exibirAlertaLogin(`E-mail não encontrado. Verifique o final do e-mail (@hotmail.com) e tente novamente.`, 'error');
+                        return;
+                    }
+
                     const equipesLocal = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
                     const inscricoesLocal = JSON.parse(localStorage.getItem('avv_inscricoes_teste') || '[]');
                     const eqLocal = equipesLocal.find(item => (item.email || '').toLowerCase() === email) ||
@@ -556,7 +565,7 @@
                             return;
                         }
                         // Migra automaticamente para o banco do servidor
-                        await fetch('api/equipes/cadastrar', {
+                        await fetch('/api/equipes/cadastrar', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ ...eqLocal, senha })
@@ -584,6 +593,10 @@
                 exibirAlertaLogin(dadosApi.mensagem || 'Credenciais inválidas.', 'error');
             } catch (err) {
                 console.warn('Usando verificação local de contingência:', err);
+                if (email.endsWith('@gmai.com')) {
+                    exibirAlertaLogin(`E-mail não encontrado. Você digitou "${email}" (faltou a letra "l" em @gmail.com). Verifique e tente novamente.`, 'error');
+                    return;
+                }
                 const equipes = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
                 const inscricoes = JSON.parse(localStorage.getItem('avv_inscricoes_teste') || '[]');
                 const eq = equipes.find(item => (item.email || '').toLowerCase() === email) ||
@@ -643,7 +656,7 @@
             }
 
             try {
-                const resp = await fetch('api/auth/login', {
+                const resp = await fetch('/api/auth/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ tipo: 'adm', login: user, senha: pass })
@@ -741,7 +754,7 @@
             btn.innerHTML = 'Enviando e-mail...';
 
             try {
-                const response = await fetch('api/recuperar-senha', {
+                const response = await fetch('/api/recuperar-senha', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -826,7 +839,7 @@
             }
 
             try {
-                const response = await fetch('api/redefinir-senha', {
+                const response = await fetch('/api/redefinir-senha', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({

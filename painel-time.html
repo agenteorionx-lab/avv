@@ -1801,7 +1801,7 @@
                 salvarStorageSeguro('avv_equipes_completo_db', JSON.stringify(db));
 
                 try {
-                    await fetch('api/equipes/excluir', {
+                    await fetch('/api/equipes/excluir', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ id: equipeId })
@@ -2195,7 +2195,7 @@
                     salvarStorageSeguro('avv_equipes_completo_db', JSON.stringify(dbCompleto));
                 }
                 if (equipeAtualizada) {
-                    fetch('api/equipes/sincronizar', {
+                    fetch('/api/equipes/sincronizar', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ equipe: equipeAtualizada })
@@ -2258,7 +2258,7 @@
                     salvarStorageSeguro('avv_equipes_completo_db', JSON.stringify(db));
                     clearTimeout(_timerSincronizarClube);
                     _timerSincronizarClube = setTimeout(() => {
-                        fetch('api/equipes/sincronizar', {
+                        fetch('/api/equipes/sincronizar', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ equipesLista: equipesDoClube })
@@ -3281,7 +3281,7 @@
                     const emailSessao = (sessao.email || '').toLowerCase().trim();
                     if (!emailSessao) return;
 
-                    const resp = await fetch('api/dados-sistema', { cache: 'no-store' });
+                    const resp = await fetch('/api/dados-sistema', { cache: 'no-store' });
                     const serverData = await resp.json();
                     if (resp.ok && serverData.ok && Array.isArray(serverData.equipes)) {
                         localStorage.setItem('avv_equipes_completo_db', JSON.stringify(serverData.equipes));
@@ -5446,7 +5446,7 @@
                     persistirEquipeNoBancoEServidor(equipe, db);
                 } else {
                     salvarStorageSeguro('avv_equipes_completo_db', JSON.stringify(db));
-                    fetch('api/equipes/sincronizar', {
+                    fetch('/api/equipes/sincronizar', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ equipesLista: db })
@@ -5499,7 +5499,7 @@
             }
 
             try {
-                const resp = await fetch('api/auth/alterar-senha', {
+                const resp = await fetch('/api/auth/alterar-senha', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -5511,11 +5511,15 @@
                     })
                 });
                 const resJson = await resp.json();
-                if (!resp.ok && resp.status === 401) {
-                    avvAlert(resJson.mensagem || 'Senha atual incorreta.', 'Erro de Autenticação', 'danger');
+                if (!resp.ok) {
+                    avvAlert(resJson.mensagem || 'Não foi possível alterar a senha no servidor. Verifique a senha atual e tente novamente.', 'Erro ao Alterar Senha', 'danger');
                     return;
                 }
-            } catch (err) {}
+            } catch (err) {
+                console.error('Erro de conexão ao alterar senha:', err);
+                avvAlert('Erro de conexão com o servidor ao alterar a senha. Verifique sua rede e tente novamente.', 'Erro de Conexão', 'danger');
+                return;
+            }
 
             if (equipe) {
                 equipe.senha = nova;

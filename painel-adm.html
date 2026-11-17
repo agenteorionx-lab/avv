@@ -1672,7 +1672,7 @@
 
         function salvarBancoEquipesIntegrado() {
             salvarStorageSeguroAdm('avv_equipes_completo_db', JSON.stringify(equipesSistema));
-            fetch('api/equipes/sincronizar', {
+            fetch('/api/equipes/sincronizar', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ equipesLista: equipesSistema, substituirTudo: true })
@@ -2265,7 +2265,7 @@
                     equipesSistema = equipesSistema.filter(e => String(e.id) !== String(idRemovido));
                     salvarStorageSeguroAdm('avv_equipes_completo_db', JSON.stringify(equipesSistema));
                     try {
-                        const resp = await fetch('api/equipes/excluir', {
+                        const resp = await fetch('/api/equipes/excluir', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ id: idRemovido })
@@ -3113,7 +3113,7 @@
 
         function salvarCampeonatosNoStorage() {
             salvarStorageSeguroAdm('avv_banco_campeonatos', JSON.stringify(campeonatosAdm));
-            fetch('api/campeonatos/sincronizar', {
+            fetch('/api/campeonatos/sincronizar', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ campeonatos: campeonatosAdm })
@@ -4048,7 +4048,7 @@
             };
 
             localStorage.setItem('avv_sessao_adm', JSON.stringify(dadosAdm));
-            fetch('api/adm/perfil', {
+            fetch('/api/adm/perfil', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ usuario: nome, setor: setor || 'Diretoria Técnica AVV', email })
@@ -4078,7 +4078,7 @@
             }
 
             try {
-                const resp = await fetch('api/auth/alterar-senha', {
+                const resp = await fetch('/api/auth/alterar-senha', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ tipo: 'adm', senhaAtual: atual, novaSenha: nova })
@@ -4334,7 +4334,7 @@
 
                 // Persiste também no servidor oficial
                 try {
-                    await fetch('api/equipes/sincronizar', {
+                    await fetch('/api/equipes/sincronizar', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ equipesLista: equipesSistema, substituirTudo: true })
@@ -4387,7 +4387,7 @@
 
                 // Sincroniza exclusão definitiva no servidor oficial (JSON + MySQL) aguardando confirmação
                 try {
-                    const resp = await fetch('api/equipes/excluir-conta', {
+                    const resp = await fetch('/api/equipes/excluir-conta', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ email: emailNorm })

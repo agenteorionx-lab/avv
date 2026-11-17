@@ -82,6 +82,15 @@ const rotasAmigaveis = {
     '/inscrever': 'inscricao.html'
 };
 
+// Normalização universal de chamadas de API: redireciona qualquer /login/api/..., /clube/api/... ou /avv/api/... para /api/...
+app.use((req, res, next) => {
+    const idxApi = req.url.indexOf('/api/');
+    if (idxApi > 0) {
+        req.url = req.url.substring(idxApi);
+    }
+    next();
+});
+
 // Redirecionamento automático caso alguém acesse diretamente com .html para a URL limpa
 app.use((req, res, next) => {
     const p = req.path.toLowerCase();
@@ -122,12 +131,19 @@ function hashSenhaSegura(senha) {
 }
 
 function verificarSenhaSegura(senhaDigitada, senhaArmazenada) {
-    if (!senhaArmazenada) return false;
-    if (String(senhaArmazenada).startsWith('sha256:')) {
-        return hashSenhaSegura(senhaDigitada) === senhaArmazenada;
+    if (!senhaArmazenada || senhaDigitada === undefined || senhaDigitada === null) return false;
+    const strDigitada = String(senhaDigitada);
+    const strArmazenada = String(senhaArmazenada);
+
+    if (strArmazenada.startsWith('sha256:')) {
+        if (hashSenhaSegura(strDigitada) === strArmazenada) return true;
+        if (hashSenhaSegura(strDigitada.trim()) === strArmazenada) return true;
+        return false;
     }
     // Compatibilidade retroativa com senhas antigas em texto puro
-    return String(senhaDigitada) === String(senhaArmazenada);
+    if (strDigitada === strArmazenada) return true;
+    if (strDigitada.trim() === strArmazenada.trim()) return true;
+    return false;
 }
 
 function sanitizarTexto(valor, maxLen = 250) {

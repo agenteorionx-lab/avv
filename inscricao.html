@@ -331,7 +331,7 @@
             };
 
             try {
-                const resp = await fetch('api/equipes/cadastrar', {
+                const resp = await fetch('/api/equipes/cadastrar', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(contaClubeData)
