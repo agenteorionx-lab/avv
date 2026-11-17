@@ -2580,14 +2580,16 @@
             if (!campId) return false;
 
             // Busca no banco de campeonatos se o prazo já venceu
-            const c = bancoCampeonatos[campId];
+            const c = (bancoCampeonatos && bancoCampeonatos[campId]) || (bancoPadraoCampeonatos && bancoPadraoCampeonatos[campId]);
             if (!c) return false;
 
+            if (c.ativo === false || c.statusTorneio === 'inativo') return true;
+
+            const timer = calcularTempoRestanteTorneio(c);
+            if (timer && timer.encerrado) return true;
+            if (timer && !timer.encerrado) return false; // Prazo prorrogado e válido
+
             if (c.statusTorneio === 'encerrado') return true;
-            if (c.dataLimiteEncerramento) {
-                const timer = calcularTempoRestanteTorneio(c.dataLimiteEncerramento);
-                if (timer && timer.encerrado) return true;
-            }
             return false;
         }
 
@@ -3246,8 +3248,22 @@
                             }
                             renderizarCardsInscricaoPorCategoria(campeonatoSelecionadoSubpagina);
                         }
-                    } else if (timerInfo && elTimerText && elTimerText.textContent !== timerInfo.texto) {
-                        elTimerText.textContent = timerInfo.texto;
+                    } else if (timerInfo && !timerInfo.encerrado) {
+                        if (campeonatoSelecionadoSubpagina.statusTorneio === 'encerrado' && campeonatoSelecionadoSubpagina.ativo !== false) {
+                            campeonatoSelecionadoSubpagina.statusTorneio = 'ativo';
+                            if (elTimerBadge) elTimerBadge.style.display = 'inline-flex';
+                            if (elStatusBadge) {
+                                elStatusBadge.className = 'badge-status-approved';
+                                elStatusBadge.style.background = '';
+                                elStatusBadge.style.color = '';
+                                elStatusBadge.style.borderColor = '';
+                                elStatusBadge.textContent = 'Inscrições Abertas';
+                            }
+                            renderizarCardsInscricaoPorCategoria(campeonatoSelecionadoSubpagina);
+                        }
+                        if (elTimerText && elTimerText.textContent !== timerInfo.texto) {
+                            elTimerText.textContent = timerInfo.texto;
+                        }
                     }
                 }
             }, 1000);
@@ -3333,8 +3349,8 @@
                 id: "camp-1794335645971",
                 nome: "XXI COPA AVV DE VOLEIBOL",
                 modalidade: "Quadra",
-                fase: "Inscrições Abertas até 16/11/2026 às 17:59",
-                dataLimiteEncerramento: "2026-11-16T20:59:00.000Z",
+                fase: "Inscrições Abertas até 18/11/2026 às 23:59",
+                dataLimiteEncerramento: "2026-11-19T03:59:00.000Z",
                 taxa: "Gratuito / Filiação Regular",
                 limiteAtletas: 12,
                 status: "Ativo",
@@ -3379,7 +3395,7 @@
                 if (!isNaN(d.getTime())) return d;
             }
             if (c.fase) {
-                const m = c.fase.match(/(\d{2})\/(\d{2})\/(\d{4})(?:.*?(\d{2}):(\d{2}))?/);
+                const m = c.fase.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})(?:.*?(\d{1,2}):(\d{1,2}))?/);
                 if (m) {
                     const dia = parseInt(m[1], 10);
                     const mes = parseInt(m[2], 10) - 1;
@@ -3390,7 +3406,7 @@
                     if (!isNaN(d.getTime())) return d;
                 }
             }
-            return new Date('2026-11-16T21:59:00.000Z');
+            return null;
         }
 
         function calcularTempoRestanteTorneio(dataLimiteOuCamp) {
@@ -3402,8 +3418,6 @@
                 dataLimite = !isNaN(d.getTime()) ? d : extrairDataLimiteCampeonato({ fase: dataLimiteOuCamp });
             } else if (dataLimiteOuCamp instanceof Date) {
                 dataLimite = dataLimiteOuCamp;
-            } else {
-                dataLimite = new Date('2026-11-16T21:59:00.000Z');
             }
 
             if (!dataLimite) return null;
@@ -3452,10 +3466,12 @@
                 // Se estiver inativo/inabilitado, oculta completamente do painel do time
                 if (!c || c.ativo === false || c.statusTorneio === 'inativo') return;
 
-                // Verificação automática do prazo limite: se esgotou, marca como encerrado
+                // Verificação automática do prazo limite: se esgotou, encerra; se prorrogado para o futuro, reabre
                 const timerInfo = calcularTempoRestanteTorneio(c);
                 if (timerInfo && timerInfo.encerrado && c.statusTorneio === 'ativo') {
                     c.statusTorneio = 'encerrado';
+                } else if (timerInfo && !timerInfo.encerrado && c.statusTorneio === 'encerrado' && c.ativo !== false) {
+                    c.statusTorneio = 'ativo';
                 }
 
                 inseridos++;
@@ -3530,6 +3546,9 @@
                 if (timerInfo.encerrado && c.statusTorneio === 'ativo') {
                     c.statusTorneio = 'encerrado';
                     mudouStatus = true;
+                } else if (!timerInfo.encerrado && c.statusTorneio === 'encerrado' && c.ativo !== false) {
+                    c.statusTorneio = 'ativo';
+                    mudouStatus = true;
                 } else {
                     const elSpan = document.querySelector(`[data-time-timer-camp="${c.id}"]`);
                     if (elSpan && elSpan.textContent !== timerInfo.texto) {
@@ -3577,13 +3596,18 @@
                 const elRegTexto = document.getElementById('champ-modal-reg-texto');
                 if (elRegTexto) elRegTexto.innerHTML = dados.regulamento || '';
 
-                // Atualiza Timer e Badge de Status na barra do campeonato
-                const timerInfo = calcularTempoRestanteTorneio(dados.dataLimiteEncerramento);
+                // Atualiza Timer e Badge de Status na barra do campeonato (passa o objeto inteiro para leitura de dataLimiteEncerramento ou fase)
+                const timerInfo = calcularTempoRestanteTorneio(dados);
                 const elTimerBadge = document.getElementById('champ-modal-timer-badge');
                 const elTimerText = document.getElementById('champ-modal-timer-text');
                 const elStatusBadge = document.getElementById('champ-modal-status-badge');
 
-                const isEncerrado = dados.statusTorneio === 'encerrado' || (timerInfo && timerInfo.encerrado);
+                // Se o prazo foi estendido para uma data futura, garante que o torneio esteja ativo
+                if (timerInfo && !timerInfo.encerrado && dados.ativo !== false && dados.statusTorneio !== 'inativo') {
+                    dados.statusTorneio = 'ativo';
+                }
+
+                const isEncerrado = dados.ativo === false || dados.statusTorneio === 'inativo' || (timerInfo && timerInfo.encerrado) || (dados.statusTorneio === 'encerrado' && (!timerInfo || timerInfo.encerrado));
                 if (isEncerrado) {
                     dados.statusTorneio = 'encerrado';
                     if (elTimerBadge) elTimerBadge.style.display = 'none';
@@ -3594,22 +3618,17 @@
                         elStatusBadge.style.borderColor = '#fde68a';
                         elStatusBadge.textContent = 'Inscrições Encerradas';
                     }
-                } else if (timerInfo) {
+                } else {
+                    dados.statusTorneio = 'ativo';
                     if (elTimerBadge) {
-                        elTimerBadge.style.display = 'inline-flex';
-                        if (elTimerText) elTimerText.textContent = timerInfo.texto;
+                        elTimerBadge.style.display = timerInfo ? 'inline-flex' : 'none';
+                        if (elTimerText) elTimerText.textContent = timerInfo ? timerInfo.texto : '';
                     }
                     if (elStatusBadge) {
                         elStatusBadge.className = 'badge-status-approved';
                         elStatusBadge.style.background = '';
                         elStatusBadge.style.color = '';
                         elStatusBadge.style.borderColor = '';
-                        elStatusBadge.textContent = 'Inscrições Abertas';
-                    }
-                } else {
-                    if (elTimerBadge) elTimerBadge.style.display = 'none';
-                    if (elStatusBadge) {
-                        elStatusBadge.className = 'badge-status-approved';
                         elStatusBadge.textContent = 'Inscrições Abertas';
                     }
                 }

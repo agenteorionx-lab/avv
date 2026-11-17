@@ -1493,8 +1493,8 @@
                 id: "camp-1794335645971",
                 nome: "XXI COPA AVV DE VOLEIBOL",
                 modalidade: "Quadra",
-                fase: "Inscrições Abertas até 16/11/2026 às 17:59",
-                dataLimiteEncerramento: "2026-11-16T21:59:00.000Z",
+                fase: "Inscrições Abertas até 18/11/2026 às 23:59",
+                dataLimiteEncerramento: "2026-11-19T03:59:00.000Z",
                 taxa: "Gratuito / Filiação Regular",
                 limiteAtletas: 12,
                 status: "Ativo",
@@ -3127,7 +3127,7 @@
                 if (!isNaN(d.getTime())) return d;
             }
             if (c.fase) {
-                const m = c.fase.match(/(\d{2})\/(\d{2})\/(\d{4})(?:.*?(\d{2}):(\d{2}))?/);
+                const m = c.fase.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})(?:.*?(\d{1,2}):(\d{1,2}))?/);
                 if (m) {
                     const dia = parseInt(m[1], 10);
                     const mes = parseInt(m[2], 10) - 1;
@@ -3138,7 +3138,7 @@
                     if (!isNaN(d.getTime())) return d;
                 }
             }
-            return new Date("2026-11-16T21:59:00.000Z");
+            return null;
         }
 
         function calcularTempoRestanteTorneio(dataLimiteOuCamp) {
@@ -3150,8 +3150,6 @@
                 dataLimite = !isNaN(d.getTime()) ? d : extrairDataLimiteCampeonato({ fase: dataLimiteOuCamp });
             } else if (dataLimiteOuCamp instanceof Date) {
                 dataLimite = dataLimiteOuCamp;
-            } else {
-                dataLimite = new Date("2026-11-16T21:59:00.000Z");
             }
 
             if (!dataLimite) return null;
@@ -3189,6 +3187,10 @@
                 if (timerInfo.encerrado && c.statusTorneio === 'ativo') {
                     c.statusTorneio = 'encerrado';
                     mudouStatus = true;
+                } else if (!timerInfo.encerrado && c.statusTorneio === 'encerrado' && c.ativo !== false) {
+                    // Prazo foi prorrogado/adiado -> reabre inscrições automaticamente
+                    c.statusTorneio = 'ativo';
+                    mudouStatus = true;
                 } else {
                     const elSpan = document.querySelector(`[data-adm-timer-camp="${c.id}"]`);
                     if (elSpan && elSpan.textContent !== timerInfo.texto) {
@@ -3223,7 +3225,7 @@
                     `<span class="champ-cat-pill">${cat}</span>`
                 ).join('');
 
-                // Checagem do Timer e Encerramento Automático
+                // Checagem do Timer e Encerramento/Reabertura Automático
                 const timerInfo = calcularTempoRestanteTorneio(c);
                 let timerHtml = '';
 
@@ -3244,6 +3246,11 @@
                             </div>
                         `;
                     } else {
+                        // Se o prazo foi prorrogado para o futuro e ainda estava como encerrado, reativa
+                        if (c.statusTorneio === 'encerrado' && c.ativo !== false) {
+                            c.statusTorneio = 'ativo';
+                            salvarCampeonatosNoStorage();
+                        }
                         timerHtml = `
                             <div style="background: #0f1c3f; border: 1px solid #1e293b; border-radius: 6px; padding: 6px 12px; margin-top: 8px; display: flex; align-items: center; justify-content: space-between; font-size: 11px; font-weight: 700; color: #f8fafc;">
                                 <span style="display: flex; align-items: center; gap: 6px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; font-size: 10px;">
@@ -3628,6 +3635,14 @@
                     const hora = String(d.getHours()).padStart(2, '0');
                     const min = String(d.getMinutes()).padStart(2, '0');
                     document.getElementById('champ-form-fase').value = `Inscrições Abertas até ${dia}/${mes}/${ano} às ${hora}:${min}`;
+
+                    // Se a data limite for no futuro e o status estiver como encerrado, atualiza automaticamente para 'ativo'
+                    if (d.getTime() > Date.now()) {
+                        const selStatus = document.getElementById('champ-form-status');
+                        if (selStatus && selStatus.value === 'encerrado') {
+                            selStatus.value = 'ativo';
+                        }
+                    }
                 }
             } catch(e) {}
         }
@@ -3678,9 +3693,14 @@
             document.getElementById('champ-form-modalidade').value = modAtual.includes('areia') ? 'Areia' : 'Quadra';
             
             // Status do torneio
+            const timerInfo = calcularTempoRestanteTorneio(c);
             let stAtual = 'ativo';
-            if (c.ativo === false || c.statusTorneio === 'inativo') stAtual = 'inativo';
-            else if (c.statusTorneio === 'encerrado') stAtual = 'encerrado';
+            if (c.ativo === false || c.statusTorneio === 'inativo') {
+                stAtual = 'inativo';
+            } else if (c.statusTorneio === 'encerrado') {
+                // Se o timer estiver no futuro, sugere como 'ativo' para não manter travado
+                stAtual = (timerInfo && !timerInfo.encerrado) ? 'ativo' : 'encerrado';
+            }
             document.getElementById('champ-form-status').value = stAtual;
 
             // Data limite de encerramento
@@ -3730,7 +3750,17 @@
             }
 
             const id = editId || ('camp-' + Date.now());
-            const ehAtivo = statusTorneio !== 'inativo';
+            let finalStatusTorneio = statusTorneio;
+            let ehAtivo = statusTorneio !== 'inativo';
+
+            // Se o prazo definido estiver no futuro e o status estava marcado como 'encerrado', reabre automaticamente
+            if (dataLimiteEncerramento) {
+                const dLim = new Date(dataLimiteEncerramento);
+                if (!isNaN(dLim.getTime()) && dLim.getTime() > Date.now() && finalStatusTorneio === 'encerrado') {
+                    finalStatusTorneio = 'ativo';
+                    ehAtivo = true;
+                }
+            }
 
             campeonatosAdm[id] = {
                 id,
@@ -3742,7 +3772,7 @@
                 taxa,
                 limiteAtletas: limite,
                 ativo: ehAtivo,
-                statusTorneio: statusTorneio,
+                statusTorneio: finalStatusTorneio,
                 descricao: desc || `Competição oficial de ${modalidade} realizada pela AVV.`,
                 categoriasAceitas: categoriasMarcadas,
                 regulamentoPdf: regulamentoPdf || (campeonatosAdm[id]?.regulamentoPdf || null),
@@ -3753,7 +3783,7 @@
             salvarCampeonatosNoStorage();
             atualizarTudoPainelAdm();
             fecharModalCriarCampeonato();
-            avvAlert(`Campeonato "${nome.toUpperCase()}" salvo com sucesso!\nStatus: ${statusTorneio === 'encerrado' ? 'Inscrições Encerradas' : (statusTorneio === 'inativo' ? 'Inabilitado' : 'Inscrições Abertas')}`, 'Campeonato Salvo', 'success');
+            avvAlert(`Campeonato "${nome.toUpperCase()}" salvo com sucesso!\nStatus: ${finalStatusTorneio === 'encerrado' ? 'Inscrições Encerradas' : (finalStatusTorneio === 'inativo' ? 'Inabilitado' : 'Inscrições Abertas')}`, 'Campeonato Salvo', 'success');
         }
 
         function excluirCampeonato(id) {
