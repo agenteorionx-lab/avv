@@ -2647,7 +2647,7 @@
                 tr.id = 'row-roster-' + num;
                 tr.innerHTML = `
                     <td style="text-align: center;">
-                        <input type="checkbox" class="chk-atleta-roster chk-roster-custom" value="${num}" data-nome="${nome}" data-cpf="${cpf}" data-rg="${rg}" data-nasc="${nasc}" data-posicao="${posicao}" data-genero="${genero}" data-foto="${foto}" onchange="atualizarEstadoSelecionarTodos()">
+                        <input type="checkbox" class="chk-atleta-roster chk-roster-custom" value="${num}" data-nome="${nome}" data-cpf="${cpf}" data-rg="${rg}" data-nasc="${nasc}" data-posicao="${posicao}" data-genero="${genero}" data-foto="${foto}" data-whats="${whats}" data-datahora="${atleta.dataHora || ''}" onchange="atualizarEstadoSelecionarTodos()">
                     </td>
                     <td style="text-align: center;"><img src="${foto}" class="atleta-roster-thumb" alt="Foto"></td>
                     <td><strong style="color: #1e293b; font-size: 13px;">${nome}</strong><div style="font-size: 11px; color: #64748b; margin-top: 2px;">CPF: ${cpf} &bull; ${catAtleta}</div></td>
@@ -4619,15 +4619,20 @@
                 let atletaDados = atletasGerais.find(a => String(a.id) === String(num));
 
                 // Se não achar no banco geral, busca nas equipes
-                const { equipe } = obterEquipeAtualDoBanco();
-                if (!atletaDados && equipe && Array.isArray(equipe.atletas)) {
-                    atletaDados = equipe.atletas.find(a => String(a.id) === String(num));
+                const equipeAlvo = equipeSelecionadaVisualizacao || (typeof obterEquipeAtualDoBanco === 'function' ? obterEquipeAtualDoBanco().equipe : null);
+                if (!atletaDados && equipeAlvo && Array.isArray(equipeAlvo.atletas)) {
+                    atletaDados = equipeAlvo.atletas.find(a => String(a.id) === String(num));
                 }
 
                 const card = document.getElementById('atleta-card-' + num);
                 
-                const timeNome = (equipe && equipe.nomeTime) || document.getElementById('team-name-card')?.textContent.trim() || 'AVV VILHENA / SICREDI';
-                const timeSede = (equipe && equipe.cidade && equipe.estado) ? `${equipe.cidade} - ${equipe.estado}` : (document.getElementById('team-city-card')?.textContent.trim() || 'Vilhena - RO');
+                const timeNome = (equipeAlvo && (equipeAlvo.nomeTime || equipeAlvo.nomeClube)) ||
+                                 document.getElementById('vis-team-name')?.textContent.trim() ||
+                                 document.getElementById('team-name-card')?.textContent.trim() ||
+                                 'AVV VILHENA / SICREDI';
+                const timeSede = (equipeAlvo && equipeAlvo.cidade && equipeAlvo.estado)
+                    ? `${equipeAlvo.cidade} - ${equipeAlvo.estado}`
+                    : (document.getElementById('vis-team-cidade')?.textContent.trim() || document.getElementById('team-city-card')?.textContent.trim() || 'Vilhena - RO');
                 
                 // Dados específicos do atleta
                 const nomeAtleta = (atletaDados && atletaDados.nome) || nome || 'ATLETA';
@@ -5955,27 +5960,63 @@
             // Limpa conteúdo anterior
             areaMultiplas.innerHTML = '';
 
-            const timeNome = document.getElementById('team-name-card')?.textContent.trim() || 'AVV VILHENA / SICREDI';
-            const timeSede = document.getElementById('team-city-card')?.textContent.trim() || 'Vilhena - RO';
+            // 1. Identifica a equipe ativa do modal visualizado ou do clube
+            const eqAtiva = equipeSelecionadaVisualizacao || (typeof obterEquipeAtualDoBanco === 'function' ? obterEquipeAtualDoBanco().equipe : null);
+            const timeNome = (eqAtiva && (eqAtiva.nomeTime || eqAtiva.nomeClube)) ||
+                             document.getElementById('vis-team-name')?.textContent.trim() ||
+                             document.getElementById('team-name-card')?.textContent.trim() ||
+                             'AVV VILHENA / SICREDI';
+
+            const timeSede = (eqAtiva && eqAtiva.cidade && eqAtiva.estado)
+                ? `${eqAtiva.cidade} - ${eqAtiva.estado}`
+                : (eqAtiva && eqAtiva.cidade)
+                    ? `${eqAtiva.cidade} - RO`
+                    : (document.getElementById('vis-team-cidade')?.textContent.trim() || document.getElementById('team-city-card')?.textContent.trim() || 'Vilhena - RO');
+
+            const timeWhatsPadrao = (eqAtiva && (eqAtiva.whatsapp || eqAtiva.whats)) || '';
+
+            // 2. Identifica o campeonato correto da equipe
             const selectCamp = document.getElementById('ficha-select-campeonato');
-            if (!selectCamp || !selectCamp.value || selectCamp.value.includes('SUPERLIGA')) {
-                popularSeletorCampeonatosFicha();
+            const campPref = (eqAtiva && eqAtiva.campeonatoNome) ||
+                             (typeof campeonatoSelecionadoSubpagina !== 'undefined' && campeonatoSelecionadoSubpagina && campeonatoSelecionadoSubpagina.nome) ||
+                             (selectCamp && selectCamp.value && !selectCamp.value.includes('SUPERLIGA') ? selectCamp.value : 'XXI COPA AVV DE VOLEIBOL');
+
+            if (typeof popularSeletorCampeonatosFicha === 'function') {
+                popularSeletorCampeonatosFicha(campPref);
             }
-            const nomeCamp = (selectCamp && selectCamp.value) ? selectCamp.value : 'XXI COPA AVV DE VOLEIBOL';
+            const nomeCamp = (selectCamp && selectCamp.value) ? selectCamp.value : campPref;
 
             const agora = new Date();
             const dataHoje = agora.toLocaleDateString('pt-BR');
             const horaHoje = agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
 
+            const atletasGerais = (typeof obterBancoAtletasClube === 'function') ? obterBancoAtletasClube() : [];
+
             selecionados.forEach((chk, index) => {
                 const num = chk.value;
-                const nome = chk.dataset.nome || 'ATLETA';
-                const cpf = chk.dataset.cpf || '---';
-                const rg = chk.dataset.rg || '---';
-                const nasc = chk.dataset.nasc || '---';
-                const posicao = chk.dataset.posicao || 'Ponteiro';
-                const genero = chk.dataset.genero || 'Masculino';
-                const foto = chk.dataset.foto || 'logos/mascote_coelho.png';
+                let atletaObj = null;
+                if (eqAtiva && Array.isArray(eqAtiva.atletas)) {
+                    atletaObj = eqAtiva.atletas.find(a => String(a.id) === String(num));
+                }
+                if (!atletaObj) {
+                    atletaObj = atletasGerais.find(a => String(a.id) === String(num));
+                }
+
+                const nome = (atletaObj?.nome || chk.dataset.nome || 'ATLETA').toUpperCase();
+                const cpf = (atletaObj?.cpf ? formatarCPF(atletaObj.cpf) : null) || chk.dataset.cpf || '---';
+                const rg = atletaObj?.rg || chk.dataset.rg || '---';
+                const nasc = (atletaObj?.nasc ? formatarDataNascimento(atletaObj.nasc) : null) || chk.dataset.nasc || '---';
+                const posicao = atletaObj?.posicao || chk.dataset.posicao || 'Ponteiro';
+                const genero = atletaObj?.genero || chk.dataset.genero || 'Masculino';
+                const foto = atletaObj?.foto || chk.dataset.foto || 'logos/mascote_coelho.png';
+                const whatsAtleta = (atletaObj && (atletaObj.whats || atletaObj.whatsapp))
+                    ? formatarTelefone(atletaObj.whats || atletaObj.whatsapp)
+                    : (chk.dataset.whats ? formatarTelefone(chk.dataset.whats) : (timeWhatsPadrao ? formatarTelefone(timeWhatsPadrao) : '---'));
+
+                const dataHoraInsc = (atletaObj && atletaObj.dataHora) ||
+                                     (eqAtiva && (eqAtiva.dataHoraCompleta || eqAtiva.dataInscricao)) ||
+                                     `${dataHoje} às ${horaHoje}`;
+
                 const authCode = 'AVV-' + num + '-' + Math.random().toString(36).substring(2, 8).toUpperCase();
 
                 const folha = document.createElement('div');
@@ -6025,7 +6066,7 @@
                                 </td>
                                 <td style="width: 33%;">
                                     <label>DATA/HORA DA INSCRIÇÃO</label>
-                                    <strong>${dataHoje} às ${horaHoje}</strong>
+                                    <strong>${dataHoraInsc}</strong>
                                 </td>
                                 <td style="width: 34%;">
                                     <label>EQUIPE / CLUBE</label>
@@ -6035,7 +6076,7 @@
                             <tr>
                                 <td colspan="2">
                                     <label>NOME COMPLETO DO ATLETA</label>
-                                    <strong>${nome.toUpperCase()}</strong>
+                                    <strong>${nome}</strong>
                                 </td>
                                 <td>
                                     <label>DATA DE NASCIMENTO</label>
@@ -6063,7 +6104,7 @@
                                 </td>
                                 <td>
                                     <label>TELEFONE / WHATSAPP</label>
-                                    <strong>(69) 99209-9604</strong>
+                                    <strong>${whatsAtleta}</strong>
                                 </td>
                                 <td>
                                     <label>MUNICÍPIO / UF</label>
@@ -6134,7 +6175,7 @@
             solicitarEmissaoDocumentoAvv({
                 titulo: 'Emissão de Fichas de Inscrição',
                 subtitulo: `${timeNome} • ${selecionados.length} Ficha(s) Selecionada(s)`,
-                nomeArquivo: `Fichas_${timeNome}_${selecionados.length}_atletas`,
+                nomeArquivo: `Fichas_${timeNome.replace(/[^a-zA-Z0-9_-]/g, '_')}_${selecionados.length}_atletas`,
                 elementoAlvo: areaMultiplas
             });
         }
