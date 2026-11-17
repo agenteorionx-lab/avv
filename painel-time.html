@@ -4698,10 +4698,11 @@
                 if (elDataInsc) elDataInsc.textContent = dataHoraInscAtleta !== '---' ? dataHoraInscAtleta : `${dataHoje} às ${horaHoje}`;
 
                 // Popula o dropdown com os campeonatos reais do sistema e seleciona o da equipe/atleta
-                const campPref = (atletaDados && atletaDados.campeonatoNome) ||
-                                 (equipe && equipe.campeonatoNome) ||
-                                 (typeof campeonatoSelecionadoSubpagina !== 'undefined' && campeonatoSelecionadoSubpagina && campeonatoSelecionadoSubpagina.nome) ||
-                                 'XXI COPA AVV DE VOLEIBOL';
+                const campPref = obterNomeCampeonatoValido(
+                    (atletaDados && atletaDados.campeonatoNome) || (equipeAlvo && equipeAlvo.campeonatoNome),
+                    equipeAlvo,
+                    atletaDados
+                );
                 popularSeletorCampeonatosFicha(campPref);
 
                 // Código de autenticação eletrônica único
@@ -4722,10 +4723,62 @@
             if (modal) modal.style.display = 'none';
         }
 
+        // Validação e normalização de nome de campeonato para evitar textos genéricos
+        function obterNomeCampeonatoValido(candidato, equipe, atleta) {
+            function ehInvalido(nome) {
+                if (!nome || typeof nome !== 'string') return true;
+                const norm = nome.trim().toLowerCase();
+                return norm === '' ||
+                       norm === 'aguardando seleção no painel' ||
+                       norm === 'aguardando selecao no painel' ||
+                       norm === 'aguardando seleção' ||
+                       norm === 'aguardando inscrição pelo clube' ||
+                       norm === 'aguardando inscricao pelo clube' ||
+                       norm === 'campeonato oficial' ||
+                       norm === '---' ||
+                       norm.includes('superliga');
+            }
+
+            if (!ehInvalido(candidato)) return candidato.trim();
+            if (atleta && !ehInvalido(atleta.campeonatoNome)) return atleta.campeonatoNome.trim();
+            if (equipe && !ehInvalido(equipe.campeonatoNome)) return equipe.campeonatoNome.trim();
+
+            if (equipe && typeof obterInscricoesConfirmadasClube === 'function') {
+                try {
+                    const inscricoes = obterInscricoesConfirmadasClube();
+                    if (Array.isArray(inscricoes)) {
+                        const ins = inscricoes.find(i =>
+                            (equipe.id && String(i.equipeId) === String(equipe.id)) ||
+                            (equipe.numeroInscricao && String(i.numeroInscricao) === String(equipe.numeroInscricao)) ||
+                            (equipe.nomeTime && i.equipeNome && i.equipeNome.toLowerCase() === equipe.nomeTime.toLowerCase())
+                        );
+                        if (ins && !ehInvalido(ins.campeonatoNome)) return ins.campeonatoNome.trim();
+                    }
+                } catch (e) {}
+            }
+
+            if (typeof campeonatoSelecionadoSubpagina !== 'undefined' && campeonatoSelecionadoSubpagina && !ehInvalido(campeonatoSelecionadoSubpagina.nome)) {
+                return campeonatoSelecionadoSubpagina.nome.trim();
+            }
+
+            if (typeof bancoCampeonatos === 'object' && bancoCampeonatos !== null) {
+                const ativo = Object.values(bancoCampeonatos).find(c => c && c.ativo !== false && c.statusTorneio !== 'inativo' && !ehInvalido(c.nome));
+                if (ativo) return ativo.nome.trim();
+            }
+
+            return 'XXI COPA AVV DE VOLEIBOL';
+        }
+
         function popularSeletorCampeonatosFicha(campeonatoPreferencial) {
             try {
                 const selectCamp = document.getElementById('ficha-select-campeonato');
                 if (!selectCamp) return;
+
+                function ehNomeInvalido(n) {
+                    if (!n || typeof n !== 'string') return true;
+                    const norm = n.trim().toLowerCase();
+                    return norm === '' || norm.includes('aguardando') || norm.includes('superliga') || norm === 'campeonato oficial' || norm === '---';
+                }
 
                 // Coleta todos os nomes de campeonatos únicos e reais do sistema
                 const nomesCampeonatos = new Set();
@@ -4733,14 +4786,14 @@
                 // 1. Campeonatos cadastrados no banco
                 if (typeof bancoCampeonatos === 'object' && bancoCampeonatos !== null) {
                     Object.values(bancoCampeonatos).forEach(c => {
-                        if (c && c.nome && c.nome.trim()) {
+                        if (c && c.nome && !ehNomeInvalido(c.nome)) {
                             nomesCampeonatos.add(c.nome.trim());
                         }
                     });
                 }
                 if (typeof bancoPadraoCampeonatos === 'object' && bancoPadraoCampeonatos !== null) {
                     Object.values(bancoPadraoCampeonatos).forEach(c => {
-                        if (c && c.nome && c.nome.trim()) {
+                        if (c && c.nome && !ehNomeInvalido(c.nome)) {
                             nomesCampeonatos.add(c.nome.trim());
                         }
                     });
@@ -4751,7 +4804,7 @@
                     const inscricoes = obterInscricoesConfirmadasClube();
                     if (Array.isArray(inscricoes)) {
                         inscricoes.forEach(ins => {
-                            if (ins && ins.campeonatoNome && ins.campeonatoNome.trim()) {
+                            if (ins && ins.campeonatoNome && !ehNomeInvalido(ins.campeonatoNome)) {
                                 nomesCampeonatos.add(ins.campeonatoNome.trim());
                             }
                         });
@@ -4761,32 +4814,21 @@
                 // 3. Campeonato da equipe selecionada ou logada
                 const eqAtual = (typeof equipeSelecionadaVisualizacao !== 'undefined' && equipeSelecionadaVisualizacao) || 
                                 (typeof obterEquipeAtualDoBanco === 'function' ? obterEquipeAtualDoBanco().equipe : null);
-                if (eqAtual && eqAtual.campeonatoNome && eqAtual.campeonatoNome.trim()) {
+                if (eqAtual && eqAtual.campeonatoNome && !ehNomeInvalido(eqAtual.campeonatoNome)) {
                     nomesCampeonatos.add(eqAtual.campeonatoNome.trim());
                 }
 
-                // 4. Se ainda estiver vazio, fallback oficial
-                if (nomesCampeonatos.size === 0) {
-                    nomesCampeonatos.add('XXI COPA AVV DE VOLEIBOL');
-                }
+                // 4. Sempre garante o campeonato oficial principal
+                nomesCampeonatos.add('XXI COPA AVV DE VOLEIBOL');
 
                 // Determina qual campeonato deve ficar selecionado
-                let selecionado = campeonatoPreferencial ? campeonatoPreferencial.trim() : null;
-                if (!selecionado && eqAtual && eqAtual.campeonatoNome && eqAtual.campeonatoNome.trim()) {
-                    selecionado = eqAtual.campeonatoNome.trim();
-                }
-                if (!selecionado && typeof campeonatoSelecionadoSubpagina !== 'undefined' && campeonatoSelecionadoSubpagina && campeonatoSelecionadoSubpagina.nome) {
-                    selecionado = campeonatoSelecionadoSubpagina.nome.trim();
-                }
-                if (!selecionado && nomesCampeonatos.size > 0) {
-                    selecionado = Array.from(nomesCampeonatos)[0];
-                }
+                const selecionado = obterNomeCampeonatoValido(campeonatoPreferencial, eqAtual, null);
 
                 // Reconstrói as opções do dropdown
                 selectCamp.innerHTML = '';
-                const listaNomes = Array.from(nomesCampeonatos);
+                const listaNomes = Array.from(nomesCampeonatos).filter(n => !ehNomeInvalido(n));
                 
-                // Se o selecionado não estava na lista, adiciona
+                // Se o selecionado não estava na lista, adiciona no início
                 if (selecionado && !listaNomes.some(n => n.toUpperCase() === selecionado.toUpperCase())) {
                     listaNomes.unshift(selecionado);
                 }
@@ -4801,7 +4843,7 @@
                     selectCamp.appendChild(opt);
                 });
 
-                atualizarCampeonatoFicha(selectCamp.value);
+                atualizarCampeonatoFicha(selectCamp.value || selecionado);
             } catch (e) {
                 console.error('Erro ao popular seletor de campeonatos da ficha:', e);
             }
@@ -5976,15 +6018,14 @@
             const timeWhatsPadrao = (eqAtiva && (eqAtiva.whatsapp || eqAtiva.whats)) || '';
 
             // 2. Identifica o campeonato correto da equipe
-            const selectCamp = document.getElementById('ficha-select-campeonato');
-            const campPref = (eqAtiva && eqAtiva.campeonatoNome) ||
-                             (typeof campeonatoSelecionadoSubpagina !== 'undefined' && campeonatoSelecionadoSubpagina && campeonatoSelecionadoSubpagina.nome) ||
-                             (selectCamp && selectCamp.value && !selectCamp.value.includes('SUPERLIGA') ? selectCamp.value : 'XXI COPA AVV DE VOLEIBOL');
+            const eqCampCandidato = (eqAtiva && eqAtiva.campeonatoNome) ||
+                                    (typeof campeonatoSelecionadoSubpagina !== 'undefined' && campeonatoSelecionadoSubpagina && campeonatoSelecionadoSubpagina.nome) ||
+                                    null;
+            const nomeCamp = obterNomeCampeonatoValido(eqCampCandidato, eqAtiva, null);
 
             if (typeof popularSeletorCampeonatosFicha === 'function') {
-                popularSeletorCampeonatosFicha(campPref);
+                popularSeletorCampeonatosFicha(nomeCamp);
             }
-            const nomeCamp = (selectCamp && selectCamp.value) ? selectCamp.value : campPref;
 
             const agora = new Date();
             const dataHoje = agora.toLocaleDateString('pt-BR');

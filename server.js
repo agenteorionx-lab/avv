@@ -272,6 +272,13 @@ function limparEquipeCompleta(eq) {
     if (!eq) return null;
     const copia = { ...eq };
     delete copia.senhaHash;
+    const campInvalido = !copia.campeonatoNome || 
+                         copia.campeonatoNome === 'Aguardando Seleção no Painel' || 
+                         copia.campeonatoNome === 'Aguardando Inscrição pelo Clube';
+    if (campInvalido && copia.categoria !== '__CONTA_CLUBE__') {
+        copia.campeonatoNome = 'XXI COPA AVV DE VOLEIBOL';
+        copia.campeonatoId = copia.campeonatoId || 'camp-1794335645971';
+    }
     return copia;
 }
 
@@ -287,6 +294,13 @@ function limparEquipeLeveParaListagem(eq) {
     delete copia.senhaHash;
     delete copia.bancoAtletasGeral;
     delete copia.bancoComissaoGeral;
+    const campInvalido = !copia.campeonatoNome || 
+                         copia.campeonatoNome === 'Aguardando Seleção no Painel' || 
+                         copia.campeonatoNome === 'Aguardando Inscrição pelo Clube';
+    if (campInvalido && copia.categoria !== '__CONTA_CLUBE__') {
+        copia.campeonatoNome = 'XXI COPA AVV DE VOLEIBOL';
+        copia.campeonatoId = copia.campeonatoId || 'camp-1794335645971';
+    }
     if (copia.logo && copia.logo.length > 30000) copia.logo = 'logos/logo_avv.png';
     if (copia.fotoDirigente && copia.fotoDirigente.length > 30000) copia.fotoDirigente = 'logos/logo_avv.png';
 
