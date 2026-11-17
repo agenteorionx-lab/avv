@@ -805,9 +805,11 @@
                         <div>
                             <label style="display: block; font-size: 11px; font-weight: 700; color: #334155; margin-bottom: 4px;">FOTO ATLETA</label>
                             <input type="file" id="modal-ath-foto-file" accept="image/*" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 4px; background: #fff;" onchange="previewFotoAtletaModal(event)">
+                            <div style="font-size: 11px; color: #64748b; margin-top: 3px;">Formatos aceitos: JPG, PNG, WEBP (máx. 15MB). Otimização automática.</div>
+                            <div id="modal-ath-foto-status" style="font-size: 11px; font-weight: 700; margin-top: 4px; display: none;"></div>
                             
                             <!-- PREVIEW DA FOTO -->
-                            <div style="margin-top: 10px; width: 110px; height: 110px; border-radius: 4px; overflow: hidden; border: 1px solid #cbd5e1; background: #f1f5f9;">
+                            <div style="margin-top: 8px; width: 110px; height: 110px; border-radius: 4px; overflow: hidden; border: 1px solid #cbd5e1; background: #f1f5f9;">
                                 <img id="modal-ath-foto-preview" src="logos/mascote_coelho.png" style="width: 100%; height: 100%; object-fit: cover;" alt="Foto Atleta">
                             </div>
                         </div>
@@ -1600,10 +1602,10 @@
         function comprimirImagemCanvas(file, maxW, maxH, quality, callback) {
             if (!file) return;
 
-            // Limite de segurança de 5MB por arquivo
-            const limiteBytes = 5 * 1024 * 1024; // 5MB
+            // Limite de segurança de 15MB por arquivo (otimização de fotos tiradas de celular)
+            const limiteBytes = 15 * 1024 * 1024; // 15MB
             if (file.size > limiteBytes) {
-                avvAlert(`O arquivo selecionado (${(file.size / (1024 * 1024)).toFixed(1)} MB) excede o limite máximo permitido de 5MB.\n\nPor favor, escolha uma imagem menor que 5MB para otimizar o carregamento e evitar lentidão.`, 'Arquivo Muito Pesado', 'warning');
+                avvAlert(`O arquivo selecionado (${(file.size / (1024 * 1024)).toFixed(1)} MB) excede o limite máximo permitido de 15MB.\n\nPor favor, escolha uma imagem menor que 15MB para otimizar o carregamento e evitar lentidão.`, 'Arquivo Muito Pesado', 'warning');
                 return;
             }
 
@@ -1631,9 +1633,14 @@
                     }
                 };
                 img.onerror = function() {
-                    callback(e.target.result);
+                    avvAlert('Não foi possível processar a imagem selecionada. Verifique se o arquivo é uma imagem válida (JPG, PNG ou WEBP).', 'Formato Não Suportado', 'warning');
+                    callback(null);
                 };
                 img.src = e.target.result;
+            };
+            reader.onerror = function() {
+                avvAlert('Erro ao ler a foto do seu dispositivo. Por favor, tente novamente.', 'Erro de Leitura', 'error');
+                callback(null);
             };
             reader.readAsDataURL(file);
         }
@@ -3042,48 +3049,85 @@
                         }
                         if (Array.isArray(serverData.equipes)) {
                             window.bancoEquipesServidor = serverData.equipes;
+                            const emailSessaoAtiva = (sessao.email || '').toLowerCase().trim();
+                            const chaveAtletas = obterChaveStorageAtletasClube();
+                            const chaveComissao = obterChaveStorageComissaoClube();
+                            const chaveInsc = obterChaveInscricoesConfirmadasClube();
+
+                            // Preserva fotos locais existentes antes de sobrescrever com dados leves do servidor
+                            const dbAnterior = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
+                            const equipesSalvar = serverData.equipes.map(eqS => {
+                                const eqAntiga = dbAnterior.find(e => String(e.id) === String(eqS.id));
+                                if (eqAntiga && (eqAntiga.email || '').toLowerCase().trim() === emailSessaoAtiva) {
+                                    if (Array.isArray(eqAntiga.atletas) && Array.isArray(eqS.atletas)) {
+                                        eqS.atletas = eqS.atletas.map(atlS => {
+                                            const atlA = eqAntiga.atletas.find(x => String(x.id) === String(atlS.id));
+                                            if (atlA && atlA.foto && atlA.foto.length > 500 && (!atlS.foto || atlS.foto.length <= 500)) {
+                                                return { ...atlS, foto: atlA.foto };
+                                            }
+                                            return atlS;
+                                        });
+                                    }
+                                    if (Array.isArray(eqAntiga.bancoAtletasGeral) && (!eqS.bancoAtletasGeral || eqS.bancoAtletasGeral.length === 0)) {
+                                        eqS.bancoAtletasGeral = eqAntiga.bancoAtletasGeral;
+                                    }
+                                }
+                                return eqS;
+                            });
+
                             try {
-                                localStorage.setItem('avv_equipes_completo_db', JSON.stringify(serverData.equipes));
+                                localStorage.setItem('avv_equipes_completo_db', JSON.stringify(equipesSalvar));
                             } catch (eStorage) {
-                                // Caso exceda cota de 5MB por fotos de outras equipes, salva apenas as equipes do próprio clube
-                                const emailSessaoAtiva = (sessao.email || '').toLowerCase().trim();
-                                const minhasEquipes = serverData.equipes.filter(e => (e.email || '').toLowerCase().trim() === emailSessaoAtiva);
+                                const minhasEquipes = equipesSalvar.filter(e => (e.email || '').toLowerCase().trim() === emailSessaoAtiva);
                                 try { localStorage.setItem('avv_equipes_completo_db', JSON.stringify(minhasEquipes)); } catch(e2){}
                             }
                             try { localStorage.removeItem('avv_inscricoes_teste'); } catch (e) {}
 
-                            // Atualiza os caches locais de atletas, comissão e inscrições com o que veio do servidor
-                            const emailSessaoAtiva = (sessao.email || '').toLowerCase().trim();
+                            // Carrega os dados COMPLETOS específicos deste clube (com fotos reais de atletas e comissão)
                             if (emailSessaoAtiva) {
-                                const chaveAtletas = obterChaveStorageAtletasClube();
-                                const chaveComissao = obterChaveStorageComissaoClube();
-                                const chaveInsc = obterChaveInscricoesConfirmadasClube();
-
-                                const equipesDestaConta = serverData.equipes.filter(e => (e.email || '').toLowerCase().trim() === emailSessaoAtiva);
-                                for (const eq of equipesDestaConta) {
-                                    if (Array.isArray(eq.bancoAtletasGeral) && eq.bancoAtletasGeral.length > 0) {
-                                        try { localStorage.setItem(chaveAtletas, JSON.stringify(eq.bancoAtletasGeral)); } catch(e){}
+                                try {
+                                    const respClube = await fetch('/api/clube/dados-completos?email=' + encodeURIComponent(emailSessaoAtiva), { cache: 'no-store' });
+                                    const dadosClube = await respClube.json();
+                                    if (respClube.ok && dadosClube.ok && Array.isArray(dadosClube.equipes)) {
+                                        const dbAtual = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
+                                        dadosClube.equipes.forEach(eqC => {
+                                            const idx = dbAtual.findIndex(e => String(e.id) === String(eqC.id));
+                                            if (idx !== -1) {
+                                                dbAtual[idx] = { ...dbAtual[idx], ...eqC };
+                                            } else {
+                                                dbAtual.push(eqC);
+                                            }
+                                            if (Array.isArray(eqC.bancoAtletasGeral) && eqC.bancoAtletasGeral.length > 0) {
+                                                try { localStorage.setItem(chaveAtletas, JSON.stringify(eqC.bancoAtletasGeral)); } catch(e){}
+                                            }
+                                            if (Array.isArray(eqC.bancoComissaoGeral) && eqC.bancoComissaoGeral.length > 0) {
+                                                try { localStorage.setItem(chaveComissao, JSON.stringify(eqC.bancoComissaoGeral)); } catch(e){}
+                                            }
+                                            if (Array.isArray(eqC.inscricoesConfirmadas) && eqC.inscricoesConfirmadas.length > 0) {
+                                                try { localStorage.setItem(chaveInsc, JSON.stringify(eqC.inscricoesConfirmadas)); } catch(e){}
+                                            }
+                                            if (eqC.fotoDirigente || eqC.logo) {
+                                                const f = eqC.fotoDirigente || eqC.logo;
+                                                sessao.foto = f;
+                                                try {
+                                                    localStorage.setItem('avv_sessao_ativa', JSON.stringify(sessao));
+                                                    localStorage.setItem('avv_foto_clube_' + emailSessaoAtiva, f);
+                                                } catch(e){}
+                                            }
+                                        });
+                                        salvarStorageSeguro('avv_equipes_completo_db', JSON.stringify(dbAtual));
                                     }
-                                    if (Array.isArray(eq.bancoComissaoGeral) && eq.bancoComissaoGeral.length > 0) {
-                                        try { localStorage.setItem(chaveComissao, JSON.stringify(eq.bancoComissaoGeral)); } catch(e){}
-                                    }
-                                    if (Array.isArray(eq.inscricoesConfirmadas) && eq.inscricoesConfirmadas.length > 0) {
-                                        try { localStorage.setItem(chaveInsc, JSON.stringify(eq.inscricoesConfirmadas)); } catch(e){}
-                                    }
-                                    if (eq.fotoDirigente || eq.logo) {
-                                        const f = eq.fotoDirigente || eq.logo;
-                                        sessao.foto = f;
-                                        try {
-                                            localStorage.setItem('avv_sessao_ativa', JSON.stringify(sessao));
-                                            localStorage.setItem('avv_foto_clube_' + emailSessaoAtiva, f);
-                                        } catch(e){}
-                                    }
-                                }
+                                } catch(eClube) {}
                             }
 
                             // Renderiza imediatamente com as equipes frescas vindas da nuvem
-                            const equipesFrescas = obterEquipesDesteClube(serverData.equipes, sessao);
+                            const dbFinal = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
+                            const equipesFrescas = obterEquipesDesteClube(dbFinal, sessao);
                             renderizarEquipesClubeView(equipesFrescas);
+                            renderizarCardsAtletasDoClube();
+                            if (typeof renderizarComissaoTecnicaClube === 'function') {
+                                renderizarComissaoTecnicaClube();
+                            }
                             atualizarContadoresTime();
                         }
                     }
@@ -4378,6 +4422,10 @@
             if (elWhats) elWhats.value = '';
             document.getElementById('modal-ath-foto-preview').src = 'logos/mascote_coelho.png';
             atletaFotoDataUrl = 'logos/mascote_coelho.png';
+            const fileInput = document.getElementById('modal-ath-foto-file');
+            if (fileInput) fileInput.value = '';
+            const statusEl = document.getElementById('modal-ath-foto-status');
+            if (statusEl) statusEl.style.display = 'none';
 
             // Padrão: Adulto marcado
             setCheckboxesCategoriasAtleta(['Adulto']);
@@ -4409,13 +4457,34 @@
         }
 
         function previewFotoAtletaModal(event) {
-            const file = event.target.files[0];
-            if (file) {
-                comprimirImagemCanvas(file, 320, 380, 0.8, (compressedUrl) => {
-                    atletaFotoDataUrl = compressedUrl;
-                    document.getElementById('modal-ath-foto-preview').src = compressedUrl;
-                });
+            const file = event.target.files && event.target.files[0];
+            if (!file) return;
+
+            const previewImg = document.getElementById('modal-ath-foto-preview');
+            const statusEl = document.getElementById('modal-ath-foto-status');
+            if (statusEl) {
+                statusEl.textContent = 'Processando e otimizando imagem...';
+                statusEl.style.color = '#1d4ed8';
+                statusEl.style.display = 'block';
             }
+
+            comprimirImagemCanvas(file, 320, 380, 0.78, (compressedUrl) => {
+                if (!compressedUrl) {
+                    if (statusEl) {
+                        statusEl.textContent = 'Falha ao processar a foto selecionada.';
+                        statusEl.style.color = '#dc2626';
+                    }
+                    return;
+                }
+                atletaFotoDataUrl = compressedUrl;
+                if (previewImg) previewImg.src = compressedUrl;
+                if (statusEl) {
+                    const kb = Math.round(compressedUrl.length * 0.75 / 1024);
+                    statusEl.textContent = `✓ Foto pronta e otimizada (${kb} KB)`;
+                    statusEl.style.color = '#15803d';
+                    statusEl.style.display = 'block';
+                }
+            });
         }
 
         function abrirEdicaoAtleta(numInscricao, nome, cpf, rg, nasc, genero, posicao, whats = '') {
@@ -4441,12 +4510,34 @@
                 setCheckboxesCategoriasAtleta(['Adulto']);
             }
 
-            // Busca foto atual do card se existir
-            const imgExistente = document.getElementById('img-ath-' + numInscricao);
-            if (imgExistente) {
-                atletaFotoDataUrl = imgExistente.src;
-                document.getElementById('modal-ath-foto-preview').src = imgExistente.src;
+            // Resgata foto com máxima prioridade no objeto do atleta ou elencos
+            let fotoRecuperada = (atletaObj && atletaObj.foto && atletaObj.foto.length > 50) ? atletaObj.foto : null;
+            if (!fotoRecuperada) {
+                const db = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
+                for (const eq of db) {
+                    if (Array.isArray(eq.atletas)) {
+                        const a = eq.atletas.find(x => String(x.id) === String(numInscricao) || String(x.inscricao) === String(numInscricao));
+                        if (a && a.foto && a.foto.length > 50) {
+                            fotoRecuperada = a.foto;
+                            break;
+                        }
+                    }
+                }
             }
+            if (!fotoRecuperada) {
+                const imgExistente = document.getElementById('img-ath-' + numInscricao);
+                if (imgExistente && imgExistente.src) {
+                    fotoRecuperada = imgExistente.src;
+                }
+            }
+            fotoRecuperada = fotoRecuperada || 'logos/mascote_coelho.png';
+            atletaFotoDataUrl = fotoRecuperada;
+            const previewImg = document.getElementById('modal-ath-foto-preview');
+            if (previewImg) previewImg.src = fotoRecuperada;
+            const fileInput = document.getElementById('modal-ath-foto-file');
+            if (fileInput) fileInput.value = '';
+            const statusEl = document.getElementById('modal-ath-foto-status');
+            if (statusEl) statusEl.style.display = 'none';
 
             document.getElementById('modal-atleta').style.display = 'flex';
         }
@@ -6049,7 +6140,14 @@
                 const nasc = (atletaObj?.nasc ? formatarDataNascimento(atletaObj.nasc) : null) || chk.dataset.nasc || '---';
                 const posicao = atletaObj?.posicao || chk.dataset.posicao || 'Ponteiro';
                 const genero = atletaObj?.genero || chk.dataset.genero || 'Masculino';
-                const foto = atletaObj?.foto || chk.dataset.foto || 'logos/mascote_coelho.png';
+                let foto = atletaObj?.foto || chk.dataset.foto || '';
+                if (!foto || foto.length <= 500 || foto.includes('logo_avv.png') || foto.includes('mascote_coelho.png')) {
+                    const atlGeral = atletasGerais.find(a => String(a.id) === String(num) || (a.cpf && atletaObj?.cpf && a.cpf.replace(/\D/g, '') === atletaObj.cpf.replace(/\D/g, '')));
+                    if (atlGeral && atlGeral.foto && atlGeral.foto.length > 500) {
+                        foto = atlGeral.foto;
+                    }
+                }
+                foto = foto || 'logos/mascote_coelho.png';
                 const whatsAtleta = (atletaObj && (atletaObj.whats || atletaObj.whatsapp))
                     ? formatarTelefone(atletaObj.whats || atletaObj.whatsapp)
                     : (chk.dataset.whats ? formatarTelefone(chk.dataset.whats) : (timeWhatsPadrao ? formatarTelefone(timeWhatsPadrao) : '---'));

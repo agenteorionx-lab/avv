@@ -1297,10 +1297,10 @@
         function comprimirImagemCanvasAdm(file, maxW, maxH, quality, callback) {
             if (!file) return;
 
-            // Limite de segurança de 5MB por arquivo
-            const limiteBytes = 5 * 1024 * 1024; // 5MB
+            // Limite de segurança de 15MB por arquivo
+            const limiteBytes = 15 * 1024 * 1024; // 15MB
             if (file.size > limiteBytes) {
-                avvAlert(`O arquivo selecionado (${(file.size / (1024 * 1024)).toFixed(1)} MB) excede o limite máximo permitido de 5MB.\n\nPor favor, escolha uma imagem menor que 5MB para otimizar o carregamento.`, 'Arquivo Muito Pesado', 'warning');
+                avvAlert(`O arquivo selecionado (${(file.size / (1024 * 1024)).toFixed(1)} MB) excede o limite máximo permitido de 15MB.\n\nPor favor, escolha uma imagem menor que 15MB para otimizar o carregamento.`, 'Arquivo Muito Pesado', 'warning');
                 return;
             }
 
@@ -1328,9 +1328,14 @@
                     }
                 };
                 img.onerror = function() {
-                    callback(e.target.result);
+                    avvAlert('Não foi possível processar a imagem selecionada. Verifique se o formato é válido.', 'Formato Não Suportado', 'warning');
+                    callback(null);
                 };
                 img.src = e.target.result;
+            };
+            reader.onerror = function() {
+                avvAlert('Erro ao ler o arquivo de imagem. Tente novamente.', 'Erro de Leitura', 'error');
+                callback(null);
             };
             reader.readAsDataURL(file);
         }

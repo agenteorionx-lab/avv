@@ -415,6 +415,29 @@ app.get(['/api/equipes/:id/completo', '/avv/api/equipes/:id/completo'], (req, re
     }
 });
 
+// 4.1.3. Dados completos exclusivos do clube autenticado (com fotos reais de seus atletas e comissão)
+app.get(['/api/clube/dados-completos', '/avv/api/clube/dados-completos'], (req, res) => {
+    try {
+        const email = (req.query.email || req.headers['x-user-email'] || '').toLowerCase().trim();
+        if (!email) {
+            return res.status(400).json({ ok: false, mensagem: 'E-mail do clube não informado.' });
+        }
+        const db = carregarBancoDados();
+        const equipesDoClube = (db.equipes || [])
+            .filter(e => (e.email || '').toLowerCase().trim() === email)
+            .map(limparEquipeCompleta);
+
+        res.json({
+            ok: true,
+            total: equipesDoClube.length,
+            equipes: equipesDoClube
+        });
+    } catch (err) {
+        console.error('Erro ao carregar dados completos do clube:', err);
+        res.status(500).json({ ok: false, mensagem: 'Erro interno ao obter dados do clube.' });
+    }
+});
+
 // 4.1.2. Download sob demanda do Regulamento Oficial em PDF
 app.get(['/api/campeonatos/:id/regulamento', '/avv/api/campeonatos/:id/regulamento'], (req, res) => {
     try {
@@ -609,6 +632,79 @@ app.post(['/api/auth/login', '/avv/api/auth/login'], (req, res) => {
     }
 });
 
+// Preserva fotos de atletas para evitar perda acidental durante sincronizações
+function mesclarAtletasPreservandoFotos(antigos, novos) {
+    if (!Array.isArray(novos)) return Array.isArray(antigos) ? antigos : [];
+    if (!Array.isArray(antigos) || antigos.length === 0) return novos;
+
+    const mapaFotosAntigas = new Map();
+    antigos.forEach(a => {
+        if (!a) return;
+        const f = a.foto;
+        if (f && f.length > 500 && (f.startsWith('data:image/') || !f.includes('logo_avv.png'))) {
+            if (a.id) mapaFotosAntigas.set(String(a.id), f);
+            if (a.inscricao) mapaFotosAntigas.set(String(a.inscricao), f);
+            const cpfL = (a.cpf || a.cpf_rg || '').replace(/\D/g, '');
+            if (cpfL && cpfL.length >= 8) mapaFotosAntigas.set(cpfL, f);
+            if (a.nome) mapaFotosAntigas.set(a.nome.toUpperCase().trim(), f);
+        }
+    });
+
+    return novos.map(novo => {
+        if (!novo) return novo;
+        const fotoNova = novo.foto || '';
+        const ehFotoReal = fotoNova.length > 500 && (fotoNova.startsWith('data:image/') || !fotoNova.includes('logo_avv.png'));
+        if (ehFotoReal) {
+            return novo;
+        }
+        const cpfL = (novo.cpf || novo.cpf_rg || '').replace(/\D/g, '');
+        const fotoPreservada = (novo.id && mapaFotosAntigas.get(String(novo.id))) ||
+                               (novo.inscricao && mapaFotosAntigas.get(String(novo.inscricao))) ||
+                               (cpfL && mapaFotosAntigas.get(cpfL)) ||
+                               (novo.nome && mapaFotosAntigas.get(novo.nome.toUpperCase().trim()));
+        if (fotoPreservada) {
+            return { ...novo, foto: fotoPreservada };
+        }
+        return novo;
+    });
+}
+
+function mesclarComissaoPreservandoFotos(antigos, novos) {
+    if (!Array.isArray(novos)) return Array.isArray(antigos) ? antigos : [];
+    if (!Array.isArray(antigos) || antigos.length === 0) return novos;
+
+    const mapaFotosAntigas = new Map();
+    antigos.forEach(m => {
+        if (!m) return;
+        const f = m.foto;
+        if (f && f.length > 500 && (f.startsWith('data:image/') || !f.includes('logo_avv.png'))) {
+            if (m.id) mapaFotosAntigas.set(String(m.id), f);
+            if (m.inscricao) mapaFotosAntigas.set(String(m.inscricao), f);
+            const cpfL = (m.cpf || m.cpf_cref || '').replace(/\D/g, '');
+            if (cpfL && cpfL.length >= 8) mapaFotosAntigas.set(cpfL, f);
+            if (m.nome) mapaFotosAntigas.set(m.nome.toUpperCase().trim(), f);
+        }
+    });
+
+    return novos.map(novo => {
+        if (!novo) return novo;
+        const fotoNova = novo.foto || '';
+        const ehFotoReal = fotoNova.length > 500 && (fotoNova.startsWith('data:image/') || !fotoNova.includes('logo_avv.png'));
+        if (ehFotoReal) {
+            return novo;
+        }
+        const cpfL = (novo.cpf || novo.cpf_cref || '').replace(/\D/g, '');
+        const fotoPreservada = (novo.id && mapaFotosAntigas.get(String(novo.id))) ||
+                               (novo.inscricao && mapaFotosAntigas.get(String(novo.inscricao))) ||
+                               (cpfL && mapaFotosAntigas.get(cpfL)) ||
+                               (novo.nome && mapaFotosAntigas.get(novo.nome.toUpperCase().trim()));
+        if (fotoPreservada) {
+            return { ...novo, foto: fotoPreservada };
+        }
+        return novo;
+    });
+}
+
 // 4.4. Sincronizar / Atualizar Equipe (Dados da equipe, Atletas, Comissão, Status, Perfil do Dirigente)
 app.post(['/api/equipes/sincronizar', '/avv/api/equipes/sincronizar'], (req, res) => {
     try {
@@ -633,9 +729,19 @@ app.post(['/api/equipes/sincronizar', '/avv/api/equipes/sincronizar'], (req, res
                         const senhaHashPreservada = (antigo && antigo.senhaHash)
                             ? antigo.senhaHash
                             : hashSenhaSegura(eqCliente.senha || '123456');
+
+                        const atletasMesclados = mesclarAtletasPreservandoFotos(antigo ? antigo.atletas : [], eqCliente.atletas);
+                        const bancoAtletasMesclado = mesclarAtletasPreservandoFotos(antigo ? antigo.bancoAtletasGeral : [], eqCliente.bancoAtletasGeral);
+                        const comissaoMesclada = mesclarComissaoPreservandoFotos(antigo ? antigo.comissao : [], eqCliente.comissao);
+                        const bancoComissaoMesclado = mesclarComissaoPreservandoFotos(antigo ? antigo.bancoComissaoGeral : [], eqCliente.bancoComissaoGeral);
+
                         const item = {
                             ...(antigo || {}),
                             ...eqCliente,
+                            atletas: atletasMesclados,
+                            bancoAtletasGeral: bancoAtletasMesclado,
+                            comissao: comissaoMesclada,
+                            bancoComissaoGeral: bancoComissaoMesclado,
                             senhaHash: senhaHashPreservada
                         };
                         delete item.senha;
@@ -654,10 +760,20 @@ app.post(['/api/equipes/sincronizar', '/avv/api/equipes/sincronizar'], (req, res
                         return emailEq && (e.email || '').toLowerCase().trim() === emailEq;
                     });
                     if (idx !== -1) {
-                        const senhaHashPreservada = db.equipes[idx].senhaHash || (contaClube && contaClube.senhaHash) || (eqCliente.senha ? hashSenhaSegura(eqCliente.senha) : undefined);
+                        const antigo = db.equipes[idx];
+                        const senhaHashPreservada = antigo.senhaHash || (contaClube && contaClube.senhaHash) || (eqCliente.senha ? hashSenhaSegura(eqCliente.senha) : undefined);
+                        const atletasMesclados = mesclarAtletasPreservandoFotos(antigo.atletas, eqCliente.atletas);
+                        const bancoAtletasMesclado = mesclarAtletasPreservandoFotos(antigo.bancoAtletasGeral, eqCliente.bancoAtletasGeral);
+                        const comissaoMesclada = mesclarComissaoPreservandoFotos(antigo.comissao, eqCliente.comissao);
+                        const bancoComissaoMesclado = mesclarComissaoPreservandoFotos(antigo.bancoComissaoGeral, eqCliente.bancoComissaoGeral);
+
                         db.equipes[idx] = {
-                            ...db.equipes[idx],
+                            ...antigo,
                             ...eqCliente,
+                            atletas: atletasMesclados,
+                            bancoAtletasGeral: bancoAtletasMesclado,
+                            comissao: comissaoMesclada,
+                            bancoComissaoGeral: bancoComissaoMesclado,
                             senhaHash: senhaHashPreservada
                         };
                         delete db.equipes[idx].senha;
@@ -687,13 +803,23 @@ app.post(['/api/equipes/sincronizar', '/avv/api/equipes/sincronizar'], (req, res
                 return emailEq && (e.email || '').toLowerCase().trim() === emailEq;
             });
             if (idx !== -1) {
+                const antigo = db.equipes[idx];
                 const senhaHashPreservada = equipe.novaSenha
                     ? hashSenhaSegura(equipe.novaSenha)
-                    : (db.equipes[idx].senhaHash || (contaClube && contaClube.senhaHash) || (equipe.senha ? hashSenhaSegura(equipe.senha) : undefined));
+                    : (antigo.senhaHash || (contaClube && contaClube.senhaHash) || (equipe.senha ? hashSenhaSegura(equipe.senha) : undefined));
+
+                const atletasMesclados = mesclarAtletasPreservandoFotos(antigo.atletas, equipe.atletas);
+                const bancoAtletasMesclado = mesclarAtletasPreservandoFotos(antigo.bancoAtletasGeral, equipe.bancoAtletasGeral);
+                const comissaoMesclada = mesclarComissaoPreservandoFotos(antigo.comissao, equipe.comissao);
+                const bancoComissaoMesclado = mesclarComissaoPreservandoFotos(antigo.bancoComissaoGeral, equipe.bancoComissaoGeral);
 
                 db.equipes[idx] = {
-                    ...db.equipes[idx],
+                    ...antigo,
                     ...equipe,
+                    atletas: atletasMesclados,
+                    bancoAtletasGeral: bancoAtletasMesclado,
+                    comissao: comissaoMesclada,
+                    bancoComissaoGeral: bancoComissaoMesclado,
                     senhaHash: senhaHashPreservada
                 };
                 delete db.equipes[idx].senha;
