@@ -267,7 +267,7 @@
                             <div style="display: flex; align-items: center; gap: 14px;">
                                 <img src="logos/logo_avv.png" style="width: 46px; height: 46px; object-fit: contain; background: #fff; border-radius: 4px; padding: 3px;" alt="Logo AVV">
                                 <div>
-                                    <h2 id="champ-modal-title" style="font-size: 16px; font-weight: 800; text-transform: uppercase; margin: 0; letter-spacing: 0.5px; color: #ffffff;">SUPERLIGA INTERIORANA - POLO VILHENA - MASCULINO</h2>
+                                    <h2 id="champ-modal-title" style="font-size: 16px; font-weight: 800; text-transform: uppercase; margin: 0; letter-spacing: 0.5px; color: #ffffff;">XXI COPA AVV DE VOLEIBOL</h2>
                                     <span id="champ-modal-modalidade" style="font-size: 12px; color: #cbd5e1; display: block; margin-top: 3px;">Modalidade Oficial AVV</span>
                                 </div>
                             </div>
@@ -1341,10 +1341,7 @@
             <div class="no-print" style="background: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 10px 20px; display: flex; align-items: center; gap: 12px;">
                 <span style="font-size: 11px; font-weight: 700; color: #475569; text-transform: uppercase;">Competição Vinculada:</span>
                 <select id="ficha-select-campeonato" onchange="atualizarCampeonatoFicha(this.value)" style="flex: 1; height: 34px; padding: 0 10px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12px; font-weight: 600; color: #0f1c3f; background: #ffffff;">
-                    <option value="SUPERLIGA INTERIORANA - POLO VILHENA - MASCULINO">SUPERLIGA INTERIORANA - POLO VILHENA - MASCULINO (Oficial AVV)</option>
-                    <option value="SUPERLIGA INTERIORANA - POLO VILHENA - FEMININO">SUPERLIGA INTERIORANA - POLO VILHENA - FEMININO</option>
-                    <option value="CAMPEONATO ESTADUAL DE CATEGORIAS DE BASE (SUB-15 E SUB-17)">CAMPEONATO ESTADUAL DE CATEGORIAS DE BASE (SUB-15 E SUB-17)</option>
-                    <option value="CIRCUITO RONDONIENSE DE VÔLEI DE PRAIA">CIRCUITO RONDONIENSE DE VÔLEI DE PRAIA</option>
+                    <option value="XXI COPA AVV DE VOLEIBOL">XXI COPA AVV DE VOLEIBOL (Oficial AVV)</option>
                 </select>
             </div>
 
@@ -1360,7 +1357,7 @@
                     <!-- CABEÇALHO DO DOCUMENTO -->
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #0f1c3f; padding-bottom: 8px; margin-bottom: 12px;">
                         <div>
-                            <span id="ficha-nome-campeonato-topo" style="font-size: 11px; font-weight: 800; color: #0f1c3f; text-transform: uppercase; letter-spacing: 0.5px;">SUPERLIGA INTERIORANA - POLO VILHENA</span>
+                            <span id="ficha-nome-campeonato-topo" style="font-size: 11px; font-weight: 800; color: #0f1c3f; text-transform: uppercase; letter-spacing: 0.5px;">XXI COPA AVV DE VOLEIBOL</span>
                             <div style="font-size: 9px; color: #64748b; font-weight: 600;">ASSOCIAÇÃO VILHENENSE DE VOLEIBOL &bull; DEPARTAMENTO TÉCNICO</div>
                         </div>
                         <div style="text-align: right;">
@@ -1559,7 +1556,7 @@
                     <!-- TÍTULO CENTRAL DO REGULAMENTO -->
                     <div style="text-align: center; margin-bottom: 22px;">
                         <h2 id="pdf-doc-title" style="font-size: 15px; font-weight: 800; color: #0f1c3f; text-transform: uppercase; margin: 0; letter-spacing: 0.5px;">REGULAMENTO ESPECÍFICO DE COMPETIÇÃO</h2>
-                        <span id="pdf-doc-subtitle" style="font-size: 11px; color: #475569; font-weight: 600; display: block; margin-top: 3px;">Superliga Interiorana - Polo Vilhena</span>
+                        <span id="pdf-doc-subtitle" style="font-size: 11px; color: #475569; font-weight: 600; display: block; margin-top: 3px;">XXI Copa AVV de Voleibol</span>
                     </div>
 
                     <!-- CORPO TEXTUAL DO REGULAMENTO GERADO DINAMICAMENTE -->
@@ -4695,11 +4692,12 @@
                 const elDataInsc = document.getElementById('ficha-campo-datahora');
                 if (elDataInsc) elDataInsc.textContent = dataHoraInscAtleta !== '---' ? dataHoraInscAtleta : `${dataHoje} às ${horaHoje}`;
 
-                // Puxa o campeonato selecionado atualmente no dropdown
-                const selectCamp = document.getElementById('ficha-select-campeonato');
-                if (selectCamp) {
-                    atualizarCampeonatoFicha(selectCamp.value);
-                }
+                // Popula o dropdown com os campeonatos reais do sistema e seleciona o da equipe/atleta
+                const campPref = (atletaDados && atletaDados.campeonatoNome) ||
+                                 (equipe && equipe.campeonatoNome) ||
+                                 (typeof campeonatoSelecionadoSubpagina !== 'undefined' && campeonatoSelecionadoSubpagina && campeonatoSelecionadoSubpagina.nome) ||
+                                 'XXI COPA AVV DE VOLEIBOL';
+                popularSeletorCampeonatosFicha(campPref);
 
                 // Código de autenticação eletrônica único
                 const authHash = 'AVV-' + num + '-' + Math.random().toString(36).substring(2, 8).toUpperCase();
@@ -4717,6 +4715,91 @@
         function fecharFichaAtleta() {
             const modal = document.getElementById('modal-ficha-atleta');
             if (modal) modal.style.display = 'none';
+        }
+
+        function popularSeletorCampeonatosFicha(campeonatoPreferencial) {
+            try {
+                const selectCamp = document.getElementById('ficha-select-campeonato');
+                if (!selectCamp) return;
+
+                // Coleta todos os nomes de campeonatos únicos e reais do sistema
+                const nomesCampeonatos = new Set();
+
+                // 1. Campeonatos cadastrados no banco
+                if (typeof bancoCampeonatos === 'object' && bancoCampeonatos !== null) {
+                    Object.values(bancoCampeonatos).forEach(c => {
+                        if (c && c.nome && c.nome.trim()) {
+                            nomesCampeonatos.add(c.nome.trim());
+                        }
+                    });
+                }
+                if (typeof bancoPadraoCampeonatos === 'object' && bancoPadraoCampeonatos !== null) {
+                    Object.values(bancoPadraoCampeonatos).forEach(c => {
+                        if (c && c.nome && c.nome.trim()) {
+                            nomesCampeonatos.add(c.nome.trim());
+                        }
+                    });
+                }
+
+                // 2. Campeonatos vindos das inscrições confirmadas do clube
+                if (typeof obterInscricoesConfirmadasClube === 'function') {
+                    const inscricoes = obterInscricoesConfirmadasClube();
+                    if (Array.isArray(inscricoes)) {
+                        inscricoes.forEach(ins => {
+                            if (ins && ins.campeonatoNome && ins.campeonatoNome.trim()) {
+                                nomesCampeonatos.add(ins.campeonatoNome.trim());
+                            }
+                        });
+                    }
+                }
+
+                // 3. Campeonato da equipe selecionada ou logada
+                const eqAtual = (typeof equipeSelecionadaVisualizacao !== 'undefined' && equipeSelecionadaVisualizacao) || 
+                                (typeof obterEquipeAtualDoBanco === 'function' ? obterEquipeAtualDoBanco().equipe : null);
+                if (eqAtual && eqAtual.campeonatoNome && eqAtual.campeonatoNome.trim()) {
+                    nomesCampeonatos.add(eqAtual.campeonatoNome.trim());
+                }
+
+                // 4. Se ainda estiver vazio, fallback oficial
+                if (nomesCampeonatos.size === 0) {
+                    nomesCampeonatos.add('XXI COPA AVV DE VOLEIBOL');
+                }
+
+                // Determina qual campeonato deve ficar selecionado
+                let selecionado = campeonatoPreferencial ? campeonatoPreferencial.trim() : null;
+                if (!selecionado && eqAtual && eqAtual.campeonatoNome && eqAtual.campeonatoNome.trim()) {
+                    selecionado = eqAtual.campeonatoNome.trim();
+                }
+                if (!selecionado && typeof campeonatoSelecionadoSubpagina !== 'undefined' && campeonatoSelecionadoSubpagina && campeonatoSelecionadoSubpagina.nome) {
+                    selecionado = campeonatoSelecionadoSubpagina.nome.trim();
+                }
+                if (!selecionado && nomesCampeonatos.size > 0) {
+                    selecionado = Array.from(nomesCampeonatos)[0];
+                }
+
+                // Reconstrói as opções do dropdown
+                selectCamp.innerHTML = '';
+                const listaNomes = Array.from(nomesCampeonatos);
+                
+                // Se o selecionado não estava na lista, adiciona
+                if (selecionado && !listaNomes.some(n => n.toUpperCase() === selecionado.toUpperCase())) {
+                    listaNomes.unshift(selecionado);
+                }
+
+                listaNomes.forEach(nome => {
+                    const opt = document.createElement('option');
+                    opt.value = nome;
+                    opt.textContent = `${nome} (Oficial AVV)`;
+                    if (selecionado && nome.toUpperCase() === selecionado.toUpperCase()) {
+                        opt.selected = true;
+                    }
+                    selectCamp.appendChild(opt);
+                });
+
+                atualizarCampeonatoFicha(selectCamp.value);
+            } catch (e) {
+                console.error('Erro ao popular seletor de campeonatos da ficha:', e);
+            }
         }
 
         function atualizarCampeonatoFicha(nomeCamp) {
@@ -5871,7 +5954,10 @@
             const timeNome = document.getElementById('team-name-card')?.textContent.trim() || 'AVV VILHENA / SICREDI';
             const timeSede = document.getElementById('team-city-card')?.textContent.trim() || 'Vilhena - RO';
             const selectCamp = document.getElementById('ficha-select-campeonato');
-            const nomeCamp = selectCamp ? selectCamp.value : 'SUPERLIGA INTERIORANA - POLO VILHENA';
+            if (!selectCamp || !selectCamp.value || selectCamp.value.includes('SUPERLIGA')) {
+                popularSeletorCampeonatosFicha();
+            }
+            const nomeCamp = (selectCamp && selectCamp.value) ? selectCamp.value : 'XXI COPA AVV DE VOLEIBOL';
 
             const agora = new Date();
             const dataHoje = agora.toLocaleDateString('pt-BR');
