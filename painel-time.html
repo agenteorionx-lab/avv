@@ -1363,8 +1363,8 @@
                             <div style="font-size: 9px; color: #64748b; font-weight: 600;">ASSOCIAÇÃO VILHENENSE DE VOLEIBOL &bull; DEPARTAMENTO TÉCNICO</div>
                         </div>
                         <div style="text-align: right;">
-                            <div style="font-size: 12px; font-weight: 800; color: #0f1c3f;">Nº DA INSCRIÇÃO: <span id="ficha-numero-inscricao-topo">1914717</span></div>
-                            <div id="ficha-hora-impressao" style="font-size: 9px; color: #64748b;">Emitido em: 22/09/2026 às 18:05</div>
+                            <div style="font-size: 12px; font-weight: 800; color: #0f1c3f;">Nº DA INSCRIÇÃO: <span id="ficha-numero-inscricao-topo">---</span></div>
+                            <div id="ficha-hora-impressao" style="font-size: 9px; color: #64748b;">Emitido em: ---</div>
                         </div>
                     </div>
 
@@ -1391,53 +1391,53 @@
                             <tr>
                                 <td style="width: 33%;">
                                     <label>Nº DA INSCRIÇÃO</label>
-                                    <strong id="ficha-campo-numero">1914717</strong>
+                                    <strong id="ficha-campo-numero">---</strong>
                                 </td>
                                 <td style="width: 33%;">
                                     <label>DATA/HORA DA INSCRIÇÃO</label>
-                                    <strong id="ficha-campo-datahora">10/09/2026 às 13:47</strong>
+                                    <strong id="ficha-campo-datahora">---</strong>
                                 </td>
                                 <td style="width: 34%;">
                                     <label>EQUIPE / CLUBE</label>
-                                    <strong id="ficha-campo-time">AVV VILHENA / SICREDI</strong>
+                                    <strong id="ficha-campo-time">---</strong>
                                 </td>
                             </tr>
                             <tr>
                                 <td colspan="2">
                                     <label>NOME COMPLETO DO ATLETA</label>
-                                    <strong id="ficha-campo-nome">ADRIANO MARTINS GUIRRO</strong>
+                                    <strong id="ficha-campo-nome">---</strong>
                                 </td>
                                 <td>
                                     <label>DATA DE NASCIMENTO</label>
-                                    <strong id="ficha-campo-nasc">28/04/1988</strong>
+                                    <strong id="ficha-campo-nasc">---</strong>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     <label>CPF</label>
-                                    <strong id="ficha-campo-cpf">064.797.809-14</strong>
+                                    <strong id="ficha-campo-cpf">---</strong>
                                 </td>
                                 <td>
                                     <label>RG / ÓRGÃO EXPEDIDOR</label>
-                                    <strong id="ficha-campo-rg">142857 SSP/RO</strong>
+                                    <strong id="ficha-campo-rg">---</strong>
                                 </td>
                                 <td>
                                     <label>GÊNERO / NAIPE</label>
-                                    <strong id="ficha-campo-genero">Masculino</strong>
+                                    <strong id="ficha-campo-genero">---</strong>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     <label>POSIÇÃO EM QUADRA</label>
-                                    <strong id="ficha-campo-posicao">Ponteiro</strong>
+                                    <strong id="ficha-campo-posicao">---</strong>
                                 </td>
                                 <td>
                                     <label>TELEFONE / WHATSAPP</label>
-                                    <strong id="ficha-campo-whats">(69) 99209-9604</strong>
+                                    <strong id="ficha-campo-whats">---</strong>
                                 </td>
                                 <td>
                                     <label>MUNICÍPIO / UF</label>
-                                    <strong id="ficha-campo-cidade">Vilhena - RO</strong>
+                                    <strong id="ficha-campo-cidade">---</strong>
                                 </td>
                             </tr>
                         </table>
@@ -1492,8 +1492,6 @@
                     <!-- RODAPÉ DA FOLHA A4 -->
                     <div style="margin-top: 8px; border-top: 1px solid #000000; padding-top: 4px; display: flex; justify-content: space-between; font-size: 7.5px; color: #000000;">
                         <span>AVV - Sistema Oficial de Competições &bull; Vilhena / Rondônia</span>
-                        <span id="ficha-footer-auth">Documento Autenticado Eletronicamente</span>
-                    </div>
                         <span id="ficha-footer-auth">Documento Autenticado Eletronicamente</span>
                     </div>
 
@@ -4706,41 +4704,72 @@
                 }
 
                 // 1. Busca os dados reais do atleta primeiramente no banco geral de atletas do clube
-                const atletasGerais = obterBancoAtletasClube();
-                let atletaDados = atletasGerais.find(a => String(a.id) === String(num));
+                const atletasGerais = (typeof obterBancoAtletasClube === 'function') ? obterBancoAtletasClube() : [];
+                let atletaDados = atletasGerais.find(a => String(a.id) === String(num) || String(a.inscricao) === String(num));
 
                 // Se não achar no banco geral, busca nas equipes
-                const equipeAlvo = equipeSelecionadaVisualizacao || (typeof obterEquipeAtualDoBanco === 'function' ? obterEquipeAtualDoBanco().equipe : null);
+                let equipeAlvo = equipeSelecionadaVisualizacao || (typeof obterEquipeAtualDoBanco === 'function' ? obterEquipeAtualDoBanco().equipe : null);
                 if (!atletaDados && equipeAlvo && Array.isArray(equipeAlvo.atletas)) {
-                    atletaDados = equipeAlvo.atletas.find(a => String(a.id) === String(num));
+                    atletaDados = equipeAlvo.atletas.find(a => String(a.id) === String(num) || String(a.inscricao) === String(num));
+                }
+
+                // Se ainda não encontrou por ID, busca por nome (independente de maiúsculas/minúsculas)
+                if (!atletaDados && nome) {
+                    const nomeBusca = String(nome).toUpperCase().trim();
+                    atletaDados = atletasGerais.find(a => String(a.nome || '').toUpperCase().trim() === nomeBusca) ||
+                                  (equipeAlvo && Array.isArray(equipeAlvo.atletas) && equipeAlvo.atletas.find(a => String(a.nome || '').toUpperCase().trim() === nomeBusca));
+                }
+
+                // Se ainda não encontrou, busca em todas as equipes do clube em avv_equipes_completo_db
+                if (!atletaDados) {
+                    try {
+                        const db = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
+                        for (const eq of db) {
+                            if (Array.isArray(eq.atletas)) {
+                                const achou = eq.atletas.find(a => String(a.id) === String(num) || String(a.inscricao) === String(num) || (nome && String(a.nome || '').toUpperCase().trim() === String(nome).toUpperCase().trim()));
+                                if (achou) {
+                                    atletaDados = achou;
+                                    if (!equipeAlvo) equipeAlvo = eq;
+                                    break;
+                                }
+                            }
+                        }
+                    } catch (e) {}
                 }
 
                 const card = document.getElementById('atleta-card-' + num);
+                const sessao = (typeof obterSessaoAtiva === 'function' ? obterSessaoAtiva() : null) || JSON.parse(localStorage.getItem('avv_sessao_ativa') || '{}');
                 
                 const timeNome = (equipeAlvo && (equipeAlvo.nomeTime || equipeAlvo.nomeClube)) ||
+                                 sessao.nomeTime ||
+                                 sessao.nomeClube ||
                                  document.getElementById('vis-team-name')?.textContent.trim() ||
                                  document.getElementById('team-name-card')?.textContent.trim() ||
-                                 'AVV VILHENA / SICREDI';
+                                 'Sua Agremiação';
+
                 const timeSede = (equipeAlvo && equipeAlvo.cidade && equipeAlvo.estado)
                     ? `${equipeAlvo.cidade} - ${equipeAlvo.estado}`
-                    : (document.getElementById('vis-team-cidade')?.textContent.trim() || document.getElementById('team-city-card')?.textContent.trim() || 'Vilhena - RO');
+                    : (equipeAlvo && equipeAlvo.cidade)
+                        ? `${equipeAlvo.cidade} - RO`
+                        : (sessao.cidade && sessao.estado ? `${sessao.cidade} - ${sessao.estado}` : (document.getElementById('vis-team-cidade')?.textContent.trim() || document.getElementById('team-city-card')?.textContent.trim() || 'Vilhena - RO'));
                 
                 // Dados específicos do atleta
                 const nomeAtleta = (atletaDados && atletaDados.nome) || nome || 'ATLETA';
-                const cpfAtleta = (atletaDados && atletaDados.cpf) || '---';
+                const cpfAtleta = (atletaDados && atletaDados.cpf && atletaDados.cpf !== '---' ? formatarCPF(atletaDados.cpf) : null) || (atletaDados && atletaDados.cpf) || '---';
                 const rgAtleta = (atletaDados && atletaDados.rg) || '---';
-                const nascAtleta = (atletaDados && atletaDados.nasc) || '---';
+                const nascAtleta = (atletaDados && atletaDados.nasc && atletaDados.nasc !== '---' ? formatarDataNascimento(atletaDados.nasc) : null) || (atletaDados && atletaDados.nasc) || '---';
                 const generoAtleta = (atletaDados && atletaDados.genero) || 'Masculino';
-                const posicaoAtleta = (atletaDados && atletaDados.posicao) || 'Ponteiro';
-                const dataHoraInscAtleta = (atletaDados && atletaDados.dataHora) || (equipe && equipe.dataHoraCompleta) || '---';
-                const whatsAtleta = (atletaDados && atletaDados.whats) || (equipe && equipe.whatsapp) || '---';
+                const posicaoAtleta = (atletaDados && (atletaDados.posicao || atletaDados.pos)) || 'Ponteiro';
+                const dataHoraInscAtleta = (atletaDados && atletaDados.dataHora) || (equipeAlvo && (equipeAlvo.dataHoraCompleta || equipeAlvo.dataInscricao)) || '---';
+                const whatsAtleta = (atletaDados && (atletaDados.whats || atletaDados.whatsapp) ? formatarTelefone(atletaDados.whats || atletaDados.whatsapp) : null) || (equipeAlvo && (equipeAlvo.whatsapp || equipeAlvo.whats) ? formatarTelefone(equipeAlvo.whatsapp || equipeAlvo.whats) : null) || '---';
 
                 // Puxa foto atual do atleta
-                let fotoSrc = (atletaDados && atletaDados.foto) || 'logos/mascote_coelho.png';
-                if (card && fotoSrc === 'logos/mascote_coelho.png') {
+                let fotoSrc = (atletaDados && atletaDados.foto && atletaDados.foto.length > 50) ? atletaDados.foto : null;
+                if (!fotoSrc && card) {
                     const imgThumb = card.querySelector('.atleta-img-thumb');
-                    if (imgThumb && imgThumb.src) fotoSrc = imgThumb.src;
+                    if (imgThumb && imgThumb.src && imgThumb.src.length > 50) fotoSrc = imgThumb.src;
                 }
+                fotoSrc = fotoSrc || 'logos/mascote_coelho.png';
 
                 // Preenchimento dinâmico dos dados cadastrais na folha
                 const elNumTopo = document.getElementById('ficha-numero-inscricao-topo');
@@ -4947,7 +4976,7 @@
 
         function solicitarDownloadFichaIndividualTime() {
             const el = document.getElementById('folha-ficha-impressao');
-            const nomeAtleta = document.getElementById('ficha-atleta-nome-topo')?.textContent || 'Atleta';
+            const nomeAtleta = document.getElementById('ficha-campo-nome')?.textContent?.trim() || 'Atleta';
             const opt = {
                 margin: [6, 6, 6, 6],
                 filename: `Ficha_${nomeAtleta.replace(/[^a-zA-Z0-9_-]/g, '_')}.pdf`,
