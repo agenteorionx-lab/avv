@@ -1643,8 +1643,58 @@
             reader.readAsDataURL(file);
         }
 
+        // Higienização inicial de Storage para liberar espaço de versões anteriores
+        (function autoLimparStorageExcedido() {
+            try {
+                localStorage.removeItem('avv_inscricoes_teste');
+                const sessao = JSON.parse(localStorage.getItem('avv_sessao_ativa') || 'null');
+                const email = (sessao && sessao.email ? sessao.email.toLowerCase().trim() : '');
+                const salvo = localStorage.getItem('avv_equipes_completo_db');
+                if (salvo && email) {
+                    const lista = JSON.parse(salvo);
+                    if (Array.isArray(lista)) {
+                        const precisaLimpar = lista.some(e => (e.email || '').toLowerCase().trim() !== email) ||
+                                              lista.some(e => !e.isContaClube && e.categoria !== '__CONTA_CLUBE__' && Array.isArray(e.bancoAtletasGeral));
+                        if (precisaLimpar) {
+                            const limpas = lista.filter(e => (e.email || '').toLowerCase().trim() === email).map(e => {
+                                const cp = { ...e };
+                                if (!cp.isContaClube && cp.categoria !== '__CONTA_CLUBE__') {
+                                    delete cp.bancoAtletasGeral;
+                                    delete cp.bancoComissaoGeral;
+                                }
+                                return cp;
+                            });
+                            localStorage.setItem('avv_equipes_completo_db', JSON.stringify(limpas));
+                        }
+                    }
+                }
+            } catch(e) {}
+        })();
+
         function salvarStorageSeguro(chave, valorString) {
             try {
+                // Otimização proativa para avv_equipes_completo_db: mantém apenas equipes deste clube e remove duplicatas
+                if (chave === 'avv_equipes_completo_db') {
+                    try {
+                        const sessao = JSON.parse(localStorage.getItem('avv_sessao_ativa') || 'null');
+                        const emailSessao = (sessao && sessao.email ? sessao.email.toLowerCase().trim() : '');
+                        const lista = JSON.parse(valorString);
+                        if (Array.isArray(lista)) {
+                            const filtradas = lista
+                                .filter(e => !emailSessao || (e.email || '').toLowerCase().trim() === emailSessao)
+                                .map(e => {
+                                    const cp = { ...e };
+                                    if (!cp.isContaClube && cp.categoria !== '__CONTA_CLUBE__') {
+                                        delete cp.bancoAtletasGeral;
+                                        delete cp.bancoComissaoGeral;
+                                    }
+                                    return cp;
+                                });
+                            valorString = JSON.stringify(filtradas);
+                        }
+                    } catch(eProativo) {}
+                }
+
                 localStorage.setItem(chave, valorString);
                 return true;
             } catch (err) {
@@ -1654,7 +1704,7 @@
                         const leve = {};
                         Object.keys(obj).forEach(k => {
                             leve[k] = { ...obj[k] };
-                            if (leve[k].regulamentoPdf && leve[k].regulamentoPdf.length > 200000) {
+                            if (leve[k].regulamentoPdf && leve[k].regulamentoPdf.length > 50000) {
                                 delete leve[k].regulamentoPdf;
                             }
                         });
@@ -1666,12 +1716,39 @@
                         const sessao = JSON.parse(localStorage.getItem('avv_sessao_ativa') || 'null');
                         const emailSessao = (sessao && sessao.email ? sessao.email.toLowerCase().trim() : '');
                         const lista = JSON.parse(valorString);
-                        const minhas = (Array.isArray(lista) ? lista : []).filter(e => (e.email || '').toLowerCase().trim() === emailSessao);
+                        const minhas = (Array.isArray(lista) ? lista : [])
+                            .filter(e => (e.email || '').toLowerCase().trim() === emailSessao)
+                            .map(e => {
+                                const cp = { ...e };
+                                delete cp.bancoAtletasGeral;
+                                delete cp.bancoComissaoGeral;
+                                return cp;
+                            });
                         localStorage.setItem(chave, JSON.stringify(minhas));
                         return true;
-                    } catch(e3) {}
+                    } catch(e3) {
+                        try {
+                            // Em caso extremo de cota reduzida no dispositivo, remove fotos pesadas no cache local
+                            const lista = JSON.parse(valorString);
+                            const superLeve = (Array.isArray(lista) ? lista : []).map(e => {
+                                const cp = { ...e };
+                                delete cp.bancoAtletasGeral;
+                                delete cp.bancoComissaoGeral;
+                                if (Array.isArray(cp.atletas)) {
+                                    cp.atletas = cp.atletas.map(a => {
+                                        const ca = { ...a };
+                                        if (ca.foto && ca.foto.length > 500) ca.foto = 'logos/logo_avv.png';
+                                        return ca;
+                                    });
+                                }
+                                return cp;
+                            });
+                            localStorage.setItem(chave, JSON.stringify(superLeve));
+                            return true;
+                        } catch(e4) {}
+                    }
                 }
-                console.warn('Limite de armazenamento atingido ao salvar:', chave, err);
+                console.warn('Armazenamento seguro ajustado para:', chave);
                 return false;
             }
         }
@@ -2248,8 +2325,14 @@
                 db.forEach(eq => {
                     const eqEmail = (eq.email || '').toLowerCase().trim();
                     if (eqEmail === emailSessao) {
-                        eq.bancoAtletasGeral = atletasAtuais;
-                        eq.bancoComissaoGeral = comissaoAtual;
+                        const isContaClube = eq.isContaClube || eq.categoria === '__CONTA_CLUBE__';
+                        if (isContaClube) {
+                            eq.bancoAtletasGeral = atletasAtuais;
+                            eq.bancoComissaoGeral = comissaoAtual;
+                        } else {
+                            delete eq.bancoAtletasGeral;
+                            delete eq.bancoComissaoGeral;
+                        }
                         eq.inscricoesConfirmadas = inscricoesAtuais;
                         if (fotoSalva) {
                             eq.fotoDirigente = fotoSalva;
@@ -2260,7 +2343,7 @@
                 });
 
                 if (equipesDoClube.length > 0) {
-                    salvarStorageSeguro('avv_equipes_completo_db', JSON.stringify(db));
+                    salvarStorageSeguro('avv_equipes_completo_db', JSON.stringify(equipesDoClube));
                     clearTimeout(_timerSincronizarClube);
                     _timerSincronizarClube = setTimeout(() => {
                         fetch('/api/equipes/sincronizar', {
@@ -3054,31 +3137,32 @@
 
                             // Preserva fotos locais existentes antes de sobrescrever com dados leves do servidor
                             const dbAnterior = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
-                            const equipesSalvar = serverData.equipes.map(eqS => {
-                                const eqAntiga = dbAnterior.find(e => String(e.id) === String(eqS.id));
-                                if (eqAntiga && (eqAntiga.email || '').toLowerCase().trim() === emailSessaoAtiva) {
-                                    if (Array.isArray(eqAntiga.atletas) && Array.isArray(eqS.atletas)) {
-                                        eqS.atletas = eqS.atletas.map(atlS => {
-                                            const atlA = eqAntiga.atletas.find(x => String(x.id) === String(atlS.id));
-                                            if (atlA && atlA.foto && atlA.foto.length > 500 && (!atlS.foto || atlS.foto.length <= 500)) {
-                                                return { ...atlS, foto: atlA.foto };
-                                            }
-                                            return atlS;
-                                        });
+                            const equipesSalvar = serverData.equipes
+                                .filter(e => (e.email || '').toLowerCase().trim() === emailSessaoAtiva)
+                                .map(eqS => {
+                                    const eqAntiga = dbAnterior.find(e => String(e.id) === String(eqS.id));
+                                    if (eqAntiga) {
+                                        if (Array.isArray(eqAntiga.atletas) && Array.isArray(eqS.atletas)) {
+                                            eqS.atletas = eqS.atletas.map(atlS => {
+                                                const atlA = eqAntiga.atletas.find(x => String(x.id) === String(atlS.id));
+                                                if (atlA && atlA.foto && atlA.foto.length > 500 && (!atlS.foto || atlS.foto.length <= 500)) {
+                                                    return { ...atlS, foto: atlA.foto };
+                                                }
+                                                return atlS;
+                                            });
+                                        }
+                                        if (Array.isArray(eqAntiga.bancoAtletasGeral) && (!eqS.bancoAtletasGeral || eqS.bancoAtletasGeral.length === 0)) {
+                                            eqS.bancoAtletasGeral = eqAntiga.bancoAtletasGeral;
+                                        }
                                     }
-                                    if (Array.isArray(eqAntiga.bancoAtletasGeral) && (!eqS.bancoAtletasGeral || eqS.bancoAtletasGeral.length === 0)) {
-                                        eqS.bancoAtletasGeral = eqAntiga.bancoAtletasGeral;
+                                    if (!eqS.isContaClube && eqS.categoria !== '__CONTA_CLUBE__') {
+                                        delete eqS.bancoAtletasGeral;
+                                        delete eqS.bancoComissaoGeral;
                                     }
-                                }
-                                return eqS;
-                            });
+                                    return eqS;
+                                });
 
-                            try {
-                                localStorage.setItem('avv_equipes_completo_db', JSON.stringify(equipesSalvar));
-                            } catch (eStorage) {
-                                const minhasEquipes = equipesSalvar.filter(e => (e.email || '').toLowerCase().trim() === emailSessaoAtiva);
-                                try { localStorage.setItem('avv_equipes_completo_db', JSON.stringify(minhasEquipes)); } catch(e2){}
-                            }
+                            salvarStorageSeguro('avv_equipes_completo_db', JSON.stringify(equipesSalvar));
                             try { localStorage.removeItem('avv_inscricoes_teste'); } catch (e) {}
 
                             // Carrega os dados COMPLETOS específicos deste clube (com fotos reais de atletas e comissão)
@@ -3095,14 +3179,19 @@
                                             } else {
                                                 dbAtual.push(eqC);
                                             }
+                                            const alvo = dbAtual[idx !== -1 ? idx : dbAtual.length - 1];
+                                            if (!eqC.isContaClube && eqC.categoria !== '__CONTA_CLUBE__') {
+                                                delete alvo.bancoAtletasGeral;
+                                                delete alvo.bancoComissaoGeral;
+                                            }
                                             if (Array.isArray(eqC.bancoAtletasGeral) && eqC.bancoAtletasGeral.length > 0) {
-                                                try { localStorage.setItem(chaveAtletas, JSON.stringify(eqC.bancoAtletasGeral)); } catch(e){}
+                                                salvarStorageSeguro(chaveAtletas, JSON.stringify(eqC.bancoAtletasGeral));
                                             }
                                             if (Array.isArray(eqC.bancoComissaoGeral) && eqC.bancoComissaoGeral.length > 0) {
-                                                try { localStorage.setItem(chaveComissao, JSON.stringify(eqC.bancoComissaoGeral)); } catch(e){}
+                                                salvarStorageSeguro(chaveComissao, JSON.stringify(eqC.bancoComissaoGeral));
                                             }
                                             if (Array.isArray(eqC.inscricoesConfirmadas) && eqC.inscricoesConfirmadas.length > 0) {
-                                                try { localStorage.setItem(chaveInsc, JSON.stringify(eqC.inscricoesConfirmadas)); } catch(e){}
+                                                salvarStorageSeguro(chaveInsc, JSON.stringify(eqC.inscricoesConfirmadas));
                                             }
                                             if (eqC.fotoDirigente || eqC.logo) {
                                                 const f = eqC.fotoDirigente || eqC.logo;
@@ -3326,12 +3415,12 @@
                     const resp = await fetch('/api/dados-sistema', { cache: 'no-store' });
                     const serverData = await resp.json();
                     if (resp.ok && serverData.ok && Array.isArray(serverData.equipes)) {
-                        localStorage.setItem('avv_equipes_completo_db', JSON.stringify(serverData.equipes));
+                        const equipesDestaConta = serverData.equipes.filter(e => (e.email || '').toLowerCase().trim() === emailSessao);
+                        salvarStorageSeguro('avv_equipes_completo_db', JSON.stringify(equipesDestaConta));
                         if (serverData.campeonatos) {
-                            localStorage.setItem('avv_banco_campeonatos', JSON.stringify(serverData.campeonatos));
+                            salvarStorageSeguro('avv_banco_campeonatos', JSON.stringify(serverData.campeonatos));
                         }
 
-                        const equipesDestaConta = serverData.equipes.filter(e => (e.email || '').toLowerCase().trim() === emailSessao);
                         let atualizouAlgo = false;
                         const chaveAtletas = obterChaveStorageAtletasClube();
                         const chaveComissao = obterChaveStorageComissaoClube();
@@ -3339,15 +3428,15 @@
 
                         for (const eq of equipesDestaConta) {
                             if (Array.isArray(eq.bancoAtletasGeral) && eq.bancoAtletasGeral.length > 0) {
-                                localStorage.setItem(chaveAtletas, JSON.stringify(eq.bancoAtletasGeral));
+                                salvarStorageSeguro(chaveAtletas, JSON.stringify(eq.bancoAtletasGeral));
                                 atualizouAlgo = true;
                             }
                             if (Array.isArray(eq.bancoComissaoGeral) && eq.bancoComissaoGeral.length > 0) {
-                                localStorage.setItem(chaveComissao, JSON.stringify(eq.bancoComissaoGeral));
+                                salvarStorageSeguro(chaveComissao, JSON.stringify(eq.bancoComissaoGeral));
                                 atualizouAlgo = true;
                             }
                             if (Array.isArray(eq.inscricoesConfirmadas) && eq.inscricoesConfirmadas.length > 0) {
-                                localStorage.setItem(chaveInsc, JSON.stringify(eq.inscricoesConfirmadas));
+                                salvarStorageSeguro(chaveInsc, JSON.stringify(eq.inscricoesConfirmadas));
                                 atualizouAlgo = true;
                             }
                         }
@@ -4266,7 +4355,7 @@
                         delete equipesDb[idx].campeonatoId;
                         delete equipesDb[idx].numeroInscricaoTorneio;
                         delete equipesDb[idx].dataInscricaoTorneio;
-                        localStorage.setItem('avv_equipes_completo_db', JSON.stringify(equipesDb));
+                        salvarStorageSeguro('avv_equipes_completo_db', JSON.stringify(equipesDb));
                         persistirEquipeNoBancoEServidor(equipesDb[idx], equipesDb);
                     }
                 }
@@ -4316,7 +4405,7 @@
                         equipesDb[idx].inscritoCampeonato = true;
                         equipesDb[idx].dataInscricaoTorneio = `${dataStr} às ${horaStr}`;
                         equipesDb[idx].numeroInscricaoTorneio = String(numeroInscricao);
-                        localStorage.setItem('avv_equipes_completo_db', JSON.stringify(equipesDb));
+                        salvarStorageSeguro('avv_equipes_completo_db', JSON.stringify(equipesDb));
                         persistirEquipeNoBancoEServidor(equipesDb[idx], equipesDb);
                     }
                 }

@@ -267,11 +267,16 @@ function salvarBancoDados(dados, sincronizarMySQL = true) {
     }
 }
 
-// Retorna os dados completos da equipe (incluindo fotos em alta resolução), removendo apenas senhas
+// Retorna os dados completos da equipe (incluindo fotos em alta resolução), removendo apenas senhas e redundâncias
 function limparEquipeCompleta(eq) {
     if (!eq) return null;
     const copia = { ...eq };
     delete copia.senhaHash;
+    // O banco geral de atletas e comissão pertence exclusivamente à conta central do clube
+    if (!copia.isContaClube && copia.categoria !== '__CONTA_CLUBE__') {
+        delete copia.bancoAtletasGeral;
+        delete copia.bancoComissaoGeral;
+    }
     const campInvalido = !copia.campeonatoNome || 
                          copia.campeonatoNome === 'Aguardando Seleção no Painel' || 
                          copia.campeonatoNome === 'Aguardando Inscrição pelo Clube';
@@ -735,15 +740,21 @@ app.post(['/api/equipes/sincronizar', '/avv/api/equipes/sincronizar'], (req, res
                         const comissaoMesclada = mesclarComissaoPreservandoFotos(antigo ? antigo.comissao : [], eqCliente.comissao);
                         const bancoComissaoMesclado = mesclarComissaoPreservandoFotos(antigo ? antigo.bancoComissaoGeral : [], eqCliente.bancoComissaoGeral);
 
+                        const isClube = eqCliente.isContaClube || eqCliente.categoria === '__CONTA_CLUBE__' || (antigo && (antigo.isContaClube || antigo.categoria === '__CONTA_CLUBE__'));
                         const item = {
                             ...(antigo || {}),
                             ...eqCliente,
                             atletas: atletasMesclados,
-                            bancoAtletasGeral: bancoAtletasMesclado,
                             comissao: comissaoMesclada,
-                            bancoComissaoGeral: bancoComissaoMesclado,
                             senhaHash: senhaHashPreservada
                         };
+                        if (isClube) {
+                            item.bancoAtletasGeral = bancoAtletasMesclado;
+                            item.bancoComissaoGeral = bancoComissaoMesclado;
+                        } else {
+                            delete item.bancoAtletasGeral;
+                            delete item.bancoComissaoGeral;
+                        }
                         delete item.senha;
                         delete item.novaSenha;
                         return item;
@@ -767,15 +778,21 @@ app.post(['/api/equipes/sincronizar', '/avv/api/equipes/sincronizar'], (req, res
                         const comissaoMesclada = mesclarComissaoPreservandoFotos(antigo.comissao, eqCliente.comissao);
                         const bancoComissaoMesclado = mesclarComissaoPreservandoFotos(antigo.bancoComissaoGeral, eqCliente.bancoComissaoGeral);
 
+                        const isClube = antigo.isContaClube || antigo.categoria === '__CONTA_CLUBE__' || eqCliente.isContaClube || eqCliente.categoria === '__CONTA_CLUBE__';
                         db.equipes[idx] = {
                             ...antigo,
                             ...eqCliente,
                             atletas: atletasMesclados,
-                            bancoAtletasGeral: bancoAtletasMesclado,
                             comissao: comissaoMesclada,
-                            bancoComissaoGeral: bancoComissaoMesclado,
                             senhaHash: senhaHashPreservada
                         };
+                        if (isClube) {
+                            db.equipes[idx].bancoAtletasGeral = bancoAtletasMesclado;
+                            db.equipes[idx].bancoComissaoGeral = bancoComissaoMesclado;
+                        } else {
+                            delete db.equipes[idx].bancoAtletasGeral;
+                            delete db.equipes[idx].bancoComissaoGeral;
+                        }
                         delete db.equipes[idx].senha;
                     } else {
                         const nova = {
@@ -813,15 +830,21 @@ app.post(['/api/equipes/sincronizar', '/avv/api/equipes/sincronizar'], (req, res
                 const comissaoMesclada = mesclarComissaoPreservandoFotos(antigo.comissao, equipe.comissao);
                 const bancoComissaoMesclado = mesclarComissaoPreservandoFotos(antigo.bancoComissaoGeral, equipe.bancoComissaoGeral);
 
+                const isClube = antigo.isContaClube || antigo.categoria === '__CONTA_CLUBE__' || equipe.isContaClube || equipe.categoria === '__CONTA_CLUBE__';
                 db.equipes[idx] = {
                     ...antigo,
                     ...equipe,
                     atletas: atletasMesclados,
-                    bancoAtletasGeral: bancoAtletasMesclado,
                     comissao: comissaoMesclada,
-                    bancoComissaoGeral: bancoComissaoMesclado,
                     senhaHash: senhaHashPreservada
                 };
+                if (isClube) {
+                    db.equipes[idx].bancoAtletasGeral = bancoAtletasMesclado;
+                    db.equipes[idx].bancoComissaoGeral = bancoComissaoMesclado;
+                } else {
+                    delete db.equipes[idx].bancoAtletasGeral;
+                    delete db.equipes[idx].bancoComissaoGeral;
+                }
                 delete db.equipes[idx].senha;
                 delete db.equipes[idx].novaSenha;
 
