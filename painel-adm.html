@@ -1544,10 +1544,11 @@
             carregarBancoEquipesIntegrado();
             atualizarTudoPainelAdm();
 
-            // Sincroniza dados do Banco de Dados Oficial do Servidor (Fonte Única da Verdade)
-            await sincronizarDadosComServidorAdm();
-            carregarCampeonatos();
-            atualizarTudoPainelAdm();
+            // Sincroniza dados do Banco de Dados Oficial do Servidor em segundo plano (sem travar a tela)
+            sincronizarDadosComServidorAdm().then(() => {
+                carregarCampeonatos();
+                atualizarTudoPainelAdm();
+            }).catch(() => {});
 
             // Atualiza perfil visual do ADM
             if (sessaoAdm.usuario && document.getElementById('adm-user-display-name')) {

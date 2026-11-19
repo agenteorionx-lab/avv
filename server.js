@@ -38,33 +38,46 @@ app.use((req, res, next) => {
     next();
 });
 
-// Middleware para desabilitar cache em requisições de API e páginas HTML
-// Garante que qualquer atualização no sistema apareça imediatamente em tempo real
+// Middleware para gerenciamento inteligente de Cache HTTP
 app.use((req, res, next) => {
     const urlLower = req.path.toLowerCase();
+    
+    // Imagens, logos, ícones e fontes: cache de 24 horas no navegador com revalidação inteligente
+    if (
+        urlLower.startsWith('/logos/') ||
+        urlLower.endsWith('.png') ||
+        urlLower.endsWith('.jpg') ||
+        urlLower.endsWith('.jpeg') ||
+        urlLower.endsWith('.webp') ||
+        urlLower.endsWith('.svg') ||
+        urlLower.endsWith('.ico') ||
+        urlLower.endsWith('.woff') ||
+        urlLower.endsWith('.woff2') ||
+        urlLower.endsWith('.ttf')
+    ) {
+        res.setHeader('Cache-Control', 'public, max-age=86400, stale-while-revalidate=604800');
+        return next();
+    }
+
+    // Páginas HTML e APIs dinâmicas: sempre consulta o servidor mas permite ETag/304 rápido
     if (
         urlLower.endsWith('.html') ||
         urlLower.endsWith('/') ||
         urlLower.startsWith('/api/') ||
-        urlLower.startsWith('/avv/api/')
+        urlLower.startsWith('/avv/api/') ||
+        rotasAmigaveis[urlLower] ||
+        rotasAmigaveis[urlLower.replace(/^\/avv/, '')]
     ) {
-        res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0');
-        res.setHeader('Pragma', 'no-cache');
-        res.setHeader('Expires', '0');
+        res.setHeader('Cache-Control', 'no-cache, must-revalidate');
     }
     next();
 });
 
-// Configuração de estáticos com revalidação imediata (sem cache travado no navegador)
+// Configuração de estáticos com ETag habilitado para revalidação ultrarrápida (304 Not Modified)
 const staticOpts = {
     maxAge: 0,
-    etag: false,
-    lastModified: false,
-    setHeaders: (res, path) => {
-        res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
-        res.setHeader('Pragma', 'no-cache');
-        res.setHeader('Expires', '0');
-    }
+    etag: true,
+    lastModified: true
 };
 
 // Roteamento amigável e moderno (Clean URLs) sem extensão .html
@@ -610,18 +623,18 @@ app.post(['/api/auth/login', '/avv/api/auth/login'], (req, res) => {
             }
         });
         if (precisouUnificar) {
-            salvarBancoDados(db);
+            setImmediate(() => salvarBancoDados(db));
         }
 
         const todasEquipesClube = registrosClube
             .filter(item => !item.isContaClube && item.categoria !== '__CONTA_CLUBE__')
-            .map(limparEquipeParaCliente);
+            .map(limparEquipeLeveParaListagem);
 
         res.json({
             ok: true,
-            equipe: limparEquipeParaCliente(eq),
+            equipe: limparEquipeLeveParaListagem(eq),
             equipes: todasEquipesClube,
-            registrosCompletos: registrosClube.map(limparEquipeParaCliente),
+            registrosCompletos: registrosClube.map(limparEquipeLeveParaListagem),
             sessao: {
                 tipo: 'time',
                 equipeId: eq.id,

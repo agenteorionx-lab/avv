@@ -502,44 +502,16 @@
                         localStorage.removeItem('avv_inscricoes_teste');
                     } catch (e) {}
 
-                    // Sincroniza todas as equipes desta agremiação retornadas pela API no cache local
-                    const equipesDb = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
+                    // Sincroniza diretamente as equipes desta agremiação no cache local de forma leve
                     const listaRecebida = Array.isArray(dadosApi.equipes) && dadosApi.equipes.length > 0
                         ? dadosApi.equipes
                         : (dadosApi.equipe ? [dadosApi.equipe] : []);
 
-                    listaRecebida.forEach(eqRecebida => {
-                        const idx = equipesDb.findIndex(item => String(item.id) === String(eqRecebida.id));
-                        if (idx !== -1) {
-                            equipesDb[idx] = { ...equipesDb[idx], ...eqRecebida };
-                        } else {
-                            equipesDb.unshift(eqRecebida);
-                        }
-                    });
                     try {
-                        localStorage.setItem('avv_equipes_completo_db', JSON.stringify(equipesDb));
+                        localStorage.setItem('avv_equipes_completo_db', JSON.stringify(listaRecebida));
                     } catch(e) {}
 
-                    // Prepara o cache local de atletas, comissão e inscrições unificados direto da nuvem
-                    const idClubeChave = email.replace(/[^a-z0-9_-]/g, '_');
-                    const listaParaExtrair = Array.isArray(dadosApi.registrosCompletos) && dadosApi.registrosCompletos.length > 0
-                        ? dadosApi.registrosCompletos
-                        : listaRecebida;
-
-                    for (const eqItem of listaParaExtrair) {
-                        if (Array.isArray(eqItem.bancoAtletasGeral) && eqItem.bancoAtletasGeral.length > 0) {
-                            try { localStorage.setItem(`avv_atletas_clube_${idClubeChave}`, JSON.stringify(eqItem.bancoAtletasGeral)); } catch(e){}
-                        }
-                        if (Array.isArray(eqItem.bancoComissaoGeral) && eqItem.bancoComissaoGeral.length > 0) {
-                            try { localStorage.setItem(`avv_comissao_clube_${idClubeChave}`, JSON.stringify(eqItem.bancoComissaoGeral)); } catch(e){}
-                        }
-                        if (Array.isArray(eqItem.inscricoesConfirmadas) && eqItem.inscricoesConfirmadas.length > 0) {
-                            try { localStorage.setItem(`avv_inscricoes_confirmadas_${idClubeChave}`, JSON.stringify(eqItem.inscricoesConfirmadas)); } catch(e){}
-                        }
-                    }
-
-                    exibirAlertaLogin('Acesso autorizado! Redirecionando para o painel do clube...', 'success');
-                    setTimeout(() => { window.location.replace('/clube'); }, 300);
+                    window.location.replace('/clube');
                     return;
                 }
 
@@ -669,8 +641,7 @@
                         return;
                     }
                     localStorage.setItem('avv_sessao_adm', JSON.stringify(dadosApi.sessao));
-                    exibirAlertaLogin('Acesso de Administrador confirmado. Entrando no painel...', 'success');
-                    setTimeout(() => { window.location.replace('/administrador'); }, 400);
+                    window.location.replace('/administrador');
                     return;
                 }
 

@@ -3302,9 +3302,6 @@
                     }
                     renderizarAtletasEComissaoSalvos(ult);
 
-                    // Garante que a equipe selecionada esteja sincronizada no servidor
-                    persistirEquipeNoBancoEServidor(ult, null);
-
                     const elTeamCard = document.getElementById('team-name-card');
                     if (elTeamCard && ult.nomeTime) elTeamCard.textContent = ult.nomeTime.toUpperCase();
                     
