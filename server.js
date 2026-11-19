@@ -306,8 +306,10 @@ function limparEquipeLeveParaListagem(eq) {
         copia.campeonatoNome = 'XXI COPA AVV DE VOLEIBOL';
         copia.campeonatoId = copia.campeonatoId || 'camp-1794335645971';
     }
-    if (copia.logo && copia.logo.length > 30000) copia.logo = 'logos/logo_avv.png';
-    if (copia.fotoDirigente && copia.fotoDirigente.length > 30000) copia.fotoDirigente = 'logos/logo_avv.png';
+    // Otimiza imagens base64 pesadas no endpoint leve de listagem
+    if (copia.logo && copia.logo.length > 500) copia.logo = 'logos/logo_avv.png';
+    if (copia.fotoDirigente && copia.fotoDirigente.length > 500) copia.fotoDirigente = 'logos/logo_avv.png';
+    delete copia.inscricoesConfirmadas;
 
     if (Array.isArray(copia.atletas)) {
         copia.atletas = copia.atletas.map(a => {

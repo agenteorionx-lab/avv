@@ -3119,106 +3119,99 @@
                 }
                 renovarAtividadeSessaoTime();
 
-                // Sincroniza dados mais recentes do servidor (Fonte Única da Verdade)
-                try {
-                    const resp = await fetch('/api/dados-sistema', { cache: 'no-store' });
-                    const serverData = await resp.json();
-                    if (resp.ok && serverData.ok) {
-                        if (serverData.campeonatos && typeof serverData.campeonatos === 'object') {
-                            try { localStorage.setItem('avv_banco_campeonatos', JSON.stringify(serverData.campeonatos)); } catch(e){}
-                            carregarCampeonatosPainelTime();
-                        }
-                        if (Array.isArray(serverData.equipes)) {
-                            window.bancoEquipesServidor = serverData.equipes;
-                            const emailSessaoAtiva = (sessao.email || '').toLowerCase().trim();
-                            const chaveAtletas = obterChaveStorageAtletasClube();
-                            const chaveComissao = obterChaveStorageComissaoClube();
-                            const chaveInsc = obterChaveInscricoesConfirmadasClube();
+                const emailSessaoAtiva = (sessao.email || '').toLowerCase().trim();
+                const chaveAtletas = obterChaveStorageAtletasClube();
+                const chaveComissao = obterChaveStorageComissaoClube();
+                const chaveInsc = obterChaveInscricoesConfirmadasClube();
 
-                            // Preserva fotos locais existentes antes de sobrescrever com dados leves do servidor
-                            const dbAnterior = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
-                            const equipesSalvar = serverData.equipes
-                                .filter(e => (e.email || '').toLowerCase().trim() === emailSessaoAtiva)
-                                .map(eqS => {
-                                    const eqAntiga = dbAnterior.find(e => String(e.id) === String(eqS.id));
-                                    if (eqAntiga) {
-                                        if (Array.isArray(eqAntiga.atletas) && Array.isArray(eqS.atletas)) {
-                                            eqS.atletas = eqS.atletas.map(atlS => {
-                                                const atlA = eqAntiga.atletas.find(x => String(x.id) === String(atlS.id));
-                                                if (atlA && atlA.foto && atlA.foto.length > 500 && (!atlS.foto || atlS.foto.length <= 500)) {
-                                                    return { ...atlS, foto: atlA.foto };
-                                                }
-                                                return atlS;
-                                            });
+                // =========================================================================
+                // ETAPA 1: RENDERIZAÇÃO INSTANTÂNEA IMEDIATA (0ms - SEM ESPERAR A REDE)
+                // =========================================================================
+                const dbLocalInicial = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
+                const equipesLocais = obterEquipesDesteClube(dbLocalInicial, sessao);
+                renderizarEquipesClubeView(equipesLocais);
+                renderizarCardsAtletasDoClube();
+                if (typeof renderizarComissaoTecnicaClube === 'function') {
+                    renderizarComissaoTecnicaClube();
+                }
+                atualizarContadoresTime();
+                carregarCampeonatosPainelTime();
+                renderizarListaInscricoesConfirmadas();
+
+                // =========================================================================
+                // ETAPA 2: ATUALIZAÇÃO PROGRESSIVA EM SEGUNDO PLANO (SEM TRAVAR A TELA)
+                // =========================================================================
+                (async function carregarDadosEmEtapas() {
+                    // Passo 2.1: Busca em background dados do clube autenticado
+                    if (emailSessaoAtiva) {
+                        try {
+                            const respClube = await fetch('/api/clube/dados-completos?email=' + encodeURIComponent(emailSessaoAtiva));
+                            if (respClube.ok) {
+                                const dadosClube = await respClube.json();
+                                if (dadosClube && dadosClube.ok && Array.isArray(dadosClube.equipes)) {
+                                    const dbAtual = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
+                                    dadosClube.equipes.forEach(eqC => {
+                                        const idx = dbAtual.findIndex(e => String(e.id) === String(eqC.id));
+                                        if (idx !== -1) {
+                                            dbAtual[idx] = { ...dbAtual[idx], ...eqC };
+                                        } else {
+                                            dbAtual.push(eqC);
                                         }
-                                        if (Array.isArray(eqAntiga.bancoAtletasGeral) && (!eqS.bancoAtletasGeral || eqS.bancoAtletasGeral.length === 0)) {
-                                            eqS.bancoAtletasGeral = eqAntiga.bancoAtletasGeral;
+                                        const alvo = dbAtual[idx !== -1 ? idx : dbAtual.length - 1];
+                                        if (!eqC.isContaClube && eqC.categoria !== '__CONTA_CLUBE__') {
+                                            delete alvo.bancoAtletasGeral;
+                                            delete alvo.bancoComissaoGeral;
                                         }
-                                    }
-                                    if (!eqS.isContaClube && eqS.categoria !== '__CONTA_CLUBE__') {
-                                        delete eqS.bancoAtletasGeral;
-                                        delete eqS.bancoComissaoGeral;
-                                    }
-                                    return eqS;
-                                });
+                                        if (Array.isArray(eqC.bancoAtletasGeral) && eqC.bancoAtletasGeral.length > 0) {
+                                            salvarStorageSeguro(chaveAtletas, JSON.stringify(eqC.bancoAtletasGeral));
+                                        }
+                                        if (Array.isArray(eqC.bancoComissaoGeral) && eqC.bancoComissaoGeral.length > 0) {
+                                            salvarStorageSeguro(chaveComissao, JSON.stringify(eqC.bancoComissaoGeral));
+                                        }
+                                        if (Array.isArray(eqC.inscricoesConfirmadas) && eqC.inscricoesConfirmadas.length > 0) {
+                                            salvarStorageSeguro(chaveInsc, JSON.stringify(eqC.inscricoesConfirmadas));
+                                        }
+                                        if (eqC.fotoDirigente || eqC.logo) {
+                                            const f = eqC.fotoDirigente || eqC.logo;
+                                            sessao.foto = f;
+                                            try {
+                                                localStorage.setItem('avv_sessao_ativa', JSON.stringify(sessao));
+                                                localStorage.setItem('avv_foto_clube_' + emailSessaoAtiva, f);
+                                            } catch(e){}
+                                        }
+                                    });
+                                    salvarStorageSeguro('avv_equipes_completo_db', JSON.stringify(dbAtual));
 
-                            salvarStorageSeguro('avv_equipes_completo_db', JSON.stringify(equipesSalvar));
-                            try { localStorage.removeItem('avv_inscricoes_teste'); } catch (e) {}
-
-                            // Carrega os dados COMPLETOS específicos deste clube (com fotos reais de atletas e comissão)
-                            if (emailSessaoAtiva) {
-                                try {
-                                    const respClube = await fetch('/api/clube/dados-completos?email=' + encodeURIComponent(emailSessaoAtiva), { cache: 'no-store' });
-                                    const dadosClube = await respClube.json();
-                                    if (respClube.ok && dadosClube.ok && Array.isArray(dadosClube.equipes)) {
-                                        const dbAtual = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
-                                        dadosClube.equipes.forEach(eqC => {
-                                            const idx = dbAtual.findIndex(e => String(e.id) === String(eqC.id));
-                                            if (idx !== -1) {
-                                                dbAtual[idx] = { ...dbAtual[idx], ...eqC };
-                                            } else {
-                                                dbAtual.push(eqC);
-                                            }
-                                            const alvo = dbAtual[idx !== -1 ? idx : dbAtual.length - 1];
-                                            if (!eqC.isContaClube && eqC.categoria !== '__CONTA_CLUBE__') {
-                                                delete alvo.bancoAtletasGeral;
-                                                delete alvo.bancoComissaoGeral;
-                                            }
-                                            if (Array.isArray(eqC.bancoAtletasGeral) && eqC.bancoAtletasGeral.length > 0) {
-                                                salvarStorageSeguro(chaveAtletas, JSON.stringify(eqC.bancoAtletasGeral));
-                                            }
-                                            if (Array.isArray(eqC.bancoComissaoGeral) && eqC.bancoComissaoGeral.length > 0) {
-                                                salvarStorageSeguro(chaveComissao, JSON.stringify(eqC.bancoComissaoGeral));
-                                            }
-                                            if (Array.isArray(eqC.inscricoesConfirmadas) && eqC.inscricoesConfirmadas.length > 0) {
-                                                salvarStorageSeguro(chaveInsc, JSON.stringify(eqC.inscricoesConfirmadas));
-                                            }
-                                            if (eqC.fotoDirigente || eqC.logo) {
-                                                const f = eqC.fotoDirigente || eqC.logo;
-                                                sessao.foto = f;
-                                                try {
-                                                    localStorage.setItem('avv_sessao_ativa', JSON.stringify(sessao));
-                                                    localStorage.setItem('avv_foto_clube_' + emailSessaoAtiva, f);
-                                                } catch(e){}
-                                            }
-                                        });
-                                        salvarStorageSeguro('avv_equipes_completo_db', JSON.stringify(dbAtual));
+                                    // Atualiza suavemente a visualização com os dados frescos
+                                    const equipesAtualizadas = obterEquipesDesteClube(dbAtual, sessao);
+                                    renderizarEquipesClubeView(equipesAtualizadas);
+                                    renderizarCardsAtletasDoClube();
+                                    if (typeof renderizarComissaoTecnicaClube === 'function') {
+                                        renderizarComissaoTecnicaClube();
                                     }
-                                } catch(eClube) {}
+                                    atualizarContadoresTime();
+                                }
                             }
-
-                            // Renderiza imediatamente com as equipes frescas vindas da nuvem
-                            const dbFinal = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
-                            const equipesFrescas = obterEquipesDesteClube(dbFinal, sessao);
-                            renderizarEquipesClubeView(equipesFrescas);
-                            renderizarCardsAtletasDoClube();
-                            if (typeof renderizarComissaoTecnicaClube === 'function') {
-                                renderizarComissaoTecnicaClube();
-                            }
-                            atualizarContadoresTime();
-                        }
+                        } catch(eClube) {}
                     }
-                } catch (err) {}
+
+                    // Passo 2.2: Busca dados globais leves e campeonatos
+                    try {
+                        const resp = await fetch('/api/dados-sistema');
+                        if (resp.ok) {
+                            const serverData = await resp.json();
+                            if (serverData && serverData.ok) {
+                                if (serverData.campeonatos && typeof serverData.campeonatos === 'object') {
+                                    salvarStorageSeguro('avv_banco_campeonatos', JSON.stringify(serverData.campeonatos));
+                                    carregarCampeonatosPainelTime();
+                                }
+                                if (Array.isArray(serverData.equipes)) {
+                                    window.bancoEquipesServidor = serverData.equipes;
+                                }
+                            }
+                        }
+                    } catch(eGeral) {}
+                })();
 
                 // Valida se a conta da sessão ativa ainda é válida (não foi excluída nem bloqueada no ADM)
                 const dbAtualVerif = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
