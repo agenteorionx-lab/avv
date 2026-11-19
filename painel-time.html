@@ -12,8 +12,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="painel.css?v=17">
-    <script src="html2pdf.bundle.min.js"></script>
+    <link rel="stylesheet" href="painel.css?v=18">
+    <script src="html2pdf.bundle.min.js" defer></script>
     <script src="avv-dialogs.js"></script>
     <script src="avv-emissao-docs.js"></script>
     <style>
@@ -2058,6 +2058,7 @@
                 btnComissao.classList.add('active');
                 paneComissao.classList.add('active');
                 btnAcaoComissao.style.display = 'inline-flex';
+                renderizarComissaoTecnica();
             }
             atualizarContadoresTime();
         }
@@ -2432,42 +2433,46 @@
                 const chave = obterChaveStorageComissaoClube();
                 const salvos = localStorage.getItem(chave);
                 let lista = salvos ? JSON.parse(salvos) : [];
+                if (!Array.isArray(lista)) lista = [];
 
-                if (!Array.isArray(lista) || lista.length === 0) {
-                    lista = [];
-                    const db = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
-                    const sessao = JSON.parse(localStorage.getItem('avv_sessao_ativa') || '{}');
-                    const equipes = obterEquipesDesteClube(db, sessao);
+                const db = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
+                const sessao = JSON.parse(localStorage.getItem('avv_sessao_ativa') || '{}');
+                const equipes = obterEquipesDesteClube(db, sessao);
 
-                    // 1. Tenta recuperar do campo central bancoComissaoGeral da equipe
-                    for (const eq of equipes) {
-                        if (Array.isArray(eq.bancoComissaoGeral) && eq.bancoComissaoGeral.length > 0) {
-                            eq.bancoComissaoGeral.forEach(tc => {
-                                if (!lista.some(t => String(t.id) === String(tc.id))) {
-                                    lista.push({ ...tc });
-                                }
-                            });
-                        }
-                    }
-
-                    // 2. Se ainda não achou, resgata dos elencos específicos
-                    if (lista.length === 0) {
-                        equipes.forEach(eq => {
-                            if (Array.isArray(eq.comissao)) {
-                                eq.comissao.forEach(tc => {
-                                    if (!lista.some(t => String(t.id) === String(tc.id))) {
-                                        lista.push({ ...tc });
-                                    }
-                                });
+                // 1. Tenta recuperar e enriquecer fotos a partir de bancoComissaoGeral
+                for (const eq of equipes) {
+                    if (Array.isArray(eq.bancoComissaoGeral) && eq.bancoComissaoGeral.length > 0) {
+                        eq.bancoComissaoGeral.forEach(tc => {
+                            if (!tc || !tc.nome) return;
+                            const idx = lista.findIndex(t => (t.id && String(t.id) === String(tc.id)) || (t.nome && t.nome.toUpperCase().trim() === tc.nome.toUpperCase().trim()));
+                            if (idx === -1) {
+                                lista.push({ ...tc });
+                            } else if (tc.foto && tc.foto.length > 500 && (!lista[idx].foto || lista[idx].foto.includes('logos/'))) {
+                                lista[idx].foto = tc.foto;
                             }
                         });
                     }
-
-                    if (lista.length > 0) {
-                        salvarStorageSeguro(chave, JSON.stringify(lista));
-                    }
                 }
-                return Array.isArray(lista) ? lista : [];
+
+                // 2. Mescla com os membros de comissão das equipes do clube para garantir fotos completas
+                equipes.forEach(eq => {
+                    if (Array.isArray(eq.comissao)) {
+                        eq.comissao.forEach(tc => {
+                            if (!tc || !tc.nome) return;
+                            const idx = lista.findIndex(t => (t.id && String(t.id) === String(tc.id)) || (t.nome && t.nome.toUpperCase().trim() === tc.nome.toUpperCase().trim()));
+                            if (idx === -1) {
+                                lista.push({ ...tc });
+                            } else if (tc.foto && tc.foto.length > 500 && (!lista[idx].foto || lista[idx].foto.includes('logos/'))) {
+                                lista[idx].foto = tc.foto;
+                            }
+                        });
+                    }
+                });
+
+                if (lista.length > 0) {
+                    salvarStorageSeguro(chave, JSON.stringify(lista));
+                }
+                return lista;
             } catch (e) {
                 return [];
             }
@@ -3046,7 +3051,7 @@
                     </div>
                     <div class="atleta-card-inner">
                         <div class="atleta-photo-box">
-                            <img src="${foto}" class="atleta-img-thumb" id="img-tec-${num}" alt="Foto">
+                            <img src="${foto}" class="atleta-img-thumb" id="img-tec-${num}" alt="Foto" onerror="this.src='logos/mascote_coelho.png'">
                             <img src="logos/logo_avv.png" class="atleta-club-badge" title="Associação Vilhenense de Voleibol" alt="AVV">
                         </div>
                         <div class="atleta-info-body">
@@ -3131,9 +3136,7 @@
                 const equipesLocais = obterEquipesDesteClube(dbLocalInicial, sessao);
                 renderizarEquipesClubeView(equipesLocais);
                 renderizarCardsAtletasDoClube();
-                if (typeof renderizarComissaoTecnicaClube === 'function') {
-                    renderizarComissaoTecnicaClube();
-                }
+                renderizarComissaoTecnica();
                 atualizarContadoresTime();
                 carregarCampeonatosPainelTime();
                 renderizarListaInscricoesConfirmadas();
@@ -3148,48 +3151,51 @@
                             const respClube = await fetch('/api/clube/dados-completos?email=' + encodeURIComponent(emailSessaoAtiva));
                             if (respClube.ok) {
                                 const dadosClube = await respClube.json();
-                                if (dadosClube && dadosClube.ok && Array.isArray(dadosClube.equipes)) {
-                                    const dbAtual = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
-                                    dadosClube.equipes.forEach(eqC => {
-                                        const idx = dbAtual.findIndex(e => String(e.id) === String(eqC.id));
-                                        if (idx !== -1) {
-                                            dbAtual[idx] = { ...dbAtual[idx], ...eqC };
-                                        } else {
-                                            dbAtual.push(eqC);
-                                        }
-                                        const alvo = dbAtual[idx !== -1 ? idx : dbAtual.length - 1];
-                                        if (!eqC.isContaClube && eqC.categoria !== '__CONTA_CLUBE__') {
-                                            delete alvo.bancoAtletasGeral;
-                                            delete alvo.bancoComissaoGeral;
-                                        }
-                                        if (Array.isArray(eqC.bancoAtletasGeral) && eqC.bancoAtletasGeral.length > 0) {
-                                            salvarStorageSeguro(chaveAtletas, JSON.stringify(eqC.bancoAtletasGeral));
-                                        }
-                                        if (Array.isArray(eqC.bancoComissaoGeral) && eqC.bancoComissaoGeral.length > 0) {
-                                            salvarStorageSeguro(chaveComissao, JSON.stringify(eqC.bancoComissaoGeral));
-                                        }
-                                        if (Array.isArray(eqC.inscricoesConfirmadas) && eqC.inscricoesConfirmadas.length > 0) {
-                                            salvarStorageSeguro(chaveInsc, JSON.stringify(eqC.inscricoesConfirmadas));
-                                        }
-                                        if (eqC.fotoDirigente || eqC.logo) {
-                                            const f = eqC.fotoDirigente || eqC.logo;
-                                            sessao.foto = f;
-                                            try {
-                                                localStorage.setItem('avv_sessao_ativa', JSON.stringify(sessao));
-                                                localStorage.setItem('avv_foto_clube_' + emailSessaoAtiva, f);
-                                            } catch(e){}
-                                        }
-                                    });
-                                    salvarStorageSeguro('avv_equipes_completo_db', JSON.stringify(dbAtual));
-
-                                    // Atualiza suavemente a visualização com os dados frescos
-                                    const equipesAtualizadas = obterEquipesDesteClube(dbAtual, sessao);
-                                    renderizarEquipesClubeView(equipesAtualizadas);
-                                    renderizarCardsAtletasDoClube();
-                                    if (typeof renderizarComissaoTecnicaClube === 'function') {
-                                        renderizarComissaoTecnicaClube();
+                                if (dadosClube && dadosClube.ok) {
+                                    if (Array.isArray(dadosClube.bancoComissao) && dadosClube.bancoComissao.length > 0) {
+                                        salvarStorageSeguro(chaveComissao, JSON.stringify(dadosClube.bancoComissao));
                                     }
-                                    atualizarContadoresTime();
+                                    if (Array.isArray(dadosClube.equipes)) {
+                                        const dbAtual = JSON.parse(localStorage.getItem('avv_equipes_completo_db') || '[]');
+                                        dadosClube.equipes.forEach(eqC => {
+                                            const idx = dbAtual.findIndex(e => String(e.id) === String(eqC.id));
+                                            if (idx !== -1) {
+                                                dbAtual[idx] = { ...dbAtual[idx], ...eqC };
+                                            } else {
+                                                dbAtual.push(eqC);
+                                            }
+                                            const alvo = dbAtual[idx !== -1 ? idx : dbAtual.length - 1];
+                                            if (!eqC.isContaClube && eqC.categoria !== '__CONTA_CLUBE__') {
+                                                delete alvo.bancoAtletasGeral;
+                                                delete alvo.bancoComissaoGeral;
+                                            }
+                                            if (Array.isArray(eqC.bancoAtletasGeral) && eqC.bancoAtletasGeral.length > 0) {
+                                                salvarStorageSeguro(chaveAtletas, JSON.stringify(eqC.bancoAtletasGeral));
+                                            }
+                                            if (Array.isArray(eqC.bancoComissaoGeral) && eqC.bancoComissaoGeral.length > 0) {
+                                                salvarStorageSeguro(chaveComissao, JSON.stringify(eqC.bancoComissaoGeral));
+                                            }
+                                            if (Array.isArray(eqC.inscricoesConfirmadas) && eqC.inscricoesConfirmadas.length > 0) {
+                                                salvarStorageSeguro(chaveInsc, JSON.stringify(eqC.inscricoesConfirmadas));
+                                            }
+                                            if (eqC.fotoDirigente || eqC.logo) {
+                                                const f = eqC.fotoDirigente || eqC.logo;
+                                                sessao.foto = f;
+                                                try {
+                                                    localStorage.setItem('avv_sessao_ativa', JSON.stringify(sessao));
+                                                    localStorage.setItem('avv_foto_clube_' + emailSessaoAtiva, f);
+                                                } catch(e){}
+                                            }
+                                        });
+                                        salvarStorageSeguro('avv_equipes_completo_db', JSON.stringify(dbAtual));
+
+                                        // Atualiza suavemente a visualização com os dados frescos
+                                        const equipesAtualizadas = obterEquipesDesteClube(dbAtual, sessao);
+                                        renderizarEquipesClubeView(equipesAtualizadas);
+                                        renderizarCardsAtletasDoClube();
+                                        renderizarComissaoTecnica();
+                                        atualizarContadoresTime();
+                                    }
                                 }
                             }
                         } catch(eClube) {}
@@ -3395,14 +3401,20 @@
                 }
             });
 
-            // Sincronização em tempo real ao focar na janela ou voltar de outro dispositivo/aba
-            async function rechecarSincronizacaoFundo() {
+            // Sincronização inteligente com controle de throttle (mínimo 45s entre checagens)
+            let ultimoSyncFundo = Date.now();
+            async function rechecarSincronizacaoFundo(forcar = false) {
+                const agora = Date.now();
+                if (!forcar && (agora - ultimoSyncFundo < 45000)) {
+                    return;
+                }
+                ultimoSyncFundo = agora;
                 try {
                     const sessao = JSON.parse(localStorage.getItem('avv_sessao_ativa') || '{}');
                     const emailSessao = (sessao.email || '').toLowerCase().trim();
                     if (!emailSessao) return;
 
-                    const resp = await fetch('/api/dados-sistema', { cache: 'no-store' });
+                    const resp = await fetch('/api/dados-sistema');
                     const serverData = await resp.json();
                     if (resp.ok && serverData.ok && Array.isArray(serverData.equipes)) {
                         const equipesDestaConta = serverData.equipes.filter(e => (e.email || '').toLowerCase().trim() === emailSessao);

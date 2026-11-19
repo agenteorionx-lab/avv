@@ -42,7 +42,7 @@ app.use((req, res, next) => {
 app.use((req, res, next) => {
     const urlLower = req.path.toLowerCase();
     
-    // Imagens, logos, ícones e fontes: cache de 24 horas no navegador com revalidação inteligente
+    // Imagens, logos, ícones, fontes, CSS e bibliotecas estáticas: cache de 24 horas no navegador
     if (
         urlLower.startsWith('/logos/') ||
         urlLower.endsWith('.png') ||
@@ -53,7 +53,9 @@ app.use((req, res, next) => {
         urlLower.endsWith('.ico') ||
         urlLower.endsWith('.woff') ||
         urlLower.endsWith('.woff2') ||
-        urlLower.endsWith('.ttf')
+        urlLower.endsWith('.ttf') ||
+        urlLower.endsWith('html2pdf.bundle.min.js') ||
+        urlLower.endsWith('.css')
     ) {
         res.setHeader('Cache-Control', 'public, max-age=86400, stale-while-revalidate=604800');
         return next();
@@ -285,11 +287,6 @@ function limparEquipeCompleta(eq) {
     if (!eq) return null;
     const copia = { ...eq };
     delete copia.senhaHash;
-    // O banco geral de atletas e comissão pertence exclusivamente à conta central do clube
-    if (!copia.isContaClube && copia.categoria !== '__CONTA_CLUBE__') {
-        delete copia.bancoAtletasGeral;
-        delete copia.bancoComissaoGeral;
-    }
     const campInvalido = !copia.campeonatoNome || 
                          copia.campeonatoNome === 'Aguardando Seleção no Painel' || 
                          copia.campeonatoNome === 'Aguardando Inscrição pelo Clube';
@@ -447,9 +444,43 @@ app.get(['/api/clube/dados-completos', '/avv/api/clube/dados-completos'], (req, 
             .filter(e => (e.email || '').toLowerCase().trim() === email)
             .map(limparEquipeCompleta);
 
+        // Consolida comissão técnica do clube com fotos completas
+        let comissaoGeralClube = [];
+        equipesDoClube.forEach(e => {
+            if (Array.isArray(e.bancoComissaoGeral) && e.bancoComissaoGeral.length > 0) {
+                e.bancoComissaoGeral.forEach(tc => {
+                    if (!tc || !tc.nome) return;
+                    const idx = comissaoGeralClube.findIndex(t => (t.id && String(t.id) === String(tc.id)) || (t.nome && t.nome.toUpperCase().trim() === tc.nome.toUpperCase().trim()));
+                    if (idx === -1) {
+                        comissaoGeralClube.push({ ...tc });
+                    } else if (tc.foto && tc.foto.length > 500 && (!comissaoGeralClube[idx].foto || comissaoGeralClube[idx].foto.includes('logos/'))) {
+                        comissaoGeralClube[idx].foto = tc.foto;
+                    }
+                });
+            }
+            if (Array.isArray(e.comissao)) {
+                e.comissao.forEach(tc => {
+                    if (!tc || !tc.nome) return;
+                    const idx = comissaoGeralClube.findIndex(t => (t.id && String(t.id) === String(tc.id)) || (t.nome && t.nome.toUpperCase().trim() === tc.nome.toUpperCase().trim()));
+                    if (idx === -1) {
+                        comissaoGeralClube.push({ ...tc });
+                    } else if (tc.foto && tc.foto.length > 500 && (!comissaoGeralClube[idx].foto || comissaoGeralClube[idx].foto.includes('logos/'))) {
+                        comissaoGeralClube[idx].foto = tc.foto;
+                    }
+                });
+            }
+        });
+
+        // Garante que bancoComissaoGeral esteja presente na primeira equipe do clube caso não exista
+        if (equipesDoClube.length > 0 && comissaoGeralClube.length > 0) {
+            const eqPrincipal = equipesDoClube.find(e => e.isContaClube || e.categoria === '__CONTA_CLUBE__') || equipesDoClube[0];
+            eqPrincipal.bancoComissaoGeral = comissaoGeralClube;
+        }
+
         res.json({
             ok: true,
             total: equipesDoClube.length,
+            bancoComissao: comissaoGeralClube,
             equipes: equipesDoClube
         });
     } catch (err) {
